@@ -5,3 +5,36 @@
 **Frontend:** Vue.js  
 **Database:** MySQL
  
+ 
+### How To Install:
+1. Download or clone repository  
+    ```
+    git clone https://github.com/PatrykJelonek/teamproject
+    ```
+2. Install Composer dependencies  
+    ``` 
+    composer install
+    ```
+3. Install NPM dependencies
+    ```
+    npm install
+    ```
+4. Enter into project directory 
+    ```
+    cd teamproject
+    ```
+5. Create a copy of `.env` files
+6. Generate an app encryption key
+    ```
+    php artisan key:generate
+    ```
+7. Create an empty database
+8. Change `.env` files by data to connect with database
+9. Migrate the database
+    ```
+    php artisan migrate
+    ```
+10. Seed the database
+    ```
+    php artisan db:seed
+    ```
