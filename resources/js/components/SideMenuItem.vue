@@ -1,5 +1,5 @@
 <template>
-    <li class="c-Navbar__item">
+    <li class="c-Navbar__item" :class="{ 'c-Navbar__item--visible': isVisible }">
         <a class="c-Navbar__link" :href="href">
             <side-menu-icon :iconName="icon" v-if="icon"></side-menu-icon>
             <slot></slot>
@@ -11,7 +11,7 @@
     import SideMenuIcon from './SideMenuIcon.vue';
 
     export default {
-        name: 'Side Menu Item',
+        name: 'side-menu-item',
         props:
             {
                 href: {
@@ -24,12 +24,11 @@
                     default: 'left',
                     validator: (value) => ['left', 'right'].indexOf(value) > -1
                 },
-                icon:
-                    {
-                        type: String,
-                        required: false,
-                        validator: (value) => ['dashboard', 'profile'].indexOf(value) > -1
-                    }
+                icon: {
+                    type: String,
+                    required: false,
+                    validator: (value) => ['dashboard', 'profile', 'settings'].indexOf(value) > -1
+                },
             },
         components: {
             SideMenuIcon
@@ -60,6 +59,7 @@
             border-left: 5px solid rgba(0,0,0,.6);
             left: -5px;
             transition: left .1s ease-in-out;
+            font-size: 14px;
 
             &:hover
             {

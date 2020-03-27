@@ -4,7 +4,7 @@
 
 <script>
     export default {
-        name: 'Icon',
+        name: 'side-menu-icon',
         props: {
             iconName: {
                 type: String,

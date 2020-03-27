@@ -1,6 +1,7 @@
 <template>
-    <nav class="c-Navbar" v-bind:class="{ 'c-Navbar--right': isRightSidebar, 'c-Navbar--active': isActive }" v-on:click="isActive = !isActive">
+    <nav class="c-Navbar" v-bind:class="{ 'c-Navbar--right': isRightSidebar, 'c-Navbar--active': menuIsActive }">
         <ul class="c-Navbar__list">
+            <li class="c-Navbar__hamburger" :class="{ 'c-Navbar__hamburger--active': menuIsActive }" v-on:click="menuIsActive = !menuIsActive"></li>
             <slot></slot>
         </ul>
     </nav>
@@ -8,7 +9,7 @@
 
 <script>
     export default {
-        name: 'Side Menu',
+        name: 'side-menu',
         props: {
                 direction: {
                     type: String,
@@ -22,6 +23,11 @@
                     default: false
                 }
             },
+        data () {
+            return {
+                menuIsActive: this.isActive,
+            }
+        },
         computed: {
             isRightSidebar() {
                 return this.direction === 'right';
@@ -44,12 +50,34 @@
         &__list
         {
             width: 100%;
-            padding: 60px 0px;
+            padding: 0;
             margin: 0;
             display: flex;
             justify-content: center;
             align-items: flex-start;
             flex-direction: column;
+            list-style-type: none;
+        }
+
+        &__hamburger
+        {
+            &::before
+            {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                width: 60px;
+                height: 60px;
+                font-family: "FontAwesome";
+                content: '\f061';
+                color: white;
+                transition: all .75s ease-in-out;
+            }
+
+            &--active
+            {
+                &::before { transform: rotate(-180deg); }
+            }
         }
 
         &--right
