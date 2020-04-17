@@ -29,8 +29,6 @@ class CreateUserStatusesTable extends Migration
      */
     public function down()
     {
-        Schema::table('user_statuses', function (Blueprint $table) {
-            //
-        });
+        Schema::drop('user_statuses');
     }
 }
