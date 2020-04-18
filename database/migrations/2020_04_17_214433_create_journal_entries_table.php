@@ -15,8 +15,10 @@ class CreateJournalEntriesTable extends Migration
     {
         Schema::create('journal_entries', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('internship_id');
             $table->foreign('internship_id')->references('id')->on('internships');
             $table->longText('content');
+            $table->foreignId('user_id');
             $table->foreign('user_id')->references('id')->on('users');
             $table->boolean('accepted')->default(false);
             $table->dateTime('created_at', 0);
