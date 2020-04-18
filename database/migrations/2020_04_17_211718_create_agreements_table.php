@@ -21,9 +21,13 @@ class CreateAgreementsTable extends Migration
             $table->longText('program')->nullable();
             $table->longText('schedule')->nullable();
             $table->longText('content');
+            $table->foreignId('company_id');
             $table->foreign('company_id')->references('id')->on('companies');
+            $table->foreignId('university_id');
             $table->foreign('university_id')->references('id')->on('universities');
+            $table->foreignId('university_supervisor_id');
             $table->foreign('university_supervisor_id')->references('id')->on('users');
+            $table->foreignId('offer_id');
             $table->foreign('offer_id')->references('id')->on('offers');
             $table->boolean('is_active')->default(false);
             $table->dateTime('created_at', 0);
