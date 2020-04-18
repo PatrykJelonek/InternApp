@@ -15,7 +15,9 @@ class CreateOffersAttachmentsTable extends Migration
     {
         Schema::create('offers_attachments', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('offer_id');
             $table->foreign('offer_id')->references('id')->on('offers');
+            $table->foreignId('attachment_id');
             $table->foreign('attachment_id')->references('id')->on('attachments');
         });
     }
