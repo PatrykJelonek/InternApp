@@ -13,7 +13,7 @@ class CreateOfferCategoriesTable extends Migration
      */
     public function up()
     {
-        Schema::table('offer_categories', function (Blueprint $table) {
+        Schema::create('offer_categories', function (Blueprint $table) {
             $table->id();
             $table->string('name', 32)->unique();
             $table->string('description', 128)->nullable();
