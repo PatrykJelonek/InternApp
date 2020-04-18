@@ -16,7 +16,9 @@ class CreateUniversitiesTable extends Migration
         Schema::create('universities', function (Blueprint $table) {
             $table->id();
             $table->string('name', 255)->unique();
+            $table->foreignId('university_type_id');
             $table->foreign('university_type_id')->references('id')->on('university_types');
+            $table->foreignId('city_id');
             $table->foreign('city_id')->references('id')->on('cities');
             $table->string('street',64);
             $table->string('street_number', 8);
