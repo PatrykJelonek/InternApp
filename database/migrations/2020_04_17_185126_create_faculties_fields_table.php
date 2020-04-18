@@ -15,7 +15,9 @@ class CreateFacultiesFieldsTable extends Migration
     {
         Schema::create('faculties_fields', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('faculty_id');
             $table->foreign('faculty_id')->references('id')->on('faculties');
+            $table->foreignId('field_id');
             $table->foreign('field_id')->references('id')->on('fields');
             $table->dateTime('created_at', 0);
         });
