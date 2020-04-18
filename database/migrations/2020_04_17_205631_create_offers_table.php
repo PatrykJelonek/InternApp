@@ -15,14 +15,19 @@ class CreateOffersTable extends Migration
     {
         Schema::create('offers', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('company_id');
             $table->foreign('company_id')->references('id')->on('companies');
+            $table->foreignId('user_id');
             $table->foreign('user_id')->references('id')->on('users');
             $table->string('name', 128);
             $table->integer('places_number')->nullable()->default(0);
             $table->longText('program')->nullable();
             $table->longText('schedule')->nullable();
+            $table->foreignId('offer_category_id');
             $table->foreign('offer_category_id')->references('id')->on('offer_categories');
+            $table->foreignId('offer_status_id');
             $table->foreign('offer_status_id')->references('id')->on('offer_statuses');
+            $table->foreignId('company_supervisor_id');
             $table->foreign('company_supervisor_id')->references('id')->on('users');
             $table->boolean('interview');
             $table->dateTime('created_at', 0);
