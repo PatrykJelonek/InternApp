@@ -15,7 +15,9 @@ class CreateUserCompaniesTable extends Migration
     {
         Schema::create('user_companies', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id');
             $table->foreign('user_id')->references('id')->on('users');
+            $table->foreignId('company_id');
             $table->foreign('company_id')->references('id')->on('companies');
             $table->dateTime('created_at', 0);
         });
