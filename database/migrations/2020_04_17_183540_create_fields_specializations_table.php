@@ -15,7 +15,9 @@ class CreateFieldsSpecializationsTable extends Migration
     {
         Schema::create('fields_specializations', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('field_id');
             $table->foreign('field_id')->references('id')->on('fields');
+            $table->foreignId('specialization_id');
             $table->foreign('specialization_id')->references('id')->on('specializations');
             $table->dateTime('created_at', 0);
         });
