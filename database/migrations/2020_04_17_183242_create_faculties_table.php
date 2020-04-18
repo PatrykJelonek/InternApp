@@ -13,7 +13,7 @@ class CreateFacultiesTable extends Migration
      */
     public function up()
     {
-        Schema::table('faculties', function (Blueprint $table) {
+        Schema::create('faculties', function (Blueprint $table) {
             $table->id();
             $table->string('name', 128)->unique();
             $table->dateTime('created_at', 0);

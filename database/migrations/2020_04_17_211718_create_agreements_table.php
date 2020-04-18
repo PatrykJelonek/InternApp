@@ -13,7 +13,7 @@ class CreateAgreementsTable extends Migration
      */
     public function up()
     {
-        Schema::table('agreements', function (Blueprint $table) {
+        Schema::create('agreements', function (Blueprint $table) {
             $table->id();
             $table->date('signing_date');
             $table->date('date_from');

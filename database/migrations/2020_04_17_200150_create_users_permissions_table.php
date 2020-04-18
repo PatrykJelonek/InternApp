@@ -13,7 +13,7 @@ class CreateUsersPermissionsTable extends Migration
      */
     public function up()
     {
-        Schema::table('users_permissions', function (Blueprint $table) {
+        Schema::create('users_permissions', function (Blueprint $table) {
             $table->id();
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('permission_id')->references('id')->on('permissions');

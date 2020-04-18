@@ -13,7 +13,7 @@ class CreateOfferStatusesTable extends Migration
      */
     public function up()
     {
-        Schema::table('offer_statuses', function (Blueprint $table) {
+        Schema::create('offer_statuses', function (Blueprint $table) {
             $table->id();
             $table->string('name', 16)->unique();
             $table->string('description', 128)->nullable();

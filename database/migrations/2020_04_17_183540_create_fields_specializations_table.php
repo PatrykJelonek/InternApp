@@ -13,7 +13,7 @@ class CreateFieldsSpecializationsTable extends Migration
      */
     public function up()
     {
-        Schema::table('fields_specializations', function (Blueprint $table) {
+        Schema::create('fields_specializations', function (Blueprint $table) {
             $table->id();
             $table->foreign('field_id')->references('id')->on('fields');
             $table->foreign('specialization_id')->references('id')->on('specializations');

@@ -13,7 +13,7 @@ class CreateUserCompaniesTable extends Migration
      */
     public function up()
     {
-        Schema::table('user_companies', function (Blueprint $table) {
+        Schema::create('user_companies', function (Blueprint $table) {
             $table->id();
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('company_id')->references('id')->on('companies');

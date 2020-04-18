@@ -13,7 +13,7 @@ class CreateFieldsTable extends Migration
      */
     public function up()
     {
-        Schema::table('fields', function (Blueprint $table) {
+        Schema::create('fields', function (Blueprint $table) {
             $table->id();
             $table->string('name', 128)->unique();
             $table->dateTime('created_at', 0);

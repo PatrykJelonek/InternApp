@@ -13,7 +13,7 @@ class CreateUniversitiesFacultiesTable extends Migration
      */
     public function up()
     {
-        Schema::table('universities_faculties', function (Blueprint $table) {
+        Schema::create('universities_faculties', function (Blueprint $table) {
             $table->id();
             $table->foreign('university_id')->references('id')->on('universities');
             $table->foreign('faculty_id')->references('id')->on('faculties');

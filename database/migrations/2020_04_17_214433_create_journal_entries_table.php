@@ -13,7 +13,7 @@ class CreateJournalEntriesTable extends Migration
      */
     public function up()
     {
-        Schema::table('journal_entries', function (Blueprint $table) {
+        Schema::create('journal_entries', function (Blueprint $table) {
             $table->id();
             $table->foreign('internship_id')->references('id')->on('internships');
             $table->longText('content');

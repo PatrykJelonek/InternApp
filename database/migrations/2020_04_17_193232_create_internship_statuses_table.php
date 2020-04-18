@@ -13,7 +13,7 @@ class CreateInternshipStatusesTable extends Migration
      */
     public function up()
     {
-        Schema::table('internship_statuses', function (Blueprint $table) {
+        Schema::create('internship_statuses', function (Blueprint $table) {
             $table->id();
             $table->string('name', 32)->unique();
             $table->dateTime('created_at', 0);

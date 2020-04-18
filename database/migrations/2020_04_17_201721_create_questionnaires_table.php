@@ -13,7 +13,7 @@ class CreateQuestionnairesTable extends Migration
      */
     public function up()
     {
-        Schema::table('questionnaires', function (Blueprint $table) {
+        Schema::create('questionnaires', function (Blueprint $table) {
             $table->id();
             $table->string('name', 64)->unique();
             $table->longText('description');

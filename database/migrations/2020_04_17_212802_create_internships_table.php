@@ -13,7 +13,7 @@ class CreateInternshipsTable extends Migration
      */
     public function up()
     {
-        Schema::table('internships', function (Blueprint $table) {
+        Schema::create('internships', function (Blueprint $table) {
             $table->id();
             $table->foreign('offer_id')->references('id')->on('offers');
             $table->foreign('student_id')->references('id')->on('students');

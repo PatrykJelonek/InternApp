@@ -13,7 +13,7 @@ class CreateQuestionnairesRolesTable extends Migration
      */
     public function up()
     {
-        Schema::table('questionnaires_roles', function (Blueprint $table) {
+        Schema::create('questionnaires_roles', function (Blueprint $table) {
             $table->id();
             $table->foreign('role_id')->references('id')->on('roles');
             $table->foreign('questionnaire_id')->references('id')->on('questionnaires');

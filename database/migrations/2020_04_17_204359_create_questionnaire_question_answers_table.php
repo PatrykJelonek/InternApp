@@ -13,7 +13,7 @@ class CreateQuestionnaireQuestionAnswersTable extends Migration
      */
     public function up()
     {
-        Schema::table('questionnaire_question_answers', function (Blueprint $table) {
+        Schema::create('questionnaire_question_answers', function (Blueprint $table) {
             $table->id();
             $table->foreign('questionnaire_question_id')->references('id')->on('questionnaire_questions');
             $table->foreign('user_id')->references('id')->on('users');

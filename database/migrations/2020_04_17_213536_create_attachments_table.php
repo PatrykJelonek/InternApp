@@ -13,7 +13,7 @@ class CreateAttachmentsTable extends Migration
      */
     public function up()
     {
-        Schema::table('attachments', function (Blueprint $table) {
+        Schema::create('attachments', function (Blueprint $table) {
             $table->id();
             $table->string('name',128)->unique();
             $table->string('description', 255)->nullable();

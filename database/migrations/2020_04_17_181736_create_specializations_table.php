@@ -13,7 +13,7 @@ class CreateSpecializationsTable extends Migration
      */
     public function up()
     {
-        Schema::table('specializations', function (Blueprint $table) {
+        Schema::create('specializations', function (Blueprint $table) {
             $table->id();
             $table->string('name', 64)->unique();
             $table->string('description', 128)->nullable();

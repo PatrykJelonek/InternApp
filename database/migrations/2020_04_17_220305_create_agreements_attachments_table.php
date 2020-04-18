@@ -13,7 +13,7 @@ class CreateAgreementsAttachmentsTable extends Migration
      */
     public function up()
     {
-        Schema::table('agreements_attachments', function (Blueprint $table) {
+        Schema::create('agreements_attachments', function (Blueprint $table) {
             $table->id();
             $table->foreign('agreement_id')->references('id')->on('agreements');
             $table->foreign('attachment_id')->references('id')->on('attachments');
