@@ -28,6 +28,6 @@ class CreateQuestionnairesRolesTable extends Migration
      */
     public function down()
     {
-        Schema::drop('questionnaires_roles');
+        Schema::dropIfExists('questionnaires_roles');
     }
 }

@@ -29,6 +29,6 @@ class CreateOfferCategoriesTable extends Migration
      */
     public function down()
     {
-        Schema::drop('offer_categories');
+        Schema::dropIfExists('offer_categories');
     }
 }

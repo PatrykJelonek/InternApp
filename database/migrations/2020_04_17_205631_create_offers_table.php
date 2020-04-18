@@ -37,6 +37,6 @@ class CreateOffersTable extends Migration
      */
     public function down()
     {
-        Schema::drop('offers');
+        Schema::dropIfExists('offers');
     }
 }

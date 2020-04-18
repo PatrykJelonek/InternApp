@@ -30,6 +30,6 @@ class CreateQuestionnaireQuestionsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('questionnaire_questions');
+        Schema::dropIfExists('questionnaire_questions');
     }
 }

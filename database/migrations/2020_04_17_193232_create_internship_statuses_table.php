@@ -27,6 +27,6 @@ class CreateInternshipStatusesTable extends Migration
      */
     public function down()
     {
-        Schema::drop('internship_statuses');
+        Schema::dropIfExists('internship_statuses');
     }
 }

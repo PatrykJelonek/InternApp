@@ -27,6 +27,6 @@ class CreateOffersAttachmentsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('offers_attachments');
+        Schema::dropIfExists('offers_attachments');
     }
 }

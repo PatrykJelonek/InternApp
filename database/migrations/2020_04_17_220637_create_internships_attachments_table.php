@@ -27,6 +27,6 @@ class CreateInternshipsAttachmentsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('internships_attachments');
+        Schema::dropIfExists('internships_attachments');
     }
 }

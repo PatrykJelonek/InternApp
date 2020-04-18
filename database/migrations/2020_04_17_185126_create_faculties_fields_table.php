@@ -28,6 +28,6 @@ class CreateFacultiesFieldsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('faculties_fields');
+        Schema::dropIfExists('faculties_fields');
     }
 }

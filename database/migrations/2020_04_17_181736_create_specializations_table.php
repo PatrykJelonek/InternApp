@@ -29,6 +29,6 @@ class CreateSpecializationsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('specializations');
+        Schema::dropIfExists('specializations');
     }
 }

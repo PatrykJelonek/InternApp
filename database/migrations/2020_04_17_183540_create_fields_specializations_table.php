@@ -28,6 +28,6 @@ class CreateFieldsSpecializationsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('fields_specializations');
+        Schema::dropIfExists('fields_specializations');
     }
 }

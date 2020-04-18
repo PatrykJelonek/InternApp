@@ -38,6 +38,6 @@ class CreateAgreementsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('agreements');
+        Schema::dropIfExists('agreements');
     }
 }

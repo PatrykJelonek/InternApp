@@ -28,6 +28,6 @@ class CreateFieldsTable extends Migration
      */
     public function down()
     {
-        Schema::drop('fields');
+        Schema::dropIfExists('fields');
     }
 }

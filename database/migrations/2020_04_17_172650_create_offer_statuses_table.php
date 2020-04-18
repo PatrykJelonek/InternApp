@@ -29,6 +29,6 @@ class CreateOfferStatusesTable extends Migration
      */
     public function down()
     {
-        Schema::drop('offer_statuses');
+        Schema::dropIfExists('offer_statuses');
     }
 }
