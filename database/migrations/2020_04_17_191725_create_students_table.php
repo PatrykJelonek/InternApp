@@ -15,10 +15,12 @@ class CreateStudentsTable extends Migration
     {
         Schema::create('students', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id');
             $table->foreign('user_id')->references('id')->on('users');
             $table->string('student_index',8);
             $table->integer('semester');
             $table->integer('study_year');
+            $table->foreignId('specialization_id');
             $table->foreign('specialization_id')->references('id')->on('specializations');
             $table->dateTime('created_at', 0);
             $table->dateTime('updated_at', 0);
