@@ -17,7 +17,9 @@ class CreateTasksTable extends Migration
             $table->id();
             $table->string('name', 64);
             $table->longText('description');
+            $table->foreignId('internship_id');
             $table->foreign('internship_id')->references('id')->on('internships');
+            $table->foreignId('user_id');
             $table->foreign('user_id')->references('id')->on('users');
             $table->boolean('done')->default(false);
             $table->dateTime('created_at', 0);
