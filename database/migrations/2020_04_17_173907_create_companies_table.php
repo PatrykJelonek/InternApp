@@ -16,6 +16,7 @@ class CreateCompaniesTable extends Migration
         Schema::create('companies', function (Blueprint $table) {
             $table->id();
             $table->string('name', 64);
+            $table->foreignId('city_id');
             $table->foreign('city_id')->references('id')->on('cities');
             $table->string('street', 64);
             $table->string('street_number', 8);
@@ -23,6 +24,7 @@ class CreateCompaniesTable extends Migration
             $table->string('phone', 16)->nullable();
             $table->string('website', 64)->nullable();
             $table->string('description', 255);
+            $table->foreignId('company_category_id');
             $table->foreign('company_category_id')->references('id')->on('company_categories');
             $table->dateTime('created_at', 0);
             $table->dateTime('updated_at', 0);
