@@ -21,6 +21,7 @@
                 <side-menu-item href="/settings" icon="settings">Settings</side-menu-item>
             </side-menu>
             <user-statuses></user-statuses>
+            <user-status-add></user-status-add>
         </div>
         <h1>Elo</h1>
 

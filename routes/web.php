@@ -17,4 +17,5 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::resource('user_statuses', 'UserStatusController');
+Route::resource('/user_statuses', 'UserStatusController');
+Route::resource('/user_statuses/{name}/{description}', 'UserStatusController');

@@ -15,7 +15,12 @@ class UserStatusController extends Controller
      */
     public function index()
     {
-        return response(UserStatus::all(), Response::HTTP_OK);
+        $a = true;
+
+        if($a)
+            return response(UserStatus::all(), Response::HTTP_OK);
+        else
+            return response('You have not access',Response::HTTP_NOT_FOUND);
     }
 
     /**
@@ -36,7 +41,16 @@ class UserStatusController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $userStatus = new UserStatus;
+        $userStatus->name = $request->name;
+        $userStatus->description = $request->description;
+        $userStatus->created_at = date('Y-m-d H:i:s');
+        $userStatus->updated_at = date('Y-m-d H:i:s');
+
+        if($userStatus->save())
+            return response('User Status created', Response::HTTP_CREATED);
+        else
+            return response('Error', Response::HTTP_OK);
     }
 
     /**
