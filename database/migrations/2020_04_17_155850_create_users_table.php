@@ -22,7 +22,7 @@ class CreateUsersTable extends Migration
             $table->string('last_name', 64);
             $table->string('phone_number', 16);
             $table->rememberToken();
-            $table->integer('user_status_id')->unsigned();
+            $table->unsignedBigInteger('user_status_id');
             $table->foreign('user_status_id')->references('id')->on('user_statuses');
             $table->dateTime('created_at', 0);
             $table->dateTime('updated_at', 0);
