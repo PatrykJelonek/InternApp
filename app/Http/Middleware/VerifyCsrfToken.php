@@ -14,5 +14,6 @@ class VerifyCsrfToken extends Middleware
     protected $except = [
         'stripe/*',
         '/user_statuses',
+        '/user_statuses/*',
     ];
 }

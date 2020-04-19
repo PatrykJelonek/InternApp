@@ -3,7 +3,7 @@
     <ul id="example-1">
         <li>Response Status: {{ resStatus }}</li>
         <li v-for="status in statuses" :key="status.id">
-            <b>{{ status.name }}</b> - {{ status.description }}
+            <b>{{ status.name }}</b> - {{ status.description }} <button type="button" v-on:click="deleteItem(status.id)">Delete</button>
         </li>
     </ul>
 </template>
@@ -13,7 +13,7 @@
         data: function () {
             return {
                 resStatus: null,
-                statuses: [],
+                statuses: []
             }
         },
         methods: {
@@ -29,6 +29,15 @@
                         console.log(err);
                     });
             },
+            deleteItem: function(statusId) {
+                window.axios({
+                    method: 'delete',
+                    headers: {'X-CSRF-TOKEN': document.head.querySelector('meta[name="csrf-token"]').content},
+                    url: `/user_statuses/${statusId}`
+                }).then(res => {
+                    alert(res.data);
+                })
+            }
         },
         created: function () {
             this.read();

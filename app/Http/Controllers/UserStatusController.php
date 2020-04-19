@@ -95,6 +95,11 @@ class UserStatusController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $userStatus = UserStatus::find($id);
+
+        if($userStatus->delete())
+            return response('Item deleted', Response::HTTP_OK);
+        else
+            return response('Item not deleted', Response::HTTP_CONFLICT);
     }
 }

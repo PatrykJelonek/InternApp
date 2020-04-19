@@ -6754,7 +6754,18 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }
 
       return read;
-    }()
+    }(),
+    deleteItem: function deleteItem(statusId) {
+      window.axios({
+        method: 'delete',
+        headers: {
+          'X-CSRF-TOKEN': document.head.querySelector('meta[name="csrf-token"]').content
+        },
+        url: "/user_statuses/".concat(statusId)
+      }).then(function (res) {
+        alert(res.data);
+      });
+    }
   },
   created: function created() {
     this.read();
@@ -26099,7 +26110,19 @@ var render = function() {
       _vm._l(_vm.statuses, function(status) {
         return _c("li", { key: status.id }, [
           _c("b", [_vm._v(_vm._s(status.name))]),
-          _vm._v(" - " + _vm._s(status.description) + "\n    ")
+          _vm._v(" - " + _vm._s(status.description) + " "),
+          _c(
+            "button",
+            {
+              attrs: { type: "button" },
+              on: {
+                click: function($event) {
+                  return _vm.deleteItem(status.id)
+                }
+              }
+            },
+            [_vm._v("Delete")]
+          )
         ])
       })
     ],
