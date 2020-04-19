@@ -1,5 +1,6 @@
 import '@fortawesome/fontawesome-free/css/all.css';
-import '@fortawesome/fontawesome-free/js/all.js'
+import '@fortawesome/fontawesome-free/js/all.js';
+import store from './store';
 import axios from 'axios';
 
 require('./bootstrap');
@@ -16,5 +17,6 @@ Vue.component('user-statuses', UserStatuses);
 Vue.component('user-status-add', UserStatusesAdd);
 
 new Vue({
-    el: '#app'
+    el: '#app',
+    store
 });
