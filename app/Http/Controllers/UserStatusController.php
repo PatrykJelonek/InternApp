@@ -42,13 +42,13 @@ class UserStatusController extends Controller
     public function store(Request $request)
     {
         $userStatus = new UserStatus;
-        $userStatus->name = $request->name;
-        $userStatus->description = $request->description;
+        $userStatus->name = $request->input('name');
+        $userStatus->description = $request->input('description');
         $userStatus->created_at = date('Y-m-d H:i:s');
         $userStatus->updated_at = date('Y-m-d H:i:s');
 
         if($userStatus->save())
-            return response('User Status created', Response::HTTP_CREATED);
+            return response($request->all(), Response::HTTP_CREATED);
         else
             return response('Error', Response::HTTP_OK);
     }

@@ -1,14 +1,16 @@
 <template>
-    <form>
+    <form @submit="onSumbit">
         <input v-model="name" type="text">
         <textarea v-model="description">
 
         </textarea>
-        <button type='button' v-on:click="send">Dodaj status</button>
+        <button type="submit">Dodaj status</button>
     </form>
 </template>
 
 <script>
+    import {mapActions} from 'vuex';
+
     export default {
         data: () => {
             return {
@@ -17,22 +19,11 @@
             }
         },
         methods: {
-            send: async function() {
-                await window.axios({
-                    method: 'post',
-                    url: 'user_statuses',
-                    headers: {'X-CSRF-TOKEN': document.head.querySelector('meta[name="csrf-token"]').content},
-                    data: {
-                        name: this.name,
-                        description: this.description
-                    }
-                }).then(res => {
-                    alert(res.data);
-                })
-                .catch(err => {
-                    console.log(err);
-                });
-            }
+            ...mapActions(["addUserStatus"]),
+            onSumbit(e){
+              e.preventDefault();
+              this.addUserStatus({name: this.name, description: this.description});
+            },
         }
     }
 </script>
