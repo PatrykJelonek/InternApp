@@ -48,9 +48,9 @@ class UserStatusController extends Controller
         $userStatus->updated_at = date('Y-m-d H:i:s');
 
         if($userStatus->save())
-            return response($request->all(), Response::HTTP_CREATED);
+            return response($userStatus, Response::HTTP_CREATED);
         else
-            return response('Error', Response::HTTP_OK);
+            return response('Error', Response::HTTP_CONFLICT);
     }
 
     /**

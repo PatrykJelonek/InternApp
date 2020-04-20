@@ -1,7 +1,7 @@
 <template>
     <form @submit="onSumbit">
-        <input v-model="name" type="text">
-        <textarea v-model="description">
+        <input v-model="status.name" type="text">
+        <textarea v-model="status.description">
 
         </textarea>
         <button type="submit">Dodaj status</button>
@@ -14,15 +14,19 @@
     export default {
         data: () => {
             return {
-                name: '',
-                description: ''
+                status: {
+                    name: '',
+                    description: '',
+                }
             }
         },
         methods: {
             ...mapActions(["addUserStatus"]),
             onSumbit(e){
-              e.preventDefault();
-              this.addUserStatus({name: this.name, description: this.description});
+                this.addUserStatus({name: this.status.name, description: this.status.description});
+                e.preventDefault();
+
+                this.status = {};
             },
         }
     }
