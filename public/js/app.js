@@ -6757,17 +6757,20 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      name: '',
-      description: ''
+      status: {
+        name: '',
+        description: ''
+      }
     };
   },
   methods: _objectSpread({}, Object(vuex__WEBPACK_IMPORTED_MODULE_0__["mapActions"])(["addUserStatus"]), {
     onSumbit: function onSumbit(e) {
-      e.preventDefault();
       this.addUserStatus({
-        name: this.name,
-        description: this.description
+        name: this.status.name,
+        description: this.status.description
       });
+      e.preventDefault();
+      this.status = {};
     }
   })
 });
@@ -25340,18 +25343,18 @@ var render = function() {
         {
           name: "model",
           rawName: "v-model",
-          value: _vm.name,
-          expression: "name"
+          value: _vm.status.name,
+          expression: "status.name"
         }
       ],
       attrs: { type: "text" },
-      domProps: { value: _vm.name },
+      domProps: { value: _vm.status.name },
       on: {
         input: function($event) {
           if ($event.target.composing) {
             return
           }
-          _vm.name = $event.target.value
+          _vm.$set(_vm.status, "name", $event.target.value)
         }
       }
     }),
@@ -25361,17 +25364,17 @@ var render = function() {
         {
           name: "model",
           rawName: "v-model",
-          value: _vm.description,
-          expression: "description"
+          value: _vm.status.description,
+          expression: "status.description"
         }
       ],
-      domProps: { value: _vm.description },
+      domProps: { value: _vm.status.description },
       on: {
         input: function($event) {
           if ($event.target.composing) {
             return
           }
-          _vm.description = $event.target.value
+          _vm.$set(_vm.status, "description", $event.target.value)
         }
       }
     }),
