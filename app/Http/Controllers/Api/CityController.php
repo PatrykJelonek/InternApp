@@ -92,14 +92,16 @@ class CityController extends Controller
     {
         $city = City::find($request->input("id"));
 
-        $city->name = $request->input("name");
-        $city->post_code = $request->input("post_code");
-        $city->updated_at = date('Y-m-d H:i:s');
+        if (isset($city)) {
+            $city->name = $request->input("name");
+            $city->post_code = $request->input("post_code");
+            $city->updated_at = date('Y-m-d H:i:s');
 
-        if ($city->save())
-            return response($city, Response::HTTP_OK);
-        else
-            return response("The city has not been updated!", Response::HTTP_NOT_MODIFIED);
+            if ($city->save())
+                return response($city, Response::HTTP_OK);
+        }
+
+        return response("The city has not been updated!", Response::HTTP_NOT_MODIFIED);
     }
 
     /**
