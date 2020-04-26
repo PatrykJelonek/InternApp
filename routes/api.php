@@ -22,3 +22,4 @@ Route::resource('/user_statuses', 'Api\UserStatusController');
 Route::resource('/users', 'Api\UserController');
 Route::resource('/cities', 'Api\CityController');
 Route::resource('/university_types', 'Api\UniversityTypeController');
+Route::resource('/universities', 'Api\UniversityController');
