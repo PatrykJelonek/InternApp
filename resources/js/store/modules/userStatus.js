@@ -11,7 +11,7 @@ export default {
     },
     actions: {
         fetchUserStatuses({commit}) {
-            return window.axios.get('/user_statuses', {validateStatus: (status) => {
+            return window.axios.get('api/user_statuses', {validateStatus: (status) => {
                     this.resStatus = status;
                     return status < 400;
                 }})
@@ -26,7 +26,7 @@ export default {
             console.log(name, description);
             window.axios({
                 method: 'post',
-                url: 'user_statuses',
+                url: 'api/user_statuses',
                 headers: {'X-CSRF-TOKEN': window.Laravel.csrfToken},
                 data: {
                     name: name,
@@ -44,7 +44,7 @@ export default {
             window.axios({
                 method: 'delete',
                 headers: {'X-CSRF-TOKEN': window.Laravel.csrfToken},
-                url: `/user_statuses/${id}`
+                url: `api/user_statuses/${id}`
             }).then(res => {
                 commit('deleteUserStatus', id);
             });
