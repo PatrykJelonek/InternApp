@@ -18,4 +18,4 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::resource('/user_statuses', 'UserStatusController');
+Route::resource('/user_statuses', 'Api\UserStatusController');
