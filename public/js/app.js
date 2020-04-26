@@ -39167,7 +39167,7 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
 
       var commit = _ref.commit;
-      return window.axios.get('/user_statuses', {
+      return window.axios.get('api/user_statuses', {
         validateStatus: function validateStatus(status) {
           _this.resStatus = status;
           return status < 400;
@@ -39185,7 +39185,7 @@ __webpack_require__.r(__webpack_exports__);
       console.log(name, description);
       window.axios({
         method: 'post',
-        url: 'user_statuses',
+        url: 'api/user_statuses',
         headers: {
           'X-CSRF-TOKEN': window.Laravel.csrfToken
         },
@@ -39206,7 +39206,7 @@ __webpack_require__.r(__webpack_exports__);
         headers: {
           'X-CSRF-TOKEN': window.Laravel.csrfToken
         },
-        url: "/user_statuses/".concat(id)
+        url: "api/user_statuses/".concat(id)
       }).then(function (res) {
         commit('deleteUserStatus', id);
       });

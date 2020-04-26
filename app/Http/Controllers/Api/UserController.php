@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class UserController extends Controller
 {
@@ -15,7 +16,12 @@ class UserController extends Controller
      */
     public function index()
     {
-        //
+        $allUsers = User::all();
+
+        if(isset($allUsers))
+            return response($allUsers, Response::HTTP_OK);
+        else
+            return response("Error", Response::HTTP_NOT_FOUND);
     }
 
     /**
