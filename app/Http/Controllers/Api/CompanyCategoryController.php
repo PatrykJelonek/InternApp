@@ -44,15 +44,17 @@ class CompanyCategoryController extends Controller
     {
         $companyCategory = new CompanyCategory;
 
-        $companyCategory->name = $request->input("name");
-        $companyCategory->description = $request->input("description");
-        $companyCategory->created_at = date('Y-m-d H:i:s');
-        $companyCategory->updated_at = date('Y-m-d H:i:s');
+        if (isset($companyCategory)) {
+            $companyCategory->name = $request->input("name");
+            $companyCategory->description = $request->input("description");
+            $companyCategory->created_at = date('Y-m-d H:i:s');
+            $companyCategory->updated_at = date('Y-m-d H:i:s');
 
-        if ($companyCategory->save())
-            return response($companyCategory, Response::HTTP_OK);
-        else
-            return response("Company category has not been created!", Response::HTTP_INTERNAL_SERVER_ERROR);
+            if ($companyCategory->save())
+                return response($companyCategory, Response::HTTP_OK);
+        }
+
+        return response("Company category has not been created!", Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
     /**
