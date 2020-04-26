@@ -93,14 +93,16 @@ class UniversityTypeController extends Controller
     {
         $universityType = UniversityType::find($request->input("id"));
 
-        $universityType->name = $request->input("name");
-        $universityType->description = $request->input("description");
-        $universityType->updated_at = date('Y-m-d H:i:s');
+        if (isset($universityType)) {
+            $universityType->name = $request->input("name");
+            $universityType->description = $request->input("description");
+            $universityType->updated_at = date('Y-m-d H:i:s');
 
-        if ($universityType->save())
-            return response($universityType, Response::HTTP_OK);
-        else
-            return response("University type has not been updated!", Response::HTTP_NOT_MODIFIED);
+            if ($universityType->save())
+                return response($universityType, Response::HTTP_OK);
+        }
+
+        return response("University type has not been updated!", Response::HTTP_NOT_MODIFIED);
     }
 
     /**
