@@ -21,3 +21,4 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::resource('/user_statuses', 'Api\UserStatusController');
 Route::resource('/users', 'Api\UserController');
 Route::resource('/cities', 'Api\CityController');
+Route::resource('/university_types', 'Api\UniversityTypeController');
