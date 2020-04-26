@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class University extends Model
 {
-    protected $table = 'Universities';
+    protected $table = 'universities';
 
     public function type()
     {
