@@ -59,7 +59,7 @@ class FieldController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Field  $field
+     * @param  $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
