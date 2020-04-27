@@ -88,18 +88,19 @@ class FacultyController extends Controller
      * @param  \App\Faculty  $faculty
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Faculty $faculty)
+    public function update(Request $request)
     {
-        $faculty = new Faculty;
+        $faculty = Faculty::find($request->input("id"));
 
-        $faculty->name = $request->input("name");
-        $faculty->created_at = date('Y-m-d H:i:s');
-        $faculty->updated_at = date('Y-m-d H:i:s');
+        if (isset($faculty)) {
+            $faculty->name = $request->input("name");
+            $faculty->updated_at = date('Y-m-d H:i:s');
 
-        if ($faculty->save())
-            return response($faculty, Response::HTTP_CREATED);
-        else
-            return response("Faculty has not been created!", Response::HTTP_INTERNAL_SERVER_ERROR);
+            if ($faculty->save())
+                return response($faculty, Response::HTTP_OK);
+        }
+
+        return response("The faculty has not been updated!", Response::HTTP_NOT_MODIFIED);
     }
 
     /**
