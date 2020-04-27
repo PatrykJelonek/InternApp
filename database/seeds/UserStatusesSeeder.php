@@ -18,5 +18,12 @@ class UserStatusesSeeder extends Seeder
             'created_at' => date('Y-m-d H:i:s'),
             'updated_at' => date('Y-m-d H:i:s')
         ]);
+
+        DB::table('user_statuses')->insert([
+            'name' => 'inactive',
+            'description' => 'Status of inactive user account',
+            'created_at' => date('Y-m-d H:i:s'),
+            'updated_at' => date('Y-m-d H:i:s')
+        ]);
     }
 }
