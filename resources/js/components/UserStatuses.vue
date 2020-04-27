@@ -3,7 +3,8 @@
     <ul id="example-1">
         <li>Response Status: {{ resStatus }}</li>
         <li v-for="status in userStatuses" :key="status.id">
-            <b>{{ status.name }}</b> - {{ status.description }} <button type="button" v-on:click="deleteItem(status.id)">Delete</button>
+            <b>{{ status.name }}</b> - {{ status.description }}
+            <v-btn x-small color="error" v-on:click="deleteItem(status.id)" type="button">Delete</v-btn>
         </li>
     </ul>
 </template>
