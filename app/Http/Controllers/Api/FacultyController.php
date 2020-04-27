@@ -113,7 +113,7 @@ class FacultyController extends Controller
     {
         $faculty = Faculty::find($id);
 
-        if ($Faculty->delete())
+        if ($faculty->delete())
             return response("The faculty has been deleted!", Response::HTTP_OK);
         else
             return response("The faculty has not been deleted!", Response::HTTP_INTERNAL_SERVER_ERROR);

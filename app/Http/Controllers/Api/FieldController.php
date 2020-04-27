@@ -109,7 +109,7 @@ class FieldController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Field  $field
+     * @param  $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
