@@ -110,7 +110,7 @@ class InternshipStatusController extends Controller
      * @param  \App\InternshipStatus  $internshipStatus
      * @return \Illuminate\Http\Response
      */
-    public function destroy(InternshipStatus $internshipStatus)
+    public function destroy($id)
     {
         $internshipStatus = InternshipStatus::find($id);
 
