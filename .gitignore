@@ -61,3 +61,4 @@ _ide_helper.php
 /public/.htaccess
 /storage
 storage/*.key
+composer.lock
