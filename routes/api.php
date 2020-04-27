@@ -24,3 +24,6 @@ Route::resource('/cities', 'Api\CityController');
 Route::resource('/university_types', 'Api\UniversityTypeController');
 Route::resource('/universities', 'Api\UniversityController');
 Route::resource('/companies', 'Api\CompanyController');
+Route::resource('/company_categories', 'Api\CompanyCategoryController');
+Route::resource('/specializations', 'Api\SpecializationController');
+Route::resource('/students', 'Api\StudentController');
