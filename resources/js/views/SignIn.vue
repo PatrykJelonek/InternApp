@@ -25,6 +25,7 @@
                         @click:append="showPassword = !showPassword"
                     ></v-text-field>
                     <v-row>
+                        <v-btn to="sign-up" text="true" type="button" color="secondary">Załóż Konto</v-btn>
                         <v-spacer></v-spacer>
                         <v-btn type="button" color="primary" class="justify-end">Zaloguj Się</v-btn>
                     </v-row>
