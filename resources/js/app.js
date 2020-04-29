@@ -13,7 +13,6 @@ import App from "./views/App";
 new Vue({
     el: '#app',
     router: Routes,
-    render: h => h(App),
     store,
     vuetify
 });
