@@ -10,6 +10,9 @@ import SignIn from "../views/SignIn";
 import SignUp from "../views/SignUp";
 import App from "../views/App";
 import NotFound from "../views/NotFound";
+import SingUpStudent from "../components/SingUpStudent";
+import SignUpCompany from "../components/SignUpCompany";
+import SignUpUniversity from "../components/SignUpUniversity";
 
 const isTrue = true;
 
@@ -39,17 +42,17 @@ const router = new VueRouter({
                 {
                     path: 'student',
                     name: 'student-sign-up',
-                    component: null
+                    component: SingUpStudent
                 },
                 {
                     path: 'company',
                     name: 'company-sign-up',
-                    component: null
+                    component: SignUpCompany
                 },
                 {
                     path: 'university',
                     name: 'university-sign-up',
-                    component: null
+                    component: SignUpUniversity
                 }
             ]
         },

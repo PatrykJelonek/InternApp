@@ -10,8 +10,8 @@ export default {
         }
     },
     actions: {
-        fetchUniversitiesFromApi({commit}) {
-            return window.axios.get("api/universities")
+        async fetchUniversitiesFromApi({commit}) {
+             return window.axios.get("/api/universities")
                 .then(res => {
                     commit("SET_UNIVERSITIES", res.data);
                 })

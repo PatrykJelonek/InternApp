@@ -2,7 +2,7 @@
     <v-app>
         <v-content class="d-flex justify-center align-center">
             <v-container class="d-flex justify-center align-center" fluid>
-                <v-form class="col-4">
+                <v-form class="col-5">
                     <v-text-field
                         v-model="email"
                         label="Email"
