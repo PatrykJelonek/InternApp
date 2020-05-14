@@ -7,7 +7,8 @@ Vue.use(VueRouter);
 import HelloVuetify from "../components/HelloVuetify";
 import UserStatusesAdd from "../components/UserStatusesAdd";
 import SignIn from "../views/SignIn";
-import SignUp from "../views/SignUp";
+import SignUp from "../views/SignUp_Old";
+import Registration from "../views/Registration";
 import App from "../views/App";
 import NotFound from "../views/NotFound";
 import SingUpStudent from "../components/SingUpStudent";
@@ -37,7 +38,7 @@ const router = new VueRouter({
         {
             path: '/sign-up',
             name: 'sign-up',
-            component: SignUp,
+            component: Registration,
             children: [
                 {
                     path: 'student',

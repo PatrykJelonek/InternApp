@@ -61,5 +61,4 @@ export default {
             state.userStatuses = state.userStatuses.filter(userStatus => userStatus.id !== id);
         }
     }
-
 }
