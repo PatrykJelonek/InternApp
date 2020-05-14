@@ -67,7 +67,7 @@
                         dense
                         hide-details="auto"
                         placeholder="●●●●●●●"
-                        :rules="rules.required"
+                        :rules="[rules.required, rules.minPasswordLength]"
                         :error-messages="this.validationErrors.password"
                     ></v-text-field>
                 </v-col>
@@ -100,7 +100,7 @@
                                 Przeczytałem i akceptuje
                                 <v-tooltip bottom>
                                     <template v-slot:activator="{ on }">
-                                        <a target="_blank" href="http://vuetifyjs.com" @click.stop v-on="on">regulamin</a>
+                                        <a target="_blank" href="/rules" @click.stop v-on="on">regulamin</a>
                                     </template>
                                     Otwórz w nowym oknie
                                 </v-tooltip>
@@ -141,6 +141,7 @@
                     required: value => !!value || 'To pole jest wymagane!',
                     acceptRules: value => !!value || 'Musisz zaakceptować regulamin!',
                     repeatPassword: value => value == this.account.password || 'Hasła muszą być identyczne!',
+                    minPasswordLength: value => value.length >= 6 || 'Hasło musi zawierać min. 6 znaków!',
                 }
             }
         },
