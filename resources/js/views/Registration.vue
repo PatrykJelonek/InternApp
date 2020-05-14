@@ -18,7 +18,7 @@
                     >
                         <h3 class="font-weight-medium title font-weight-bold">Posiadasz już konto?</h3>
                         <p class="subtitle-2 mt-2">Skorzystaj ze swojego konta by w pełni korzystać z naszego serwisu!</p>
-                        <v-btn large outlined color="white">Zaloguj Się</v-btn>
+                        <v-btn large outlined color="white" v-on:click="$router.push('/sign-in')">Zaloguj się</v-btn>
                     </v-col>
                     <v-col
                         cols="7"
@@ -35,11 +35,10 @@
 </template>
 
 <script>
-    import SignUpLoginData from "../components/SignUpLoginData";
     import SingUpForm from "../components/SingUpForm";
     export default {
         name: "Registration",
-        components: {SingUpForm, SignUpLoginData},
+        components: {SingUpForm},
         data() {
             return {
                 darkTheme: true,

@@ -44,6 +44,14 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+        $validatedData = $request->validate([
+            'firstName' => 'required|max:64',
+            'lastName' => 'required|max:64',
+            'phone' => 'required|max:16',
+            'email' => 'required|unique:users|max:64',
+            'password' => 'required|max:255',
+        ]);
+
         $user = new User;
 
         //Personal Data
@@ -67,7 +75,7 @@ class UserController extends Controller
         if ($user->save())
             return response("Account has been created!", Response::HTTP_CREATED);
         else
-            return response("Account has not been created!", 000);
+            return response("Account has not been created!", Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
     /**

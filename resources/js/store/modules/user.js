@@ -1,15 +1,16 @@
 import vue from "vue";
+import router from "../../router/routers";
 
 export default {
     state: {
-        users: []
+        users: [],
+        validationErrors: '',
     },
     getters: {
 
     },
     actions: {
         createUserAccount({commit}, account) {
-            console.log(account);
             window.axios({
                 method: 'post',
                 url: '/api/users',
@@ -23,15 +24,22 @@ export default {
                 }
             }).then(res => {
                 commit('CREATE_USER_ACCOUNT', res.data);
-            })
-                .catch(err => {
-                    console.log(err);
-                });
+            }).catch(err => {
+                if (err.response.status == 422){
+                    commit('ACCOUNT_VALIDATION', err.response.data.errors)
+                }
+            });
         },
     },
     mutations: {
         CREATE_USER_ACCOUNT(state, message) {
+            state.validationErrors = '';
             console.log(message);
+            router.push('/dashboard');
         },
+        ACCOUNT_VALIDATION(state, errors)
+        {
+            state.validationErrors = errors;
+        }
     }
 };
