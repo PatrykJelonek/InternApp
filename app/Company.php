@@ -10,7 +10,7 @@ class Company extends Model
 
     public function category()
     {
-        return $this->hasOne('App\CompaniesCategory');
+        return $this->hasOne('App\CompanyCategory');
     }
 
     public function city()
