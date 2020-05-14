@@ -10,6 +10,8 @@ import Registration from "../views/Registration";
 import App from "../views/App";
 import NotFound from "../views/NotFound";
 import Rules from "../views/Rules";
+import Universities from "../views/Universities";
+import Companies from "../views/Companies";
 
 const isTrue = true;
 
@@ -50,6 +52,16 @@ const router = new VueRouter({
                     path: 'users/new-status',
                     name: 'user-statuses',
                     component: UserStatusesAdd
+                },
+                {
+                    path: '/universities',
+                    name: 'universities',
+                    component: Universities
+                },
+                {
+                    path: '/companies',
+                    name: 'companies',
+                    component: Companies
                 }
             ],
         },

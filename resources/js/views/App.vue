@@ -1,17 +1,6 @@
 <template>
     <v-app>
-        <v-navigation-drawer
-            app
-            v-model="drawer"
-            :color="color"
-            :expand-on-hover="expandOnHover"
-            :mini-variant="miniVariant"
-            :permanent="permament"
-            absolute
-            dark
-        >
-
-        </v-navigation-drawer>
+        <dashboard-navigation></dashboard-navigation>
         <v-content>
             <v-container>
                 <router-link tag="li" to="/">Home</router-link>
@@ -24,11 +13,12 @@
 </template>
 
 <script>
+    import DashboardNavigation from "../components/DashboardNavigation";
     export default {
+        components: {DashboardNavigation},
         data() {
             return {
                 drawer: true,
-                color: 'primary',
                 permament: true,
                 miniVariant: true,
                 expandOnHover: true,
