@@ -3,6 +3,9 @@ import router from "../../router/routers";
 
 export default {
     state: {
+        loggedUser: {
+            email: '',
+        },
         users: [],
         validationErrors: '',
     },
@@ -30,6 +33,22 @@ export default {
                 }
             });
         },
+        loginUser({commit}, credentials)
+        {
+            window.axios({
+                method: 'post',
+                url: '/auth/login',
+                headers: {'X-CSRF-TOKEN': window.Laravel.csrfToken},
+                data: {
+                    email: credentials.email,
+                    password: credentials.password
+                }
+            }).then(res => {
+                commit('LOGIN_USER', res.data);
+            }).catch(err => {
+                console.log(err.response.data);
+            })
+        },
     },
     mutations: {
         CREATE_USER_ACCOUNT(state, message) {
@@ -40,6 +59,10 @@ export default {
         ACCOUNT_VALIDATION(state, errors)
         {
             state.validationErrors = errors;
-        }
+        },
+        LOGIN_USER(state, data) {
+          state.loggedUser.email = data.email;
+          router.push('/dashboard');
+        },
     }
 };

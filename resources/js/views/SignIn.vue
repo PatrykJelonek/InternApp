@@ -14,6 +14,7 @@
                     ></v-text-field>
 
                     <v-text-field
+                        v-model="password"
                         label="Hasło"
                         type="password"
                         prepend-icon="mdi-lock"
@@ -21,13 +22,13 @@
                         required
                         :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
                         :type="showPassword ? 'text' : 'password'"
-                        :rules="[rules.requiredPassword, rules.min]"
+                        :rules="[rules.requiredPassword]"
                         @click:append="showPassword = !showPassword"
                     ></v-text-field>
                     <v-row>
-                        <v-btn to="sign-up" text="true" type="button" color="secondary">Załóż Konto</v-btn>
+                        <v-btn to="sign-up" text type="button" color="secondary">Załóż Konto</v-btn>
                         <v-spacer></v-spacer>
-                        <v-btn type="button" color="primary" class="justify-end">Zaloguj Się</v-btn>
+                        <v-btn type="button" color="primary" class="justify-end" @click="submit">Zaloguj Się</v-btn>
                     </v-row>
                 </v-form>
             </v-container>
@@ -36,7 +37,10 @@
 </template>
 
 <script>
+    import {mapActions} from "vuex";
+
     export default {
+        name: "SignIn",
         data() {
             return {
                 email: '',
@@ -46,11 +50,16 @@
                 rules: {
                     requiredEmail: value => !!value || 'Email jest wymagany!',
                     requiredPassword: value => !!value || 'Hasło jest wymagane!',
-                    min: value => value.length >= 8 || 'Hasło musi zawierać min. 8 znaków!',
                 }
             }
         },
-        name: "SignIn"
+        methods: {
+            ...mapActions(["loginUser"]),
+            submit (e) {
+                this.loginUser({email: this.email, password: this.password});
+                e.preventDefault();
+            },
+        }
     }
 </script>
 
