@@ -1,7 +1,7 @@
 <template>
-    <v-container>
-        <h2>Universities</h2>
-    </v-container>
+    <div>
+        <h2 class="pb-5">Universities</h2>
+    </div>
 </template>
 
 <script>

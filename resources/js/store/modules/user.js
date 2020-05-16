@@ -9,8 +9,8 @@ export default {
     },
     getters: {
         isAuthenticated: state => {
-            return Object.keys(state.loggedUser).length > 0;
-        }
+            return localStorage.getItem('user') != null;
+        },
     },
     actions: {
         createUserAccount({commit}, account) {
@@ -49,24 +49,38 @@ export default {
                 console.log(err.response.data);
             })
         },
+        logoutUser({commit})
+        {
+            commit('LOGOUT_USER');
+        },
+        fetchUserData({commit})
+        {
+            commit('FETCH_USER_DATA', JSON.parse(localStorage.getItem('user')));
+        },
     },
     mutations: {
         CREATE_USER_ACCOUNT(state, message) {
             state.validationErrors = '';
             console.log(message);
-            router.push('/dashboard');
+            router.push('/login');
         },
         ACCOUNT_VALIDATION(state, errors)
         {
             state.validationErrors = errors;
         },
         LOGIN_USER(state, data) {
-          state.loggedUser = data;
-          router.push('/dashboard');
+            localStorage.setItem('user', JSON.stringify(data));
+            state.loggedUser = data;
+            router.push('/dashboard');
         },
         LOGOUT_USER(state, data) {
             state.loggedUser = null;
+            localStorage.removeItem('user');
             router.push('/');
         },
+        FETCH_USER_DATA(state, data)
+        {
+            state.loggedUser = data;
+        }
     }
 };

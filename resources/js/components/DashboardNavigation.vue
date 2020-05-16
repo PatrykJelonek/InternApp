@@ -14,7 +14,8 @@
                 <v-img src="https://randomuser.me/api/portraits/men/85.jpg"></v-img>
             </v-list-item-avatar>
 
-            <v-list-item-title class="font-weight-bold">Patryk Jelonek</v-list-item-title>
+            <v-list-item-title class="font-weight-bold" v-if="this.loggedUser.first_name">{{ this.loggedUser.first_name + ' ' + this.loggedUser.last_name}}</v-list-item-title>
+            <v-list-item-title class="font-weight-bold" v-else>Jan Kowalski</v-list-item-title>
         </v-list-item>
 
 
@@ -58,8 +59,6 @@
                     </v-list-item>
             </v-list-group>
 
-
-
         </v-list>
 
         <template v-slot:append>
@@ -76,6 +75,9 @@
 </template>
 
 <script>
+    import {mapState} from "vuex";
+    import store from "../store";
+
     export default {
         name: "DashboardNavigation",
         data() {
@@ -87,6 +89,15 @@
                 background: false,
                 miniVariant: false,
             }
+        },
+        computed: {
+            ...mapState({
+                loggedUser: state => state.user.loggedUser
+            }),
+
+        },
+        created: function () {
+            store.dispatch('fetchUserData');
         }
     }
 </script>

@@ -14,7 +14,6 @@ import Universities from "../views/Universities";
 import Companies from "../views/Companies";
 
 import store from "../store/index";
-import {mapState} from "vuex";
 import Login from "../views/Login";
 
 const isTrue = false;
@@ -30,7 +29,13 @@ const router = new VueRouter({
         {
             path: '/login',
             name: 'login',
-            component: Login
+            component: Login,
+            beforeEnter: (to, from, next) => {
+                const loggedIn = localStorage.getItem('user');
+
+                if(loggedIn) next({name: 'dashboard'});
+                else next();
+            },
         },
         {
             path: '/sign-up',
@@ -40,15 +45,10 @@ const router = new VueRouter({
         {
             path: '/logout',
             name: 'logout',
-            redirect: to => {
-                window.axios({
-                    method: 'post',
-                    url: '/auth/logout',
-                    headers: {'X-CSRF-TOKEN': window.Laravel.csrfToken},
-                }).then(res => {
-                    return {name: 'rules'};
-                })
-            }
+            beforeEnter: (to, from, next) => {
+              store.dispatch('logoutUser');
+              next({name: 'login'});
+            },
         },
         {
             path: '/rules',
@@ -59,8 +59,11 @@ const router = new VueRouter({
             path: '/dashboard',
             name: 'dashboard',
             component: App,
-            meta: {
-                auth: true
+            beforeEnter: (to, from, next) => {
+                const loggedIn = localStorage.getItem('user');
+
+                if(!loggedIn) next({name: 'login'});
+                else next();
             },
             children: [
                 {

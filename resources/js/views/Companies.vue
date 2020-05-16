@@ -1,7 +1,7 @@
 <template>
-    <v-container>
+    <div>
         <h2>Companies</h2>
-    </v-container>
+    </div>
 </template>
 
 <script>

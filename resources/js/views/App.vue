@@ -1,11 +1,8 @@
 <template>
     <v-app>
         <dashboard-navigation></dashboard-navigation>
-        <v-content>
-            <v-container>
-                <router-link tag="li" to="/">Home</router-link>
-                <router-link tag="li" to="add-user-status">Add User Status</router-link>
-
+        <v-content class="grey lighten-5">
+            <v-container fluid class="pa-10">
                 <router-view></router-view>
             </v-container>
         </v-content>
