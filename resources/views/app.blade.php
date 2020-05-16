@@ -5,7 +5,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
         <script>window.Laravel = { csrfToken: '{{ csrf_token() }}'}</script>
-        <title>Laravel</title>
+        <title>Internships</title>
 
         <!-- Fonts -->
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@latest/css/materialdesignicons.min.css">
@@ -17,9 +17,7 @@
     </head>
     <body>
     <div id="app">
-        <router-view>
-
-        </router-view>
+        <router-view></router-view>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/all.min.js"
             integrity="sha256-KzZiKy0DWYsnwMF+X1DvQngQ2/FxF7MF3Ff72XcpuPs=" crossorigin="anonymous"></script>
