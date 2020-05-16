@@ -13,7 +13,11 @@ import Rules from "../views/Rules";
 import Universities from "../views/Universities";
 import Companies from "../views/Companies";
 
-const isTrue = true;
+import store from "../store/index";
+import {mapState} from "vuex";
+import Login from "../views/Login";
+
+const isTrue = false;
 
 const router = new VueRouter({
     mode: 'history',
@@ -21,22 +25,30 @@ const router = new VueRouter({
         {
             path: '/',
             name: 'home',
-            redirect: to => {
-                if (isTrue)
-                    return {name: 'dashboard'};
-                else
-                    return {name: 'sign-in'};
-            }
+            redirect: '/dashboard'
         },
         {
-            path: '/sign-in',
-            name: 'sign-in',
-            component: SignIn
+            path: '/login',
+            name: 'login',
+            component: Login
         },
         {
             path: '/sign-up',
             name: 'sign-up',
             component: Registration,
+        },
+        {
+            path: '/logout',
+            name: 'logout',
+            redirect: to => {
+                window.axios({
+                    method: 'post',
+                    url: '/auth/logout',
+                    headers: {'X-CSRF-TOKEN': window.Laravel.csrfToken},
+                }).then(res => {
+                    return {name: 'rules'};
+                })
+            }
         },
         {
             path: '/rules',
@@ -47,6 +59,9 @@ const router = new VueRouter({
             path: '/dashboard',
             name: 'dashboard',
             component: App,
+            meta: {
+                auth: true
+            },
             children: [
                 {
                     path: 'users/new-status',

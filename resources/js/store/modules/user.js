@@ -3,14 +3,14 @@ import router from "../../router/routers";
 
 export default {
     state: {
-        loggedUser: {
-            email: '',
-        },
+        loggedUser: {},
         users: [],
         validationErrors: '',
     },
     getters: {
-
+        isAuthenticated: state => {
+            return Object.keys(state.loggedUser).length > 0;
+        }
     },
     actions: {
         createUserAccount({commit}, account) {
@@ -61,8 +61,12 @@ export default {
             state.validationErrors = errors;
         },
         LOGIN_USER(state, data) {
-          state.loggedUser.email = data.email;
+          state.loggedUser = data;
           router.push('/dashboard');
+        },
+        LOGOUT_USER(state, data) {
+            state.loggedUser = null;
+            router.push('/');
         },
     }
 };

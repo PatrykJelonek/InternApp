@@ -16,17 +16,17 @@
                         cols="5"
                         class="blue accent-4 pt-10 d-flex justify-center align-center fill-height white--text flex-column"
                     >
-                        <h3 class="font-weight-medium title font-weight-bold">Posiadasz już konto?</h3>
-                        <p class="subtitle-2 mt-2">Skorzystaj ze swojego konta by w pełni korzystać z naszego serwisu!</p>
-                        <v-btn large outlined color="white" v-on:click="$router.push('/login')">Zaloguj się</v-btn>
+                        <h3 class="font-weight-medium title font-weight-bold">Nie posiadasz jeszcze konta?</h3>
+                        <p class="subtitle-2 mt-2 px-10 text-center">Załóż darmowe konto w naszym serwisie by zarządzać praktykami na uczelni lub pozyskać praktykantów do firmy!</p>
+                        <v-btn large outlined color="white" v-on:click="$router.push('/sign-up')">Zarejestruj się</v-btn>
                     </v-col>
                     <v-col
                         cols="7"
                         class="pt-10 d-flex flex-column justify-center align-center fill-height"
                     >
-                        <h2 class="font-weight-medium title font-weight-bold pa-0 ma-2">Zarejestruj się za darmo!</h2>
-                        <p class="subtitle-2 pa-0 ma-2">Zarzadzaj praktykami na swojej uczelni lub pozyskaj praktykantów do swojej firmy!</p>
-                        <sing-up-form></sing-up-form>
+                        <h2 class="font-weight-medium title font-weight-bold pa-0 ma-2">Logowanie</h2>
+                        <p class="subtitle-2 pa-0 ma-2">Zaloguj się na swoje konto by skorzystać ze wszystkich funkcji naszego serwisu!</p>
+                        <login-form></login-form>
                     </v-col>
                 </v-row>
             </v-container>
@@ -35,10 +35,10 @@
 </template>
 
 <script>
-    import SingUpForm from "../components/SingUpForm";
+    import LoginForm from "../components/LoginForm";
     export default {
-        name: "Registration",
-        components: {SingUpForm},
+        name: "Login",
+        components: {LoginForm},
         data() {
             return {
                 darkTheme: true,
