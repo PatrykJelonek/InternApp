@@ -2,10 +2,15 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
+//use App\Http\Controllers\Controller;
+use App\Http\Api\Controllers\Controller;
+use App\Role;
 use App\University;
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
+use Tymon\JWTAuth\Exceptions\UserNotDefinedException;
 
 class UniversityController extends Controller
 {
@@ -18,7 +23,9 @@ class UniversityController extends Controller
     {
         $universities = University::all();
 
-        if (isset($universities))
+        $user = $this->authUser();
+
+        if (isset($universities) && $user->hasRole('admin'))
             return response($universities, Response::HTTP_OK);
         else
             return \response("Universities not found!", Response::HTTP_NOT_FOUND);

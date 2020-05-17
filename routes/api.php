@@ -27,3 +27,22 @@ Route::resource('/companies', 'Api\CompanyController');
 Route::resource('/company_categories', 'Api\CompanyCategoryController');
 Route::resource('/specializations', 'Api\SpecializationController');
 Route::resource('/students', 'Api\StudentController');
+
+//Login
+Route::post('/login', [
+    'as' => 'login.login',
+    'uses' => 'Api\Auth\LoginController@login'
+]);
+
+Route::get('/logout', [
+    'as' => 'login.logout',
+    'uses' => 'Api\Auth\LoginController@logout'
+]);
+
+Route::get('/refresh', [
+    'as' => 'login.refresh',
+    'uses' => 'Api\Auth\LoginController@refresh'
+]);
+
+//Debug
+Route::resource('/debug', 'Api\DebugController');

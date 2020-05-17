@@ -19,6 +19,7 @@ class LoginController extends Controller
 
         if (Auth::attempt(['email' => $request->input("email"), 'password' => $request->input('password'), 'user_status_id' => 1])) {
             $userInformation = User::select('email','first_name','last_name','phone_number')->where('email', $request->input("email"))->first();
+
             return response($userInformation, Response::HTTP_OK);
         } else
             return response('User has not been authenticated!', Response::HTTP_UNAUTHORIZED);

@@ -25,6 +25,9 @@ use Illuminate\Routing\Middleware\ValidateSignature;
 use Illuminate\Session\Middleware\AuthenticateSession;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use Laratrust\Middleware\LaratrustAbility;
+use Laratrust\Middleware\LaratrustPermission;
+use Laratrust\Middleware\LaratrustRole;
 
 class Kernel extends HttpKernel
 {
@@ -84,5 +87,8 @@ class Kernel extends HttpKernel
         'signed' => ValidateSignature::class,
         'throttle' => ThrottleRequests::class,
         'verified' => EnsureEmailIsVerified::class,
+        'role' => LaratrustRole::class,
+        'permission' => LaratrustPermission::class,
+        'ability' => LaratrustAbility::class,
     ];
 }

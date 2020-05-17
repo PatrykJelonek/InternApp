@@ -3,7 +3,7 @@ import router from "../../router/routers";
 
 export default {
     state: {
-        loggedUser: {},
+        loggedUser: '',
         users: [],
         validationErrors: '',
     },
@@ -37,7 +37,7 @@ export default {
         {
             window.axios({
                 method: 'post',
-                url: '/auth/login',
+                url: '/api/login',
                 headers: {'X-CSRF-TOKEN': window.Laravel.csrfToken},
                 data: {
                     email: credentials.email,
@@ -70,7 +70,7 @@ export default {
         },
         LOGIN_USER(state, data) {
             localStorage.setItem('user', JSON.stringify(data));
-            state.loggedUser = data;
+            state.loggedUser = data.user;
             router.push('/dashboard');
         },
         LOGOUT_USER(state, data) {
@@ -80,7 +80,7 @@ export default {
         },
         FETCH_USER_DATA(state, data)
         {
-            state.loggedUser = data;
+            state.loggedUser = data.user;
         }
     }
 };
