@@ -16,8 +16,6 @@ import Login from "../views/Login";
 //Other imports
 import store from "../store/index";
 
-
-
 const router = new VueRouter({
     mode: 'history',
     routes: [
