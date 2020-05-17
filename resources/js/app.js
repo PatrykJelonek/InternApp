@@ -6,13 +6,18 @@ import Routes from './router/routers';
 import axios from 'axios';
 
 require('./bootstrap');
+require('./store/subscriber');
 window.Vue = require('vue');
 
 import App from "./views/App";
 
-new Vue({
-    el: '#app',
-    router: Routes,
-    store,
-    vuetify
+store.dispatch('auth/attempt', localStorage.getItem('token')).then(() => {
+    new Vue({
+        el: '#app',
+        router: Routes,
+        store,
+        vuetify
+    });
 });
+
+

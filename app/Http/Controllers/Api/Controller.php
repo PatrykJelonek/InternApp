@@ -18,14 +18,19 @@ class Controller extends BaseController
         auth()->setDefaultDriver('api');
     }
 
-    public function authUser()
+    public function authUser($roles)
     {
         try{
             $user = auth()->userOrFail();
-        } catch(UserNotDefinedException $e)
-        {
-            return response(['error' => $e], Response::HTTP_UNAUTHORIZED);
-        }
+
+            if(count($roles) > 0)
+                foreach ($roles as $role)
+                    if(!$user->hasRole($role))
+                        throw new UserNotDefinedException("User not definded!");
+                    else
+                        break;
+
+        } catch(UserNotDefinedException $e) { return response(['error' => $e], Response::HTTP_UNAUTHORIZED); }
 
         return $user;
     }

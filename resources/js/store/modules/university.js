@@ -14,13 +14,10 @@ export default {
              return window.axios({
                  method: 'get',
                  url: '/api/universities',
-                 headers: {
-                     'X-CSRF-TOKEN': window.Laravel.csrfToken,
-                     'Authorization': `${JSON.parse(localStorage.getItem('user')).token_type} ${JSON.parse(localStorage.getItem('user')).token}`
-                 },
-             })
-                 .then(res => {
-                    commit("SET_UNIVERSITIES", res.data);
+                 headers: { 'X-CSRF-TOKEN': window.Laravel.csrfToken},
+             }).then(res => {
+                 console.log(res.data);
+                    commit("SET_UNIVERSITIES", res.data.data);
                 })
                 .catch(error => {
                     console.log(error);

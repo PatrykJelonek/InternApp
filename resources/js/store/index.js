@@ -7,11 +7,13 @@ Vue.use(Vuex);
 import userStatus from "./modules/userStatus";
 import university from "./modules/university";
 import user from "./modules/user";
+import auth from "./modules/auth";
 
 const debug = process.env.NODE_ENV !== 'production';
 
 export default new Vuex.Store({
     modules: {
+        auth,
         userStatus,
         university,
         user,

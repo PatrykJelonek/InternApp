@@ -21,12 +21,23 @@ class UniversityController extends Controller
      */
     public function index()
     {
+        $user = auth()->user();
+
+        if(!$user->hasRole('admin'))
+           return response([
+               'status' => 'error',
+               'data' => null,
+               'message' => 'Nie posiadasz uprawnień do tego zasobu!'
+           ], Response::HTTP_UNAUTHORIZED);
+
         $universities = University::all();
 
-        $user = $this->authUser();
-
-        if (isset($universities) && $user->hasRole('admin'))
-            return response($universities, Response::HTTP_OK);
+        if (isset($universities))
+            return response([
+                'status' => 'success',
+                'data' => $universities,
+                'message' => null
+            ], Response::HTTP_OK);
         else
             return \response("Universities not found!", Response::HTTP_NOT_FOUND);
     }

@@ -31,10 +31,13 @@ const router = new VueRouter({
             name: 'login',
             component: Login,
             beforeEnter: (to, from, next) => {
-                const loggedIn = localStorage.getItem('user');
+                if (store.getters['auth/authenticated']) {
+                    return next({
+                        name: 'dashboard'
+                    });
+                }
 
-                if(loggedIn) next({name: 'dashboard'});
-                else next();
+                return next();
             },
         },
         {
@@ -46,8 +49,11 @@ const router = new VueRouter({
             path: '/logout',
             name: 'logout',
             beforeEnter: (to, from, next) => {
-              store.dispatch('logoutUser');
-              next({name: 'login'});
+               store.dispatch('auth/signOut').then(() =>{
+                   return next({name: 'login'})
+               })
+
+                return next();
             },
         },
         {
@@ -60,10 +66,11 @@ const router = new VueRouter({
             name: 'dashboard',
             component: App,
             beforeEnter: (to, from, next) => {
-                const loggedIn = localStorage.getItem('user');
+                if (!store.getters['auth/authenticated']) {
+                    return next({name: 'login'})
+                }
 
-                if(!loggedIn) next({name: 'login'});
-                else next();
+                next();
             },
             children: [
                 {

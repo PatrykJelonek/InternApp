@@ -6,6 +6,7 @@ export default {
         loggedUser: '',
         users: [],
         validationErrors: '',
+        hasBeenCreated: false,
     },
     getters: {
         isAuthenticated: state => {
@@ -61,6 +62,7 @@ export default {
     mutations: {
         CREATE_USER_ACCOUNT(state, message) {
             state.validationErrors = '';
+            state.hasBeenCreated = true;
             console.log(message);
             router.push('/login');
         },

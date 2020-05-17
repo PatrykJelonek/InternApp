@@ -26,6 +26,7 @@
                         hide-details="auto"
                         placeholder="●●●●●●●"
                         :rules="[rules.required]"
+                        :error-messages="errorMessage"
                     ></v-text-field>
                 </v-col>
             </v-row>
@@ -50,6 +51,8 @@
                     password: ''
                 },
 
+                errorMessage: '',
+
                 persistentHint: false,
 
                 rules: {
@@ -59,10 +62,15 @@
             }
         },
         methods: {
-            ...mapActions(["loginUser"]),
-            submit (e) {
-                this.loginUser({email: this.loginData.email, password: this.loginData.password});
-                e.preventDefault();
+            ...mapActions({
+                signIn: 'auth/signIn',
+            }),
+            async submit () {
+                await this.signIn({email: this.loginData.email, password: this.loginData.password}).then(() => {
+                    this.$router.go('/dashboard');
+                }).catch(() => {
+                    this.errorMessage = "Email lub hasło jest niepoprawne!";
+                });
             },
         }
     }

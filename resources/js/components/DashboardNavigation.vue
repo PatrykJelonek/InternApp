@@ -9,13 +9,12 @@
         absolute
         dark
     >
-        <v-list-item class="px-2">
+        <v-list-item class="px-2" v-if="authenticated">
             <v-list-item-avatar>
                 <v-img src="https://randomuser.me/api/portraits/men/85.jpg"></v-img>
             </v-list-item-avatar>
 
-            <v-list-item-title class="font-weight-bold" v-if="this.loggedUser.first_name">{{ this.loggedUser.first_name + ' ' + this.loggedUser.last_name}}</v-list-item-title>
-            <v-list-item-title class="font-weight-bold" v-else>Jan Kowalski</v-list-item-title>
+            <v-list-item-title class="font-weight-bold" >{{user.first_name + " " + user.last_name}}</v-list-item-title>
         </v-list-item>
 
 
@@ -62,7 +61,7 @@
         </v-list>
 
         <template v-slot:append>
-            <v-list-item link dense to="logout">
+            <v-list-item link dense @click.prevent="signOut">
                 <v-list-item-icon>
                     <v-icon>mdi-exit-to-app</v-icon>
                 </v-list-item-icon>
@@ -75,11 +74,12 @@
 </template>
 
 <script>
-    import {mapState} from "vuex";
+    import {mapState, mapActions, mapGetters} from "vuex";
     import store from "../store";
 
     export default {
         name: "DashboardNavigation",
+
         data() {
             return {
                 drawer: true,
@@ -90,15 +90,27 @@
                 miniVariant: false,
             }
         },
+
         computed: {
-            ...mapState({
-                loggedUser: state => state.user.loggedUser
+            ...mapGetters({
+                authenticated: 'auth/authenticated',
+                user: 'auth/user',
+            }),
+        },
+
+        methods: {
+            ...mapActions({
+                singOutAction: 'auth/signOut',
             }),
 
+            signOut () {
+                this.singOutAction().then(() => {
+                    this.$router.replace({
+                        name: 'login'
+                    })
+                });
+            },
         },
-        created: function () {
-            store.dispatch('fetchUserData');
-        }
     }
 </script>
 
