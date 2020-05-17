@@ -13,11 +13,5 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-//Auth routing
-Route::post('/auth/login', 'Auth\LoginController@authenticate');
-Route::post('/auth/logout', 'Auth\LoginController@logout');
-
-Route::get('/debug', 'Api\UniversityController@index');
-
 //Vue routing
 Route::get('/{any}', 'SinglePageController@index')->where('any', '.*');

@@ -34,7 +34,7 @@ Route::get('/refresh', [
     'uses' => 'Api\Auth\AuthController@refresh'
 ]);
 
-Route::post('/users', 'Api\UserController@store');
+Route::resource('/users', 'Api\UserController');
 
 //For Logged Users
 Route::group(['middleware' => ['jwt.verify']], function() {
@@ -52,6 +52,3 @@ Route::group(['middleware' => ['jwt.verify']], function() {
         'uses' => 'Api\Auth\AuthController@me'
     ]);
 });
-
-//Debug
-Route::resource('/debug', 'Api\DebugController');

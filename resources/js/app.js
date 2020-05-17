@@ -9,8 +9,6 @@ require('./bootstrap');
 require('./store/subscriber');
 window.Vue = require('vue');
 
-import App from "./views/App";
-
 store.dispatch('auth/attempt', localStorage.getItem('token')).then(() => {
     new Vue({
         el: '#app',

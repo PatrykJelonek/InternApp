@@ -31,29 +31,11 @@
                 </v-row>
             </v-container>
         </v-content>
-        <v-snackbar
-            v-model="this.hasBeenCreated"
-            :bottom="true"
-            color="success"
-            :right="true"
-            :timeout="60000"
-        >
-            Konto zostało utworzone!
-            <v-btn
-                dark
-                text
-                @click="snackbar = false"
-            >
-                Close
-            </v-btn>
-        </v-snackbar>
     </v-app>
 </template>
 
 <script>
     import LoginForm from "../components/LoginForm";
-    import { mapState } from "vuex";
-    import store from "../store";
     export default {
         name: "Login",
         components: {LoginForm},
@@ -69,12 +51,6 @@
                 snackbar: false,
                 snackbarMessage: '',
             }
-        },
-
-        computed: {
-            ...mapState({
-               hasBeenCreated: 'hasBeenCreated'
-            }),
         },
     }
 </script>

@@ -5,18 +5,18 @@ Vue.use(VueRouter);
 
 //Components imports
 import UserStatusesAdd from "../components/UserStatusesAdd";
-import SignIn from "../views/SignIn";
 import Registration from "../views/Registration";
 import App from "../views/App";
 import NotFound from "../views/NotFound";
 import Rules from "../views/Rules";
 import Universities from "../views/Universities";
 import Companies from "../views/Companies";
-
-import store from "../store/index";
 import Login from "../views/Login";
 
-const isTrue = false;
+//Other imports
+import store from "../store/index";
+
+
 
 const router = new VueRouter({
     mode: 'history',
