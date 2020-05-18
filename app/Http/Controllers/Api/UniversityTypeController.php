@@ -19,7 +19,11 @@ class UniversityTypeController extends Controller
         $universityTypes = UniversityType::all();
 
         if (isset($universityTypes))
-            return response($universityTypes, Response::HTTP_OK);
+            return response([
+                'status' => 'success',
+                'data' => $universityTypes,
+                'message' => null
+            ], Response::HTTP_OK);
         else
             return response("University types not found!", Response::HTTP_NOT_FOUND);
     }

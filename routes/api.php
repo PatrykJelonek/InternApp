@@ -41,12 +41,13 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::resource('/user_statuses', 'Api\UserStatusController');
     //Route::resource('/users', 'Api\UserController');
     Route::resource('/cities', 'Api\CityController');
-    Route::resource('/university_types', 'Api\UniversityTypeController');
+    Route::resource('/university-types', 'Api\UniversityTypeController');
     Route::resource('/universities', 'Api\UniversityController');
     Route::resource('/companies', 'Api\CompanyController');
-    Route::resource('/company_categories', 'Api\CompanyCategoryController');
+    Route::resource('/company-categories', 'Api\CompanyCategoryController');
     Route::resource('/specializations', 'Api\SpecializationController');
     Route::resource('/students', 'Api\StudentController');
+    Route::resource('/user-universities', 'Api\UserUniversityController');
     Route::get('/me', [
         'as' => 'login.me',
         'uses' => 'Api\Auth\AuthController@me'

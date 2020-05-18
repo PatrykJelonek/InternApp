@@ -60,7 +60,34 @@ class UniversityController extends Controller
      */
     public function store(Request $request)
     {
-        //TODO: Create method to create university
+        //TODO: Stworzyć walidacje
+        $university = new University;
+
+        $university->name = $request->input('name');
+        $university->university_type_id = $request->input('universityTypeId');
+        $university->city_id = $request->input('cityId');
+        $university->street = $request->input('street');
+        $university->street_number = $request->input('streetNumber');
+        $university->email = $request->input('email');
+        $university->phone = $request->input('phone');
+        $university->website = $request->input('website');
+        $university->created_at = date('Y-m-d H:i:s');
+        $university->updated_at = date('Y-m-d H:i:s');
+
+        if($university->save())
+        {
+            if($university->users()->save(auth()->user(), ['created_at' => date('Y-m-d H:i:s')]))
+                return response([
+                    'status' => 'success',
+                    'data' => null,
+                    'message' => 'Uczelnia została dodana!'
+                ], Response::HTTP_OK);
+        } else
+            return response([
+                'status' => 'error',
+                'data' => null,
+                'message' => 'Niestety nie udało się dodać twojej uczelni!'
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
     /**

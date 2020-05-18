@@ -54,7 +54,6 @@ export default {
 
             try {
                 let response = await axios.get('/api/me');
-
                 commit('SET_USER', response.data.data);
             } catch (e) {
                 console.log(e);

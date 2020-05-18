@@ -1,10 +1,8 @@
 <template>
     <v-app>
         <dashboard-navigation></dashboard-navigation>
-        <v-content class="grey lighten-5">
-            <v-container fluid class="pa-10">
-                <router-view></router-view>
-            </v-container>
+        <v-content class="grey lighten-5" app>
+            <router-view></router-view>
         </v-content>
     </v-app>
 </template>

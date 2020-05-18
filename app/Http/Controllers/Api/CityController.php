@@ -19,7 +19,11 @@ class CityController extends Controller
         $cities = City::all();
 
         if (isset($cities))
-            return response($cities, Response::HTTP_OK);
+            return response([
+                'status' => 'success',
+                'data' => $cities,
+                'message' => null
+            ], Response::HTTP_OK);
         else
             return response("Cities not found!", Response::HTTP_NOT_FOUND);
     }

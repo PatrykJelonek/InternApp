@@ -15,6 +15,7 @@ import Login from "../views/Login";
 
 //Other imports
 import store from "../store/index";
+import UniversityCreate from "../views/UniversityCreate";
 
 const router = new VueRouter({
     mode: 'history',
@@ -79,7 +80,12 @@ const router = new VueRouter({
                 {
                     path: '/universities',
                     name: 'universities',
-                    component: Universities
+                    component: Universities,
+                },
+                {
+                    path: '/create-university',
+                    name: 'create-university',
+                    component: UniversityCreate
                 },
                 {
                     path: '/companies',

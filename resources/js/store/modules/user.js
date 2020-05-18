@@ -2,14 +2,36 @@ import vue from "vue";
 import router from "../../router/routers";
 
 export default {
+    namespaced: true,
+
     state: {
         loggedUser: '',
-        users: [],
         validationErrors: '',
+        userUniversities: [],
     },
-    getters: {
 
+    getters: {
+        userUniversities(state) {
+            return state.userUniversities;
+        },
     },
+
+    mutations: {
+        CREATE_USER_ACCOUNT(state, message) {
+            state.validationErrors = '';
+            console.log(message);
+            router.push('/login');
+        },
+
+        ACCOUNT_VALIDATION(state, errors) {
+            state.validationErrors = errors;
+        },
+
+        SET_USER_UNIVERSITIES(state, data) {
+            state.userUniversities = data;
+        }
+    },
+
     actions: {
         createUserAccount({commit}, account) {
             window.axios({
@@ -30,17 +52,15 @@ export default {
                     commit('ACCOUNT_VALIDATION', err.response.data.errors)
                 }
             });
-        }
-    },
-    mutations: {
-        CREATE_USER_ACCOUNT(state, message) {
-            state.validationErrors = '';
-            console.log(message);
-            router.push('/login');
         },
-        ACCOUNT_VALIDATION(state, errors)
-        {
-            state.validationErrors = errors;
+
+        async fetchUserUniversities({ commit }) {
+            try {
+                let response = await axios.get('/api/user-universities');
+                commit('SET_USER_UNIVERSITIES', response.data.data);
+            } catch (e) {
+                commit('SET_USER_UNIVERSITIES', []);
+            }
         },
     }
 };

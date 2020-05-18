@@ -6,7 +6,6 @@
         :expand-on-hover="expandOnHover"
         :mini-variant="miniVariant"
         :permanent="permament"
-        absolute
         dark
     >
         <v-list-item class="px-2" v-if="authenticated">

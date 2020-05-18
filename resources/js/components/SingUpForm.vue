@@ -146,7 +146,7 @@
             }
         },
         methods: {
-            ...mapActions(["createUserAccount"]),
+            ...mapActions(["user/createUserAccount"]),
             submit (e) {
                 this.createUserAccount(this.account);
                 e.preventDefault();
