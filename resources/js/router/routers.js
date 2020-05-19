@@ -3,6 +3,9 @@ import VueRouter from 'vue-router';
 
 Vue.use(VueRouter);
 
+//Other imports
+import store from "../store/index";
+
 //Components imports
 import UserStatusesAdd from "../components/UserStatusesAdd";
 import Registration from "../views/Registration";
@@ -12,10 +15,8 @@ import Rules from "../views/Rules";
 import Universities from "../views/Universities";
 import Companies from "../views/Companies";
 import Login from "../views/Login";
-
-//Other imports
-import store from "../store/index";
 import UniversityCreate from "../views/UniversityCreate";
+import CompanyCreate from "../views/CompanyCreate";
 
 const router = new VueRouter({
     mode: 'history',
@@ -91,7 +92,12 @@ const router = new VueRouter({
                     path: '/companies',
                     name: 'companies',
                     component: Companies
-                }
+                },
+                {
+                    path: '/create-company',
+                    name: 'create-company',
+                    component: CompanyCreate
+                },
             ],
         },
         {

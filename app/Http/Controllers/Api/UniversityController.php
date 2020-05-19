@@ -60,7 +60,17 @@ class UniversityController extends Controller
      */
     public function store(Request $request)
     {
-        //TODO: Stworzyć walidacje
+        $validatedData = $request->validate([
+            'name' => 'required|unique:universities|max:255',
+            'universityTypeId' => 'required',
+            'cityId' => 'required',
+            'street' => 'required|max:64',
+            'streetNumber' => 'required|max:8',
+            'email' => 'required|max:64',
+            'phone' => 'required|max:16',
+            'website' => 'required|max:64',
+        ], University::messages());
+
         $university = new University;
 
         $university->name = $request->input('name');

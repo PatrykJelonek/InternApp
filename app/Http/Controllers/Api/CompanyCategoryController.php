@@ -19,9 +19,17 @@ class CompanyCategoryController extends Controller
         $companyCategories = CompanyCategory::all();
 
         if (isset($companyCategories))
-            return response($companyCategories, Response::HTTP_OK);
+            return response([
+                'status' => 'success',
+                'data' => $companyCategories,
+                'message' => null
+            ], Response::HTTP_OK);
         else
-            return response("Company categories not found!", Response::HTTP_NOT_FOUND);
+            return response([
+                'status' => 'error',
+                'data' => null,
+                'message' => 'Nie znaleziono żadnych kategory dla firm!'
+            ], Response::HTTP_NOT_FOUND);
     }
 
     /**

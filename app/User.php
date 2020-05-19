@@ -38,7 +38,7 @@ class User extends Model implements AuthenticatableContract, JWTSubject
 
     public function companies()
     {
-        return $this->belongsToMany('App\Company', 'users_companies', 'user_id', 'company_id');
+        return $this->belongsToMany('App\Company', 'users_companies', 'user_id', 'company_id')->with(['city', 'category']);
     }
 
     public function getJWTIdentifier()

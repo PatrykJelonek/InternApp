@@ -8,12 +8,17 @@ export default {
         loggedUser: '',
         validationErrors: '',
         userUniversities: [],
+        userCompanies: []
     },
 
     getters: {
         userUniversities(state) {
             return state.userUniversities;
         },
+
+        userCompanies(state) {
+            return state.userCompanies;
+        }
     },
 
     mutations: {
@@ -29,6 +34,10 @@ export default {
 
         SET_USER_UNIVERSITIES(state, data) {
             state.userUniversities = data;
+        },
+
+        SET_USER_COMPANIES(state, data) {
+            state.userCompanies = data;
         }
     },
 
@@ -62,5 +71,14 @@ export default {
                 commit('SET_USER_UNIVERSITIES', []);
             }
         },
+
+        async fetchUserCompanies({ commit }) {
+            try {
+                let response = await axios.get('/api/user-companies');
+                commit('SET_USER_COMPANIES', response.data.data);
+            } catch (e) {
+                commit('SET_USER_COMPANIES', []);
+            }
+        }
     }
 };

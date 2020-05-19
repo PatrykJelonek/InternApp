@@ -48,6 +48,7 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::resource('/specializations', 'Api\SpecializationController');
     Route::resource('/students', 'Api\StudentController');
     Route::resource('/user-universities', 'Api\UserUniversityController');
+    Route::resource('/user-companies', 'Api\UserCompanyController');
     Route::get('/me', [
         'as' => 'login.me',
         'uses' => 'Api\Auth\AuthController@me'

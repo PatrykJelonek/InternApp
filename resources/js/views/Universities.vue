@@ -5,7 +5,7 @@
                 <v-col class="pa-0">
                     <h2 class="text-uppercase title font-weight-black grey--text text--darken-4">Zarządzaj Uczelnią</h2>
                 </v-col>
-                <v-col cols="4">
+                <v-col cols="4" class="d-flex align-center justify-center">
                     <v-select
                         v-model="chosenUniversity"
                         :items="userUniversities"
@@ -16,6 +16,9 @@
                         dense
                         hide-details
                     ></v-select>
+                    <v-btn icon color="grey darken-2" class="ml-4" to="create-university">
+                        <v-icon>mdi-plus</v-icon>
+                    </v-btn>
                 </v-col>
             </v-row>
         </v-row>
@@ -34,9 +37,10 @@
     export default {
         name: "Universities",
         components: {UniversitiesNotFound},
+
         data() {
             return {
-                chosenUniversity: 'a',
+                chosenUniversity: '',
             }
         },
 

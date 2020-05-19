@@ -3,34 +3,34 @@
         <v-form>
             <v-row>
                 <v-col>
-                    <validation-provider v-slot="{ errors }"  vid="name" rules="required|max:64">
+                    <validation-provider v-slot="{ errors }" vid="name" rules="required|max:64">
                         <v-text-field
-                            label="Nazwa uczelni"
-                            v-model="university.name"
+                            label="Nazwa frimy"
+                            v-model="company.name"
                             outlined
                             dense
                             hide-details="auto"
                             :error-messages="errors"
-                            placeholder="Politechnika Warszawska"
+                            placeholder="Intel"
                         ></v-text-field>
                     </validation-provider>
                 </v-col>
             </v-row>
             <v-row>
                 <v-col>
-                    <validation-provider v-slot="{ errors }" vid="universityTypeId" rules="required">
+                    <validation-provider v-slot="{ errors }" vid="companyCategoryId" rules="required">
                         <v-select
-                            label="Typ uczelni"
-                            v-model="university.universityTypeId"
-                            :items="universityTypes"
+                            label="Kategoria firmy"
+                            v-model="company.companyCategoryId"
+                            :items="companyCategories"
                             item-text="name"
                             item-value="id"
                             outlined
                             dense
                             hide-details="auto"
                             :error-messages="errors"
-                            no-data-text="Brak typów uczelni!"
-                            placeholder="Techniczna"
+                            no-data-text="Brak kategorii dla firm!"
+                            placeholder="Programowanie"
                         ></v-select>
                     </validation-provider>
                 </v-col>
@@ -40,7 +40,7 @@
                     <validation-provider v-slot="{ errors }" vid="street" rules="required|max:64">
                         <v-text-field
                             label="Ulica"
-                            v-model="university.street"
+                            v-model="company.street"
                             outlined
                             dense
                             hide-details="auto"
@@ -53,7 +53,7 @@
                     <validation-provider v-slot="{ errors }" vid="streetNumber" rules="required|max:8">
                         <v-text-field
                             label="Numer budynku"
-                            v-model="university.streetNumber"
+                            v-model="company.streetNumber"
                             outlined
                             dense
                             hide-details="auto"
@@ -64,11 +64,11 @@
                 </v-col>
             </v-row>
             <v-row>
-                <v-col cols="12">
+                <v-col>
                     <validation-provider v-slot="{ errors }" vid="cityId" rules="required">
                         <v-autocomplete
                             label="Miasto"
-                            v-model="university.cityId"
+                            v-model="company.cityId"
                             :items="cities"
                             item-text="name"
                             item-value="id"
@@ -86,7 +86,7 @@
                     <validation-provider v-slot="{ errors }" vid="email" rules="required|email|max:64">
                         <v-text-field
                             label="Email kontakowy"
-                            v-model="university.email"
+                            v-model="company.email"
                             outlined
                             dense
                             hide-details="auto"
@@ -99,7 +99,7 @@
                     <validation-provider v-slot="{ errors }" vid="phone" rules="required|max:16">
                         <v-text-field
                             label="Numer kontaktowy"
-                            v-model="university.phone"
+                            v-model="company.phone"
                             outlined
                             dense
                             hide-details="auto"
@@ -114,7 +114,7 @@
                     <validation-provider v-slot="{ errors }" vid="website" rules="required|max:64">
                         <v-text-field
                             label="Strona internetowa"
-                            v-model="university.website"
+                            v-model="company.website"
                             outlined
                             dense
                             hide-details="auto"
@@ -125,8 +125,22 @@
                 </v-col>
             </v-row>
             <v-row>
+                <v-col>
+                    <validation-provider v-slot="{ errors }" vid="description" rules="required|max:255">
+                        <v-textarea
+                            v-model="company.description"
+                            label="Opis firmy"
+                            outlined
+                            hide-details="auto"
+                            :error-messages="errors"
+                            placeholder="Firma programistyczna"
+                        ></v-textarea>
+                    </validation-provider>
+                </v-col>
+            </v-row>
+            <v-row>
                 <v-col class="d-flex justify-end">
-                    <v-btn color="blue accent-4" large @click="submit" :disabled="invalid" class="white--text">Dodaj uczelnie</v-btn>
+                    <v-btn color="blue accent-4" large @click="submit" :disabled="invalid" class="white--text">Dodaj firmę</v-btn>
                 </v-col>
             </v-row>
         </v-form>
@@ -134,14 +148,14 @@
 </template>
 
 <script>
-    import { mapActions, mapGetters } from "vuex";
+    import {mapActions, mapGetters} from "vuex";
     import { required, email, max } from "vee-validate/dist/rules";
     import {  extend, setInteractionMode, ValidationProvider, ValidationObserver } from "vee-validate";
 
     setInteractionMode('eager');
 
     export default {
-        name: "UniversityCreateForm",
+        name: "CompanyCreateForm",
 
         components: {
             ValidationProvider,
@@ -150,38 +164,39 @@
 
         data() {
             return {
-                university: {
+                company: {
                     name: null,
-                    universityTypeId: null,
+                    companyCategoryId: null,
                     cityId: null,
                     street: null,
                     streetNumber: null,
                     email: null,
                     phone: null,
                     website: null,
+                    description: null,
                 }
             }
         },
 
         computed: {
             ...mapGetters({
-                universityTypes: 'university/universityTypes',
+                companyCategories: 'company/companyCategories',
                 cities: 'city/cities'
             }),
         },
 
         methods: {
             ...mapActions({
-                fetchUniversityTypes: 'university/fetchUniversityTypes',
+                fetchCompanyCategories: 'company/fetchCompanyCategories',
                 fetchCities: 'city/fetchCities',
-                createUniversity: 'university/createUniversity'
+                createCompany: 'company/createCompany'
             }),
 
-            async submit(e) {
+            async submit() {
                 this.$refs.observer.validate();
 
-                await this.createUniversity(this.university).then(() => {
-                    this.$router.go('/universities');
+                await this.createCompany(this.company).then(() => {
+                    this.$router.replace('companies');
                 }).catch((e) => {
                     if(e.response.status == 422) {
                         console.log(e.response.data.errors);
@@ -193,7 +208,7 @@
         },
 
         created() {
-            this.fetchUniversityTypes();
+            this.fetchCompanyCategories();
             this.fetchCities();
         },
     };
@@ -205,14 +220,14 @@
     });
 
     extend('email', {
-       ...email,
-       message: "Podaj poprawny adres email!"
+        ...email,
+        message: "Podaj poprawny adres email!"
     });
 
     extend('max', {
         ...max,
         message: "Pole nie może przekraczać {length} znaków!"
-    })
+    });
 </script>
 
 <style scoped>

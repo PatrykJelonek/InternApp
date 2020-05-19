@@ -23,4 +23,18 @@ class University extends Model
     {
         return $this->belongsToMany('App\User', 'users_universities', 'university_id', 'user_id');
     }
+
+    public static function messages()
+    {
+        return [
+            'name.required' => 'Nazwa uczelni jest wymagana!',
+            'universityTypeId:required' => 'Rodzaj uczelni jest wymagany!',
+            'cityId:required' => 'Miasto jest wymagane!',
+            'street:required' => 'Ulica jest wymagana!',
+            'streetNumber:required' => 'Numer budynku jest wymagany!',
+            'email:required' => 'Email jest wymagany!',
+            'phone:required' => 'Numer telefonu jest wymagany!',
+            'website:required' => 'Strona internetowa jest wymagana!'
+        ];
+    }
 }
