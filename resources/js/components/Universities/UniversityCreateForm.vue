@@ -181,12 +181,10 @@
                 this.$refs.observer.validate();
 
                 await this.createUniversity(this.university).then(() => {
-                    this.$router.go('/universities');
+                    this.$router.replace('universities');
                 }).catch((e) => {
                     if(e.response.status == 422) {
-                        console.log(e.response.data.errors);
                         this.$refs.observer.setErrors(e.response.data.errors);
-
                     }
                 });
             }

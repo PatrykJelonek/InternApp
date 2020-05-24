@@ -15,11 +15,25 @@
                         outlined
                         dense
                         hide-details
+                        @change="selectUniversity(getSelectedUniversity())"
                     ></v-select>
-                    <v-btn icon color="grey darken-2" class="ml-4" to="create-university">
-                        <v-icon>mdi-plus</v-icon>
-                    </v-btn>
+                    <v-menu offset-y>
+                        <template v-slot:activator="{ on }">
+                            <v-btn icon color="grey darken-2" class="ml-4" v-on="on">
+                                <v-icon>mdi-plus</v-icon>
+                            </v-btn>
+                        </template>
+                        <v-list dense>
+                            <university-access-code-dialog></university-access-code-dialog>
+                            <v-list-item  to="create-university" dense>
+                                <v-list-item-title>Stwórz nową</v-list-item-title>
+                            </v-list-item>
+                        </v-list>
+                    </v-menu>
                 </v-col>
+            </v-row>
+            <v-row v-if="!isLoading">
+                <university-access-code></university-access-code>
             </v-row>
         </v-row>
         <v-row class="d-flex" v-else>
@@ -33,14 +47,17 @@
 <script>
     import {mapActions, mapGetters, mapState} from "vuex";
     import UniversitiesNotFound from "../components/Universities/UniversitiesNotFound";
+    import UniversityAccessCode from "../components/Universities/UniversityAccessCode";
+    import UniversityAccessCodeDialog from "../components/Universities/UniversityAccessCodeDialog";
 
     export default {
         name: "Universities",
-        components: {UniversitiesNotFound},
+        components: {UniversityAccessCodeDialog, UniversityAccessCode, UniversitiesNotFound},
 
         data() {
             return {
                 chosenUniversity: '',
+                isLoading: true,
             }
         },
 
@@ -53,12 +70,23 @@
         methods: {
             ...mapActions({
                 fetchUserUniversities: 'user/fetchUserUniversities',
+                selectUniversity: 'university/selectUniversity'
             }),
+
+            getSelectedUniversity() {
+                return this.userUniversities.find((university, index) => {
+                    if(university.id === this.chosenUniversity)
+                        return true;
+                });
+            }
         },
 
         created() {
             this.fetchUserUniversities().then(() => {
                 this.chosenUniversity = this.userUniversities[0];
+                this.selectUniversity(this.userUniversities[0]).then(() => {
+                    this.isLoading = false;
+                });
             });
         },
     }

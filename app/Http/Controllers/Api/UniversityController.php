@@ -10,6 +10,7 @@ use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 use Tymon\JWTAuth\Exceptions\UserNotDefinedException;
 
 class UniversityController extends Controller
@@ -81,6 +82,7 @@ class UniversityController extends Controller
         $university->email = $request->input('email');
         $university->phone = $request->input('phone');
         $university->website = $request->input('website');
+        $university->access_code = $this->generateUniqueRandomAccessCode();
         $university->created_at = date('Y-m-d H:i:s');
         $university->updated_at = date('Y-m-d H:i:s');
 
@@ -153,5 +155,84 @@ class UniversityController extends Controller
             return response("University has been deleted!", Response::HTTP_OK);
         else
             return response("University has not been deleted", Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+
+    /**
+     * Set new access code for university.
+     *
+     * @param Request $request
+     * @return Response
+     */
+    public function setNewAccessCode(Request $request)
+    {
+        //TODO: Będzie trzeba to zabezpieczyć
+
+        $university = University::find($request->input("id"));
+
+        if(isset($university))
+        {
+            $university->access_code = $this->generateUniqueRandomAccessCode();
+
+            if($university->save())
+                return response([
+                    'status' => 'success',
+                    'data' => $university->access_code,
+                    'message' => null,
+                ], Response::HTTP_OK);
+        }
+
+        return response([
+            'status' => 'error',
+            'data' => null,
+            'message' => 'New access code has been not generate!',
+        ], Response::HTTP_NOT_MODIFIED);
+    }
+
+    /**
+     * Use access code to join to university
+     *
+     * @param Request $request
+     * @return Response
+     */
+    public function useCode(Request $request)
+    {
+        $university = University::where('access_code', $request->input('accessCode'))->first();
+        $errorMessage = "Coś poszło nie tak!";
+
+        if($university === null)
+            $errorMessage  = "Nie udało się dopasować podanego kodu do żadnej uczelni!";
+        else
+            if((count($university->users()->where('user_id', auth()->id())->get()) < 1))
+            {
+                if($university->users()->save(auth()->user(), ['created_at' => date('Y-m-d H:i:s')]))
+                    return response([
+                        'status' => 'success',
+                        'data' => $university,
+                        'message' => null
+                    ], Response::HTTP_OK);
+                else
+                    $errorMessage = "Nie udało się dodać Cię do tej uczelni!";
+            } else
+                $errorMessage  = 'Należysz już do uczelni do której przypisano podany kod!';
+
+        return response([
+            'status' => 'error',
+            'data' => null,
+            'message' => $errorMessage
+        ], Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+
+    /**
+     * Generate unique random access code.
+     *
+     * @return string
+     */
+    private function generateUniqueRandomAccessCode()
+    {
+        do {
+            $randomAccessCode = Str::upper( Str::random(8));
+        } while(count(University::where('access_code', $randomAccessCode)->get()) > 0);
+
+        return $randomAccessCode;
     }
 }

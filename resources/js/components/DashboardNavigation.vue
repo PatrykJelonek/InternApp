@@ -10,9 +10,10 @@
     >
         <v-list-item class="px-2" v-if="authenticated">
             <v-list-item-avatar>
-                <v-img src="https://randomuser.me/api/portraits/men/85.jpg"></v-img>
+                <v-avatar color="#F4511E" size="36">
+                    <span class="white--text body-2">{{ user.first_name.slice(0,1).toUpperCase()+user.last_name.slice(0,1).toUpperCase() }}</span>
+                </v-avatar>
             </v-list-item-avatar>
-
             <v-list-item-title class="font-weight-bold" >{{user.first_name + " " + user.last_name}}</v-list-item-title>
         </v-list-item>
 

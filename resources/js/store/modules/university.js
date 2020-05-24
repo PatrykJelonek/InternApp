@@ -4,6 +4,7 @@ export default {
     namespaced: true,
 
     state: {
+        selectedUniversity: null,
         universities: [],
         universityTypes: [],
     },
@@ -15,6 +16,10 @@ export default {
 
         universityTypes: (state) => {
             return state.universityTypes;
+        },
+
+        selectedUniversity: (state) => {
+            return state.selectedUniversity;
         }
     },
 
@@ -26,6 +31,14 @@ export default {
         SET_UNIVERSITY_TYPES(state, data) {
             state.universityTypes = data;
         },
+
+        SET_SELECTED_UNIVERSITY(state, university) {
+            state.selectedUniversity = university;
+        },
+
+        SET_NEW_ACCESS_CODE(state, accessCode) {
+            state.selectedUniversity.access_code = accessCode;
+        }
     },
 
     actions: {
@@ -54,6 +67,27 @@ export default {
 
         createUniversity({commit}, university) {
             return axios.post('/api/universities', university);
+        },
+
+        selectUniversity({commit}, university) {
+            commit('SET_SELECTED_UNIVERSITY', university);
+        },
+
+        async generateNewAccessCode({commit}, id) {
+            try {
+                let response = await axios.post('/api/generate-access-code', {
+                    id: id
+                });
+                commit('SET_NEW_ACCESS_CODE', response.data.data);
+            } catch (e) {
+                commit('SET_NEW_ACCESS_CODE', e.response.data.message);
+            }
+        },
+
+        useAccessCode({commit}, accessCode) {
+            return axios.post('/api/university/use-code', {
+                accessCode: accessCode
+            });
         }
     }
 };
