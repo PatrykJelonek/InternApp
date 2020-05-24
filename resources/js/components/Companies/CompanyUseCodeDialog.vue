@@ -33,7 +33,7 @@
             <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn color="blue accent-4" text @click="dialog = false">Anuluj</v-btn>
-                <v-btn color="blue accent-4" dark @click="jointToUniversity">Dołącz</v-btn>
+                <v-btn color="blue accent-4" dark @click="jointToCompany">Dołącz</v-btn>
             </v-card-actions>
         </v-card>
     </v-dialog>
@@ -47,7 +47,7 @@
     setInteractionMode('eager');
 
     export default {
-        name: "UniversityUseAccessCode",
+        name: "CompanyUseCodeDialog",
 
         components: {
             ValidationProvider,
@@ -62,12 +62,12 @@
         },
         methods: {
             ...mapActions({
-                useCode: 'university/useCode'
+                useCode: 'company/useCode'
             }),
 
-            jointToUniversity() {
+            jointToCompany() {
                 this.useCode(this.code).then(() => {
-                    this.$store.dispatch('user/fetchUserUniversities');
+                    this.$store.dispatch('user/fetchUserCompanies');
                     this.dialog = false;
                 }).catch((e) => {
                     console.log(e.response);

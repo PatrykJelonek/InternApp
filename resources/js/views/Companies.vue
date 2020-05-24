@@ -7,7 +7,7 @@
                 </v-col>
                 <v-col cols="4" class="d-flex align-center justify-center">
                     <v-select
-                        v-model="chosenCompanies"
+                        v-model="chosenCompany"
                         :items="userCompanies"
                         item-text="name"
                         item-value="id"
@@ -15,11 +15,25 @@
                         outlined
                         dense
                         hide-details
+                        @change="selectCompany(getSelectedCompany())"
                     ></v-select>
-                    <v-btn icon color="grey darken-2" class="ml-4" to="create-company">
-                        <v-icon>mdi-plus</v-icon>
-                    </v-btn>
+                    <v-menu offset-y>
+                        <template v-slot:activator="{ on }">
+                            <v-btn icon color="grey darken-2" class="ml-4" v-on="on">
+                                <v-icon>mdi-plus</v-icon>
+                            </v-btn>
+                        </template>
+                        <v-list dense>
+                            <company-use-code-dialog></company-use-code-dialog>
+                            <v-list-item  to="create-company" dense>
+                                <v-list-item-title>Stwórz nową</v-list-item-title>
+                            </v-list-item>
+                        </v-list>
+                    </v-menu>
                 </v-col>
+            </v-row>
+            <v-row v-if="!isLoading">
+                <company-code-card></company-code-card>
             </v-row>
         </v-row>
         <v-row class="d-flex" v-else>
@@ -33,14 +47,17 @@
 <script>
     import {mapActions, mapGetters} from "vuex";
     import CompaniesNotFound from "../components/Companies/CompaniesNotFound";
+    import CompanyCodeCard from "../components/Companies/CompanyCodeCard";
+    import CompanyUseCodeDialog from "../components/Companies/CompanyUseCodeDialog";
 
     export default {
         name: "Companies",
-        components: {CompaniesNotFound},
+        components: {CompanyUseCodeDialog, CompanyCodeCard, CompaniesNotFound},
 
         data() {
             return {
-                chosenCompanies: ''
+                chosenCompany: '',
+                isLoading: true,
             }
         },
 
@@ -53,12 +70,23 @@
         methods: {
             ...mapActions({
                 fetchUserCompanies: 'user/fetchUserCompanies',
+                selectCompany: 'company/selectCompany'
             }),
+
+            getSelectedCompany() {
+                return this.userCompanies.find((company, index) => {
+                    if(company.id === this.chosenCompany)
+                        return true;
+                });
+            }
         },
 
         created() {
             this.fetchUserCompanies().then(() => {
-                this.chosenCompanies = this.userCompanies[0];
+                this.chosenCompany = this.userCompanies[0];
+                this.selectCompany(this.userCompanies[0]).then(() => {
+                    this.isLoading = false;
+                });
             });
         },
     }

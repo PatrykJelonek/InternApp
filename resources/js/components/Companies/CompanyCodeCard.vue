@@ -3,10 +3,10 @@
         <v-list-item two-line>
             <v-list-item-content>
                 <div class="overline mb-4 text-uppercase">Kod dostępu</div>
-                <v-list-item-title id="accessCodeTitle" class="headline mb-1">{{ selectedUniversity.access_code }}
+                <v-list-item-title id="accessCodeTitle" class="headline mb-1">{{ selectedCompany.access_code }}
                     <v-tooltip bottom>
                         <template v-slot:activator="{ on }">
-                            <v-icon @click="copyAccessCode" class="ml-3 body-1" v-on="on">mdi-content-copy</v-icon>
+                            <v-icon @click="copyCode" class="ml-3 body-1" v-on="on">mdi-content-copy</v-icon>
                         </template>
                         <span>Kliknij by skopiować!</span>
                     </v-tooltip>
@@ -14,7 +14,7 @@
             </v-list-item-content>
         </v-list-item>
         <v-card-actions>
-            <v-btn @click="generateNewAccessCode(selectedUniversity.id)" text>Generuj Nowy</v-btn>
+            <v-btn @click="generateCode(selectedCompany.id)" text>Generuj Nowy</v-btn>
         </v-card-actions>
         <v-snackbar v-model="snackbar" color="success" bottom right>
             Skopiowano kod!
@@ -29,35 +29,35 @@
     import {mapActions, mapGetters} from "vuex";
 
     export default {
-        name: "UniversityAccessCode",
+        name: "CompanyCodeCard",
 
         data() {
             return {
-                accessCode: "",
+                code: "",
                 snackbar: false
             }
         },
 
         computed: {
             ...mapGetters({
-                selectedUniversity: 'university/selectedUniversity',
+                selectedCompany: 'company/selectedCompany',
             }),
         },
 
         methods: {
             ...mapActions({
-                generateNewAccessCode: 'university/generateCode'
+                generateCode: 'company/generateCode'
             }),
 
-            copyAccessCode() {
-                navigator.clipboard.writeText(this.selectedUniversity.access_code).then(() => {
+            copyCode() {
+                navigator.clipboard.writeText(this.selectedCompany.access_code).then(() => {
                     this.snackbar = true;
                 });
             },
         },
 
         created() {
-            this.accessCode = this.selectedUniversity.access_code;
+            this.code = this.selectedCompany.access_code;
         }
     }
 </script>

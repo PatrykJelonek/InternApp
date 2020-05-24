@@ -49,8 +49,10 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::resource('/students', 'Api\StudentController');
     Route::resource('/user-universities', 'Api\UserUniversityController');
     Route::resource('/user-companies', 'Api\UserCompanyController');
-    Route::post('/generate-access-code', 'Api\UniversityController@setNewAccessCode');
+    Route::post('/university/generate-code', 'Api\UniversityController@setNewAccessCode');
     Route::post('/university/use-code', 'Api\UniversityController@useCode');
+    Route::post('/company/generate-code', 'Api\CompanyController@setNewAccessCode');
+    Route::post('/company/use-code', 'Api\CompanyController@useCode');
     Route::get('/me', [
         'as' => 'login.me',
         'uses' => 'Api\Auth\AuthController@me'

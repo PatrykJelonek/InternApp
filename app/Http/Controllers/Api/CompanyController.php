@@ -4,8 +4,10 @@ namespace App\Http\Controllers\Api;
 
 use App\Company;
 use App\Http\Controllers\Controller;
+use App\University;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Str;
 
 class CompanyController extends Controller
 {
@@ -136,5 +138,78 @@ class CompanyController extends Controller
             return response("Company has been deleted!", Response::HTTP_OK);
         else
             return response("Company has not been deleted!", Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+
+    public function setNewAccessCode(Request $request)
+    {
+        //TODO: Będzie trzeba to zabezpieczyć
+
+        $company = Company::find($request->input("id"));
+
+        if(isset($company))
+        {
+            $company->access_code = $this->generateUniqueRandomAccessCode();
+
+            if($company->save())
+                return response([
+                    'status' => 'success',
+                    'data' => $company->access_code,
+                    'message' => null,
+                ], Response::HTTP_OK);
+        }
+
+        return response([
+            'status' => 'error',
+            'data' => null,
+            'message' => 'New access code has been not generate!',
+        ], Response::HTTP_NOT_MODIFIED);
+    }
+
+    /**
+     * Use access code to join to university
+     *
+     * @param Request $request
+     * @return Response
+     */
+    public function useCode(Request $request)
+    {
+        $company = Company::where('access_code', $request->input('accessCode'))->first();
+        $errorMessage = "Coś poszło nie tak!";
+
+        if($company  === null)
+            $errorMessage  = "Nie udało się dopasować podanego kodu do żadnej firmy!";
+        else
+            if((count($company ->users()->where('user_id', auth()->id())->get()) < 1))
+            {
+                if($company ->users()->save(auth()->user(), ['created_at' => date('Y-m-d H:i:s')]))
+                    return response([
+                        'status' => 'success',
+                        'data' => $company,
+                        'message' => null
+                    ], Response::HTTP_OK);
+                else
+                    $errorMessage = "Nie udało się dodać Cię do tej firmy!";
+            } else
+                $errorMessage  = 'Należysz już do firmy do której przypisano podany kod!';
+
+        return response([
+            'status' => 'error',
+            'data' => null,
+            'message' => $errorMessage
+        ], Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+
+    /**
+     * Generate unique random access code.
+     *
+     * @return string
+     */
+    private function generateUniqueRandomAccessCode()
+    {
+        do {
+            $randomAccessCode = Str::upper( Str::random(8));
+        } while(count(Company::where('access_code', $randomAccessCode)->get()) > 0);
+
+        return $randomAccessCode;
     }
 }

@@ -36,7 +36,7 @@ export default {
             state.selectedUniversity = university;
         },
 
-        SET_NEW_ACCESS_CODE(state, accessCode) {
+        SET_CODE(state, accessCode) {
             state.selectedUniversity.access_code = accessCode;
         }
     },
@@ -73,18 +73,18 @@ export default {
             commit('SET_SELECTED_UNIVERSITY', university);
         },
 
-        async generateNewAccessCode({commit}, id) {
+        async generateCode({commit}, id) {
             try {
-                let response = await axios.post('/api/generate-access-code', {
+                let response = await axios.post('/api/university/generate-code', {
                     id: id
                 });
-                commit('SET_NEW_ACCESS_CODE', response.data.data);
+                commit('SET_CODE', response.data.data);
             } catch (e) {
-                commit('SET_NEW_ACCESS_CODE', e.response.data.message);
+                commit('SET_CODE', e.response.data.message);
             }
         },
 
-        useAccessCode({commit}, accessCode) {
+        useCode({commit}, accessCode) {
             return axios.post('/api/university/use-code', {
                 accessCode: accessCode
             });
