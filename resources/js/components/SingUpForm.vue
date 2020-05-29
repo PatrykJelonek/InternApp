@@ -1,129 +1,153 @@
 <template>
     <v-container>
-        <v-form>
-            <v-row class="d-flex justify-center">
-                <v-col cols="4">
-                    <v-text-field
-                        label="Imię"
-                        v-model="account.firstName"
-                        outlined
-                        dense
-                        hide-details="auto"
-                        placeholder="Jan"
-                        :error-messages="this.validationErrors.firstName"
-                        :rules="[rules.required]"
-                    ></v-text-field>
-                </v-col>
-                <v-col cols="4">
-                    <v-text-field
-                        label="Nazwisko"
-                        v-model="account.lastName"
-                        outlined
-                        dense
-                        hide-details="auto"
-                        placeholder="Kowalski"
-                        :error-messages="this.validationErrors.lastName"
-                        :rules="[rules.required]"
-                    ></v-text-field>
-                </v-col>
-            </v-row>
-            <v-row class="d-flex justify-center">
-                <v-col cols="8">
-                    <v-text-field
-                        label="Email"
-                        type="email"
-                        v-model="account.email"
-                        outlined
-                        dense
-                        hide-details="auto"
-                        placeholder="jankowalski@example.com"
-                        :error-messages="this.validationErrors.email"
-                        :rules="[rules.required]"
-                    ></v-text-field>
-                </v-col>
-            </v-row>
-            <v-row class="d-flex justify-center">
-                <v-col cols="8">
-                    <v-text-field
-                        label="Numer Telefonu"
-                        type="tel"
-                        v-model="account.phone"
-                        outlined
-                        dense
-                        hide-details="auto"
-                        placeholder="123-456-789"
-                        :error-messages="this.validationErrors.phone"
-                        :rules="[rules.required]"
-                    ></v-text-field>
-                </v-col>
-            </v-row>
-            <v-row class="d-flex justify-center">
-                <v-col cols="8">
-                    <v-text-field
-                        label="Hasło"
-                        v-model="account.password"
-                        type="password"
-                        outlined
-                        dense
-                        hide-details="auto"
-                        placeholder="●●●●●●●"
-                        :rules="[rules.required, rules.minPasswordLength]"
-                        :error-messages="this.validationErrors.password"
-                    ></v-text-field>
-                </v-col>
-            </v-row>
-            <v-row class="d-flex justify-center">
-                <v-col cols="8">
-                    <v-text-field
-                        label="Powtórz Hasło"
-                        v-model="account.passwordRepeat"
-                        type="password"
-                        outlined
-                        dense
-                        hide-details="auto"
-                        placeholder="●●●●●●●"
-                        :rules="[rules.required, rules.repeatPassword]"
-                    ></v-text-field>
-                </v-col>
-            </v-row>
-            <v-row class="d-flex justify-center">
-                <v-col cols="8">
-                    <v-checkbox
-                        v-model="account.acceptedRules"
-                        color="blue accent-4"
-                        class="ma-0"
-                        hide-details="auto"
-                        :rules="[rules.acceptRules]"
-                    >
-                        <template v-slot:label>
-                            <div>
-                                Przeczytałem i akceptuje
-                                <v-tooltip bottom>
-                                    <template v-slot:activator="{ on }">
-                                        <a target="_blank" href="/rules" @click.stop v-on="on">regulamin</a>
-                                    </template>
-                                    Otwórz w nowym oknie
-                                </v-tooltip>
-                                serwisu.
-                            </div>
-                        </template>
-                    </v-checkbox>
-                </v-col>
-            </v-row>
-            <v-row class="d-flex justify-center">
-                <v-col cols="8" class="d-flex justify-end">
-                    <v-btn color="blue accent-4" dark large @click="submit">Rejestruj</v-btn>
-                </v-col>
-            </v-row>
-        </v-form>
+        <validation-observer ref="observer" v-slot="{ validate }">
+            <v-form>
+                <v-row class="d-flex justify-center">
+                    <v-col cols="4">
+                        <validation-provider v-slot="{ errors }"  vid="firstName" rules="required">
+                            <v-text-field
+                                label="Imię"
+                                v-model="account.firstName"
+                                outlined
+                                dense
+                                hide-details="auto"
+                                placeholder="Jan"
+                                :error-messages="errors"
+                            ></v-text-field>
+                        </validation-provider>
+                    </v-col>
+                    <v-col cols="4">
+                        <validation-provider v-slot="{ errors }"  vid="lastName" rules="required">
+                            <v-text-field
+                                label="Nazwisko"
+                                v-model="account.lastName"
+                                outlined
+                                dense
+                                hide-details="auto"
+                                placeholder="Kowalski"
+                                :error-messages="errors"
+                            ></v-text-field>
+                        </validation-provider>
+                    </v-col>
+                </v-row>
+                <v-row class="d-flex justify-center">
+                    <v-col cols="8">
+                        <validation-provider v-slot="{ errors }"  vid="email" rules="required|email">
+                            <v-text-field
+                                label="Email"
+                                type="email"
+                                v-model="account.email"
+                                outlined
+                                dense
+                                hide-details="auto"
+                                placeholder="jankowalski@example.com"
+                                :error-messages="errors"
+                            ></v-text-field>
+                        </validation-provider>
+                    </v-col>
+                </v-row>
+                <v-row class="d-flex justify-center">
+                    <v-col cols="8">
+                        <validation-provider v-slot="{ errors }"  vid="phone" rules="required|max:11">
+                            <v-text-field
+                                label="Numer Telefonu"
+                                type="tel"
+                                v-model="account.phone"
+                                outlined
+                                dense
+                                hide-details="auto"
+                                placeholder="123-456-789"
+                                v-on:input="phonePattern"
+                                :error-messages="errors"
+                            ></v-text-field>
+                        </validation-provider>
+                    </v-col>
+                </v-row>
+                <v-row class="d-flex justify-center">
+                    <v-col cols="8">
+                        <validation-provider v-slot="{ errors }"  vid="password" rules="required|min:6">
+                            <v-text-field
+                                label="Hasło"
+                                v-model="account.password"
+                                type="password"
+                                outlined
+                                dense
+                                hide-details="auto"
+                                placeholder="●●●●●●●"
+                                :error-messages="errors"
+                            ></v-text-field>
+                        </validation-provider>
+                    </v-col>
+                </v-row>
+                <v-row class="d-flex justify-center">
+                    <v-col cols="8">
+                        <validation-provider v-slot="{ errors }"  vid="passwordRepeat" rules="required_if:password|confirmed:password">
+                            <v-text-field
+                                label="Powtórz Hasło"
+                                v-model="account.passwordRepeat"
+                                type="password"
+                                outlined
+                                dense
+                                hide-details="auto"
+                                placeholder="●●●●●●●"
+                                :error-messages="errors"
+                            ></v-text-field>
+                        </validation-provider>
+                    </v-col>
+                </v-row>
+                <v-row class="d-flex justify-center">
+                    <v-col cols="8">
+                        <validation-provider v-slot="{ errors }"  vid="acceptedRules" rules="min_value:1">
+                            <v-checkbox
+                                v-model="account.acceptedRules"
+                                color="blue accent-4"
+                                class="ma-0"
+                                hide-details="auto"
+                                :error-messages="errors"
+                                :true-value="1"
+                                :false-value="0"
+                            >
+                                <template v-slot:label>
+                                    <div>
+                                        Przeczytałem i akceptuje
+                                        <v-tooltip bottom>
+                                            <template v-slot:activator="{ on }">
+                                                <a target="_blank" href="/rules" @click.stop v-on="on">regulamin</a>
+                                            </template>
+                                            Otwórz w nowym oknie
+                                        </v-tooltip>
+                                        serwisu.
+                                    </div>
+                                </template>
+                            </v-checkbox>
+                        </validation-provider>
+                    </v-col>
+                </v-row>
+                <v-row class="d-flex justify-center">
+                    <v-col cols="8" class="d-flex justify-end">
+                        <v-btn color="blue accent-4" dark large @click="submitForm">Rejestruj</v-btn>
+                    </v-col>
+                </v-row>
+            </v-form>
+        </validation-observer>
     </v-container>
 </template>
 
 <script>
     import {mapActions, mapState} from "vuex";
+    import { required, email, required_if, confirmed, min, min_value, max } from "vee-validate/dist/rules";
+    import {  extend, setInteractionMode, ValidationProvider, ValidationObserver } from "vee-validate";
+
+    setInteractionMode('eager');
 
     export default {
         name: "SingUpForm",
+
+        components: {
+            ValidationProvider,
+            ValidationObserver
+        },
+
         data() {
             return {
                 account: {
@@ -136,28 +160,82 @@
                     acceptedRules: false
                 },
                 persistentHint: false,
-
-                rules: {
-                    required: value => !!value || 'To pole jest wymagane!',
-                    acceptRules: value => !!value || 'Musisz zaakceptować regulamin!',
-                    repeatPassword: value => value == this.account.password || 'Hasła muszą być identyczne!',
-                    minPasswordLength: value => value.length >= 6 || 'Hasło musi zawierać min. 6 znaków!',
-                }
             }
         },
+
         methods: {
-            ...mapActions(["user/createUserAccount"]),
+            ...mapActions({
+                createUserAccount: "user/createUserAccount",
+                createUser: "user/createUser",
+            }),
+
             submit (e) {
                 this.createUserAccount(this.account);
                 e.preventDefault();
+            },
+
+            phonePattern() {
+                switch(this.account.phone.length) {
+                    case 3:
+                    case 7:
+                        this.account.phone += '-';
+                }
+            },
+
+            async submitForm() {
+                this.$refs.observer.validate();
+
+                await this.createUser(this.account).then(() => {
+                    this.$router.replace('login');
+                }).catch((e) => {
+                    if(e.response.status === 422) {
+                        this.$refs.observer.setErrors(e.response.data.errors);
+                    }
+                });
             }
         },
+
         computed: {
             ...mapState({
                 validationErrors: state => state.user.validationErrors,
             }),
         },
-    }
+    };
+
+    extend('required', {
+        ...required,
+        message: 'To pole jest wymagane!',
+    });
+
+    extend('required_if', {
+        ...required_if,
+        message: 'Potwierdż hasło!',
+    });
+
+    extend('confirmed', {
+        ...confirmed,
+        message: 'Hasła muszą być identyczne!',
+    });
+
+    extend('email', {
+        ...email,
+        message: 'Podaj prawidłowy adres email!',
+    });
+
+    extend('min', {
+        ...min,
+        message: 'Pole musi mieć min. {length} znaków!',
+    });
+
+    extend('max', {
+        ...max,
+        message: 'Pole może mieć maks. {length} znaków!',
+    });
+
+    extend('min_value', {
+        ...min_value,
+        message: 'Musisz zaakceptować regulamin!',
+    });
 </script>
 
 <style scoped>

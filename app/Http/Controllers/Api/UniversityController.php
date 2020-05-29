@@ -22,15 +22,6 @@ class UniversityController extends Controller
      */
     public function index()
     {
-        $user = auth()->user();
-
-        if(!$user->hasRole('admin'))
-           return response([
-               'status' => 'error',
-               'data' => null,
-               'message' => 'Nie posiadasz uprawnień do tego zasobu!'
-           ], Response::HTTP_UNAUTHORIZED);
-
         $universities = University::all();
 
         if (isset($universities))
@@ -40,7 +31,35 @@ class UniversityController extends Controller
                 'message' => null
             ], Response::HTTP_OK);
         else
-            return \response("Universities not found!", Response::HTTP_NOT_FOUND);
+            return \response([
+                'status' => 'error',
+                'data' => null,
+                'message' => 'Nie znaleziono żadnego uniwersytetu!'
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+
+    /**
+     * Return specific university faculties
+     *
+     * @param $id
+     * @return Response
+     */
+    public function universityFaculties($id)
+    {
+        $universities = University::find($id);
+
+        if (isset($universities->faculties))
+            return response([
+                'status' => 'success',
+                'data' => $universities->faculties,
+                'message' => null
+            ], Response::HTTP_OK);
+        else
+            return \response([
+                'status' => 'error',
+                'data' => null,
+                'message' => 'Nie znaleziono żadnego uniwersytetu!'
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
     /**

@@ -11,6 +11,10 @@ import auth from "./modules/auth";
 import city from "./modules/city";
 import company from "./modules/company";
 import snackbar from "./modules/snackbar";
+import specialization from "./modules/specialization";
+import faculty from "./modules/faculty";
+import field from "./modules/field";
+import student from "./modules/student";
 
 const debug = process.env.NODE_ENV !== 'production';
 
@@ -23,6 +27,10 @@ export default new Vuex.Store({
         user,
         city,
         snackbar,
+        specialization,
+        faculty,
+        field,
+        student
     },
     strict: debug
 });

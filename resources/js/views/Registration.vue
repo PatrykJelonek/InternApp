@@ -18,7 +18,7 @@
                     >
                         <h3 class="font-weight-medium title font-weight-bold">Posiadasz już konto?</h3>
                         <p class="subtitle-2 mt-2">Skorzystaj ze swojego konta by w pełni korzystać z naszego serwisu!</p>
-                        <v-btn large outlined color="white" v-on:click="$router.push('/login')">Zaloguj się</v-btn>
+                        <v-btn large outlined color="white" to="login">Zaloguj się</v-btn>
                     </v-col>
                     <v-col
                         cols="7"

@@ -19,9 +19,17 @@ class SpecializationController extends Controller
         $specializations = Specialization::all();
 
         if (isset($specializations))
-            return response($specializations, Response::HTTP_OK);
+            return response([
+                'status' => 'success',
+                'data' => $specializations,
+                'message' => null
+            ], Response::HTTP_OK);
         else
-            return response("Specializations not found!", Response::HTTP_NOT_FOUND);
+            return response([
+                'status' => 'error',
+                'data' => null,
+                'message' => 'Nie znaleziono żadnych specializacji'
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
     /**

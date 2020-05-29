@@ -58,3 +58,11 @@ Route::group(['middleware' => ['jwt.verify']], function() {
         'uses' => 'Api\Auth\AuthController@me'
     ]);
 });
+
+//For not logged in users
+Route::get('/universities', 'Api\UniversityController@index');
+Route::get('/specializations', 'Api\SpecializationController@index');
+Route::get('/university/{id}/faculties', 'Api\UniversityController@universityFaculties');
+Route::get('/faculty/{id}/fields', 'Api\FacultyController@facultyFields');
+Route::get('/field/{id}/specializations', 'Api\FieldController@fieldSpecializations');
+Route::post('/students', 'Api\StudentController@store');

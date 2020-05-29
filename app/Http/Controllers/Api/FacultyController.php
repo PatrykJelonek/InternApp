@@ -12,7 +12,7 @@ class FacultyController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index()
     {
@@ -25,9 +25,33 @@ class FacultyController extends Controller
     }
 
     /**
+     * Get fields of specific faculty
+     *
+     * @param $id
+     * @return Response
+     */
+    public function facultyFields($id)
+    {
+        $faculties = Faculty::find($id);
+
+        if (isset($faculties->fields))
+            return response([
+                'status' => 'success',
+                'data' => $faculties->fields,
+                'message' => null
+            ], Response::HTTP_OK);
+        else
+            return response([
+                'status' => 'error',
+                'data' => null,
+                'message' => 'Nie znaleziono!'
+            ], Response::HTTP_NOT_FOUND);
+    }
+
+    /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function create()
     {
@@ -37,8 +61,8 @@ class FacultyController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return Response
      */
     public function store(Request $request)
     {
@@ -57,8 +81,8 @@ class FacultyController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Faculty  $faculty
-     * @return \Illuminate\Http\Response
+     * @param Faculty $faculty
+     * @return Response
      */
     public function show(Faculty $faculty)
     {
@@ -73,8 +97,8 @@ class FacultyController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Faculty  $faculty
-     * @return \Illuminate\Http\Response
+     * @param Faculty $faculty
+     * @return Response
      */
     public function edit(Faculty $faculty)
     {
@@ -84,9 +108,9 @@ class FacultyController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Faculty  $faculty
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @param Faculty $faculty
+     * @return Response
      */
     public function update(Request $request)
     {
@@ -107,7 +131,7 @@ class FacultyController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy($id)
     {

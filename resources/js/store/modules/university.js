@@ -10,7 +10,7 @@ export default {
     },
 
     getters: {
-        getAllUniversities: state => {
+        universities: state => {
             return state.universities;
         },
 
@@ -42,18 +42,13 @@ export default {
     },
 
     actions: {
-        async fetchUniversitiesFromApi({commit}) {
-             return window.axios({
-                 method: 'get',
-                 url: '/api/universities',
-                 headers: { 'X-CSRF-TOKEN': window.Laravel.csrfToken},
-             }).then(res => {
-                 console.log(res.data);
-                    commit("SET_UNIVERSITIES", res.data.data);
-                })
-                .catch(error => {
-                    console.log(error);
-                });
+        async fetchUniversities({commit}) {
+             try {
+                 let response = await axios.get('/api/universities');
+                 commit('SET_UNIVERSITIES', response.data.data);
+             } catch(e) {
+                 commit('SET_UNIVERSITIES', []);
+             }
         },
 
         async fetchUniversityTypes({commit}) {

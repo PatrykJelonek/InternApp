@@ -63,6 +63,10 @@ export default {
             });
         },
 
+        createUser({commit}, user) {
+          return axios.post('/api/users', user);
+        },
+
         async fetchUserUniversities({ commit }) {
             try {
                 let response = await axios.get('/api/user-universities');

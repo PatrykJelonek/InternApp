@@ -17,6 +17,7 @@ import Companies from "../views/Companies";
 import Login from "../views/Login";
 import UniversityCreate from "../views/UniversityCreate";
 import CompanyCreate from "../views/CompanyCreate";
+import StudentRegistration from "../views/StudentRegistration";
 
 const router = new VueRouter({
     mode: 'history',
@@ -41,9 +42,14 @@ const router = new VueRouter({
             },
         },
         {
-            path: '/sign-up',
-            name: 'sign-up',
+            path: '/register',
+            name: 'register',
             component: Registration,
+        },
+        {
+            path: '/register/student',
+            name: 'student-registration',
+            component: StudentRegistration,
         },
         {
             path: '/logout',

@@ -24,6 +24,11 @@ class University extends Model
         return $this->belongsToMany('App\User', 'users_universities', 'university_id', 'user_id');
     }
 
+    public function faculties()
+    {
+        return $this->belongsToMany('App\Faculty', 'universities_faculties', 'university_id', 'faculty_id');
+    }
+
     public static function messages()
     {
         return [

@@ -18,7 +18,7 @@
                     >
                         <h3 class="font-weight-medium title font-weight-bold">Nie posiadasz jeszcze konta?</h3>
                         <p class="subtitle-2 mt-2 px-10 text-center">Załóż darmowe konto w naszym serwisie by zarządzać praktykami na uczelni lub pozyskać praktykantów do firmy!</p>
-                        <v-btn large outlined color="white" v-on:click="$router.push('/sign-up')">Zarejestruj się</v-btn>
+                        <v-btn large outlined color="white" to="register">Zarejestruj się</v-btn>
                     </v-col>
                     <v-col
                         cols="7"

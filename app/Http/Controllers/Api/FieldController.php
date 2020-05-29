@@ -12,7 +12,7 @@ class FieldController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index()
     {
@@ -26,9 +26,33 @@ class FieldController extends Controller
     }
 
     /**
+     * Get fields of specific faculty
+     *
+     * @param $id
+     * @return Response
+     */
+    public function fieldSpecializations($id)
+    {
+        $field = Field::find($id);
+
+        if (isset($field->specializations))
+            return response([
+                'status' => 'success',
+                'data' => $field->specializations,
+                'message' => null
+            ], Response::HTTP_OK);
+        else
+            return response([
+                'status' => 'error',
+                'data' => null,
+                'message' => 'Nie znaleziono!'
+            ], Response::HTTP_NOT_FOUND);
+    }
+
+    /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function create()
     {
@@ -38,8 +62,8 @@ class FieldController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return Response
      */
     public function store(Request $request)
     {
@@ -60,7 +84,7 @@ class FieldController extends Controller
      * Display the specified resource.
      *
      * @param  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function show($id)
     {
@@ -76,8 +100,8 @@ class FieldController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Field  $field
-     * @return \Illuminate\Http\Response
+     * @param Field $field
+     * @return Response
      */
     public function edit(Field $field)
     {
@@ -87,9 +111,9 @@ class FieldController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Field  $field
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @param Field $field
+     * @return Response
      */
     public function update(Request $request)
     {
@@ -110,7 +134,7 @@ class FieldController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy($id)
     {
