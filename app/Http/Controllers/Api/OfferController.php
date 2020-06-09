@@ -42,12 +42,52 @@ class OfferController extends Controller
      */
     public function store(Request $request)
     {
-        //TODO:  CREATE METHOD!
+        $validatedData = $request->validate([
+            'companyId' => 'required',
+            'name' => 'required|max:128',
+            'placesNumber' => 'required',
+            'program' => 'required',
+            'schedule' => 'required',
+            'offerCategoryId' => 'required',
+            'companySupervisorId' => 'required',
+            'interview' => 'required',
+        ], Offer::messages());
+
+        $offer = new Offer;
+        $offer_status = OfferStatus::where('name', 'new')->get();
+
+        $offer->company_id = $request->input('companyId');
+        $offer->name= $request->input('name');
+        $offer->places_number = $request->input('placesNumber');
+        $offer->program = $request->input('program');
+        $offer->schedule = $request->input('schedule');
+        $offer->offer_category_id = $request->input('offerCategoryId');
+        $offer->company_supervisor_id = $request->input('companySupervisorId');
+        $offer->interview = $request->input('interivew');
+        $offer->user_id = auth()->id();
+        $offer->updated_at = date('Y-m-d H:i:s');
+        $offer->created_at = date('Y-m-d H:i:s');
+        $offer->offer_status_id = $offer_status->id;
+       
+        if($offer->save())
+        {
+            if($company->users()->save(auth()->user(), ['created_at' => date('Y-m-d H:i:s')]))
+                return response([
+                    'status' => 'success',
+                    'data' => $offers,
+                    'message' => null
+                ], Response::HTTP_OK);
+        } else
+            return response([
+                'status' => 'error',
+                'data' => $offers,
+                'message' => null
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
     /**
      * Display the specified resource.
-     *
+     *  
      * @param  $id
      * @return \Illuminate\Http\Response
      */
