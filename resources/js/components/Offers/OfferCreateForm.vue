@@ -122,7 +122,7 @@
             </v-row>
             <v-row>
                 <v-col class="d-flex justify-end">
-                    <v-btn color="blue accent-4" large @click="submit" class="white--text">Dodaj firmę</v-btn>
+                    <v-btn color="blue accent-4" large @click="submit" class="white--text">Dodaj ofertę</v-btn>
                 </v-col>
             </v-row>
         </v-form>
@@ -169,10 +169,18 @@
         methods: {
             ...mapActions({
                 fetchUserCompanies: 'user/fetchUserCompanies',
+                createOffer: 'offer/createOffer'
             }),
 
             async submit() {
+                this.$refs.observer.validate();
 
+                await this.createOffer(this.offer).then(() => {
+                    this.$router.replace('companies');
+                }).catch((e) => {
+                    console.log(e.response.data.errors);
+                    this.$refs.observer.setErrors(e.response.data.errors);
+                })
             }
         },
 
