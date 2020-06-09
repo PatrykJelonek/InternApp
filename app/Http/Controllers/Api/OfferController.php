@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Offer;
+use App\OfferStatus;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -62,25 +63,24 @@ class OfferController extends Controller
         $offer->schedule = $request->input('schedule');
         $offer->offer_category_id = $request->input('offerCategoryId');
         $offer->company_supervisor_id = $request->input('companySupervisorId');
-        $offer->interview = $request->input('interivew');
+        $offer->interview = $request->input('interivew') == true ? 1 : 0;
         $offer->user_id = auth()->id();
         $offer->updated_at = date('Y-m-d H:i:s');
         $offer->created_at = date('Y-m-d H:i:s');
-        $offer->offer_status_id = $offer_status->id;
+        $offer->offer_status_id = $offer_status[0]->id;
 
         if($offer->save())
         {
-            if($company->users()->save(auth()->user(), ['created_at' => date('Y-m-d H:i:s')]))
-                return response([
-                    'status' => 'success',
-                    'data' => $offers,
-                    'message' => null
-                ], Response::HTTP_OK);
+            return response([
+                'status' => 'success',
+                'data' => $offer,
+                'message' => null
+            ], Response::HTTP_OK);
         } else
             return response([
                 'status' => 'error',
-                'data' => $offers,
-                'message' => null
+                'data' => null,
+                'message' => 'Nie udało się utworzyć oferty!'
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
