@@ -28,4 +28,17 @@ class Offer extends Model
         return $this->hasOne('App\OfferStatus');
     }
     // TODO:supervisior_ids
+    public static function messages()
+    {
+        return [
+            'companyId:required' => 'Nazwa firmy jest wymagana!',
+            'name:required' => 'Nazwa oferty jest wymagana!',
+            'placesNumber:required' => 'Liczba miejsc jest wymagana!',
+            'program:required' => 'Program jest wymagany!',
+            'schedule:required' => 'Harmonogram jest wymagany!',
+            'offerCategoryId:required' => 'Kategoria oferty jest wymagana!',
+            'companySupervisorId:required' => 'Opiekun firmy jest wymagany !',
+        ];
+    }
+
 }
