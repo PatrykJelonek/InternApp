@@ -25,7 +25,11 @@ class UniversityTypeController extends Controller
                 'message' => null
             ], Response::HTTP_OK);
         else
-            return response("University types not found!", Response::HTTP_NOT_FOUND);
+        return response([
+            'status' => 'error',
+            'data' => null,
+            'message' => error
+        ], Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
     /**
