@@ -4,6 +4,7 @@ export default {
     state: {
         selectedCompany: null,
         companyCategories: [],
+        companyUsers: []
     },
 
     getters: {
@@ -13,12 +14,20 @@ export default {
 
         selectedCompany(state) {
             return state.selectedCompany;
+        },
+
+        companyUsers(state) {
+            return state.companyUsers;
         }
     },
 
     mutations: {
         SET_COMPANY_CATEGORIES(state, data) {
             state.companyCategories = data;
+        },
+
+        SET_COMPANY_USERS(state, data) {
+            state.companyUsers = data;
         },
 
         SELECT_COMPANY(state, company) {
@@ -37,6 +46,15 @@ export default {
                 commit('SET_COMPANY_CATEGORIES', response.data.data);
             } catch (e) {
                 commit('SET_COMPANY_CATEGORIES', []);
+            }
+        },
+
+        async fetchCompanyUsers({commit}, id) {
+            try {
+                let response = await axios.get(`/api/company/${id}/users`);
+                commit('SET_COMPANY_USERS', response.data.data);
+            } catch (e) {
+                commit('SET_COMPANY_USERS', []);
             }
         },
 

@@ -15,7 +15,7 @@ class User extends Model implements AuthenticatableContract, JWTSubject
 
     protected $table = 'users';
 
-    protected $hidden = ['password_hash', 'remember_token', 'user_status_id', 'password_reset_token', 'id'];
+    protected $hidden = ['password_hash', 'remember_token', 'user_status_id', 'password_reset_token'];
 
     public function getAuthPassword () {
         return $this->password_hash;

@@ -215,16 +215,24 @@ class CompanyController extends Controller
     /**
      * Get users from company
      * @param $id
-     * @return Response 
+     * @return Response
      */
-    
+
     public function getUsers($id)
     {
-        $company = Company::find($id)->user();
+        $company = Company::find($id);
 
          if (isset($company))
-            return response($company, Response::HTTP_OK);
+             return response([
+                 'status' => 'success',
+                 'data' => $company->users,
+                 'message' => null
+             ], Response::HTTP_OK);
         else
-            return response("user not found!", Response::HTTP_NOT_FOUND);
+            return response([
+                'status' => 'error',
+                'data' => null,
+                'message' => "Company users not found!"
+            ], Response::HTTP_NOT_FOUND);
     }
 }

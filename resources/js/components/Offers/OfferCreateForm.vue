@@ -17,6 +17,7 @@
                             no-data-text="Nie jesteś przypisany do żadnej z firm!"
                             placeholder="Nazwa firmy"
                             :readonly="isReadonly"
+                            @select="fetchCompanyUsers(offer.companyId)"
                         ></v-select>
                     </validation-provider>
                 </v-col>
@@ -67,18 +68,30 @@
                         ></v-select>
                     </validation-provider>
                 </v-col>
-                <v-col cols="5">
+                <v-col cols="5" v-if="offer.companyId">
                     <validation-provider v-slot="{ errors }" vid="companySupervisorId" rules="required">
                         <v-select
                             label="Opiekun"
                             v-model="offer.companySupervisorId"
+                            :items="companyUsers"
+                            item-text="first_name"
+                            item-value="id"
                             outlined
                             dense
                             hide-details="auto"
                             :error-messages="errors"
                             no-data-text="Ups... nie znaleziono nikogo!"
                             placeholder="Opiekun"
-                        ></v-select>
+                        >
+                            <template slot="selection" slot-scope="data">
+                                <!-- HTML that describe how select should render selected items -->
+                                {{ data.item.first_name }} {{ data.item.last_name }}
+                            </template>
+                            <template slot="item" slot-scope="data">
+                                <!-- HTML that describe how select should render items when the select is open -->
+                                {{ data.item.first_name }} {{ data.item.last_name }}
+                            </template>
+                        </v-select>
                     </validation-provider>
                 </v-col>
             </v-row>
@@ -166,7 +179,8 @@
         computed: {
             ...mapGetters({
                 userCompanies: 'user/userCompanies',
-                offerCategories: 'offer/offerCategories'
+                offerCategories: 'offer/offerCategories',
+                companyUsers: 'company/companyUsers'
             }),
         },
 
@@ -174,6 +188,7 @@
             ...mapActions({
                 fetchUserCompanies: 'user/fetchUserCompanies',
                 fetchOfferCategories: 'offer/fetchOfferCategories',
+                fetchCompanyUsers: 'company/fetchCompanyUsers',
                 createOffer: 'offer/createOffer'
             }),
 
@@ -183,10 +198,12 @@
                 await this.createOffer(this.offer).then(() => {
                     this.$router.replace('companies');
                 }).catch((e) => {
-                    console.log(e.response.data.errors);
+                    console.log(e.response.data);
+                    if(e.response.status == 422) {
                     this.$refs.observer.setErrors(e.response.data.errors);
-                })
-            }
+                    }
+                });
+            },
         },
 
         created() {
@@ -194,6 +211,7 @@
                 if(this.userCompanies.length === 1) {
                     this.isReadonly = true;
                     this.offer.companyId = this.userCompanies[0].id;
+                    this.fetchCompanyUsers(this.userCompanies[0].id);
                 }
             });
 
