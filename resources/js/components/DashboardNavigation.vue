@@ -51,9 +51,9 @@
                             <v-list-item-title>Moje Firmy</v-list-item-title>
                         </v-list-item-content>
                     </v-list-item>
-                    <v-list-item link to="companies/create">
+                    <v-list-item link to="create-offer">
                         <v-list-item-content>
-                            <v-list-item-title>Dodaj Firmę</v-list-item-title>
+                            <v-list-item-title>Utwórz Ofertę</v-list-item-title>
                         </v-list-item-content>
                     </v-list-item>
             </v-list-group>

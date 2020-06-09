@@ -28,13 +28,17 @@
     ```
     php artisan key:generate
     ```
-7. Create an empty database
-8. Change `.env` files by data to connect with database
-9. Migrate the database
+7. Generate a JWT Secret Token
+    ```
+   php artisan jwt:secret
+   ```
+8. Create an empty database
+9. Change `.env` files by data to connect with database
+10. Migrate the database
     ```
     php artisan migrate
     ```
-10. Seed the database
+11. Seed the database
     ```
     php artisan db:seed
     ```
