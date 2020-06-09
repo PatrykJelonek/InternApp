@@ -54,7 +54,7 @@
             </v-list-group>
 
             <v-list-group
-                prepend-icon="mdi-briefcase-outline"
+                prepend-icon="mdi-newspaper-variant-multiple"
                 color="white"
                 no-action
             >

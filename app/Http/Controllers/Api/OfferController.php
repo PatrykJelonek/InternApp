@@ -63,7 +63,7 @@ class OfferController extends Controller
         $offer->schedule = $request->input('schedule');
         $offer->offer_category_id = $request->input('offerCategoryId');
         $offer->company_supervisor_id = $request->input('companySupervisorId');
-        $offer->interview = $request->input('interivew') == true ? 1 : 0;
+        $offer->interview = $request->input('interview') ? 1 : 0;
         $offer->user_id = auth()->id();
         $offer->updated_at = date('Y-m-d H:i:s');
         $offer->created_at = date('Y-m-d H:i:s');

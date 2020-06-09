@@ -17,7 +17,7 @@
                             no-data-text="Nie jesteś przypisany do żadnej z firm!"
                             placeholder="Nazwa firmy"
                             :readonly="isReadonly"
-                            @select="fetchCompanyUsers(offer.companyId)"
+                            @change="fetchCompanyUsers(offer.companyId)"
                         ></v-select>
                     </validation-provider>
                 </v-col>
@@ -68,7 +68,7 @@
                         ></v-select>
                     </validation-provider>
                 </v-col>
-                <v-col cols="5" v-if="offer.companyId">
+                <v-col cols="5">
                     <validation-provider v-slot="{ errors }" vid="companySupervisorId" rules="required">
                         <v-select
                             label="Opiekun"
@@ -79,8 +79,9 @@
                             outlined
                             dense
                             hide-details="auto"
+                            :disabled="!offer.companyId"
                             :error-messages="errors"
-                            no-data-text="Ups... nie znaleziono nikogo!"
+                            no-data-text="..."
                             placeholder="Opiekun"
                         >
                             <template slot="selection" slot-scope="data">
