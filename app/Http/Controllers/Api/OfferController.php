@@ -54,6 +54,7 @@ class OfferController extends Controller
         ], Offer::messages());
 
         $offer = new Offer;
+        $offer_status = OfferStatus::where('name', 'new')->get();
 
         $offer->company_id = $request->input('companyId');
         $offer->name= $request->input('name');
@@ -66,12 +67,27 @@ class OfferController extends Controller
         $offer->user_id = auth()->id();
         $offer->updated_at = date('Y-m-d H:i:s');
         $offer->created_at = date('Y-m-d H:i:s');
-        
+        $offer->offer_status_id = $offer_status->id;
+       
+        if($offer->save())
+        {
+            if($company->users()->save(auth()->user(), ['created_at' => date('Y-m-d H:i:s')]))
+                return response([
+                    'status' => 'success',
+                    'data' => $offers,
+                    'message' => null
+                ], Response::HTTP_OK);
+        } else
+            return response([
+                'status' => 'error',
+                'data' => $offers,
+                'message' => null
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
     /**
      * Display the specified resource.
-     *
+     *  
      * @param  $id
      * @return \Illuminate\Http\Response
      */
