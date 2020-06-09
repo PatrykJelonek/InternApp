@@ -19,9 +19,17 @@ class OfferCategoryController extends Controller
         $offerCategories = OfferCategory::all();
 
         if (isset($offerCategories))
-            return response($offerCategories, Response::HTTP_OK);
+            return response([
+                'status' => 'success',
+                'data' => $offerCategories,
+                'message' => null
+            ], Response::HTTP_OK);
         else
-            return response("Offer categories not found!", Response::HTTP_NOT_FOUND);
+        return response([
+            'status' => 'error',
+            'data' => null,
+            'message' => 'nie znaleziono typów'
+        ], Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
     /**
@@ -44,17 +52,16 @@ class OfferCategoryController extends Controller
     {
         $offerCategory = new OfferCategory;
 
-        if (isset($offerCategory)) {
+        
             $offerCategory->name = $request->input("name");
             $offerCategory->description = $request->input("description");
             $offerCategory->created_at = date('Y-m-d H:i:s');
             $offerCategory->updated_at = date('Y-m-d H:i:s');
 
             if ($offerCategory->save())
-                return response($offerCategory, Response::HTTP_OK);
-        }
-
-        return response("Offer category has not been created!", Response::HTTP_INTERNAL_SERVER_ERROR);
+            return response($offerCategory, Response::HTTP_OK);
+        else
+            return response("Offer category has not been created!", Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
     /**
