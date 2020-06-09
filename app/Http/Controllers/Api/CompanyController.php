@@ -212,4 +212,19 @@ class CompanyController extends Controller
 
         return $randomAccessCode;
     }
+    /**
+     * Get users from company
+     * @param $id
+     * @return Response 
+     */
+    
+    public function getUsers($id)
+    {
+        $company = Company::find($id)->user();
+
+         if (isset($company))
+            return response($company, Response::HTTP_OK);
+        else
+            return response("user not found!", Response::HTTP_NOT_FOUND);
+    }
 }
