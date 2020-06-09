@@ -51,11 +51,21 @@
                             <v-list-item-title>Moje Firmy</v-list-item-title>
                         </v-list-item-content>
                     </v-list-item>
-                    <v-list-item link to="create-offer">
-                        <v-list-item-content>
-                            <v-list-item-title>Utwórz Ofertę</v-list-item-title>
-                        </v-list-item-content>
-                    </v-list-item>
+            </v-list-group>
+
+            <v-list-group
+                prepend-icon="mdi-briefcase-outline"
+                color="white"
+                no-action
+            >
+                <template v-slot:activator>
+                    <v-list-item-title>Oferty</v-list-item-title>
+                </template>
+                <v-list-item link to="create-offer">
+                    <v-list-item-content>
+                        <v-list-item-title>Utwórz Ofertę</v-list-item-title>
+                    </v-list-item-content>
+                </v-list-item>
             </v-list-group>
 
         </v-list>

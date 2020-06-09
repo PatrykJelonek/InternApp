@@ -55,6 +55,9 @@
                         <v-select
                             label="Kategoria Oferty"
                             v-model="offer.offerCategoryId"
+                            :items="offerCategories"
+                            item-text="name"
+                            item-value="id"
                             outlined
                             dense
                             hide-details="auto"
@@ -163,12 +166,14 @@
         computed: {
             ...mapGetters({
                 userCompanies: 'user/userCompanies',
+                offerCategories: 'offer/offerCategories'
             }),
         },
 
         methods: {
             ...mapActions({
                 fetchUserCompanies: 'user/fetchUserCompanies',
+                fetchOfferCategories: 'offer/fetchOfferCategories',
                 createOffer: 'offer/createOffer'
             }),
 
@@ -191,6 +196,8 @@
                     this.offer.companyId = this.userCompanies[0].id;
                 }
             });
+
+            this.fetchOfferCategories();
         },
 
     }
