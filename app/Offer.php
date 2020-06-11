@@ -10,22 +10,22 @@ class Offer extends Model
 
     public function company()
     {
-        return $this->hasOne('App\Company');
+        return $this->belongsTo('App\Company');
     }
 
     public function user()
     {
-        return $this->hasOne('App\User');
+        return $this->belongsTo('App\User');
     }
 
     public function offerCategory()
     {
-        return $this->hasOne('App\OfferCategory');
+        return $this->belongsTo('App\OfferCategory');
     }
 
     public function offerStatus()
     {
-        return $this->hasOne('App\OfferStatus');
+        return $this->belongsTo('App\OfferStatus');
     }
     // TODO:supervisior_ids
     public static function messages()

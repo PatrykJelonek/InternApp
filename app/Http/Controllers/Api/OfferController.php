@@ -17,12 +17,20 @@ class OfferController extends Controller
      */
     public function index()
     {
-        $offers = Offer::all();
+        $offers = Offer::with(['company','offerCategory','offerStatus','company.city'])->get();
 
         if (isset($offers))
-            return response($offers, Response::HTTP_OK);
+            return response([
+                'status' => 'success',
+                'data' => $offers,
+                'message' => null
+            ], Response::HTTP_OK);
         else
-            return response("Offers not found!", Response::HTTP_NOT_FOUND);
+            return response([
+                'status' => 'error',
+                'data' => null,
+                'message' => "Nie znaleziono żadnych ofert!"
+            ], Response::HTTP_NOT_FOUND);
     }
 
     /**
@@ -95,9 +103,17 @@ class OfferController extends Controller
         $offer = Offer::find($id);
 
         if (isset($offer))
-            return response($offer, Response::HTTP_OK);
+            return response([
+                'status' => 'success',
+                'data' => $offer,
+                'message' => null
+            ], Response::HTTP_OK);
         else
-            return response("Offer not found!", Response::HTTP_NOT_FOUND);
+            return response([
+                'status' => 'error',
+                'data' => null,
+                'message' => "Nie znaleziono oferty!"
+            ], Response::HTTP_NOT_FOUND);
     }
 
     /**
