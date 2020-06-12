@@ -5,7 +5,7 @@
             :items="offers"
             :items-per-page="10"
             :loading="isLoading"
-            @click:row="(item) => {this.$router.push(`/offer/${item.id}`)}"
+            @click:row="(item) => {this.$router.push({name: 'offer', params: {id: item.id}})}"
         ></v-data-table>
     </div>
 </template>

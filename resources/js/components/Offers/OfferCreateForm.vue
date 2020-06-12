@@ -197,7 +197,7 @@
                 this.$refs.observer.validate();
 
                 await this.createOffer(this.offer).then(() => {
-                    this.$router.replace('companies');
+                    this.$router.replace('offers');
                 }).catch((e) => {
                     console.log(e.response.data);
                     if(e.response.status == 422) {

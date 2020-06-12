@@ -110,7 +110,7 @@ const router = new VueRouter({
                 {
                     path: '/offers',
                     name: 'offers',
-                    component: Offers
+                    component: Offers,
                 },
                 {
                     path: '/offer/:id',
