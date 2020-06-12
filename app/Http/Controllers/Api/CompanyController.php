@@ -94,12 +94,20 @@ class CompanyController extends Controller
      */
     public function show($id)
     {
-        $company = Company::find($id);
+        $company = Company::with(['city','category','offers', 'offers.offerCategory'])->where(['id' => $id])->get();
 
         if (isset($company))
-            return response($company, Response::HTTP_OK);
+            return response([
+                'status' => 'success',
+                'data' => $company[0],
+                'message' => null,
+            ], Response::HTTP_OK);
         else
-            return response("Company not found!", Response::HTTP_NOT_FOUND);
+            return response([
+                'status' => 'error',
+                'data' => null,
+                'message' => 'Nie znaleziono podanej firmy!',
+            ], Response::HTTP_NOT_FOUND);
     }
 
     /**

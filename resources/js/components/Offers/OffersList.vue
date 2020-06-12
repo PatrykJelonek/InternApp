@@ -1,13 +1,13 @@
 <template>
-    <div>
-        <v-data-table
-            :headers="headers"
-            :items="offers"
-            :items-per-page="10"
-            :loading="isLoading"
-            @click:row="(item) => {this.$router.push({name: 'offer', params: {id: item.id}})}"
-        ></v-data-table>
-    </div>
+        <v-card outlined>
+            <v-data-table
+                :headers="headers"
+                :items="offers"
+                :items-per-page="10"
+                :loading="isLoading"
+                @click:row="(item) => {this.$router.push({name: 'offer', params: {id: item.id}})}"
+            ></v-data-table>
+        </v-card>
 </template>
 
 <script>

@@ -25,26 +25,26 @@
                 </template>
 
                 <v-list dense>
-                    <v-list-item to="account">
+                    <v-list-item to="/account">
                         <v-list-item-title>Profil</v-list-item-title>
                         <v-list-item-icon>
                             <v-icon dense>mdi-account</v-icon>
                         </v-list-item-icon>
                     </v-list-item>
-                    <v-list-item to="messages">
+                    <v-list-item to="/messages">
                         <v-list-item-title>Wiadomości</v-list-item-title>
                         <v-list-item-icon>
                             <v-icon dense>mdi-forum</v-icon>
                         </v-list-item-icon>
                     </v-list-item>
-                    <v-list-item to="account-settings">
+                    <v-list-item to="/account-settings">
                         <v-list-item-title>Ustawienia</v-list-item-title>
                         <v-list-item-icon>
                             <v-icon dense>mdi-cog-outline</v-icon>
                         </v-list-item-icon>
                     </v-list-item>
                     <v-divider></v-divider>
-                    <v-list-item to="logout" dense>
+                    <v-list-item to="/logout" dense>
                         <v-list-item-title>Wyloguj</v-list-item-title>
                         <v-list-item-icon>
                             <v-icon dense>mdi-exit-to-app</v-icon>

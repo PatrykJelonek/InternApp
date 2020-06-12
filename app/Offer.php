@@ -27,6 +27,12 @@ class Offer extends Model
     {
         return $this->belongsTo('App\OfferStatus');
     }
+
+    public function supervisor()
+    {
+        return $this->hasOne('App\User', 'id', 'company_supervisor_id');
+    }
+
     // TODO:supervisior_ids
     public static function messages()
     {

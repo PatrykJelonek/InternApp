@@ -20,6 +20,11 @@ class Company extends Model
         return $this->belongsTo('App\City');
     }
 
+    public function offers()
+    {
+        return $this->hasMany('App\Offer', 'company_id', 'id');
+    }
+
     public function users()
     {
         return $this->belongsToMany('App\User', 'users_companies', 'company_id', 'user_id');

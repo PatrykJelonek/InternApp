@@ -2,6 +2,7 @@ export default {
     namespaced: true,
 
     state: {
+        company: '',
         selectedCompany: null,
         companyCategories: [],
         companyUsers: []
@@ -18,6 +19,10 @@ export default {
 
         companyUsers(state) {
             return state.companyUsers;
+        },
+
+        company(state) {
+            return state.company;
         }
     },
 
@@ -28,6 +33,10 @@ export default {
 
         SET_COMPANY_USERS(state, data) {
             state.companyUsers = data;
+        },
+
+        SET_COMPANY(state, data) {
+            state.company = data;
         },
 
         SELECT_COMPANY(state, company) {
@@ -55,6 +64,15 @@ export default {
                 commit('SET_COMPANY_USERS', response.data.data);
             } catch (e) {
                 commit('SET_COMPANY_USERS', []);
+            }
+        },
+
+        async fetchCompany({commit}, id) {
+            try {
+                let response = await axios.get(`/api/companies/${id}`);
+                commit('SET_COMPANY', response.data.data);
+            } catch(e) {
+                commit('SET_COMPANY', '');
             }
         },
 
