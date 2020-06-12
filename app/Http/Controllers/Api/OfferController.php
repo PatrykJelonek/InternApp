@@ -100,12 +100,12 @@ class OfferController extends Controller
      */
     public function show($id)
     {
-        $offer = Offer::find($id);
+        $offer = Offer::with(['company','offerCategory','offerStatus','company.city'])->where(['id' => $id])->get();
 
         if (isset($offer))
             return response([
                 'status' => 'success',
-                'data' => $offer,
+                'data' => $offer[0],
                 'message' => null
             ], Response::HTTP_OK);
         else

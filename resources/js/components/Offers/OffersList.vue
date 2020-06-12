@@ -5,64 +5,8 @@
             :items="offers"
             :items-per-page="10"
             :loading="isLoading"
-            @click:row="(item) => {loadOffer(item)}"
+            @click:row="(item) => {this.$router.push(`/offer/${item.id}`)}"
         ></v-data-table>
-        <v-navigation-drawer
-            v-model="offerInformation"
-            temporary
-            clipped
-            right
-            absolute
-            width="50%"
-        >
-            <v-container class="pa-5">
-                <v-row>
-                    <v-col>
-                        <h2 class="display-1 font-weight-bold">{{ offer.name }}</h2>
-                    </v-col>
-                </v-row>
-                <v-row>
-                    <v-col cols="auto" class="grey--text text--darken-1 py-1">
-                        Ilość miejsc:
-                    </v-col>
-                    <v-col class="font-weight-bold py-1">
-                        {{ offer.places_number }}
-                    </v-col>
-                </v-row>
-                <v-row>
-                    <v-col cols="auto" class="grey--text text--darken-1 py-1">
-                        Kategoria:
-                    </v-col>
-                    <v-col class="font-weight-bold py-1" v-if="offer.offer_category">
-                        {{ offer.offer_category.name }}
-                    </v-col>
-                </v-row>
-                <v-row>
-                    <v-col cols="auto" class="grey--text text--darken-1 py-1">
-                        Rozmowa kwalifikacyjna:
-                    </v-col>
-                    <v-col class="font-weight-bold py-1">
-                        {{ offer.interview ? "Tak":"Nie" }}
-                    </v-col>
-                </v-row>
-                <v-row>
-                    <v-col cols="auto" class="grey--text text--darken-1 py-1">
-                        Firma:
-                    </v-col>
-                    <v-col class="font-weight-bold py-1" v-if="offer.company">
-                        {{ offer.company.name }}
-                    </v-col>
-                </v-row>
-                <v-row>
-                    <v-col cols="auto" class="grey--text text--darken-1 py-1">
-                        Miasto:
-                    </v-col>
-                    <v-col class="font-weight-bold py-1" v-if="offer.company">
-                        {{ offer.company.city.name }}
-                    </v-col>
-                </v-row>
-            </v-container>
-        </v-navigation-drawer>
     </div>
 </template>
 
@@ -74,7 +18,6 @@
 
         data() {
             return {
-                offerInformation: false,
                 isLoading: true,
                 headers: [
                     { text: 'Nazwa', value: 'name' },
@@ -83,7 +26,6 @@
                     { text: 'Firma', value: 'company.name' },
                     { text: 'Miasto', value: 'company.city.name' },
                 ],
-                offer: {},
             }
         },
 
@@ -97,11 +39,6 @@
             ...mapActions({
                 fetchOffers: 'offer/fetchOffers'
             }),
-
-            loadOffer(item) {
-                this.offerInformation = !this.offerInformation;
-                this.offer = item;
-            },
         },
 
         created() {
