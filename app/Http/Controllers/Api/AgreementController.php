@@ -73,6 +73,8 @@ class AgreementController extends Controller
         $agreement->company_id = $request->input('companyId');
         $agreement->university_id = $request->input('universityId');
         $agreement->offer_id = $request->input('offerId');
+        $agreement->updated_at = date('Y-m-d H:i:s');
+        $agreement->created_at = date('Y-m-d H:i:s');
         
         if($agreement->save())
         {
