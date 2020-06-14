@@ -29,6 +29,8 @@ class CreateAgreementsTable extends Migration
             $table->foreign('university_supervisor_id')->references('id')->on('users');
             $table->foreignId('offer_id');
             $table->foreign('offer_id')->references('id')->on('offers');
+            $table->foreignId('user_id');
+            $table->foreign('user_id')->references('id')->on('users');
             $table->boolean('is_active')->default(false);
             $table->dateTime('created_at', 0);
             $table->dateTime('updated_at', 0);

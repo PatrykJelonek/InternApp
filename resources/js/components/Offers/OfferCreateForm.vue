@@ -85,11 +85,9 @@
                             placeholder="Opiekun"
                         >
                             <template slot="selection" slot-scope="data">
-                                <!-- HTML that describe how select should render selected items -->
                                 {{ data.item.first_name }} {{ data.item.last_name }}
                             </template>
                             <template slot="item" slot-scope="data">
-                                <!-- HTML that describe how select should render items when the select is open -->
                                 {{ data.item.first_name }} {{ data.item.last_name }}
                             </template>
                         </v-select>
@@ -197,9 +195,9 @@
                 this.$refs.observer.validate();
 
                 await this.createOffer(this.offer).then(() => {
-                    this.$router.replace('offers');
+                    this.$router.push('offers');
                 }).catch((e) => {
-                    console.log(e.response.data);
+                    // console.log(e.response.data);
                     if(e.response.status == 422) {
                     this.$refs.observer.setErrors(e.response.data.errors);
                     }

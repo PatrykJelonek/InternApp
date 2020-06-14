@@ -16,6 +16,7 @@ import faculty from "./modules/faculty";
 import field from "./modules/field";
 import student from "./modules/student";
 import offer from "./modules/offer";
+import agreement from "./modules/agreement";
 
 const debug = process.env.NODE_ENV !== 'production';
 
@@ -33,6 +34,7 @@ export default new Vuex.Store({
         field,
         student,
         offer,
+        agreement
     },
     strict: debug
 });

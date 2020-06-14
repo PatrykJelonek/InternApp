@@ -3,6 +3,15 @@
         <page-details-header :header="offer.name" :subheader="offer.offer_category.name"></page-details-header>
         <v-container class="mt-5">
             <v-row>
+                <v-col class="body-2 grey--text text--darken-2">Akcje:</v-col>
+            </v-row>
+            <v-row>
+                <v-col>
+                    <v-btn :to="'/create-agreement/'+offer.id" color="blue accent-4" dark small>Złóż ofertę</v-btn>
+                </v-col>
+            </v-row>
+
+            <v-row>
                 <v-col class="body-2 grey--text text--darken-2">Informacje:</v-col>
             </v-row>
             <v-row>

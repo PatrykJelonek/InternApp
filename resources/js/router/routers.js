@@ -23,6 +23,7 @@ import Offers from "../views/Offers";
 import Offer from "../views/Offer";
 import Account from "../views/Account";
 import Company from "../views/Company";
+import AgreementCreate from "../views/AgreementCreate";
 
 const router = new VueRouter({
     mode: 'history',
@@ -128,6 +129,11 @@ const router = new VueRouter({
                     path: '/create-offer',
                     name: 'create-offer',
                     component: OfferCreate
+                },
+                {
+                    path: '/create-agreement/:offerId',
+                    name: 'create-agreement',
+                    component: AgreementCreate,
                 },
                 {
                     path: '/account',

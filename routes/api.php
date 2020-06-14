@@ -51,11 +51,13 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::resource('/user-companies', 'Api\UserCompanyController');
     Route::resource('/offers/categories', 'Api\OfferCategoryController');
     Route::resource('/offers', 'Api\OfferController');
+    Route::resource('/agreements', 'Api\AgreementController');
     Route::post('/university/generate-code', 'Api\UniversityController@setNewAccessCode');
     Route::post('/university/use-code', 'Api\UniversityController@useCode');
     Route::post('/company/generate-code', 'Api\CompanyController@setNewAccessCode');
     Route::post('/company/use-code', 'Api\CompanyController@useCode');
     Route::get('/company/{id}/users', 'Api\CompanyController@getUsers');
+    Route::get('/universities/{id}/users', 'Api\UniversityController@getUsers');
 
     Route::get('/me', [
         'as' => 'login.me',

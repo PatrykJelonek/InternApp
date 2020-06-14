@@ -12,7 +12,7 @@ class AgreementController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index()
     {
@@ -21,7 +21,7 @@ class AgreementController extends Controller
         if (isset($agreements))
             return response([
                 'status' => 'success',
-                'data' => $agreement,
+                'data' => $agreements,
                 'message' => null
             ], Response::HTTP_OK);
         else
@@ -35,7 +35,7 @@ class AgreementController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function create()
     {
@@ -45,13 +45,12 @@ class AgreementController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @return Response
      */
     public function store(Request $request)
     {
         $vallidatedData  = $request->validate([
-            'signingDate' => 'required',
             'dateFrom' => 'required',
             'dateTo' => 'required',
             'program' => 'required',
@@ -59,12 +58,13 @@ class AgreementController extends Controller
             'content' => 'required',
             'companyId' => 'required',
             'universityId' => 'required',
+            'universitySupervisorId' => 'required',
             'offerId' => 'required',
         ]);
 
         $agreement = new Agreement;
-        
-        $agreement->signing_date = $request->input('signingDate');
+
+        $agreement->signing_date = date('Y-m-d H:i:s');
         $agreement->date_from = $request->input('dateFrom');
         $agreement->date_to = $request->input('dateTo');
         $agreement->program = $request->input('program');
@@ -72,10 +72,12 @@ class AgreementController extends Controller
         $agreement->content = $request->input('content');
         $agreement->company_id = $request->input('companyId');
         $agreement->university_id = $request->input('universityId');
+        $agreement->university_supervisor_id = $request->input('universitySupervisorId');
         $agreement->offer_id = $request->input('offerId');
+        $agreement->user_id = auth()->id();
         $agreement->updated_at = date('Y-m-d H:i:s');
         $agreement->created_at = date('Y-m-d H:i:s');
-        
+
         if($agreement->save())
         {
             return response([
@@ -95,7 +97,7 @@ class AgreementController extends Controller
      * Display the specified resource.
      *
      * @param  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function show($id)
     {
@@ -118,8 +120,8 @@ class AgreementController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Agreement  $agreement
-     * @return \Illuminate\Http\Response
+     * @param Agreement $agreement
+     * @return Response
      */
     public function edit(Agreement $agreement)
     {
@@ -129,9 +131,9 @@ class AgreementController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Agreement  $agreement
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @param Agreement $agreement
+     * @return Response
      */
     public function update(Request $request, Agreement $agreement)
     {
@@ -142,7 +144,7 @@ class AgreementController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  Agreement $agreement
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy($id)
     {
