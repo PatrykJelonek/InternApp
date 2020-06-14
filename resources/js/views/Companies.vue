@@ -61,7 +61,7 @@
                                     :items="companyAgreements"
                                     :items-per-page="5"
                                     :loading="isLoading.agreementsTable"
-                                    @click:row="(item) => {this.$router.push({name: 'offer', params: {id: item.id}})}"
+                                    @click:row="(item) => {this.$router.push({name: 'agreement', params: {id: item.id}})}"
                                 >
                                     <template v-slot:item.is_active="{ item }">
                                         <v-chip :color="item.is_active ? 'success':'error' " dark>

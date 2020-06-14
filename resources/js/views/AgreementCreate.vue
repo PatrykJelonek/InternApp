@@ -1,6 +1,6 @@
 <template>
     <v-container fluid class="ma-0 pa-0">
-        <page-details-header header="Nowa umowa" subheader="Wypełnij poniższy formularz by dodać umowę z firmą!"></page-details-header>
+        <page-details-header header="Nowe porozumienie" subheader="Wypełnij poniższy formularz by dodać porozumienie z firmą!"></page-details-header>
         <v-container class="mt-5">
             <v-row class="d-flex justify-center">
                 <v-col cols="10">

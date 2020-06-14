@@ -176,7 +176,7 @@
             </v-row>
             <v-row>
                 <v-col class="d-flex justify-end">
-                    <v-btn color="blue accent-4" large @click="submit" class="white--text">Dodaj umowę</v-btn>
+                    <v-btn color="blue accent-4" large @click="submit" class="white--text">Dodaj porozumienie</v-btn>
                 </v-col>
             </v-row>
         </v-form>

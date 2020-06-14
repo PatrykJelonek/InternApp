@@ -101,7 +101,7 @@ class AgreementController extends Controller
      */
     public function show($id)
     {
-        $agreement = Agreement::all();
+        $agreement = Agreement::with(['company', 'university', 'author', 'universitySupervisor', 'offer.supervisor', 'company.city', 'university.city'])->where(['id' => $id])->get();
 
         if (isset($agreement))
         return response([
@@ -115,6 +115,32 @@ class AgreementController extends Controller
             'data' => null,
             'message' => "Nie znaleziono umowy!"
         ], Response::HTTP_NOT_FOUND);
+    }
+
+    /**
+     * Active specified agreements
+     *
+     * @param $id
+     * @return Response
+     */
+    public function active($id)
+    {
+        $agreement = Agreement::find($id);
+
+        $agreement->is_active = 1;
+
+        if($agreement->save())
+            return response([
+                'status' => 'success',
+                'data' => null,
+                'message' => 'Porozumienie zostało potwierdzone!'
+            ], Response::HTTP_OK);
+        else
+            return response([
+                'status' => 'error',
+                'data' => null,
+                'message' => "Nie udało się potwierdzić porozumienia!"
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
     /**
