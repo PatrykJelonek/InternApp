@@ -35,7 +35,35 @@
             <v-row v-if="!isLoading">
                 <university-access-code></university-access-code>
             </v-row>
+
+            <v-row class="mt-10">
+                <v-col>
+                    <v-tabs v-model="tab" background-color="transparent" color="blue accent-4">
+                        <v-tab>Umowy</v-tab>
+                    </v-tabs>
+                    <v-tabs-items class="transparent mt-5 body-2 text-justify" v-model="tab">
+                        <v-tab-item>
+                            <v-card outlined>
+                                <v-data-table
+                                    :headers="headers"
+                                    :items="universityAgreements"
+                                    :items-per-page="5"
+                                    :loading="isLoading"
+                                    @click:row="(item) => {this.$router.push({name: '/agreement', params: {id: item.id}})}"
+                                >
+                                    <template v-slot:item.is_active="{ item }">
+                                        <v-chip :color="item.is_active ? 'success':'error' " dark>
+                                            {{item.is_active ? 'Aktywny':'Nieaktywny'}}
+                                        </v-chip>
+                                    </template>
+                                </v-data-table>
+                            </v-card>
+                        </v-tab-item>
+                    </v-tabs-items>
+                </v-col>
+            </v-row>
         </v-row>
+
         <v-row class="d-flex" v-else>
             <v-col cols="12">
                 <universities-not-found></universities-not-found>
@@ -58,25 +86,37 @@
             return {
                 chosenUniversity: '',
                 isLoading: true,
+                headers: [
+                    {text: "Nazwa", value: 'offer.name'},
+                    {text: "Firma", value: 'company.name'},
+                    {text: "Od", value: 'date_from'},
+                    {text: "Do", value: 'date_to'},
+                    {text: "Status", value: 'is_active'},
+                ]
             }
         },
 
         computed: {
             ...mapGetters({
                 userUniversities: 'user/userUniversities',
+                universityAgreements: 'university/universityAgreements'
             }),
         },
 
         methods: {
             ...mapActions({
                 fetchUserUniversities: 'user/fetchUserUniversities',
-                selectUniversity: 'university/selectUniversity'
+                selectUniversity: 'university/selectUniversity',
+                fetchUniversityAgreements: 'university/fetchUniversityAgreements'
             }),
 
             getSelectedUniversity() {
                 return this.userUniversities.find((university, index) => {
                     if(university.id === this.chosenUniversity)
+                    {
+                        this.fetchUniversityAgreements(this.chosenUniversity);
                         return true;
+                    }
                 });
             }
         },
@@ -84,6 +124,7 @@
         created() {
             this.fetchUserUniversities().then(() => {
                 this.chosenUniversity = this.userUniversities[0];
+                this.fetchUniversityAgreements(this.userUniversities[0].id);
                 this.selectUniversity(this.userUniversities[0]).then(() => {
                     this.isLoading = false;
                 });

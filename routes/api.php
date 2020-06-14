@@ -58,6 +58,9 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::post('/company/use-code', 'Api\CompanyController@useCode');
     Route::get('/company/{id}/users', 'Api\CompanyController@getUsers');
     Route::get('/universities/{id}/users', 'Api\UniversityController@getUsers');
+    Route::get('/universities/{id}/agreements', 'Api\UniversityController@getUniversityAgreements');
+    Route::get('/companies/{id}/offers', 'Api\CompanyController@getCompanyOffers');
+    Route::get('/companies/{id}/agreements', 'Api\CompanyController@getCompanyAgreements');
 
     Route::get('/me', [
         'as' => 'login.me',

@@ -5,7 +5,9 @@ export default {
         company: '',
         selectedCompany: null,
         companyCategories: [],
-        companyUsers: []
+        companyUsers: [],
+        companyOffers: [],
+        companyAgreements: [],
     },
 
     getters: {
@@ -23,6 +25,14 @@ export default {
 
         company(state) {
             return state.company;
+        },
+
+        companyOffers(state) {
+            return state.companyOffers;
+        },
+
+        companyAgreements(state) {
+            return state.companyAgreements;
         }
     },
 
@@ -45,7 +55,15 @@ export default {
 
         SET_CODE(state, code) {
             state.selectedCompany.access_code = code;
-        }
+        },
+
+        SET_COMPANY_OFFERS(state, data) {
+            state.companyOffers = data;
+        },
+
+        SET_COMPANY_AGREEMENTS(state, data) {
+            state.companyAgreements = data;
+        },
     },
 
     actions: {
@@ -73,6 +91,24 @@ export default {
                 commit('SET_COMPANY', response.data.data);
             } catch(e) {
                 commit('SET_COMPANY', '');
+            }
+        },
+
+        async fetchCompanyOffers({commit}, id) {
+            try {
+                let response = await axios.get(`/api/companies/${id}/offers`);
+                commit('SET_COMPANY_OFFERS', response.data.data);
+            } catch(e) {
+                commit('SET_COMPANY_OFFERS', []);
+            }
+        },
+
+        async fetchCompanyAgreements({commit}, id) {
+            try {
+                let response = await axios.get(`/api/companies/${id}/agreements`);
+                commit('SET_COMPANY_AGREEMENTS', response.data.data);
+            } catch(e) {
+                commit('SET_COMPANY_AGREEMENTS', []);
             }
         },
 

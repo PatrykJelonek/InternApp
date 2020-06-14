@@ -8,6 +8,7 @@ export default {
         universities: [],
         universityTypes: [],
         universityUsers: [],
+        universityAgreements: [],
     },
 
     getters: {
@@ -26,6 +27,10 @@ export default {
         universityUsers: (state) => {
             return state.universityUsers;
         },
+
+        universityAgreements: (state) => {
+            return state.universityAgreements;
+        }
     },
 
     mutations: {
@@ -47,6 +52,10 @@ export default {
 
         SET_UNIVERSITY_USERS(state, data) {
             state.universityUsers = data;
+        },
+
+        SET_UNIVERSITY_AGREEMENTS(state, data) {
+            state.universityAgreements = data;
         }
     },
 
@@ -75,6 +84,15 @@ export default {
                 commit('SET_UNIVERSITY_USERS', response.data.data);
             } catch (e) {
                 commit('SET_UNIVERSITY_USERS', []);
+            }
+        },
+
+        async fetchUniversityAgreements({commit}, id) {
+            try {
+                let response = await axios.get(`api/universities/${id}/agreements`);
+                commit('SET_UNIVERSITY_AGREEMENTS', response.data.data);
+            } catch (e) {
+                commit('SET_UNIVERSITY_AGREEMENTS', []);
             }
         },
 

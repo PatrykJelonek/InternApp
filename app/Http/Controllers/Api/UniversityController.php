@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 //use App\Http\Controllers\Controller;
+use App\Agreement;
 use App\Http\Api\Controllers\Controller;
 use App\Role;
 use App\University;
@@ -261,6 +262,29 @@ class UniversityController extends Controller
                 'status' => 'error',
                 'data' => null,
                 'message' => "Nie udało się znaleźć użytkowników tej uczelni"
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+
+    /**
+     * Return university agreements
+     *
+     * @param $id
+     * @return Response
+     */
+    public function getUniversityAgreements($id) {
+        $university = Agreement::with(['offer', 'company'])->where(['university_id' => $id])->get();
+
+        if(isset($university))
+            return response([
+                'status' => 'success',
+                'data' => $university,
+                'message' => null
+            ], Response::HTTP_OK);
+        else
+            return response([
+                'status' => 'error',
+                'data' => null,
+                'message' => "Nie udało się żadnych umów dla tej uczelni!"
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 

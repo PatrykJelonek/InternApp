@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Agreement;
 use App\Company;
 use App\Http\Controllers\Controller;
+use App\Offer;
 use App\University;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -18,7 +20,7 @@ class CompanyController extends Controller
      */
     public function index()
     {
-        $companies = Company::all();
+        $companies = Company::with(['offers'])->get();
 
         if (isset($companies))
             return response($companies, Response::HTTP_OK);
@@ -205,6 +207,52 @@ class CompanyController extends Controller
             'data' => null,
             'message' => $errorMessage
         ], Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+
+    /**
+     * Get company offers
+     *
+     * @param $id
+     * @return Response
+     */
+    public function getCompanyOffers($id) {
+        $offers = Offer::with(['company','offerCategory','offerStatus','company.city', 'supervisor'])->where(['company_id' => $id])->get();
+
+        if (isset($offers))
+            return response([
+                'status' => 'success',
+                'data' => $offers,
+                'message' => null
+            ], Response::HTTP_OK);
+        else
+            return response([
+                'status' => 'error',
+                'data' => null,
+                'message' => "Nie znaleziono oferty!"
+            ], Response::HTTP_NOT_FOUND);
+    }
+
+    /**
+     * Get company agreements
+     *
+     * @param $id
+     * @return Response
+     */
+    public function getCompanyAgreements($id) {
+        $agreements = Agreement::with(['offer', 'university'])->where(['company_id' => $id])->get();
+
+        if (isset($agreements))
+            return response([
+                'status' => 'success',
+                'data' => $agreements,
+                'message' => null
+            ], Response::HTTP_OK);
+        else
+            return response([
+                'status' => 'error',
+                'data' => null,
+                'message' => "Nie znaleziono oferty!"
+            ], Response::HTTP_NOT_FOUND);
     }
 
     /**
