@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Message;
+use App\InternshipAttachment;
 use Illuminate\Http\Request;
 
-class MessageController extends Controller
+class InternshipAttachmentController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,19 +15,19 @@ class MessageController extends Controller
      */
     public function index()
     {
-        $messages = Agreement::all();
+        $internships_attachments = IntershipAttachment::all();
 
-        if (isset($messages))
+        if (isset($internships_attachments))
             return response([
                 'status' => 'success',
-                'data' => $messages,
+                'data' => $internships_attachments,
                 'message' => null
             ], Response::HTTP_OK);
         else
             return response([
                 'status' => 'error',
                 'data' => null,
-                'message' => "Nie znaleziono wiadomości!"
+                'message' => "Nie znaleziono powiązań!"
             ], Response::HTTP_NOT_FOUND);
     }
 
@@ -50,68 +50,65 @@ class MessageController extends Controller
     public function store(Request $request)
     {
         $vallidatedData  = $request->validate([
-            'content' => 'required|max:254',
-            'fromUserId' => 'required',
-            'toUserId' => 'required'            
+            'intership_id' => 'required',
+            'attachment_id' => 'required',
         ]);
 
-        $message = new Message;
+        $intership_attachment = new IntershipAttachment;
         
-        $message->content = $request->input('content');
-        $message->from_user_id = $request->input('fromUserId');
-        $message->to_user_id = $request->input('toUserId');
-        $message->created_at = date('Y-m-d H:i:s');
-        
-        if($message->save())
+        $intership_attachment->intership_id = $request->input('intership_id');
+        $intership_attachment->attachment_id = $request->input('attachment_id');
+
+        if($intership_attachment->save())
         {
             return response([
                 'status' => 'success',
-                'data' => $message,
+                'data' => $intership_attachment,
                 'message' => null
             ], Response::HTTP_OK);
         } else
             return response([
                 'status' => 'error',
                 'data' => null,
-                'message' => 'Nie udało się utworzyć wiadomości!'
+                'message' => 'Can not create relation!'
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Message  $message
+     * @param  \App\InternshipAttachment  $internshipAttachment
      * @return \Illuminate\Http\Response
      */
-    public function show(Message $message)
+    public function show(InternshipAttachment $internshipAttachment)
     {
-        $message = Faculty::find($id);
+        $intership_attachment = AgreementAttachment::find($id);
 
-        if (isset($message))
-            return response($message, Response::HTTP_OK);
+        if (isset($intership_attachment))
+            return response($intership_attachment, Response::HTTP_OK);
         else
-            return response("Message not found!", Response::HTTP_NOT_FOUND);
+            return response("Relation not found!", Response::HTTP_NOT_FOUND);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Message  $message
+     * @param  \App\InternshipAttachment  $internshipAttachment
      * @return \Illuminate\Http\Response
      */
-    public function edit(Message $message)
+    public function edit(InternshipAttachment $internshipAttachment)
     {
-        
+        //
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Message  $message
+     * @param  \App\InternshipAttachment  $internshipAttachment
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Message $message)
+    public function update(Request $request, InternshipAttachment $internshipAttachment)
     {
         //
     }
@@ -119,16 +116,16 @@ class MessageController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Message  $message
+     * @param  \App\InternshipAttachment  $internshipAttachment
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Message $message)
+    public function destroy(InternshipAttachment $internshipAttachment)
     {
-        $message = Message::find($id);
+        $intership_attachment = InternshipAttachment::find($id);
 
-        if ($message->delete())
-            return response("Message has been deleted!", Response::HTTP_OK);
+        if ($intership_attachment->delete())
+            return response("Relation has been deleted!", Response::HTTP_OK);
         else
-            return response("Message has not been deleted!", Response::HTTP_INTERNAL_SERVER_ERROR);
+            return response("Relation has not been deleted!", Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 }

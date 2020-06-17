@@ -42,7 +42,38 @@ class AttachmentController extends Controller
      */
     public function store(Request $request)
     {
-        //TODO
+        $vallidatedData  = $request->validate([
+            'file' => 'required|mimes:pdf,xlx,csv,jpg,png',
+            'name' => 'required|max:128',
+            'description' => 'required|max:255',
+            'type' => 'required|max:8',
+            'user_id' => 'required'
+        ]);
+
+        $attachment = new Attachment;
+        
+        $attachment->name = $request->input('name');
+        $attachment->description = $request->input('description');
+        $attachment->type = $request->input('type');
+        $attachment->user_id = $request->input('user_id');
+        $attachment->created_at = date('Y-m-d H:i:s');
+
+        if($attachment->save())
+        {
+            $fullfileName = $name.'.'.$request->file->extension();
+            $request->file->move(public_path('uploads'), $fullfileName);//zapis w folderze
+
+            return response([
+                'status' => 'success',
+                'data' => $attachment,
+                'message' => null
+            ], Response::HTTP_OK);
+        } else
+            return response([
+                'status' => 'error',
+                'data' => null,
+                'message' => 'Can not create attachment!'
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
     /**
@@ -53,7 +84,7 @@ class AttachmentController extends Controller
      */
     public function show($id)
     {
-        $attachment = attachment::find($id);
+        $attachment = Attachment::find($id);
 
         if (isset($attachment))
             return response($attachment, Response::HTTP_OK);
@@ -81,7 +112,19 @@ class AttachmentController extends Controller
      */
     public function update(Request $request, Attachment $attachment)
     {
-        //TODO
+        $attachments = Attachment::find($request->input("id"));
+
+        if (isset($attachment)) {
+            $attachment->name = $request->input("name");
+            $attachment->description = $request->input("description");
+            $attachment->type = $request->input("type");
+            $attachment->user_id = $request->input("user_id");
+
+            if ($attachment->save())
+                return response($attachment, Response::HTTP_OK);
+        }
+
+        return response("Attachment has not been updated!", Response::HTTP_NOT_MODIFIED);
     }
 
     /**
