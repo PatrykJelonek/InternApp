@@ -25,6 +25,7 @@ import Account from "../views/Account";
 import Company from "../views/Company";
 import AgreementCreate from "../views/AgreementCreate";
 import Agreement from "../views/Agreement";
+import Internships from "../views/Internships";
 
 const router = new VueRouter({
     mode: 'history',
@@ -140,6 +141,11 @@ const router = new VueRouter({
                     path: '/agreement/:id',
                     name: 'agreement',
                     component: Agreement,
+                },
+                {
+                    path: '/internships',
+                    name: 'internships',
+                    component: Internships
                 },
                 {
                     path: '/account',

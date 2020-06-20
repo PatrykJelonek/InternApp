@@ -52,6 +52,7 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::resource('/offers/categories', 'Api\OfferCategoryController');
     Route::resource('/offers', 'Api\OfferController');
     Route::resource('/agreements', 'Api\AgreementController');
+    Route::resource('/internships', 'Api\InternshipController');
     Route::post('/university/generate-code', 'Api\UniversityController@setNewAccessCode');
     Route::post('/university/use-code', 'Api\UniversityController@useCode');
     Route::post('/company/generate-code', 'Api\CompanyController@setNewAccessCode');

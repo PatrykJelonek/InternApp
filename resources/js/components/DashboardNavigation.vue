@@ -55,6 +55,16 @@
                 </v-list-item>
             </v-list-group>
 
+            <v-list-item link to="/internships" color="blue accent-4">
+                <v-list-item-icon>
+                    <v-icon>mdi-newspaper</v-icon>
+                </v-list-item-icon>
+                <v-list-item-content>
+                    <v-list-item-title>Praktyki i Staże</v-list-item-title>
+                </v-list-item-content>
+            </v-list-item>
+
+
         </v-list>
     </v-navigation-drawer>
 </template>
