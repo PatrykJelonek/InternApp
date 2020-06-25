@@ -6,7 +6,11 @@
                 :items-per-page="10"
                 :loading="isLoading"
                 @click:row="(item) => {this.$router.push({name: 'offer', params: {id: item.id}})}"
-            ></v-data-table>
+            >
+                <template v-slot:item.action="{ item }">
+                    <v-btn small color="primary" :to="'/create-agreement/'+item.id">Złóż Ofertę</v-btn>
+                </template>
+            </v-data-table>
         </v-card>
 </template>
 
@@ -25,6 +29,7 @@
                     { text: 'Kategoria', value: 'offer_category.name' },
                     { text: 'Firma', value: 'company.name' },
                     { text: 'Miasto', value: 'company.city.name' },
+                    { text: 'Akcje', value: 'action' },
                 ],
             }
         },

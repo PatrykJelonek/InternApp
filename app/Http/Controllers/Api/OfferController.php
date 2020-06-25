@@ -17,7 +17,7 @@ class OfferController extends Controller
      */
     public function index()
     {
-        $offers = Offer::with(['company','offerCategory','offerStatus','company.city'])->get();
+        $offers = Offer::with(['company','offerCategory','offerStatus','company.city'])->where('places_number', '>', 0)->get();
 
         if (isset($offers))
             return response([

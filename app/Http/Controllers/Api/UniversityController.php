@@ -5,11 +5,13 @@ namespace App\Http\Controllers\Api;
 //use App\Http\Controllers\Controller;
 use App\Agreement;
 use App\Http\Api\Controllers\Controller;
+use App\Internship;
 use App\Role;
 use App\University;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Tymon\JWTAuth\Exceptions\UserNotDefinedException;
@@ -285,6 +287,30 @@ class UniversityController extends Controller
                 'status' => 'error',
                 'data' => null,
                 'message' => "Nie udało się żadnych umów dla tej uczelni!"
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+
+    /**
+     * Return university internhips
+     *
+     * @param $id
+     * @return Response
+     */
+    public function getInternships($id) {
+        $agreements = Agreement::where(['university_id' => $id])->get();
+        $internships = Internship::with(['offer', 'student.user', 'university_supervisor', 'company_supervisor'])->whereIn('agreement_id', Arr::pluck($agreements->toArray(), 'id'))->get();
+
+        if(count($internships) > -1)
+            return response([
+                'status' => 'success',
+                'data' => $internships,
+                'message' => null
+            ], Response::HTTP_OK);
+        else
+            return response([
+                'status' => 'error',
+                'data' => null,
+                'message' => "Nie udało się żadnych praktyk dla tej uczelni!"
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 

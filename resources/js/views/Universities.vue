@@ -40,6 +40,7 @@
                 <v-col>
                     <v-tabs v-model="tab" background-color="transparent" color="blue accent-4">
                         <v-tab>Umowy</v-tab>
+                        <v-tab>Praktyki</v-tab>
                     </v-tabs>
                     <v-tabs-items class="transparent mt-5 body-2 text-justify" v-model="tab">
                         <v-tab-item>
@@ -59,6 +60,9 @@
                                 </v-data-table>
                             </v-card>
                         </v-tab-item>
+                        <v-tab-item>
+                            <universities-internships-list></universities-internships-list>
+                        </v-tab-item>
                     </v-tabs-items>
                 </v-col>
             </v-row>
@@ -77,13 +81,15 @@
     import UniversitiesNotFound from "../components/Universities/UniversitiesNotFound";
     import UniversityAccessCode from "../components/Universities/UniversityAccessCode";
     import UniversityAccessCodeDialog from "../components/Universities/UniversityAccessCodeDialog";
+    import UniversitiesInternshipsList from "../components/Universities/UniversitiesInternshipsList";
 
     export default {
         name: "Universities",
-        components: {UniversityAccessCodeDialog, UniversityAccessCode, UniversitiesNotFound},
+        components: {UniversitiesInternshipsList, UniversityAccessCodeDialog, UniversityAccessCode, UniversitiesNotFound},
 
         data() {
             return {
+                tab: null,
                 chosenUniversity: '',
                 isLoading: true,
                 headers: [
@@ -92,6 +98,9 @@
                     {text: "Od", value: 'date_from'},
                     {text: "Do", value: 'date_to'},
                     {text: "Status", value: 'is_active'},
+                ],
+                internshipsHeaders: [
+                    {text: "Supervisor", value: "company_supervisor_id"}
                 ]
             }
         },
@@ -99,7 +108,8 @@
         computed: {
             ...mapGetters({
                 userUniversities: 'user/userUniversities',
-                universityAgreements: 'university/universityAgreements'
+                universityAgreements: 'university/universityAgreements',
+                internships: 'university/internships',
             }),
         },
 
@@ -107,13 +117,16 @@
             ...mapActions({
                 fetchUserUniversities: 'user/fetchUserUniversities',
                 selectUniversity: 'university/selectUniversity',
-                fetchUniversityAgreements: 'university/fetchUniversityAgreements'
+                fetchUniversityAgreements: 'university/fetchUniversityAgreements',
+                selectUniversityId: 'university/selectUniversityId',
+                fetchInternships: 'university/fetchInternships'
             }),
 
             getSelectedUniversity() {
                 return this.userUniversities.find((university, index) => {
                     if(university.id === this.chosenUniversity)
                     {
+                        this.fetchInternships(this.chosenUniversity);
                         this.fetchUniversityAgreements(this.chosenUniversity);
                         return true;
                     }
@@ -124,7 +137,9 @@
         created() {
             this.fetchUserUniversities().then(() => {
                 this.chosenUniversity = this.userUniversities[0];
+                this.selectUniversityId(this.userUniversities[0].id);
                 this.fetchUniversityAgreements(this.userUniversities[0].id);
+                this.fetchInternships(this.userUniversities[0].id);
                 this.selectUniversity(this.userUniversities[0]).then(() => {
                     this.isLoading = false;
                 });

@@ -5,12 +5,33 @@
             :items="internships"
             :loading="isLoading"
             :items-per-page="10"
-            @click:row="(item) => {this.$router.push({name: 'offer', params: {id: item.id}})}"
         >
             <template v-slot:item.action="{ item }">
-                <v-btn small color="primary">Aplikuj</v-btn>
+                <v-btn small color="primary" v-if="item.offer.places_number > 0" @click="clickToApply(item)">Aplikuj</v-btn>
+                <v-btn small color="primary" disabled v-else>Aplikuj</v-btn>
             </template>
         </v-data-table>
+
+        <v-snackbar
+            v-model="snackbar"
+            :color="snackbarColor"
+            right
+            bottom
+            :timeout="6000"
+        >
+            {{ snackbarText }}
+
+            <template v-slot:action="{ attrs }">
+                <v-btn
+                    dark
+                    text
+                    v-bind="attrs"
+                    @click="snackbar = false"
+                >
+                    Zamknij
+                </v-btn>
+            </template>
+        </v-snackbar>
     </v-card>
 </template>
 
@@ -21,6 +42,9 @@
 
         data() {
             return {
+                snackbarText: '',
+                snackbarColor: '',
+                snackbar: false,
                 isLoading: true,
                 headers: [
                     {text: 'Nazwa', value: 'offer.name'},
@@ -40,8 +64,22 @@
 
         methods: {
             ...mapActions({
-                fetchInternships: 'internship/fetchInternships'
-            })
+                fetchInternships: 'internship/fetchInternships',
+                apply: 'internship/apply'
+            }),
+
+            async clickToApply(item) {
+                await this.apply(item).then(() => {
+                    this.snackbarText = 'Aplikowałeś na tą praktykę!';
+                    this.snackbarColor = 'success';
+                    this.snackbar = true;
+                    item.offer.places_number--;
+                }).catch((e) => {
+                    this.snackbarText = 'Przepraszamy, coś poszło nie tak!';
+                    this.snackbarColor = 'error';
+                    this.snackbar = true;
+                })
+            }
         },
 
         created() {

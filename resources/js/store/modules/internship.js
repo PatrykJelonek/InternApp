@@ -25,6 +25,14 @@ export default {
             } catch(e) {
                 commit('SET_INTERNSHIPS', []);
             }
+        },
+
+        apply({commit}, data) {
+            return axios.post(`/api/internships`, data);
+        },
+
+        confirm({commit}, id) {
+            return axios.get(`/api/internships/${id}/confirm`);
         }
     },
 }

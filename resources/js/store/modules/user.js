@@ -8,7 +8,8 @@ export default {
         loggedUser: '',
         validationErrors: '',
         userUniversities: [],
-        userCompanies: []
+        userCompanies: [],
+        roles: [],
     },
 
     getters: {
@@ -18,6 +19,10 @@ export default {
 
         userCompanies(state) {
             return state.userCompanies;
+        },
+
+        roles(state) {
+            return state.roles;
         }
     },
 
@@ -38,6 +43,10 @@ export default {
 
         SET_USER_COMPANIES(state, data) {
             state.userCompanies = data;
+        },
+
+        SET_ROLES(state, data) {
+            state.roles = data;
         }
     },
 
@@ -83,6 +92,15 @@ export default {
             } catch (e) {
                 commit('SET_USER_COMPANIES', []);
             }
-        }
+        },
+
+        async fetchUserRoles({ commit }) {
+          try {
+              let response = await axios.get('/api/user/roles');
+              commit('SET_ROLES', response.data.data);
+          } catch (e) {
+              commit('SET_ROLES', []);
+          }
+        },
     }
 };

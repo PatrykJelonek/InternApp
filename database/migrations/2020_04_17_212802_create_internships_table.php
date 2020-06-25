@@ -16,15 +16,17 @@ class CreateInternshipsTable extends Migration
         Schema::create('internships', function (Blueprint $table) {
             $table->id();
             $table->foreignId('offer_id');
-            $table->foreign('offer_id')->references('id')->on('offers');
+            $table->foreign('offer_id')->references('id')->on('agreements');
+            $table->foreignId('agreement_id');
+            $table->foreign('agreement_id')->references('id')->on('agreements');
             $table->foreignId('student_id');
             $table->foreign('student_id')->references('id')->on('students');
             $table->foreignId('company_supervisor_id');
             $table->foreign('company_supervisor_id')->references('id')->on('users');
             $table->foreignId('university_supervisor_id');
             $table->foreign('university_supervisor_id')->references('id')->on('users');
-            $table->integer('grade');
-            $table->dateTime('interview_date');
+            $table->integer('grade')->nullable();
+            $table->dateTime('interview_date')->nullable();
             $table->foreignId('internship_status_id');
             $table->foreign('internship_status_id')->references('id')->on('internship_statuses');
             $table->dateTime('created_at', 0);

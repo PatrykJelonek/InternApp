@@ -4,11 +4,13 @@ export default {
     namespaced: true,
 
     state: {
+        selectedUniversityId: '',
         selectedUniversity: null,
         universities: [],
         universityTypes: [],
         universityUsers: [],
         universityAgreements: [],
+        internships: []
     },
 
     getters: {
@@ -30,6 +32,14 @@ export default {
 
         universityAgreements: (state) => {
             return state.universityAgreements;
+        },
+
+        internships: (state) => {
+            return state.internships;
+        },
+
+        selectedUniversityId: (state) => {
+            return state.selectedUniversityId;
         }
     },
 
@@ -56,6 +66,14 @@ export default {
 
         SET_UNIVERSITY_AGREEMENTS(state, data) {
             state.universityAgreements = data;
+        },
+
+        SET_INTERNSHIPS(state, data) {
+            state.internships = data;
+        },
+
+        SET_SELECTED_UNIVERSITY_ID(state, data) {
+            state.selectedUniversityId = data;
         }
     },
 
@@ -89,10 +107,19 @@ export default {
 
         async fetchUniversityAgreements({commit}, id) {
             try {
-                let response = await axios.get(`api/universities/${id}/agreements`);
+                let response = await axios.get(`/api/universities/${id}/agreements`);
                 commit('SET_UNIVERSITY_AGREEMENTS', response.data.data);
             } catch (e) {
                 commit('SET_UNIVERSITY_AGREEMENTS', []);
+            }
+        },
+
+        async fetchInternships({commit}, id) {
+            try {
+                let response = await axios.get(`/api/universities/${id}/internships`);
+                commit('SET_INTERNSHIPS', response.data.data);
+            } catch (e) {
+                commit('SET_INTERNSHIPS', []);
             }
         },
 
@@ -102,6 +129,10 @@ export default {
 
         selectUniversity({commit}, university) {
             commit('SET_SELECTED_UNIVERSITY', university);
+        },
+
+        selectUniversityId({commit}, id) {
+            commit('SET_SELECTED_UNIVERSITY_ID', id);
         },
 
         async generateCode({commit}, id) {
