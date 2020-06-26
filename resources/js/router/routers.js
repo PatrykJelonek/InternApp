@@ -26,6 +26,7 @@ import Company from "../views/Company";
 import AgreementCreate from "../views/AgreementCreate";
 import Agreement from "../views/Agreement";
 import Internships from "../views/Internships";
+import Journal from "../views/Journal";
 
 const router = new VueRouter({
     mode: 'history',
@@ -146,6 +147,11 @@ const router = new VueRouter({
                     path: '/internships',
                     name: 'internships',
                     component: Internships
+                },
+                {
+                    path: '/journal',
+                    name: 'journal',
+                    component: Journal
                 },
                 {
                     path: '/account',

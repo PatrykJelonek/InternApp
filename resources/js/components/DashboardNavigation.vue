@@ -64,6 +64,14 @@
                 </v-list-item-content>
             </v-list-item>
 
+            <v-list-item link to="/journal" color="blue accent-4">
+                <v-list-item-icon>
+                    <v-icon>mdi-notebook-outline</v-icon>
+                </v-list-item-icon>
+                <v-list-item-content>
+                    <v-list-item-title>Dziennik Praktyk</v-list-item-title>
+                </v-list-item-content>
+            </v-list-item>
 
         </v-list>
     </v-navigation-drawer>

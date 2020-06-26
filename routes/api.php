@@ -53,6 +53,7 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::resource('/offers', 'Api\OfferController');
     Route::resource('/agreements', 'Api\AgreementController');
     Route::resource('/internships', 'Api\InternshipController');
+    Route::resource('/journals', 'Api\JournalController');
     Route::post('/university/generate-code', 'Api\UniversityController@setNewAccessCode');
     Route::post('/university/use-code', 'Api\UniversityController@useCode');
     Route::post('/company/generate-code', 'Api\CompanyController@setNewAccessCode');
@@ -65,6 +66,8 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::get('/companies/{id}/agreements', 'Api\CompanyController@getCompanyAgreements');
     Route::post('/agreements/{id}/active', 'Api\AgreementController@active');
     Route::get('/internships/{id}/confirm', 'Api\InternshipController@confirm');
+    Route::get('/user/internships', 'Api\UserController@getInternships');
+    Route::get('/user/journals', 'Api\UserController@getJournals');
 
     Route::get('/me', [
         'as' => 'login.me',

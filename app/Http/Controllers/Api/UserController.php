@@ -112,6 +112,29 @@ class UserController extends Controller
         //
     }
 
+
+    public function getInternships()
+    {
+        $user = User::with('student.internships.offer')->where(["id" => auth()->id()])->first();
+
+        return Response([
+            'status' => 'success',
+            'data' => $user->student->internships,
+            'message' => null,
+        ], Response::HTTP_OK);
+    }
+
+    public function getJournals()
+    {
+        $user = User::with('journals')->where(["id" => auth()->id()])->first();
+
+        return Response([
+            'status' => 'success',
+            'data' => $user->journals,
+            'message' => null,
+        ], Response::HTTP_OK);
+    }
+
     /**
      * Remove the specified resource from storage.
      *

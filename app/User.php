@@ -26,9 +26,19 @@ class User extends Model implements AuthenticatableContract, JWTSubject
         return $this->hasOne('App\UserStatuses');
     }
 
+    public function student()
+    {
+        return $this->hasOne('App\Student', 'user_id', 'id');
+    }
+
     public function roles()
     {
         return $this->belongsToMany('App\Role', 'users_roles', 'user_id', 'role_id');
+    }
+
+    public function journals()
+    {
+        return $this->hasMany('App\Journal', 'user_id', 'id');
     }
 
     public function universities()

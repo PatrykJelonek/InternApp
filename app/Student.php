@@ -12,4 +12,9 @@ class Student extends Model
     {
         return $this->hasOne('App\User', 'id', 'user_id');
     }
+
+    public function internships()
+    {
+        return $this->hasMany('App\Internship', 'student_id', 'id');
+    }
 }
