@@ -32,4 +32,9 @@ class Internship extends Model
     {
         return $this->hasOne('App\User', 'id', 'company_supervisor_id');
     }
+
+    public function journals()
+    {
+        return $this->hasMany('App\Journal', 'internship_id', 'id');
+    }
 }

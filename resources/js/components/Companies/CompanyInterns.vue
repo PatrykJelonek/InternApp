@@ -20,14 +20,34 @@
                     v-for="internship in item.internships"
                     :key="internship.id"
                     @click="$router.push({name: 'offer', params: {id: internship.offer.id}})"
+                    v-if="internship.offer.company_id === selectedCompanyId"
                 >
                     {{ internship.offer.name }}
                 </v-chip>
             </template>
             <template v-slot:item.action="{ item }">
-                <v-btn icon>
-                    <v-icon>mdi-dots-vertical</v-icon>
-                </v-btn>
+                <v-menu offset-y left offset-x v-model="actionsMenu" close-on-click :close-on-content-click="false">
+                    <template v-slot:activator="{ on, attrs }">
+                        <v-btn icon v-bind="attrs" v-on="on">
+                            <v-icon>mdi-dots-vertical</v-icon>
+                        </v-btn>
+                    </template>
+                    <v-list dense>
+                        <v-list-group>
+                            <template v-slot:activator>
+                                <v-list-item-title>Dziennik Praktyk</v-list-item-title>
+                            </template>
+                            <v-list-item
+                                v-for="internship in item.internships"
+                                :key="internship.id"
+                                v-if="internship.offer.company_id === selectedCompanyId"
+                                :to="'/internship/'+internship.id+'/journal'"
+                            >
+                                <v-list-item-title>{{ internship.offer.name }}</v-list-item-title>
+                            </v-list-item>
+                        </v-list-group>
+                    </v-list>
+                </v-menu>
             </template>
         </v-data-table>
     </v-card>
@@ -41,6 +61,7 @@
 
         data() {
             return {
+                actionsMenu: false,
                 isLoading: true,
                 headers: [
                     {text: 'Imię i nazwisko', value: 'fullName'},

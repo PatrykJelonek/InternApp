@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Internship;
+use App\InternshipStatus;
 use App\Journal;
 use App\Student;
 use Illuminate\Http\Request;
@@ -116,5 +117,29 @@ class JournalController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    /**
+     * Confirm many internships
+     *
+     * @param Request $request
+     * @return Response
+     */
+    public function confirmMany(Request $request)
+    {
+        $journalEntries = Journal::whereIn('id', $request->input('array'))->get();
+        $savedJournalEntries = array();
+
+        foreach ($journalEntries as $journalEntry) {
+            $journalEntry->accepted = 1;
+            if($journalEntry->save())
+                array_push($savedJournalEntries, $journalEntry->id);
+        }
+
+        return response([
+            'status' => 'success',
+            'data' => $savedJournalEntries,
+            'message' => null
+        ], Response::HTTP_OK);
     }
 }

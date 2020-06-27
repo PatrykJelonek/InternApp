@@ -91,12 +91,20 @@ class InternshipController extends Controller
      */
     public function show($id)
     {
-        $intership = Internship::find($id);
+        $internship = Internship::with(['journals.author'])->find($id);
 
-        if (isset($intership))
-            return response($intership, Response::HTTP_OK);
+        if (isset($internship))
+            return response([
+                'status' => 'success',
+                'data' => $internship,
+                'message' => 'Test'
+            ], Response::HTTP_OK);
         else
-            return response("Internship not found!", Response::HTTP_NOT_FOUND);
+            return response([
+                'status' => 'error',
+                'data' => null,
+                'message' => 'Przepraszamy, ale cos poszło nie tak!'
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
     /**

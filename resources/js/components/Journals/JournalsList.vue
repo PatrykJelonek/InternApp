@@ -11,13 +11,13 @@
                 {{ item.author.first_name + " " + item.author.last_name}}
             </template>
             <template v-slot:item.content="{ item }">
-                {{ String(item.content).substr(0,32) + "..." }}
+                {{ item.content.length > 32 ? String(item.content).substr(0,32) + "..." : item.content }}
             </template>
             <template v-slot:item.created_at="{ item }">
                 {{ moment(item.created_at).format("DD.MM.YYYY HH:mm:ss") }}
             </template>
             <template v-slot:item.status="{ item }">
-                <v-chip :color="item.accepted == 1 ? 'success' : 'error' " dark>
+                <v-chip outlined :color="item.accepted == 1 ? 'success' : 'error' " dark>
                     {{ item.accepted == 1 ? 'Zaakceptowany' : 'Niezaakceptowany'}}
                 </v-chip>
             </template>
