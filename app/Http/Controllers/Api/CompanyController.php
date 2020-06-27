@@ -5,10 +5,13 @@ namespace App\Http\Controllers\Api;
 use App\Agreement;
 use App\Company;
 use App\Http\Controllers\Controller;
+use App\Internship;
 use App\Offer;
+use App\Student;
 use App\University;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 
 class CompanyController extends Controller
@@ -290,5 +293,24 @@ class CompanyController extends Controller
                 'data' => null,
                 'message' => "Company users not found!"
             ], Response::HTTP_NOT_FOUND);
+    }
+
+    /**
+     * Get company interns
+     *
+     * @param $id
+     * @return Response
+     */
+    public function getInterns($id)
+    {
+        $company = Company::with('offers')->find($id);
+        $internships = Internship::whereIn('offer_id', Arr::pluck($company->offers, 'id'))->get();
+        $students = Student::with(['user', 'internships.offer'])->whereIn('id', Arr::pluck($internships, 'student_id'))->get();
+
+        return Response([
+            'status' => 'success',
+            'data' => $students,
+            'message' => null,
+        ], Response::HTTP_OK);
     }
 }

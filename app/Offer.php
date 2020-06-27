@@ -33,6 +33,12 @@ class Offer extends Model
         return $this->hasOne('App\User', 'id', 'company_supervisor_id');
     }
 
+    public function internships()
+    {
+        return $this->hasMany('App\Internship', 'offer_id', 'id');
+
+    }
+
     // TODO:supervisior_ids
     public static function messages()
     {

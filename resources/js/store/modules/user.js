@@ -11,7 +11,8 @@ export default {
         userCompanies: [],
         roles: [],
         journalEntries: [],
-        internships: []
+        internships: [],
+        interns: [],
     },
 
     getters: {
@@ -33,6 +34,10 @@ export default {
 
         internships(state) {
             return state.internships;
+        },
+
+        interns(state) {
+            return state.interns;
         }
     },
 
@@ -65,6 +70,10 @@ export default {
 
         SET_INTERNSHIPS(state, data) {
             state.internships = data;
+        },
+
+        SET_INTERNS(state, data) {
+            state.interns = data;
         }
     },
 
@@ -137,6 +146,15 @@ export default {
             } catch (e) {
                 commit('SET_INTERNSHIPS', []);
             }
-        }
+        },
+
+        async fetchInterns({commit}, id) {
+            try {
+                let response = await axios.get(`/api/user/interns`);
+                commit('SET_INTERNS', response.data.data);
+            } catch(e) {
+                commit('SET_INTERNS', []);
+            }
+        },
     }
 };

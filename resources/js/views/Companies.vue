@@ -41,6 +41,7 @@
                     <v-tabs v-model="tab" background-color="transparent" color="blue accent-4">
                         <v-tab>Oferty</v-tab>
                         <v-tab>Umowy</v-tab>
+                        <v-tab>Praktykanci</v-tab>
                     </v-tabs>
                     <v-tabs-items class="transparent mt-5 body-2 text-justify" v-model="tab">
                         <v-tab-item>
@@ -71,6 +72,9 @@
                                 </v-data-table>
                             </v-card>
                         </v-tab-item>
+                        <v-tab-item>
+                            <company-interns></company-interns>
+                        </v-tab-item>
                     </v-tabs-items>
                 </v-col>
             </v-row>
@@ -89,10 +93,11 @@
     import CompaniesNotFound from "../components/Companies/CompaniesNotFound";
     import CompanyCodeCard from "../components/Companies/CompanyCodeCard";
     import CompanyUseCodeDialog from "../components/Companies/CompanyUseCodeDialog";
+    import CompanyInterns from "../components/Companies/CompanyInterns";
 
     export default {
         name: "Companies",
-        components: {CompanyUseCodeDialog, CompanyCodeCard, CompaniesNotFound},
+        components: {CompanyInterns, CompanyUseCodeDialog, CompanyCodeCard, CompaniesNotFound},
 
         data() {
             return {
@@ -123,6 +128,7 @@
                 userCompanies: 'user/userCompanies',
                 companyAgreements: 'company/companyAgreements',
                 companyOffers: 'company/companyOffers',
+                selectedCompanyId: 'company/selectedCompanyId'
             }),
         },
 
@@ -132,6 +138,8 @@
                 selectCompany: 'company/selectCompany',
                 fetchCompanyAgreements: 'company/fetchCompanyAgreements',
                 fetchCompanyOffers: 'company/fetchCompanyOffers',
+                fetchCompanyInterns: 'company/fetchInterns',
+                selectCompanyId: 'company/selectCompanyId',
             }),
 
             getSelectedCompany() {
@@ -141,6 +149,8 @@
                 return this.userCompanies.find((company, index) => {
                     if(company.id === this.chosenCompany)
                     {
+                        this.selectCompanyId(company.id);
+                        this.fetchCompanyInterns(this.chosenCompany);
                         this.fetchCompanyOffers(this.chosenCompany).then(() => {
                             this.isLoading.offersTable = false;
                         });
@@ -157,6 +167,7 @@
         created() {
             this.fetchUserCompanies().then(() => {
                 this.chosenCompany = this.userCompanies[0];
+                this.selectCompanyId(this.userCompanies[0].id);
                 this.selectCompany(this.userCompanies[0]).then(() => {
                     this.isLoading.code = false;
 

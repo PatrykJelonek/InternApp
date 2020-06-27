@@ -4,10 +4,12 @@ export default {
     state: {
         company: '',
         selectedCompany: null,
+        selectedCompanyId: null,
         companyCategories: [],
         companyUsers: [],
         companyOffers: [],
         companyAgreements: [],
+        interns: [],
     },
 
     getters: {
@@ -33,6 +35,14 @@ export default {
 
         companyAgreements(state) {
             return state.companyAgreements;
+        },
+
+        selectedCompanyId(state) {
+            return state.selectedCompanyId;
+        },
+
+        interns(state) {
+            return state.interns;
         }
     },
 
@@ -64,6 +74,14 @@ export default {
         SET_COMPANY_AGREEMENTS(state, data) {
             state.companyAgreements = data;
         },
+
+        SET_SELECTED_COMPANY_ID(state, data) {
+            state.selectedCompanyId = data;
+        },
+
+        SET_INTERNS(state, data) {
+            state.interns = data;
+        }
     },
 
     actions: {
@@ -112,12 +130,25 @@ export default {
             }
         },
 
+        async fetchInterns({commit}, id) {
+            try {
+                let response = await axios.get(`/api/companies/${id}/interns`);
+                commit('SET_INTERNS', response.data.data);
+            } catch(e) {
+                commit('SET_INTERNS', []);
+            }
+        },
+
         createCompany({commit}, company) {
             return axios.post('/api/companies', company);
         },
 
         selectCompany({commit}, company) {
             commit('SELECT_COMPANY', company);
+        },
+
+        selectCompanyId({commit}, id) {
+            commit('SET_SELECTED_COMPANY_ID', id);
         },
 
         async generateCode({commit}, id) {

@@ -36,7 +36,7 @@
                 </v-row>
                 <v-row class="d-flex justify-center">
                     <v-col cols="8" class="d-flex justify-end">
-                        <v-btn color="blue accent-4" dark large @click="submit">Zaloguj Się</v-btn>
+                        <v-btn color="blue accent-4" type="submit" dark large @click="submit">Zaloguj Się</v-btn>
                     </v-col>
                 </v-row>
             </v-form>

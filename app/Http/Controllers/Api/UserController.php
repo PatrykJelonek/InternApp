@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
@@ -131,6 +132,22 @@ class UserController extends Controller
         return Response([
             'status' => 'success',
             'data' => $user->journals,
+            'message' => null,
+        ], Response::HTTP_OK);
+    }
+
+    /**
+     * Get user interns
+     *
+     * @return Response
+     */
+    public function getCompaniesInterns()
+    {
+        $user = User::with('companySupervisorInternships.student')->where(["id" => auth()->id()])->distinct()->first();
+
+        return Response([
+            'status' => 'success',
+            'data' => $user->companySupervisorInternships,
             'message' => null,
         ], Response::HTTP_OK);
     }
