@@ -7,7 +7,7 @@
                 :loading="isLoading"
                 @click:row="(item) => {this.$router.push({name: 'offer', params: {id: item.id}})}"
             >
-                <template v-slot:item.action="{ item }">
+                <template v-slot:item.action="{ item }" v-if="haveRole(['university-worker'])">
                     <v-btn small color="primary" :to="'/create-agreement/'+item.id">Złóż Ofertę</v-btn>
                 </template>
             </v-data-table>
@@ -37,6 +37,7 @@
         computed: {
             ...mapGetters({
                 offers: 'offer/offers',
+                roles: 'auth/roles'
             }),
         },
 
@@ -44,6 +45,19 @@
             ...mapActions({
                 fetchOffers: 'offer/fetchOffers'
             }),
+
+            haveRole: function (rolesToCheck) {
+                let haveRole = false;
+                this.roles.forEach((role) => {
+                    rolesToCheck.forEach((roleToCheck) => {
+                        console.log(`${roleToCheck} vs. ${role} == ${roleToCheck === role}`);
+                        if(roleToCheck === role)
+                            haveRole = true;
+                    });
+                });
+
+                return haveRole;
+            }
         },
 
         created() {
