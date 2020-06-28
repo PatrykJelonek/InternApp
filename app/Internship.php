@@ -13,6 +13,11 @@ class Internship extends Model
         return $this->hasOne('App\Offer','id', 'offer_id');
     }
 
+    public function agreement()
+    {
+        return $this->hasOne('App\Agreement','id', 'agreement_id');
+    }
+
     public function student()
     {
         return $this->hasOne('App\Student', 'id', 'student_id');

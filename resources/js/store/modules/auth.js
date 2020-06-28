@@ -15,6 +15,10 @@ export default {
 
         user(state) {
             return state.user;
+        },
+
+        roles(state) {
+            return state.user.roles.map(o => o['name']);
         }
     },
 
@@ -67,6 +71,6 @@ export default {
                 commit('SET_TOKEN', null);
                 commit('SET_USER', null);
             });
-        }
+        },
     }
 };

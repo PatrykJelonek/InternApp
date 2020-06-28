@@ -23,7 +23,7 @@ class AuthController extends Controller
             return response('User has not been authenticated!', Response::HTTP_UNAUTHORIZED);
         }
 
-        $userInformation = User::where('email', $request->input("email"))->first();
+        $userInformation = User::with(['roles'])->where('email', $request->input("email"))->first();
         return response()->json([
             'token' => $token,
             'token_type' => 'bearer',
@@ -33,9 +33,10 @@ class AuthController extends Controller
 
     public function me()
     {
+        $user = User::with(['roles'])->find(auth()->id());
         return response([
             'status' => 'success',
-            'data' => auth()->user(),
+            'data' => $user,
             'message' => null
         ], Response::HTTP_OK);
     }

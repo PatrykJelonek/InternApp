@@ -47,7 +47,7 @@
                                     ></v-text-field>
                                 </v-col>
                             </v-row>
-                            <v-row>
+                            <v-row v-if="journalEntries.internshipId">
                                 <v-col>
                                     <validation-provider v-slot="{ errors }" vid="content" rules="required">
                                         <v-textarea
@@ -123,7 +123,7 @@
                     this.fetchJournalEntries();
                     this.dialog = false;
                 });
-            }
+            },
         },
 
         created() {

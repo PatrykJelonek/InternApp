@@ -38,7 +38,7 @@ export default {
 
         interns(state) {
             return state.interns;
-        }
+        },
     },
 
     mutations: {
