@@ -110,12 +110,15 @@ class UniversityController extends Controller
 
         if($university->save())
         {
-            if($university->users()->save(auth()->user(), ['created_at' => date('Y-m-d H:i:s')]))
+            if($university->users()->save(auth()->user(), ['created_at' => date('Y-m-d H:i:s')])) {
+                auth()->user()->attachRole('university-worker');
+
                 return response([
                     'status' => 'success',
                     'data' => null,
                     'message' => 'Uczelnia została dodana!'
                 ], Response::HTTP_OK);
+            }
         } else
             return response([
                 'status' => 'error',

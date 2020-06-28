@@ -78,11 +78,14 @@ class CompanyController extends Controller
         if($company->save())
         {
             if($company->users()->save(auth()->user(), ['created_at' => date('Y-m-d H:i:s')]))
+            {
+                auth()->user()->attachRole('company-worker');
                 return response([
                     'status' => 'success',
                     'data' => null,
                     'message' => 'Firma została dodana!'
                 ], Response::HTTP_OK);
+            }
         } else
             return response([
                 'status' => 'error',

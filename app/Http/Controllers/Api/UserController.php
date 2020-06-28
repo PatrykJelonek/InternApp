@@ -74,8 +74,10 @@ class UserController extends Controller
         $user->updated_at = date('Y-m-d H:i:s');
 
         if ($user->save())
+        {
+            $user->attachRole('user');
             return response("Account has been created!", Response::HTTP_CREATED);
-        else
+        } else
             return response("Account has not been created!", Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
