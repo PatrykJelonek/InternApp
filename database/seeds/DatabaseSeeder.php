@@ -41,12 +41,8 @@ class DatabaseSeeder extends Seeder
         $this->call(Fields_SpecializationsSeeder::class);
         $this->call(OffersSeeder::class);
         $this->call(AgreementsSeeder::class);
-        $this->call(AttachmentsSeeder::class);
         $this->call(InternshipsSeeder::class);
-        $this->call(Offers_AttachmentsSeeder::class);
         $this->call(TasksSeeder::class);
-        $this->call(Agreements_AttachmentsSeeder::class);
-        $this->call(Internships_AttachmentsSeeder::class);
         $this->call(Journal_EntriesSeeder::class);
         $this->call(Users_UniversitiesSeeder::class);
     }
