@@ -19,12 +19,22 @@ class StudentController extends Controller
      */
     public function index()
     {
+        if(auth()->user()->hasRole(['user']))
+        {
         $students = Student::all();
 
         if (isset($students))
             return response($students, Response::HTTP_OK);
         else
             return response("Students not found!", Response::HTTP_NOT_FOUND);
+        }else
+        {
+            return response([
+                        'status' => 'error',
+                        'data' => null,
+                        'message' => "Nie masz uprawnień!"
+                    ], Response::HTTP_UNAUTHORIZED);
+        }
     }
 
     /**
@@ -45,6 +55,8 @@ class StudentController extends Controller
      */
     public function store(Request $request)
     {
+        if(auth()->user()->hasRole(['user']))
+        {
         //TODO: Napisać wiadomości zwrotne
         $validatedData = $request->validate([
             'firstName' => 'required|max:64',
@@ -101,6 +113,14 @@ class StudentController extends Controller
             'data' => null,
             'message' => 'Nie udało się utworzyć konta!'
         ], Response::HTTP_INTERNAL_SERVER_ERROR);
+    }else
+    {
+        return response([
+                    'status' => 'error',
+                    'data' => null,
+                    'message' => "Nie masz uprawnień!"
+                ], Response::HTTP_UNAUTHORIZED);
+    }
     }
 
     /**
@@ -111,12 +131,22 @@ class StudentController extends Controller
      */
     public function show($id)
     {
+        if(auth()->user()->hasRole(['user']))
+        {
         $student = Student::find($id);
 
         if (isset($student))
             return response($student, Response::HTTP_OK);
         else
             return response("Student not found!", Response::HTTP_NOT_FOUND);
+        }else
+        {
+            return response([
+                        'status' => 'error',
+                        'data' => null,
+                        'message' => "Nie masz uprawnień!"
+                    ], Response::HTTP_UNAUTHORIZED);
+        }
     }
 
     /**
@@ -150,11 +180,21 @@ class StudentController extends Controller
      */
     public function destroy($id)
     {
+        if(auth()->user()->hasRole(['user']))
+        {
         $student = Student::find($id);
 
         if ($student->delete())
             return response("Student has been deleted!", Response::HTTP_OK);
         else
             return response("Student has not been deleted!", Response::HTTP_INTERNAL_SERVER_ERROR);
+        }else
+        {
+            return response([
+                        'status' => 'error',
+                        'data' => null,
+                        'message' => "Nie masz uprawnień!"
+                    ], Response::HTTP_UNAUTHORIZED);
+        }
     }
 }

@@ -23,12 +23,22 @@ class CompanyController extends Controller
      */
     public function index()
     {
+        if(auth()->user()->hasRole(['user']))
+        {
         $companies = Company::with(['offers'])->get();
 
         if (isset($companies))
             return response($companies, Response::HTTP_OK);
         else
             return response("Companies not found!", Response::HTTP_NOT_FOUND);
+        }else
+        {
+            return response([
+                        'status' => 'error',
+                        'data' => null,
+                        'message' => "Nie masz uprawnień!"
+                    ], Response::HTTP_UNAUTHORIZED);
+        }
     }
 
     /**
@@ -49,6 +59,8 @@ class CompanyController extends Controller
      */
     public function store(Request $request)
     {
+        if(auth()->user()->hasRole(['admin', 'company-worker']))
+        {
         $validatedData = $request->validate([
             'name' => 'required|unique:companies|max:255',
             'companyCategoryId' => 'required',
@@ -92,6 +104,14 @@ class CompanyController extends Controller
                 'data' => null,
                 'message' => 'Niestety nie udało się dodać twojej firmy!'
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }else
+        {
+            return response([
+                        'status' => 'error',
+                        'data' => null,
+                        'message' => "Nie masz uprawnień!"
+                    ], Response::HTTP_UNAUTHORIZED);
+        }
     }
 
     /**
@@ -102,6 +122,8 @@ class CompanyController extends Controller
      */
     public function show($id)
     {
+        if(auth()->user()->hasRole(['user']))
+        {
         $company = Company::with(['city','category','offers', 'offers.offerCategory'])->where(['id' => $id])->get();
 
         if (isset($company))
@@ -116,6 +138,14 @@ class CompanyController extends Controller
                 'data' => null,
                 'message' => 'Nie znaleziono podanej firmy!',
             ], Response::HTTP_NOT_FOUND);
+        }else
+        {
+            return response([
+                        'status' => 'error',
+                        'data' => null,
+                        'message' => "Nie masz uprawnień!"
+                    ], Response::HTTP_UNAUTHORIZED);
+        }
     }
 
     /**
@@ -148,18 +178,29 @@ class CompanyController extends Controller
      */
     public function destroy($id)
     {
+        if(auth()->user()->hasRole(['admin', 'company-worker']))
+        {
         $company = Company::find($id);
 
         if ($company->delete())
             return response("Company has been deleted!", Response::HTTP_OK);
         else
             return response("Company has not been deleted!", Response::HTTP_INTERNAL_SERVER_ERROR);
+        }else
+        {
+            return response([
+                        'status' => 'error',
+                        'data' => null,
+                        'message' => "Nie masz uprawnień!"
+                    ], Response::HTTP_UNAUTHORIZED);
+        }
     }
 
     public function setNewAccessCode(Request $request)
     {
         //TODO: Będzie trzeba to zabezpieczyć
-
+        if(auth()->user()->hasRole(['company-worker']))
+        {
         $company = Company::find($request->input("id"));
 
         if(isset($company))
@@ -179,6 +220,14 @@ class CompanyController extends Controller
             'data' => null,
             'message' => 'New access code has been not generate!',
         ], Response::HTTP_NOT_MODIFIED);
+        }else
+        {
+            return response([
+                        'status' => 'error',
+                        'data' => null,
+                        'message' => "Nie masz uprawnień!"
+                    ], Response::HTTP_UNAUTHORIZED);
+        }
     }
 
     /**
@@ -189,6 +238,8 @@ class CompanyController extends Controller
      */
     public function useCode(Request $request)
     {
+        if(auth()->user()->hasRole(['company-worker']))
+        {
         $company = Company::where('access_code', $request->input('accessCode'))->first();
         $errorMessage = "Coś poszło nie tak!";
 
@@ -215,6 +266,14 @@ class CompanyController extends Controller
             'data' => null,
             'message' => $errorMessage
         ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }else
+        {
+            return response([
+                        'status' => 'error',
+                        'data' => null,
+                        'message' => "Nie masz uprawnień!"
+                    ], Response::HTTP_UNAUTHORIZED);
+        }
     }
 
     /**
@@ -224,6 +283,8 @@ class CompanyController extends Controller
      * @return Response
      */
     public function getCompanyOffers($id) {
+        if(auth()->user()->hasRole(['user']))
+        {
         $offers = Offer::with(['company','offerCategory','offerStatus','company.city', 'supervisor'])->where(['company_id' => $id])->get();
 
         if (isset($offers))
@@ -238,6 +299,14 @@ class CompanyController extends Controller
                 'data' => null,
                 'message' => "Nie znaleziono oferty!"
             ], Response::HTTP_NOT_FOUND);
+        }else
+        {
+            return response([
+                        'status' => 'error',
+                        'data' => null,
+                        'message' => "Nie masz uprawnień!"
+                    ], Response::HTTP_UNAUTHORIZED);
+        }
     }
 
     /**
@@ -247,6 +316,8 @@ class CompanyController extends Controller
      * @return Response
      */
     public function getCompanyAgreements($id) {
+        if(auth()->user()->hasRole(['user']))
+        {
         $agreements = Agreement::with(['offer', 'university'])->where(['company_id' => $id])->get();
 
         if (isset($agreements))
@@ -261,6 +332,14 @@ class CompanyController extends Controller
                 'data' => null,
                 'message' => "Nie znaleziono oferty!"
             ], Response::HTTP_NOT_FOUND);
+        }else
+        {
+            return response([
+                        'status' => 'error',
+                        'data' => null,
+                        'message' => "Nie masz uprawnień!"
+                    ], Response::HTTP_UNAUTHORIZED);
+        }
     }
 
     /**
@@ -270,11 +349,21 @@ class CompanyController extends Controller
      */
     private function generateUniqueRandomAccessCode()
     {
+        if(auth()->user()->hasRole(['user']))
+        {
         do {
             $randomAccessCode = Str::upper( Str::random(8));
         } while(count(Company::where('access_code', $randomAccessCode)->get()) > 0);
 
         return $randomAccessCode;
+        }else
+        {
+            return response([
+                        'status' => 'error',
+                        'data' => null,
+                        'message' => "Nie masz uprawnień!"
+                    ], Response::HTTP_UNAUTHORIZED);
+        }
     }
     /**
      * Get users from company
@@ -284,6 +373,8 @@ class CompanyController extends Controller
 
     public function getUsers($id)
     {
+        if(auth()->user()->hasRole(['admin', 'company-worker', 'university-worker']))
+        {
         $company = Company::find($id);
 
          if (isset($company))
@@ -298,6 +389,14 @@ class CompanyController extends Controller
                 'data' => null,
                 'message' => "Company users not found!"
             ], Response::HTTP_NOT_FOUND);
+        }else
+        {
+            return response([
+                        'status' => 'error',
+                        'data' => null,
+                        'message' => "Nie masz uprawnień!"
+                    ], Response::HTTP_UNAUTHORIZED);
+        }
     }
 
     /**
@@ -308,6 +407,8 @@ class CompanyController extends Controller
      */
     public function getInterns($id)
     {
+        if(auth()->user()->hasRole(['admin', 'company-worker', 'university-worker']))
+        {
         $company = Company::with('offers')->find($id);
         $internships = Internship::whereIn('offer_id', Arr::pluck($company->offers, 'id'))->get();
         $students = Student::with(['user', 'internships.offer'])->whereIn('id', Arr::pluck($internships, 'student_id'))->get();
@@ -317,5 +418,13 @@ class CompanyController extends Controller
             'data' => $students,
             'message' => null,
         ], Response::HTTP_OK);
+        }else
+        {
+            return response([
+                        'status' => 'error',
+                        'data' => null,
+                        'message' => "Nie masz uprawnień!"
+                    ], Response::HTTP_UNAUTHORIZED);
+        }
     }
 }
