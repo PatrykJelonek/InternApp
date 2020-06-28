@@ -15,8 +15,9 @@ class AgreementAttachmentController extends Controller
      */
     public function index()
     {
+        auth()->user()->hasRole(['admin', 'student', 'company-worker', 'university-worker']);
         $agreements_attachments = AgreementAttachment::all();
-
+        
         if (isset($agreements_attachments))
             return response([
                 'status' => 'success',
@@ -49,6 +50,7 @@ class AgreementAttachmentController extends Controller
      */
     public function store(Request $request)
     {
+        auth()->user()->hasRole(['admin', 'student', 'company-worker', 'university-worker']);
         $vallidatedData  = $request->validate([
             'agreement_id' => 'required',
             'attachment_id' => 'required',
@@ -82,6 +84,7 @@ class AgreementAttachmentController extends Controller
      */
     public function show(AgreementAttachment $agreementAttachment)
     {
+        auth()->user()->hasRole(['admin', 'student', 'company-worker', 'university-worker']);
         $agreement_attachment = AgreementAttachment::find($id);
 
         if (isset($agreement_attachment))
@@ -121,6 +124,7 @@ class AgreementAttachmentController extends Controller
      */
     public function destroy(AgreementAttachment $agreementAttachment)
     {
+        auth()->user()->hasRole(['admin', 'student', 'company-worker', 'university-worker']);
         $agreement_attachment = AgreementAttachment::find($id);
 
         if ($agreement_attachment->delete())
