@@ -5,18 +5,18 @@ namespace App\Http\Controllers\Api;
 use App\AgreementAttachment;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 
 class AgreementAttachmentController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return Response
+     * @return \Illuminate\Http\Response
      */
     public function index()
     {
-        auth()->user()->hasRole(['admin', 'student', 'company-worker', 'university-worker']);
+       if(auth()->user()->hasRole(['admin', 'student', 'company-worker', 'university-worker']))
+       {
         $agreements_attachments = AgreementAttachment::all();
 
         if (isset($agreements_attachments))
@@ -30,13 +30,21 @@ class AgreementAttachmentController extends Controller
                 'status' => 'error',
                 'data' => null,
                 'message' => "Nie znaleziono powiązań!"
-            ], Response::HTTP_UNAUTHORIZED);
+            ], Response::HTTP_NOT_FOUND);
+        }else
+        {
+            return response([
+                        'status' => 'error',
+                        'data' => null,
+                        'message' => "Nie masz uprawnień!"
+                    ], Response::HTTP_UNAUTHORIZED);
+        }
     }
 
     /**
      * Show the form for creating a new resource.
      *
-     * @return Response
+     * @return \Illuminate\Http\Response
      */
     public function create()
     {
@@ -46,12 +54,13 @@ class AgreementAttachmentController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param Request $request
-     * @return Response
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
-        auth()->user()->hasRole(['admin', 'student', 'company-worker', 'university-worker']);
+        if(auth()->user()->hasRole(['admin', 'student', 'company-worker', 'university-worker']))
+        {
         $vallidatedData  = $request->validate([
             'agreement_id' => 'required',
             'attachment_id' => 'required',
@@ -75,30 +84,47 @@ class AgreementAttachmentController extends Controller
                 'data' => null,
                 'message' => 'Can not create relation!'
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }else
+        {
+            return response([
+                        'status' => 'error',
+                        'data' => null,
+                        'message' => "Nie masz uprawnień!"
+                    ], Response::HTTP_UNAUTHORIZED);
+        }
     }
 
     /**
      * Display the specified resource.
      *
-     * @param AgreementAttachment $agreementAttachment
-     * @return Response
+     * @param  \App\AgreementAttachment  $agreementAttachment
+     * @return \Illuminate\Http\Response
      */
     public function show(AgreementAttachment $agreementAttachment)
     {
-        auth()->user()->hasRole(['admin', 'student', 'company-worker', 'university-worker']);
+        if(auth()->user()->hasRole(['admin', 'student', 'company-worker', 'university-worker']))
+        {
         $agreement_attachment = AgreementAttachment::find($id);
 
         if (isset($agreement_attachment))
             return response($agreement_attachment, Response::HTTP_OK);
         else
             return response("Relation not found!", Response::HTTP_NOT_FOUND);
+        }else
+        {
+            return response([
+                        'status' => 'error',
+                        'data' => null,
+                        'message' => "Nie masz uprawnień!"
+                    ], Response::HTTP_UNAUTHORIZED);
+        }
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param AgreementAttachment $agreementAttachment
-     * @return Response
+     * @param  \App\AgreementAttachment  $agreementAttachment
+     * @return \Illuminate\Http\Response
      */
     public function edit(AgreementAttachment $agreementAttachment)
     {
@@ -108,9 +134,9 @@ class AgreementAttachmentController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param Request $request
-     * @param AgreementAttachment $agreementAttachment
-     * @return Response
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\AgreementAttachment  $agreementAttachment
+     * @return \Illuminate\Http\Response
      */
     public function update(Request $request, AgreementAttachment $agreementAttachment)
     {
@@ -120,17 +146,26 @@ class AgreementAttachmentController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param AgreementAttachment $agreementAttachment
-     * @return Response
+     * @param  \App\AgreementAttachment  $agreementAttachment
+     * @return \Illuminate\Http\Response
      */
     public function destroy(AgreementAttachment $agreementAttachment)
     {
-        auth()->user()->hasRole(['admin', 'student', 'company-worker', 'university-worker']);
+        if(auth()->user()->hasRole(['admin', 'student', 'company-worker', 'university-worker']))
+        {
         $agreement_attachment = AgreementAttachment::find($id);
 
         if ($agreement_attachment->delete())
             return response("Relation has been deleted!", Response::HTTP_OK);
         else
             return response("Relation has not been deleted!", Response::HTTP_INTERNAL_SERVER_ERROR);
+        }else
+        {
+            return response([
+                        'status' => 'error',
+                        'data' => null,
+                        'message' => "Nie masz uprawnień!"
+                    ], Response::HTTP_UNAUTHORIZED);
+        }
     }
 }

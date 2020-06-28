@@ -16,6 +16,8 @@ class AgreementController extends Controller
      */
     public function index()
     {
+        if(auth()->user()->hasRole(['admin', 'student', 'company-worker', 'university-worker']))
+       {
         $agreements = Agreement::all();
 
         if (isset($agreements))
@@ -30,6 +32,14 @@ class AgreementController extends Controller
                 'data' => null,
                 'message' => "Nie znaleziono żadnej umowy!"
             ], Response::HTTP_NOT_FOUND);
+        }else 
+        {
+            return response([
+                        'status' => 'error',
+                        'data' => null,
+                        'message' => "Nie masz uprawnień!"
+                    ], Response::HTTP_UNAUTHORIZED);
+        }
     }
 
     /**
@@ -50,6 +60,8 @@ class AgreementController extends Controller
      */
     public function store(Request $request)
     {
+        if(auth()->user()->hasRole(['admin', 'student', 'company-worker', 'university-worker']))
+       {
         $vallidatedData  = $request->validate([
             'dateFrom' => 'required',
             'dateTo' => 'required',
@@ -91,6 +103,14 @@ class AgreementController extends Controller
                 'data' => null,
                 'message' => 'Nie udało się utworzyć umowy!'
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }else 
+        {
+            return response([
+                        'status' => 'error',
+                        'data' => null,
+                        'message' => "Nie masz uprawnień!"
+                    ], Response::HTTP_UNAUTHORIZED);
+        }
     }
 
     /**
@@ -101,6 +121,8 @@ class AgreementController extends Controller
      */
     public function show($id)
     {
+        if(auth()->user()->hasRole(['admin', 'student', 'company-worker', 'university-worker']))
+       {
         $agreement = Agreement::with(['company', 'university', 'author', 'universitySupervisor', 'offer.supervisor', 'company.city', 'university.city'])->where(['id' => $id])->get();
 
         if (isset($agreement))
@@ -115,6 +137,14 @@ class AgreementController extends Controller
             'data' => null,
             'message' => "Nie znaleziono umowy!"
         ], Response::HTTP_NOT_FOUND);
+        }else 
+        {
+            return response([
+                        'status' => 'error',
+                        'data' => null,
+                        'message' => "Nie masz uprawnień!"
+                    ], Response::HTTP_UNAUTHORIZED);
+        }
     }
 
     /**
@@ -125,6 +155,8 @@ class AgreementController extends Controller
      */
     public function active($id)
     {
+        if(auth()->user()->hasRole(['admin', 'student', 'company-worker', 'university-worker']))
+       {
         $agreement = Agreement::find($id);
 
         $agreement->is_active = 1;
@@ -141,6 +173,14 @@ class AgreementController extends Controller
                 'data' => null,
                 'message' => "Nie udało się potwierdzić porozumienia!"
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }else 
+        {
+            return response([
+                        'status' => 'error',
+                        'data' => null,
+                        'message' => "Nie masz uprawnień!"
+                    ], Response::HTTP_UNAUTHORIZED);
+        }
     }
 
     /**
@@ -174,11 +214,21 @@ class AgreementController extends Controller
      */
     public function destroy($id)
     {
+        if(auth()->user()->hasRole(['admin', 'student', 'company-worker', 'university-worker']))
+       {
         $agreement = Agreement::find($id);
 
         if ($agreement->delete())
             return response("Agreement has been deleted!", Response::HTTP_OK);
         else
             return response("Agreement has not been deleted!", Response::HTTP_INTERNAL_SERVER_ERROR);
+       }else 
+       {
+           return response([
+                       'status' => 'error',
+                       'data' => null,
+                       'message' => "Nie masz uprawnień!"
+                   ], Response::HTTP_UNAUTHORIZED);
+       }
     }
 }
