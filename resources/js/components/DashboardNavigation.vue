@@ -37,11 +37,11 @@
                 </v-list-item-content>
             </v-list-item>
 
-            <v-list-group prepend-icon="mdi-newspaper-variant-multiple" no-action color="blue accent-4" v-if="this.haveRole(['admin','university-worker', 'company-worker'])">
+            <v-list-group prepend-icon="mdi-newspaper-variant-multiple" no-action color="blue accent-4" v-if="!this.haveRole(['student'])">
                 <template v-slot:activator>
                     <v-list-item-title>Oferty</v-list-item-title>
                 </template>
-                <v-list-item link to="/offers" v-if="this.haveRole(['admin','university-worker', 'company-worker'])">
+                <v-list-item link to="/offers" v-if="!this.haveRole(['student'])">
                     <v-list-item-content>
                         <v-list-item-title>Wszystkie Oferty</v-list-item-title>
                     </v-list-item-content>
