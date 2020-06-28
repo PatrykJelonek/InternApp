@@ -298,7 +298,7 @@ class UniversityController extends Controller
      */
     public function getInternships($id) {
         $agreements = Agreement::where(['university_id' => $id])->get();
-        $internships = Internship::with(['offer', 'student.user', 'university_supervisor', 'company_supervisor'])->whereIn('agreement_id', Arr::pluck($agreements->toArray(), 'id'))->get();
+        $internships = Internship::with(['offer', 'student.user', 'university_supervisor', 'company_supervisor', 'student.internships.offer', 'student.internships.agreement'])->whereIn('agreement_id', Arr::pluck($agreements->toArray(), 'id'))->get();
 
         if(count($internships) > -1)
             return response([

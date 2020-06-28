@@ -82,10 +82,13 @@
     import UniversityAccessCode from "../components/Universities/UniversityAccessCode";
     import UniversityAccessCodeDialog from "../components/Universities/UniversityAccessCodeDialog";
     import UniversitiesInternshipsList from "../components/Universities/UniversitiesInternshipsList";
+    import UniversityInternsList from "../components/Universities/UniversityInternsList";
 
     export default {
         name: "Universities",
-        components: {UniversitiesInternshipsList, UniversityAccessCodeDialog, UniversityAccessCode, UniversitiesNotFound},
+        components: {
+            UniversityInternsList,
+            UniversitiesInternshipsList, UniversityAccessCodeDialog, UniversityAccessCode, UniversitiesNotFound},
 
         data() {
             return {
