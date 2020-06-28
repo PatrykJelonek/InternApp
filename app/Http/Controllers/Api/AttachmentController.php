@@ -16,12 +16,22 @@ class AttachmentController extends Controller
      */
     public function index()
     {
+        if(auth()->user()->hasRole(['admin', 'student', 'company-worker', 'university-worker']))
+       {
         $attachments = Attachment::all();
 
         if (isset($attachments))
             return response($attachments, Response::HTTP_OK);
         else
             return response("Attachments not found!", Response::HTTP_NOT_FOUND);
+        }else
+        {
+            return response([
+                        'status' => 'error',
+                        'data' => null,
+                        'message' => "Nie masz uprawnień!"
+                    ], Response::HTTP_UNAUTHORIZED);
+        }
     }
 
     /**
@@ -42,6 +52,8 @@ class AttachmentController extends Controller
      */
     public function store(Request $request)
     {
+        if(auth()->user()->hasRole(['admin', 'student', 'company-worker', 'university-worker']))
+       {
         $vallidatedData  = $request->validate([
             'file' => 'required|mimes:pdf,xlx,csv,jpg,png',
             'name' => 'required|max:128',
@@ -74,6 +86,14 @@ class AttachmentController extends Controller
                 'data' => null,
                 'message' => 'Can not create attachment!'
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }else
+        {
+            return response([
+                        'status' => 'error',
+                        'data' => null,
+                        'message' => "Nie masz uprawnień!"
+                    ], Response::HTTP_UNAUTHORIZED);
+        }
     }
 
     /**
@@ -84,12 +104,22 @@ class AttachmentController extends Controller
      */
     public function show($id)
     {
+        if(auth()->user()->hasRole(['admin', 'student', 'company-worker', 'university-worker']))
+       {
         $attachment = Attachment::find($id);
 
         if (isset($attachment))
             return response($attachment, Response::HTTP_OK);
         else
             return response("Attachment not found!", Response::HTTP_NOT_FOUND);
+        }else
+        {
+            return response([
+                        'status' => 'error',
+                        'data' => null,
+                        'message' => "Nie masz uprawnień!"
+                    ], Response::HTTP_UNAUTHORIZED);
+        }
     }
 
     /**
@@ -112,6 +142,8 @@ class AttachmentController extends Controller
      */
     public function update(Request $request, Attachment $attachment)
     {
+        if(auth()->user()->hasRole(['admin', 'student', 'company-worker', 'university-worker']))
+       {
         $attachments = Attachment::find($request->input("id"));
 
         if (isset($attachment)) {
@@ -125,6 +157,14 @@ class AttachmentController extends Controller
         }
 
         return response("Attachment has not been updated!", Response::HTTP_NOT_MODIFIED);
+        }else
+        {
+        return response([
+                    'status' => 'error',
+                    'data' => null,
+                    'message' => "Nie masz uprawnień!"
+                ], Response::HTTP_UNAUTHORIZED);
+        }
     }
 
     /**
@@ -135,11 +175,21 @@ class AttachmentController extends Controller
      */
     public function destroy($id)
     {
+        if(auth()->user()->hasRole(['admin', 'student', 'company-worker', 'university-worker']))
+       {
         $attachment = Attachment::find($id);
 
         if ($attachment->delete())
             return response("Attachment has been deleted!", Response::HTTP_OK);
         else
             return response("Attachment has not been deleted!", Response::HTTP_INTERNAL_SERVER_ERROR);
+        }else
+        {
+            return response([
+                        'status' => 'error',
+                        'data' => null,
+                        'message' => "Nie masz uprawnień!"
+                    ], Response::HTTP_UNAUTHORIZED);
+        }
     }
 }

@@ -16,12 +16,22 @@ class QuestionnaireController extends Controller
      */
     public function index()
     {
+        if(auth()->user()->hasRole(['user']))
+        {
         $questionnaires = Questionnaire::all();
 
         if (isset($questionnaires))
             return response($questionnaires, Response::HTTP_OK);
         else
             return response("Questionnaires not found!", Response::HTTP_NOT_FOUND);
+        }else
+        {
+            return response([
+                        'status' => 'error',
+                        'data' => null,
+                        'message' => "Nie masz uprawnień!"
+                    ], Response::HTTP_UNAUTHORIZED);
+        }
     }
 
     /**
@@ -42,6 +52,8 @@ class QuestionnaireController extends Controller
      */
     public function store(Request $request)
     {
+        if(auth()->user()->hasRole(['admin','company-worker', 'university-worker']))
+        {
         $questionnaire = new Questionnaire;
 
         if (isset($questionnaire)) {
@@ -56,6 +68,14 @@ class QuestionnaireController extends Controller
         }
 
         return response("Questionnaire has not been created!", Response::HTTP_INTERNAL_SERVER_ERROR);
+        }else
+        {
+            return response([
+                        'status' => 'error',
+                        'data' => null,
+                        'message' => "Nie masz uprawnień!"
+                    ], Response::HTTP_UNAUTHORIZED);
+        }
     }
 
     /**
@@ -66,12 +86,22 @@ class QuestionnaireController extends Controller
      */
     public function show($id)
     {
+        if(auth()->user()->hasRole(['user']))
+        {
         $questionnaire = Questionnaire::find($id);
 
         if (isset($questionnaire))
             return response($questionnaire, Response::HTTP_OK);
         else
             return response("Questionnaire not found!", Response::HTTP_NOT_FOUND);
+        }else
+        {
+            return response([
+                        'status' => 'error',
+                        'data' => null,
+                        'message' => "Nie masz uprawnień!"
+                    ], Response::HTTP_UNAUTHORIZED);
+        }
     }
 
     /**
@@ -94,6 +124,8 @@ class QuestionnaireController extends Controller
      */
     public function update(Request $request)
     {
+        if(auth()->user()->hasRole(['user']))
+        {
         $questionnaire = Questionnaire::find($request->input("id"));
 
         if (isset($questionnaire)) {
@@ -107,6 +139,14 @@ class QuestionnaireController extends Controller
         }
 
         return response("Questionnaire not found!", Response::HTTP_NOT_FOUND);
+        }else
+        {
+            return response([
+                        'status' => 'error',
+                        'data' => null,
+                        'message' => "Nie masz uprawnień!"
+                    ], Response::HTTP_UNAUTHORIZED);
+        }
     }
 
     /**
@@ -117,11 +157,21 @@ class QuestionnaireController extends Controller
      */
     public function destroy($id)
     {
+        if(auth()->user()->hasRole(['user']))
+        {
         $questionnaire = Questionnaire::find($id);
 
         if ($questionnaire->delete())
             return response("Questionnaire has been deleted!", Response::HTTP_OK);
         else
             return response("Questionnaire has not been deleted!", Response::HTTP_INTERNAL_SERVER_ERROR);
+        }else
+        {
+            return response([
+                        'status' => 'error',
+                        'data' => null,
+                        'message' => "Nie masz uprawnień!"
+                    ], Response::HTTP_UNAUTHORIZED);
+        }
     }
 }

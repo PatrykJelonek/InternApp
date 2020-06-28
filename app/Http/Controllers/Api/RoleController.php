@@ -16,12 +16,22 @@ class RoleController extends Controller
      */
     public function index()
     {
+        if(auth()->user()->hasRole(['admin']))
+        {
         $roles = Role::all();
 
         if (isset($roles))
             return response($roles, Response::HTTP_OK);
         else
             return response("Roles not found!", Response::HTTP_NOT_FOUND);
+        }else
+        {
+            return response([
+                        'status' => 'error',
+                        'data' => null,
+                        'message' => "Nie masz uprawnień!"
+                    ], Response::HTTP_UNAUTHORIZED);
+        }
     }
 
     /**
@@ -42,6 +52,8 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
+        if(auth()->user()->hasRole(['admin']))
+        {
         $role = new Role;
 
         if (isset($role)) {
@@ -56,6 +68,14 @@ class RoleController extends Controller
         }
 
         return response("Role has not been created!", Response::HTTP_INTERNAL_SERVER_ERROR);
+        }else
+        {
+            return response([
+                        'status' => 'error',
+                        'data' => null,
+                        'message' => "Nie masz uprawnień!"
+                    ], Response::HTTP_UNAUTHORIZED);
+        }
     }
 
     /**
@@ -66,12 +86,22 @@ class RoleController extends Controller
      */
     public function show($id)
     {
+        if(auth()->user()->hasRole(['admin']))
+        {
         $role = Role::find($id);
 
         if (isset($role))
             return response($role, Response::HTTP_OK);
         else
             return response("Role not found!", Response::HTTP_NOT_FOUND);
+        }else
+        {
+            return response([
+                        'status' => 'error',
+                        'data' => null,
+                        'message' => "Nie masz uprawnień!"
+                    ], Response::HTTP_UNAUTHORIZED);
+        }
     }
 
     /**
@@ -94,6 +124,8 @@ class RoleController extends Controller
      */
     public function update(Request $request, Role $role)
     {
+        if(auth()->user()->hasRole(['admin']))
+        {
         $role = Role::find($request->input("id"));
 
         if (isset($role)) {
@@ -107,6 +139,14 @@ class RoleController extends Controller
         }
 
         return response("Role not found!", Response::HTTP_NOT_FOUND);
+        }else
+        {
+            return response([
+                        'status' => 'error',
+                        'data' => null,
+                        'message' => "Nie masz uprawnień!"
+                    ], Response::HTTP_UNAUTHORIZED);
+        }
     }
 
     /**
@@ -117,11 +157,21 @@ class RoleController extends Controller
      */
     public function destroy($id)
     {
+        if(auth()->user()->hasRole(['admin']))
+        {
         $role = Role::find($id);
 
         if ($role->delete())
             return response("Role has been deleted!", Response::HTTP_OK);
         else
             return response("Role has not been deleted!", Response::HTTP_INTERNAL_SERVER_ERROR);
+        }else
+        {
+            return response([
+                        'status' => 'error',
+                        'data' => null,
+                        'message' => "Nie masz uprawnień!"
+                    ], Response::HTTP_UNAUTHORIZED);
+        }
     }
 }

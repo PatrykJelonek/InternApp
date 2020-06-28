@@ -16,6 +16,8 @@ class SpecializationController extends Controller
      */
     public function index()
     {
+        if(auth()->user()->hasRole(['admin', 'university-worker','student']))
+        {
         $specializations = Specialization::all();
 
         if (isset($specializations))
@@ -30,6 +32,14 @@ class SpecializationController extends Controller
                 'data' => null,
                 'message' => 'Nie znaleziono żadnych specializacji'
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }else
+        {
+            return response([
+                        'status' => 'error',
+                        'data' => null,
+                        'message' => "Nie masz uprawnień!"
+                    ], Response::HTTP_UNAUTHORIZED);
+        }
     }
 
     /**
@@ -50,6 +60,8 @@ class SpecializationController extends Controller
      */
     public function store(Request $request)
     {
+        if(auth()->user()->hasRole(['admin', 'university-worker', 'student']))
+        {
         $specialization = new Specialization;
 
         $specialization->name = $request->input("name");
@@ -61,6 +73,14 @@ class SpecializationController extends Controller
             return response($specialization, Response::HTTP_OK);
         else
             return response("Specialization has not been created!", Response::HTTP_INTERNAL_SERVER_ERROR);
+        }else
+        {
+            return response([
+                        'status' => 'error',
+                        'data' => null,
+                        'message' => "Nie masz uprawnień!"
+                    ], Response::HTTP_UNAUTHORIZED);
+        }
     }
 
     /**
@@ -94,6 +114,8 @@ class SpecializationController extends Controller
      */
     public function update(Request $request)
     {
+        if(auth()->user()->hasRole(['admin', 'university-worker', 'student']))
+        {
         $specialization = Specialization::find($request->input("id"));
 
         if (isset($specialization)) {
@@ -106,6 +128,14 @@ class SpecializationController extends Controller
         }
 
         return response("Specialization has not been updated!", Response::HTTP_NOT_MODIFIED);
+    }else
+    {
+        return response([
+                    'status' => 'error',
+                    'data' => null,
+                    'message' => "Nie masz uprawnień!"
+                ], Response::HTTP_UNAUTHORIZED);
+    }
     }
 
     /**
@@ -116,11 +146,21 @@ class SpecializationController extends Controller
      */
     public function destroy($id)
     {
+        if(auth()->user()->hasRole(['admin', 'university-worker']))
+        {
         $specialization = Specialization::find($id);
 
         if ($specialization->delete())
             return response("Specialization has been deleted!", Response::HTTP_OK);
         else
             return response("Specialization has not been deleted!", Response::HTTP_INTERNAL_SERVER_ERROR);
+        }else
+        {
+            return response([
+                        'status' => 'error',
+                        'data' => null,
+                        'message' => "Nie masz uprawnień!"
+                    ], Response::HTTP_UNAUTHORIZED);
+        }
     }
 }

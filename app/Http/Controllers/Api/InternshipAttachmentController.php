@@ -15,6 +15,8 @@ class InternshipAttachmentController extends Controller
      */
     public function index()
     {
+        if(auth()->user()->hasRole(['user']))
+        {
         $internships_attachments = IntershipAttachment::all();
 
         if (isset($internships_attachments))
@@ -29,6 +31,15 @@ class InternshipAttachmentController extends Controller
                 'data' => null,
                 'message' => "Nie znaleziono powiązań!"
             ], Response::HTTP_NOT_FOUND);
+        }else
+        {
+            return response([
+                        'status' => 'error',
+                        'data' => null,
+                        'message' => "Nie masz uprawnień!"
+                    ], Response::HTTP_UNAUTHORIZED);
+        }
+
     }
 
     /**
@@ -49,6 +60,8 @@ class InternshipAttachmentController extends Controller
      */
     public function store(Request $request)
     {
+        if(auth()->user()->hasRole(['user']))
+        {
         $vallidatedData  = $request->validate([
             'intership_id' => 'required',
             'attachment_id' => 'required',
@@ -72,6 +85,14 @@ class InternshipAttachmentController extends Controller
                 'data' => null,
                 'message' => 'Can not create relation!'
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }else
+        {
+            return response([
+                        'status' => 'error',
+                        'data' => null,
+                        'message' => "Nie masz uprawnień!"
+                    ], Response::HTTP_UNAUTHORIZED);
+        }
     }
 
     /**
@@ -82,12 +103,22 @@ class InternshipAttachmentController extends Controller
      */
     public function show(InternshipAttachment $internshipAttachment)
     {
+        if(auth()->user()->hasRole(['user']))
+        {
         $intership_attachment = AgreementAttachment::find($id);
 
         if (isset($intership_attachment))
             return response($intership_attachment, Response::HTTP_OK);
         else
             return response("Relation not found!", Response::HTTP_NOT_FOUND);
+        }else
+        {
+            return response([
+                        'status' => 'error',
+                        'data' => null,
+                        'message' => "Nie masz uprawnień!"
+                    ], Response::HTTP_UNAUTHORIZED);
+        }
     }
 
     /**
@@ -121,11 +152,21 @@ class InternshipAttachmentController extends Controller
      */
     public function destroy(InternshipAttachment $internshipAttachment)
     {
+        if(auth()->user()->hasRole(['user']))
+        {
         $intership_attachment = InternshipAttachment::find($id);
 
         if ($intership_attachment->delete())
             return response("Relation has been deleted!", Response::HTTP_OK);
         else
             return response("Relation has not been deleted!", Response::HTTP_INTERNAL_SERVER_ERROR);
+        }else
+        {
+            return response([
+                        'status' => 'error',
+                        'data' => null,
+                        'message' => "Nie masz uprawnień!"
+                    ], Response::HTTP_UNAUTHORIZED);
+        }
     }
 }
