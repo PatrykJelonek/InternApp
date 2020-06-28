@@ -6,7 +6,7 @@
             :loading="isLoading"
             :items-per-page="10"
         >
-            <template v-slot:item.action="{ item }">
+            <template v-slot:item.action="{ item }" v-if="this.haveRole(['student'])">
                 <v-btn small color="primary" v-if="item.offer.places_number > 0" @click="clickToApply(item)">Aplikuj</v-btn>
                 <v-btn small color="primary" disabled v-else>Aplikuj</v-btn>
             </template>
@@ -58,7 +58,8 @@
 
         computed: {
             ...mapGetters({
-                internships: 'internship/internships'
+                internships: 'internship/internships',
+                roles: 'auth/roles',
             })
         },
 
@@ -79,6 +80,19 @@
                     this.snackbarColor = 'error';
                     this.snackbar = true;
                 })
+            },
+
+            haveRole: function (rolesToCheck) {
+                let haveRole = false;
+                this.roles.forEach((role) => {
+                    rolesToCheck.forEach((roleToCheck) => {
+                        console.log(`${roleToCheck} vs. ${role} == ${roleToCheck === role}`);
+                        if(roleToCheck === role)
+                            haveRole = true;
+                    });
+                });
+
+                return haveRole;
             }
         },
 
