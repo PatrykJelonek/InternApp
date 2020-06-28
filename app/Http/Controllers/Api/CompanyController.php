@@ -198,12 +198,14 @@ class CompanyController extends Controller
             if((count($company ->users()->where('user_id', auth()->id())->get()) < 1))
             {
                 if($company ->users()->save(auth()->user(), ['created_at' => date('Y-m-d H:i:s')]))
+                {
+                    auth()->user()->attachRole('company-worker');
                     return response([
                         'status' => 'success',
                         'data' => $company,
                         'message' => null
                     ], Response::HTTP_OK);
-                else
+                } else
                     $errorMessage = "Nie udało się dodać Cię do tej firmy!";
             } else
                 $errorMessage  = 'Należysz już do firmy do której przypisano podany kod!';

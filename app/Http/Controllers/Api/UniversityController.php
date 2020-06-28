@@ -230,12 +230,14 @@ class UniversityController extends Controller
             if((count($university->users()->where('user_id', auth()->id())->get()) < 1))
             {
                 if($university->users()->save(auth()->user(), ['created_at' => date('Y-m-d H:i:s')]))
+                {
+                    auth()->user()->attachRole('university-worker');
                     return response([
                         'status' => 'success',
                         'data' => $university,
                         'message' => null
                     ], Response::HTTP_OK);
-                else
+                } else
                     $errorMessage = "Nie udało się dodać Cię do tej uczelni!";
             } else
                 $errorMessage  = 'Należysz już do uczelni do której przypisano podany kod!';
