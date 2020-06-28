@@ -144,7 +144,6 @@ class AgreementController extends Controller
                 'data' => null,
                 'message' => "Nie udało się potwierdzić porozumienia!"
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
     }
 
     /**
@@ -167,7 +166,7 @@ class AgreementController extends Controller
      */
     public function update(Request $request, Agreement $agreement)
     {
-        //TODO:
+        //
     }
 
     /**
