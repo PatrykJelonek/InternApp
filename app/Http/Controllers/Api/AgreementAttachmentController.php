@@ -15,7 +15,8 @@ class AgreementAttachmentController extends Controller
      */
     public function index()
     {
-        auth()->user()->hasRole(['admin', 'student', 'company-worker', 'university-worker']);
+       if(auth()->user()->hasRole(['admin', 'student', 'company-worker', 'university-worker']))
+       {
         $agreements_attachments = AgreementAttachment::all();
         
         if (isset($agreements_attachments))
@@ -30,6 +31,14 @@ class AgreementAttachmentController extends Controller
                 'data' => null,
                 'message' => "Nie znaleziono powiązań!"
             ], Response::HTTP_NOT_FOUND);
+        }else 
+        {
+            return response([
+                        'status' => 'error',
+                        'data' => null,
+                        'message' => "Nie masz uprawnień!"
+                    ], Response::HTTP_UNAUTHORIZED);
+        }
     }
 
     /**
@@ -50,7 +59,8 @@ class AgreementAttachmentController extends Controller
      */
     public function store(Request $request)
     {
-        auth()->user()->hasRole(['admin', 'student', 'company-worker', 'university-worker']);
+        if(auth()->user()->hasRole(['admin', 'student', 'company-worker', 'university-worker']))
+        {
         $vallidatedData  = $request->validate([
             'agreement_id' => 'required',
             'attachment_id' => 'required',
@@ -74,6 +84,14 @@ class AgreementAttachmentController extends Controller
                 'data' => null,
                 'message' => 'Can not create relation!'
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }else 
+        {
+            return response([
+                        'status' => 'error',
+                        'data' => null,
+                        'message' => "Nie masz uprawnień!"
+                    ], Response::HTTP_UNAUTHORIZED);
+        }
     }
 
     /**
@@ -84,13 +102,22 @@ class AgreementAttachmentController extends Controller
      */
     public function show(AgreementAttachment $agreementAttachment)
     {
-        auth()->user()->hasRole(['admin', 'student', 'company-worker', 'university-worker']);
+        if(auth()->user()->hasRole(['admin', 'student', 'company-worker', 'university-worker']))
+        {
         $agreement_attachment = AgreementAttachment::find($id);
 
         if (isset($agreement_attachment))
             return response($agreement_attachment, Response::HTTP_OK);
         else
             return response("Relation not found!", Response::HTTP_NOT_FOUND);
+        }else 
+        {
+            return response([
+                        'status' => 'error',
+                        'data' => null,
+                        'message' => "Nie masz uprawnień!"
+                    ], Response::HTTP_UNAUTHORIZED);
+        }
     }
 
     /**
@@ -124,12 +151,21 @@ class AgreementAttachmentController extends Controller
      */
     public function destroy(AgreementAttachment $agreementAttachment)
     {
-        auth()->user()->hasRole(['admin', 'student', 'company-worker', 'university-worker']);
+        if(auth()->user()->hasRole(['admin', 'student', 'company-worker', 'university-worker']))
+        {
         $agreement_attachment = AgreementAttachment::find($id);
 
         if ($agreement_attachment->delete())
             return response("Relation has been deleted!", Response::HTTP_OK);
         else
             return response("Relation has not been deleted!", Response::HTTP_INTERNAL_SERVER_ERROR);
+        }else 
+        {
+            return response([
+                        'status' => 'error',
+                        'data' => null,
+                        'message' => "Nie masz uprawnień!"
+                    ], Response::HTTP_UNAUTHORIZED);
+        }
     }
 }
