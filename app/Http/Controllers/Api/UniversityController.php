@@ -25,8 +25,6 @@ class UniversityController extends Controller
      */
     public function index()
     {
-        if(auth()->user()->hasRole(['user']))
-        {
         $universities = University::all();
 
         if (isset($universities))
@@ -41,14 +39,6 @@ class UniversityController extends Controller
                 'data' => null,
                 'message' => 'Nie znaleziono żadnego uniwersytetu!'
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
-        }else
-        {
-            return response([
-                        'status' => 'error',
-                        'data' => null,
-                        'message' => "Nie masz uprawnień!"
-                    ], Response::HTTP_UNAUTHORIZED);
-        }
     }
 
     /**
@@ -59,8 +49,6 @@ class UniversityController extends Controller
      */
     public function universityFaculties($id)
     {
-        if(auth()->user()->hasRole(['user']))
-        {
         $universities = University::find($id);
 
         if (isset($universities->faculties))
@@ -75,14 +63,6 @@ class UniversityController extends Controller
                 'data' => null,
                 'message' => 'Nie znaleziono żadnego uniwersytetu!'
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
-        }else
-        {
-            return response([
-                        'status' => 'error',
-                        'data' => null,
-                        'message' => "Nie masz uprawnień!"
-                    ], Response::HTTP_UNAUTHORIZED);
-        }
     }
 
     /**
@@ -103,8 +83,6 @@ class UniversityController extends Controller
      */
     public function store(Request $request)
     {
-        if(auth()->user()->hasRole(['admin', 'university-worker']))
-        {
         $validatedData = $request->validate([
             'name' => 'required|unique:universities|max:255',
             'universityTypeId' => 'required',
@@ -147,14 +125,6 @@ class UniversityController extends Controller
                 'data' => null,
                 'message' => 'Niestety nie udało się dodać twojej uczelni!'
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
-        }else
-        {
-            return response([
-                        'status' => 'error',
-                        'data' => null,
-                        'message' => "Nie masz uprawnień!"
-                    ], Response::HTTP_UNAUTHORIZED);
-        }
     }
 
     /**
@@ -165,22 +135,12 @@ class UniversityController extends Controller
      */
     public function show($id)
     {
-        if(auth()->user()->hasRole(['user']))
-        {
         $university = University::find($id);
 
         if (isset($university))
             return response($university, Response::HTTP_OK);
         else
             return reponse("University not found!", Response::HTTP_NOT_FOUND);
-        }else
-        {
-            return response([
-                        'status' => 'error',
-                        'data' => null,
-                        'message' => "Nie masz uprawnień!"
-                    ], Response::HTTP_UNAUTHORIZED);
-        }
     }
 
     /**
@@ -214,22 +174,13 @@ class UniversityController extends Controller
      */
     public function destroy($id)
     {
-        if(auth()->user()->hasRole(['admin','university-worker']))
-        {
         $university = University::find($id);
 
         if ($university->delete())
             return response("University has been deleted!", Response::HTTP_OK);
         else
             return response("University has not been deleted", Response::HTTP_INTERNAL_SERVER_ERROR);
-        }else
-        {
-            return response([
-                        'status' => 'error',
-                        'data' => null,
-                        'message' => "Nie masz uprawnień!"
-                    ], Response::HTTP_UNAUTHORIZED);
-        }
+
     }
 
     /**
@@ -240,9 +191,6 @@ class UniversityController extends Controller
      */
     public function setNewAccessCode(Request $request)
     {
-        //TODO: Będzie trzeba to zabezpieczyć
-        if(auth()->user()->hasRole(['university-worker']))
-        {
         $university = University::find($request->input("id"));
 
         if(isset($university))
@@ -262,14 +210,6 @@ class UniversityController extends Controller
             'data' => null,
             'message' => 'New access code has been not generate!',
         ], Response::HTTP_NOT_MODIFIED);
-    }else
-    {
-        return response([
-                    'status' => 'error',
-                    'data' => null,
-                    'message' => "Nie masz uprawnień!"
-                ], Response::HTTP_UNAUTHORIZED);
-    }
     }
 
     /**
@@ -280,8 +220,6 @@ class UniversityController extends Controller
      */
     public function useCode(Request $request)
     {
-        if(auth()->user()->hasRole(['university-worker']))
-        {
         $university = University::where('access_code', $request->input('accessCode'))->first();
         $errorMessage = "Coś poszło nie tak!";
 
@@ -308,14 +246,6 @@ class UniversityController extends Controller
             'data' => null,
             'message' => $errorMessage
         ], Response::HTTP_INTERNAL_SERVER_ERROR);
-    }else
-    {
-        return response([
-                    'status' => 'error',
-                    'data' => null,
-                    'message' => "Nie masz uprawnień!"
-                ], Response::HTTP_UNAUTHORIZED);
-    }
     }
 
     /**
@@ -325,8 +255,6 @@ class UniversityController extends Controller
      * @return Response
      */
     public function getUsers($id) {
-        if(auth()->user()->hasRole(['admin','university-worker']))
-        {
         $university = University::find($id);
 
         if(isset($university))
@@ -341,14 +269,6 @@ class UniversityController extends Controller
                 'data' => null,
                 'message' => "Nie udało się znaleźć użytkowników tej uczelni"
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
-        }else
-        {
-            return response([
-                        'status' => 'error',
-                        'data' => null,
-                        'message' => "Nie masz uprawnień!"
-                    ], Response::HTTP_UNAUTHORIZED);
-        }
     }
 
     /**
@@ -358,8 +278,6 @@ class UniversityController extends Controller
      * @return Response
      */
     public function getUniversityAgreements($id) {
-        if(auth()->user()->hasRole(['university-worker']))
-        {
         $university = Agreement::with(['offer', 'company'])->where(['university_id' => $id])->get();
 
         if(isset($university))
@@ -374,14 +292,6 @@ class UniversityController extends Controller
                 'data' => null,
                 'message' => "Nie udało się żadnych umów dla tej uczelni!"
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
-        }else
-        {
-            return response([
-                        'status' => 'error',
-                        'data' => null,
-                        'message' => "Nie masz uprawnień!"
-                    ], Response::HTTP_UNAUTHORIZED);
-        }
     }
 
     /**
@@ -391,8 +301,6 @@ class UniversityController extends Controller
      * @return Response
      */
     public function getInternships($id) {
-        if(auth()->user()->hasRole(['university-worker']))
-        {
         $agreements = Agreement::where(['university_id' => $id])->get();
         $internships = Internship::with(['offer', 'student.user', 'university_supervisor', 'company_supervisor', 'student.internships.offer', 'student.internships.agreement'])->whereIn('agreement_id', Arr::pluck($agreements->toArray(), 'id'))->get();
 
@@ -408,14 +316,6 @@ class UniversityController extends Controller
                 'data' => null,
                 'message' => "Nie udało się żadnych praktyk dla tej uczelni!"
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
-        }else
-        {
-            return response([
-                        'status' => 'error',
-                        'data' => null,
-                        'message' => "Nie masz uprawnień!"
-                    ], Response::HTTP_UNAUTHORIZED);
-        }
     }
 
     /**
@@ -425,20 +325,10 @@ class UniversityController extends Controller
      */
     private function generateUniqueRandomAccessCode()
     {
-        if(auth()->user()->hasRole(['university-worker']))
-        {
         do {
             $randomAccessCode = Str::upper( Str::random(8));
         } while(count(University::where('access_code', $randomAccessCode)->get()) > 0);
 
         return $randomAccessCode;
-    }else
-    {
-        return response([
-                    'status' => 'error',
-                    'data' => null,
-                    'message' => "Nie masz uprawnień!"
-                ], Response::HTTP_UNAUTHORIZED);
-    }
     }
 }
