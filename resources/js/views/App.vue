@@ -31,13 +31,13 @@
                             <v-icon dense>mdi-account</v-icon>
                         </v-list-item-icon>
                     </v-list-item>
-                    <v-list-item to="/messages">
+                    <v-list-item to="/messages" v-if="false">
                         <v-list-item-title>Wiadomości</v-list-item-title>
                         <v-list-item-icon>
                             <v-icon dense>mdi-forum</v-icon>
                         </v-list-item-icon>
                     </v-list-item>
-                    <v-list-item to="/account-settings">
+                    <v-list-item to="/account-settings" v-if="false">
                         <v-list-item-title>Ustawienia</v-list-item-title>
                         <v-list-item-icon>
                             <v-icon dense>mdi-cog-outline</v-icon>
