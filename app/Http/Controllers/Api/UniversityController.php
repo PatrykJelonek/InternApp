@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers\Api;
 
-//use App\Http\Controllers\Controller;
+use App\Http\Controllers\Controller;
 use App\Agreement;
-use App\Http\Api\Controllers\Controller;
 use App\Internship;
 use App\Role;
 use App\University;
