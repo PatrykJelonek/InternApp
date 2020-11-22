@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Collections\StudentCollection;
+use App\Http\Resources\Student as StudentResource;
 use App\Student;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -15,11 +17,11 @@ class UniversityStudentController extends Controller
      * Display a listing of the resource.
      *
      * @param $university_id
-     * @return StudentCollection
+     * @return JsonResponse
      */
     public function index($university_id)
     {
-        if(!$this->ownStudents($university_id) OR !Auth::user()->hasPermission('view-students'))
+        if(!$this->ownStudents($university_id) OR !Auth::user()->hasPermission('view-university-students'))
             abort(403);
 
         $students = Student::whereIn('user_id', function ($query) use ($university_id) {
@@ -28,7 +30,7 @@ class UniversityStudentController extends Controller
                 ->where('university_id', $university_id);
         })->get();
 
-        return new StudentCollection($students);
+        return response()->json(new StudentCollection($students));
     }
 
     /**
@@ -56,11 +58,14 @@ class UniversityStudentController extends Controller
      * Display the specified resource.
      *
      * @param int $id
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
     public function show($id)
     {
-        //
+        if(!Auth::user()->hasPermission('view-university-student'))
+            abort(403);
+
+        return response()->json(new StudentResource(Student::find($id)));
     }
 
     /**
