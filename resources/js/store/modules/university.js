@@ -1,5 +1,3 @@
-import Vue from 'vue';
-
 export default {
     namespaced: true,
 
@@ -10,7 +8,8 @@ export default {
         universityTypes: [],
         universityUsers: [],
         universityAgreements: [],
-        internships: []
+        internships: [],
+        students: [],
     },
 
     getters: {
@@ -40,6 +39,10 @@ export default {
 
         selectedUniversityId: (state) => {
             return state.selectedUniversityId;
+        },
+
+        students: (state) => {
+            return state.students;
         }
     },
 
@@ -74,7 +77,11 @@ export default {
 
         SET_SELECTED_UNIVERSITY_ID(state, data) {
             state.selectedUniversityId = data;
-        }
+        },
+
+        SET_STUDENTS(state, data) {
+            state.students = data;
+        },
     },
 
     actions: {
@@ -150,6 +157,15 @@ export default {
             return axios.post('/api/university/use-code', {
                 accessCode: accessCode
             });
-        }
+        },
+
+        async fetchStudents({commit}, id) {
+            try {
+                let response = await axios.get(`/api/universities/${id}/students`);
+                commit('SET_STUDENTS', response.data);
+            } catch (e) {
+                commit('SET_STUDENTS', []);
+            }
+        },
     }
 };
