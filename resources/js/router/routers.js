@@ -1,11 +1,7 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-
-Vue.use(VueRouter);
-
 //Other imports
 import store from "../store/index";
-
 //Components imports
 import UserStatusesAdd from "../components/UserStatusesAdd";
 import Registration from "../views/Registration";
@@ -29,6 +25,9 @@ import Internships from "../views/Internships";
 import Journal from "../views/Journal";
 import InternshipJournal from "../views/InternshipJournal";
 import NoPermissions from "../views/NoPermissions";
+import Welcome from "../views/Welcome";
+
+Vue.use(VueRouter);
 
 const router = new VueRouter({
     mode: 'history',
@@ -37,11 +36,6 @@ const router = new VueRouter({
             path: '/no-permissions',
             name: 'no-permissions',
             component: NoPermissions,
-        },
-        {
-            path: '/',
-            name: 'home',
-            redirect: '/dashboard'
         },
         {
             path: '/login',
@@ -84,8 +78,7 @@ const router = new VueRouter({
             component: Rules,
         },
         {
-            path: '/dashboard',
-            name: 'dashboard',
+            path: '',
             component: App,
             beforeEnter: (to, from, next) => {
                 if (!store.getters['auth/authenticated']) {
@@ -95,6 +88,17 @@ const router = new VueRouter({
                 next();
             },
             children: [
+                {
+                    title: 'Dashboard',
+                    path: '/',
+                    name: 'dashboard',
+                    component: Welcome,
+                },
+                {
+                    path: 'welcome',
+                    name: 'welcome',
+                    component: Welcome,
+                },
                 {
                     path: 'users/new-status',
                     name: 'user-statuses',
