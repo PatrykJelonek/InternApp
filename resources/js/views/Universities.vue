@@ -41,6 +41,7 @@
                     <v-tabs v-model="tab" background-color="transparent" color="blue accent-4">
                         <v-tab>Umowy</v-tab>
                         <v-tab>Praktyki</v-tab>
+                        <v-tab>Studenci</v-tab>
                     </v-tabs>
                     <v-tabs-items class="transparent mt-5 body-2 text-justify" v-model="tab">
                         <v-tab-item>
@@ -63,6 +64,9 @@
                         <v-tab-item>
                             <universities-internships-list></universities-internships-list>
                         </v-tab-item>
+                        <v-tab-item>
+                            <university-interns-list></university-interns-list>
+                        </v-tab-item>
                     </v-tabs-items>
                 </v-col>
             </v-row>
@@ -77,7 +81,7 @@
 </template>
 
 <script>
-    import {mapActions, mapGetters, mapState} from "vuex";
+    import {mapActions, mapGetters} from "vuex";
     import UniversitiesNotFound from "../components/Universities/UniversitiesNotFound";
     import UniversityAccessCode from "../components/Universities/UniversityAccessCode";
     import UniversityAccessCodeDialog from "../components/Universities/UniversityAccessCodeDialog";
