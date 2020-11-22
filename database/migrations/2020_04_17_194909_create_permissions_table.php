@@ -18,8 +18,7 @@ class CreatePermissionsTable extends Migration
             $table->string('name',32)->unique();
             $table->string('display_name',32)->nullable();
             $table->string('description', 128)->nullable();
-            $table->dateTime('created_at', 0);
-            $table->dateTime('updated_at', 0);
+            $table->timestamps();
         });
     }
 

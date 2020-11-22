@@ -20,7 +20,7 @@ class CreateUsersPermissionsTable extends Migration
             $table->foreignId('permission_id');
             $table->foreign('permission_id')->references('id')->on('permissions');
             $table->string('user_type');
-            $table->dateTime('created_at', 0);
+            $table->timestamp('created_at', 0)->useCurrent();
         });
     }
 
