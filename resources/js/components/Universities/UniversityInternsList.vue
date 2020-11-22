@@ -1,12 +1,16 @@
 <template>
     <v-card otulined>
         <v-data-table
-            :items="internships"
+            :items="students"
             :headers="headers"
             :items-per-page="10"
             :loading="isLoading"
             no-data-text="Niestety nie ma jeszcze żadnych praktykantów!"
-        ></v-data-table>
+        >
+            <template v-slot:item.full_name="{ item }">
+               {{item.user.first_name}} {{item.user.last_name}}
+            </template>
+        </v-data-table>
     </v-card>
 </template>
 
@@ -20,7 +24,10 @@
             return {
                 isLoading: true,
                 headers: [
-                    {text: 'student id', value: 'student_id'},
+                    {text: 'Indeks', value: 'student_index'},
+                    {text: 'Semestr', value: 'semester'},
+                    {text: 'Rok Studiów', value: 'study_year'},
+                    {text: 'Imię i nazwisko', value: 'full_name'},
                 ]
             }
         },
@@ -28,26 +35,26 @@
         computed: {
             ...mapGetters({
                 selectedUniversityId: 'university/selectedUniversityId',
-                internships: 'university/internships'
+                students: 'university/students'
             }),
         },
 
         methods: {
             ...mapActions({
-                fetchInternships: 'university/fetchInternships',
+                fetchStudents: 'university/fetchStudents',
             }),
         },
 
         watch: {
             selectedUniversityId() {
-                this.fetchInternships(this.selectedUniversityId).then(() => {
+                this.fetchStudents(this.selectedUniversityId).then(() => {
                     this.isLoading = false;
                 });
             }
         },
 
         created() {
-            this.fetchInternships(this.selectedUniversityId).then(() => {
+            this.fetchStudents(this.selectedUniversityId).then(() => {
                 this.isLoading = false;
             });
         }
