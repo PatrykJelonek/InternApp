@@ -19,7 +19,7 @@ class CreatePermissionsRolesTable extends Migration
             $table->foreign('permission_id')->references('id')->on('permissions');
             $table->foreignId('role_id');
             $table->foreign('role_id')->references('id')->on('roles');
-            $table->dateTime('created_at', 0);
+            $table->dateTime('created_at', 0)->useCurrent();
         });
     }
 

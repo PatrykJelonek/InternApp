@@ -34,7 +34,6 @@ class University extends Model
         return $this->hasMany('App\Agreement', 'university_id', 'id');
     }
 
-
     public static function messages()
     {
         return [
