@@ -1,11 +1,7 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
-
-Vue.use(VueRouter);
-
 //Other imports
 import store from "../store/index";
-
 //Components imports
 import UserStatusesAdd from "../components/UserStatusesAdd";
 import Registration from "../views/Registration";
@@ -29,6 +25,8 @@ import Internships from "../views/Internships";
 import Journal from "../views/Journal";
 import InternshipJournal from "../views/InternshipJournal";
 import NoPermissions from "../views/NoPermissions";
+
+Vue.use(VueRouter);
 
 const router = new VueRouter({
     mode: 'history',
@@ -104,12 +102,7 @@ const router = new VueRouter({
                     path: '/universities',
                     name: 'universities',
                     component: Universities,
-                    beforeEnter: (to, from, next) => {
-                        if(!haveRole(['student']))
-                            return next();
-                        else
-                            return next({name: 'no-permissions'});
-                    }
+                    meta: { have: ['admin']}
                 },
                 {
                     path: '/create-university',
@@ -126,12 +119,7 @@ const router = new VueRouter({
                     path: '/companies',
                     name: 'companies',
                     component: Companies,
-                    beforeEnter: (to, from, next) => {
-                        if(!haveRole(['student']))
-                            return next();
-                        else
-                            return next({name: 'no-permissions'});
-                    }
+                    meta: { have: ['admin'] }
                 },
                 {
                     path: '/company/:id',
@@ -263,13 +251,33 @@ const router = new VueRouter({
     ],
 });
 
+router.beforeEach((to, from, next) => {
+    const { can, have } = to.meta;
+    const currentUser = store.getters['auth/user'];
+
+    if (can || have) {
+        if (!currentUser) {
+            return next({ path: '/login', query: { returnUrl: to.path } });
+        }
+
+        if (have && have.length && !have.find(role => currentUser.roles.map(role => role['name']).includes(role))) {
+            return next(false);
+        }
+
+        if (can && can.length && !can.find(permission => currentUser.permissions.map(permission => permission['name']).includes(permission))) {
+            return next(false);
+        }
+    }
+
+    next();
+});
+
 const haveRole = function (rolesToCheck) {
     let haveRole = false;
 
     if(store.getters['auth/roles'].length > 0)
         store.getters['auth/roles'].forEach((role) => {
             rolesToCheck.forEach((roleToCheck) => {
-                console.log(`${roleToCheck} vs. ${role} == ${roleToCheck === role}`);
                 if(roleToCheck === role)
                     haveRole = true;
             });
