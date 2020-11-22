@@ -6,7 +6,6 @@ use App\Http\Controllers\Api\Controller;
 use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Auth;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Exceptions\TokenInvalidException;
 
@@ -23,7 +22,7 @@ class AuthController extends Controller
             return response('User has not been authenticated!', Response::HTTP_UNAUTHORIZED);
         }
 
-        $userInformation = User::with(['roles'])->where('email', $request->input("email"))->first();
+        $userInformation = User::with(['roles', 'permissions'])->where('email', $request->input("email"))->first();
         return response()->json([
             'token' => $token,
             'token_type' => 'bearer',
@@ -33,7 +32,7 @@ class AuthController extends Controller
 
     public function me()
     {
-        $user = User::with(['roles'])->find(auth()->id());
+        $user = User::with(['roles', 'permissions'])->find(auth()->id());
         return response([
             'status' => 'success',
             'data' => $user,

@@ -41,7 +41,7 @@
                     <v-tabs v-model="tab" background-color="transparent" color="blue accent-4">
                         <v-tab>Umowy</v-tab>
                         <v-tab>Praktyki</v-tab>
-                        <v-tab>Studenci</v-tab>
+                        <v-tab v-can="['view-university-students']">Studenci</v-tab>
                     </v-tabs>
                     <v-tabs-items class="transparent mt-5 body-2 text-justify" v-model="tab">
                         <v-tab-item>

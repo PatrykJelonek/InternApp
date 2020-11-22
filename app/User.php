@@ -2,11 +2,11 @@
 
 namespace App;
 
-use Tymon\JWTAuth\Contracts\JWTSubject;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
+use Illuminate\Database\Eloquent\Model;
 use Laratrust\Traits\LaratrustUserTrait;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
 class User extends Model implements AuthenticatableContract, JWTSubject
 {
@@ -34,6 +34,11 @@ class User extends Model implements AuthenticatableContract, JWTSubject
     public function roles()
     {
         return $this->belongsToMany('App\Role', 'users_roles', 'user_id', 'role_id');
+    }
+
+    public function permissions()
+    {
+        return $this->belongsToMany('App\Permission', 'users_permissions', 'user_id', 'permission_id');
     }
 
     public function journals()
