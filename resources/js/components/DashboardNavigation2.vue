@@ -19,7 +19,7 @@
                 </v-list-item-content>
             </v-list-item>
 
-            <v-list-item link to="/universities" color="blue accent-4" v-have="['university-worker']">
+            <v-list-item link to="/universities" color="blue accent-4" v-if="!this.haveRole(['student'])">
                 <v-list-item-icon>
                     <v-icon>mdi-school-outline</v-icon>
                 </v-list-item-icon>
@@ -28,7 +28,7 @@
                 </v-list-item-content>
             </v-list-item>
 
-            <v-list-item link to="/companies" color="blue accent-4" v-have="['company-worker']">
+            <v-list-item link to="/companies" color="blue accent-4" v-if="!this.haveRole(['student'])">
                 <v-list-item-icon>
                     <v-icon>mdi-briefcase-outline</v-icon>
                 </v-list-item-icon>
@@ -37,23 +37,23 @@
                 </v-list-item-content>
             </v-list-item>
 
-            <v-list-group prepend-icon="mdi-newspaper-variant-multiple" no-action color="blue accent-4" v-have="['company-worker', 'university-worker']">
+            <v-list-group prepend-icon="mdi-newspaper-variant-multiple" no-action color="blue accent-4" v-if="!this.haveRole(['student'])">
                 <template v-slot:activator>
                     <v-list-item-title>Oferty</v-list-item-title>
                 </template>
-                <v-list-item link to="/offers">
+                <v-list-item link to="/offers" v-if="!this.haveRole(['student'])">
                     <v-list-item-content>
                         <v-list-item-title>Wszystkie Oferty</v-list-item-title>
                     </v-list-item-content>
                 </v-list-item>
-                <v-list-item link to="/create-offer">
+                <v-list-item link to="/create-offer" v-if="this.haveRole(['admin', 'company-worker'])">
                     <v-list-item-content>
                         <v-list-item-title>Utwórz Ofertę</v-list-item-title>
                     </v-list-item-content>
                 </v-list-item>
             </v-list-group>
 
-            <v-list-item link to="/internships" color="blue accent-4" v-have="['admin']">
+            <v-list-item link to="/internships" color="blue accent-4" v-if="this.haveRole(['user'])">
                 <v-list-item-icon>
                     <v-icon>mdi-newspaper</v-icon>
                 </v-list-item-icon>
@@ -62,7 +62,7 @@
                 </v-list-item-content>
             </v-list-item>
 
-            <v-list-item link to="/journal" color="blue accent-4">
+            <v-list-item link to="/journal" color="blue accent-4" v-if="this.haveRole(['student'])">
                 <v-list-item-icon>
                     <v-icon>mdi-notebook-outline</v-icon>
                 </v-list-item-icon>
@@ -93,7 +93,20 @@
             })
         },
 
-        methods: {},
+        methods: {
+            haveRole: function (rolesToCheck) {
+                let haveRole = false;
+                this.roles.forEach((role) => {
+                    rolesToCheck.forEach((roleToCheck) => {
+                        console.log(`${roleToCheck} vs. ${role} == ${roleToCheck === role}`);
+                        if(roleToCheck === role)
+                            haveRole = true;
+                    });
+                });
+
+                return haveRole;
+            }
+        },
     }
 </script>
 
