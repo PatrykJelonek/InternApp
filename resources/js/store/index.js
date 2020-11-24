@@ -1,8 +1,5 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-
-Vue.use(Vuex);
-
 //modules
 import userStatus from "./modules/userStatus";
 import university from "./modules/university";
@@ -19,6 +16,9 @@ import offer from "./modules/offer";
 import agreement from "./modules/agreement";
 import internship from "./modules/internship";
 import journal from "./modules/journal";
+import tabs from "./modules/tabs";
+
+Vue.use(Vuex);
 
 const debug = process.env.NODE_ENV !== 'production';
 
@@ -38,7 +38,8 @@ export default new Vuex.Store({
         offer,
         agreement,
         internship,
-        journal
+        journal,
+        tabs,
     },
     strict: debug
 });

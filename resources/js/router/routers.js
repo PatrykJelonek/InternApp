@@ -25,6 +25,9 @@ import Internships from "../views/Internships";
 import Journal from "../views/Journal";
 import InternshipJournal from "../views/InternshipJournal";
 import NoPermissions from "../views/NoPermissions";
+import Welcome from "../views/Welcome";
+import WelcomeTabs from "../components/Tabs/WelcomeTabs";
+import UniversitiesTabs from "../components/Tabs/UniversitiesTabs";
 
 Vue.use(VueRouter);
 
@@ -35,11 +38,6 @@ const router = new VueRouter({
             path: '/no-permissions',
             name: 'no-permissions',
             component: NoPermissions,
-        },
-        {
-            path: '/',
-            name: 'home',
-            redirect: '/dashboard'
         },
         {
             path: '/login',
@@ -82,8 +80,7 @@ const router = new VueRouter({
             component: Rules,
         },
         {
-            path: '/dashboard',
-            name: 'dashboard',
+            path: '',
             component: App,
             beforeEnter: (to, from, next) => {
                 if (!store.getters['auth/authenticated']) {
@@ -94,14 +91,26 @@ const router = new VueRouter({
             },
             children: [
                 {
+                    title: 'Dashboard',
+                    path: '/',
+                    name: 'dashboard',
+                    components: {
+                        default: Welcome,
+                        tabs: WelcomeTabs,
+                    }
+                },
+                {
                     path: 'users/new-status',
                     name: 'user-statuses',
                     component: UserStatusesAdd,
                 },
                 {
-                    path: '/universities',
+                    path: '/universities/',
                     name: 'universities',
-                    component: Universities,
+                    components: {
+                        default: Universities,
+                        tabs: UniversitiesTabs
+                    },
                     meta: { have: ['admin']}
                 },
                 {

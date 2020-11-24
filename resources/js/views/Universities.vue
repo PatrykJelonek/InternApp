@@ -90,13 +90,16 @@
 
     export default {
         name: "Universities",
+
+        props: ['tab'],
+
         components: {
             UniversityInternsList,
             UniversitiesInternshipsList, UniversityAccessCodeDialog, UniversityAccessCode, UniversitiesNotFound},
 
         data() {
             return {
-                tab: null,
+
                 chosenUniversity: '',
                 isLoading: true,
                 headers: [
@@ -152,6 +155,7 @@
                 });
             });
         },
+
     }
 </script>
 

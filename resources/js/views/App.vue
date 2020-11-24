@@ -1,77 +1,75 @@
 <template>
     <v-app>
-        <dashboard-navigation></dashboard-navigation>
+        <v-navigation-drawer
+            app
+            dark
+            color="secondary"
+        >
+            <v-list-item>
+                <v-list-item-content>
+                    <v-list-item-title class="title font-weight-black pl-2 text-uppercase">Internships</v-list-item-title>
+                </v-list-item-content>
+            </v-list-item>
+
+            <v-divider></v-divider>
+
+            <v-list dense nav>
+                <v-list-item
+                    link
+                    v-for="link in menu.links"
+                    :key="link.name"
+                    v-can="link.can"
+                    v-has="link.has"
+                    :to="link.href"
+                >
+                    <v-list-item-icon>
+                        <v-icon>{{ link.icon }}</v-icon>
+                    </v-list-item-icon>
+
+                    <v-list-item-content>
+                        <v-list-item-title>{{ link.name }}</v-list-item-title>
+                    </v-list-item-content>
+                </v-list-item>
+            </v-list>
+        </v-navigation-drawer>
+
         <v-app-bar
             app
             flat
-            dark
-            clipped-left
-            clipped-right
-            color="blue accent-4">
-            <v-toolbar-title class="font-weight-bold">Internships</v-toolbar-title>
-            <v-spacer></v-spacer>
-            <v-menu bottom left offset-y>
-                <template v-slot:activator="{ on, attrs }">
-                    <v-btn
-                        dark
-                        text
-                        v-bind="attrs"
-                        v-on="on"
-                        depressed
-                    >
-                        <span class="ml-2"><b>{{user.first_name + " " + user.last_name}}</b></span>
-                        <v-icon class="ml-2">mdi-chevron-down</v-icon>
-                    </v-btn>
-                </template>
-
-                <v-list dense>
-                    <v-list-item to="/account">
-                        <v-list-item-title>Profil</v-list-item-title>
-                        <v-list-item-icon>
-                            <v-icon dense>mdi-account</v-icon>
-                        </v-list-item-icon>
-                    </v-list-item>
-                    <v-list-item to="/messages" v-if="false">
-                        <v-list-item-title>Wiadomości</v-list-item-title>
-                        <v-list-item-icon>
-                            <v-icon dense>mdi-forum</v-icon>
-                        </v-list-item-icon>
-                    </v-list-item>
-                    <v-list-item to="/account-settings" v-if="false">
-                        <v-list-item-title>Ustawienia</v-list-item-title>
-                        <v-list-item-icon>
-                            <v-icon dense>mdi-cog-outline</v-icon>
-                        </v-list-item-icon>
-                    </v-list-item>
-                    <v-divider></v-divider>
-                    <v-list-item to="/logout" dense>
-                        <v-list-item-title>Wyloguj</v-list-item-title>
-                        <v-list-item-icon>
-                            <v-icon dense>mdi-exit-to-app</v-icon>
-                        </v-list-item-icon>
-                    </v-list-item>
-                </v-list>
-            </v-menu>
+            color="primary"
+            dense
+        >
+            <template>
+                <router-view name="tabs"></router-view>
+            </template>
         </v-app-bar>
-        <v-content class="grey lighten-4" app>
-            <router-view></router-view>
-        </v-content>
+
+        <v-main>
+            <v-container fluid>
+
+                <!-- If using vue-router -->
+                <router-view></router-view>
+            </v-container>
+        </v-main>
     </v-app>
 </template>
 
 <script>
-    import DashboardNavigation from "../components/DashboardNavigation";
     import {mapGetters} from "vuex";
-    export default {
-        components: {DashboardNavigation},
 
+    export default {
         data() {
             return {
-                drawer: true,
-                permament: true,
-                miniVariant: true,
-                expandOnHover: true,
-                background: false,
+                menu: {
+                    links: [
+                        { name: 'Dashboard', href: {name: 'dashboard'}, icon: 'mdi-view-dashboard', can: [], has: [] },
+                        { name: 'Uniwersytet', href: {name: 'universities'}, icon: 'mdi-school-outline', can: [], has: [] },
+                        { name: 'Firma', href: {name: 'companies'}, icon: 'mdi-briefcase-outline', can: [], has: [] },
+                        { name: 'Oferty', href: {name: 'offers'}, icon: 'mdi-newspaper-variant-multiple', can: [], has: [] },
+                        { name: 'Praktyki i staże', href: {name: 'internships'}, icon: 'mdi-newspaper', can: [], has: [] },
+                        { name: 'Dziennik praktyk', href: {name: 'journal'}, icon: 'mdi-notebook-outline', can: [], has: [] },
+                    ]
+                }
             }
         },
 
@@ -83,6 +81,11 @@
     }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+    $main-color: #181F47;
 
+    .border {
+        box-sizing: content-box;
+        border-bottom: 1px solid rgba(0,0,0,.1);
+    }
 </style>
