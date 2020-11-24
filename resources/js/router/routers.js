@@ -26,8 +26,8 @@ import Journal from "../views/Journal";
 import InternshipJournal from "../views/InternshipJournal";
 import NoPermissions from "../views/NoPermissions";
 import Welcome from "../views/Welcome";
-
-Vue.use(VueRouter);
+import WelcomeTabs from "../components/Tabs/WelcomeTabs";
+import UniversitiesTabs from "../components/Tabs/UniversitiesTabs";
 
 Vue.use(VueRouter);
 
@@ -94,12 +94,10 @@ const router = new VueRouter({
                     title: 'Dashboard',
                     path: '/',
                     name: 'dashboard',
-                    component: Welcome,
-                },
-                {
-                    path: 'welcome',
-                    name: 'welcome',
-                    component: Welcome,
+                    components: {
+                        default: Welcome,
+                        tabs: WelcomeTabs,
+                    }
                 },
                 {
                     path: 'users/new-status',
@@ -107,9 +105,12 @@ const router = new VueRouter({
                     component: UserStatusesAdd,
                 },
                 {
-                    path: '/universities',
+                    path: '/universities/',
                     name: 'universities',
-                    component: Universities,
+                    components: {
+                        default: Universities,
+                        tabs: UniversitiesTabs
+                    },
                     meta: { have: ['admin']}
                 },
                 {

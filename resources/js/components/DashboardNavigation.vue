@@ -19,7 +19,7 @@
                 </v-list-item-content>
             </v-list-item>
 
-            <v-list-item link to="/universities" color="blue accent-4" v-have="['university-worker']">
+            <v-list-item link to="/universities" color="blue accent-4" v-has="['university-worker', 'admin']">
                 <v-list-item-icon>
                     <v-icon>mdi-school-outline</v-icon>
                 </v-list-item-icon>
@@ -28,7 +28,7 @@
                 </v-list-item-content>
             </v-list-item>
 
-            <v-list-item link to="/companies" color="blue accent-4" v-have="['company-worker']">
+            <v-list-item link to="/companies" color="blue accent-4" v-has="['company-worker', 'admin']">
                 <v-list-item-icon>
                     <v-icon>mdi-briefcase-outline</v-icon>
                 </v-list-item-icon>
@@ -37,7 +37,7 @@
                 </v-list-item-content>
             </v-list-item>
 
-            <v-list-group prepend-icon="mdi-newspaper-variant-multiple" no-action color="blue accent-4" v-have="['company-worker', 'university-worker']">
+            <v-list-group prepend-icon="mdi-newspaper-variant-multiple" no-action color="blue accent-4" v-has="['company-worker', 'university-worker']">
                 <template v-slot:activator>
                     <v-list-item-title>Oferty</v-list-item-title>
                 </template>
@@ -53,7 +53,7 @@
                 </v-list-item>
             </v-list-group>
 
-            <v-list-item link to="/internships" color="blue accent-4" v-have="['admin']">
+            <v-list-item link to="/internships" color="blue accent-4" v-has="['admin']">
                 <v-list-item-icon>
                     <v-icon>mdi-newspaper</v-icon>
                 </v-list-item-icon>

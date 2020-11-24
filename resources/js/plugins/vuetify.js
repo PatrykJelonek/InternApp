@@ -4,10 +4,18 @@ import 'vuetify/dist/vuetify.min.css';
 
 Vue.use(Vuetify);
 
-const opts = {
+export default new Vuetify({
     theme: {
-        dark: false
-    }
-};
-
-export default new Vuetify(opts);
+        themes: {
+            light: {
+                primary: '#fff',
+                secondary: '#181F47',
+                accent: '#306BFF',
+                error: '#FF5252',
+                info: '#2196F3',
+                success: '#4CAF50',
+                warning: '#FFC107',
+            },
+        },
+    },
+});
