@@ -111,7 +111,36 @@
                 ],
                 internshipsHeaders: [
                     {text: "Supervisor", value: "company_supervisor_id"}
-                ]
+                ],
+                sidebarItems: [
+                    {
+                        header: 'Ala ma kota',
+                        items: [
+                            {
+                                text: 'Umowy',
+                                link: 'agreements',
+                            },
+                            {
+                                text: 'Studenci',
+                                link: 'students',
+                            }
+
+                        ]
+                    },
+                    {
+                        header: 'Inne',
+                        items: [
+                            {
+                                text: 'Inne',
+                                link: 'other'
+                            },
+                            {
+                                text: 'Ustawienia',
+                                link: 'settings'
+                            }
+                        ]
+                    }
+                ],
             }
         },
 
@@ -129,7 +158,8 @@
                 selectUniversity: 'university/selectUniversity',
                 fetchUniversityAgreements: 'university/fetchUniversityAgreements',
                 selectUniversityId: 'university/selectUniversityId',
-                fetchInternships: 'university/fetchInternships'
+                fetchInternships: 'university/fetchInternships',
+                setSidebarItems: 'sidebar/setItems'
             }),
 
             getSelectedUniversity() {
@@ -154,6 +184,8 @@
                     this.isLoading = false;
                 });
             });
+
+            this.setSidebarItems(this.sidebarItems);
         },
 
     }
