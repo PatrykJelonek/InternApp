@@ -1,7 +1,11 @@
-@import 'https://fonts.googleapis.com/css2?family=Montserrat&display=swap';
+@import 'https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap';
 
 * {box-sizing: border-box;}
 
 body {
-    background: white;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.main-menu-font-size {
+    font-size: 14px !important;
 }

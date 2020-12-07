@@ -1,59 +1,26 @@
 <template>
     <v-app>
-        <v-navigation-drawer
-            app
-            dark
-            mini-variant
-            color="primary">
-            <v-list-item>
-                <v-list-item-content>
-                    <v-list-item-title class="title font-weight-black pl-2 text-uppercase">
-                        Internships
-                    </v-list-item-title>
-                </v-list-item-content>
-            </v-list-item>
+        <v-app-bar app flat color="light" height="60px" class="pa-0 ma-0">
+            <v-toolbar-title class="font-weight-bold logo pa-0 ma-0">Intern</v-toolbar-title>
+            <v-tabs hide-slider :optional="true" active-class="font-weight-bold" class="subtitle-2">
+                <v-tab to="welcome"><v-icon class="mr-3" dense>mdi-view-dashboard</v-icon>Dashboard</v-tab>
+                <v-tab to="universities"><v-icon class="mr-3" dense>mdi-school-outline</v-icon>Uniwersytet</v-tab>
+                <v-tab to="companies"><v-icon class="mr-3" dense>mdi-briefcase-outline</v-icon>Firma</v-tab>
+            </v-tabs>
+            <v-spacer></v-spacer>
+            <template v-slot:extension >
+                <v-tabs dark show-arrows hide-slider height="50px" color="primary-light" background-color="primary" class="subtitle-2">
+                    <v-tab to="/"><v-icon dense class="mr-3">mdi-file-document</v-icon>Ogólne</v-tab>
+                    <v-tab to="/universities/agreements"><v-icon dense class="mr-3">mdi-file-document</v-icon>Umowy</v-tab>
+                    <v-tab><v-icon dense class="mr-3">mdi-account</v-icon>Studenci</v-tab>
+                    <v-tab><v-icon dense class="mr-3">mdi-account-tie</v-icon>Pracownicy</v-tab>
+                    <v-tab><v-icon dense class="mr-3">mdi-cog-outline</v-icon>Ustawienia</v-tab>
+                </v-tabs>
+            </template>
+        </v-app-bar>
 
-            <v-divider></v-divider>
-
-            <v-list dense nav>
-                <v-list-item
-                    link
-                    v-for="link in menu.links"
-                    :key="link.name"
-                    v-can="link.can"
-                    v-has="link.has"
-                    :to="link.href"
-                >
-                    <v-list-item-icon>
-                        <v-icon>{{ link.icon }}</v-icon>
-                    </v-list-item-icon>
-
-                    <v-list-item-content>
-                        <v-list-item-title>{{ link.name }}</v-list-item-title>
-                    </v-list-item-content>
-                </v-list-item>
-            </v-list>
-        </v-navigation-drawer>
-
-        <!--        <v-app-bar-->
-        <!--            app-->
-        <!--            flat-->
-        <!--            color="primary"-->
-        <!--            dense-->
-        <!--        >-->
-        <!--            <template>-->
-        <!--                <router-view name="tabs"></router-view>-->
-        <!--            </template>-->
-        <!--        </v-app-bar>-->
-
-        <v-main>
-
-            <v-container class="abc" fluid>
-                <sidebar></sidebar>
-
-                <!-- If using vue-router -->
-                <router-view></router-view>
-            </v-container>
+        <v-main class="secondary">
+            <router-view></router-view>
         </v-main>
     </v-app>
 </template>
@@ -112,17 +79,17 @@
 </script>
 
 <style lang="scss" scoped>
-    $main-color: #181F47;
-
-    .border {
-        box-sizing: content-box;
-        border-bottom: 1px solid rgba(0, 0, 0, .1);
-    }
-
-    .abc {
+    .logo {
+        max-width: 60px;
+        min-width: 60px;
+        height: 60px;
+        background: #223345;
         display: flex;
-        height: 100%;
-        padding: 0;
-        background: rgba(0, 0, 0, 0.05);
+        justify-content: center;
+        align-items: center;
+        color: #fff;
+        font-size: 14px;
+        position: relative;
+        left: -16px;
     }
 </style>
