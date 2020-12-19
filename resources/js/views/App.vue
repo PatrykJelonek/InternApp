@@ -1,26 +1,108 @@
 <template>
     <v-app>
-        <v-app-bar app flat color="light" height="60px" class="pa-0 ma-0">
-            <v-toolbar-title class="font-weight-bold logo pa-0 ma-0">Intern</v-toolbar-title>
-            <v-tabs hide-slider :optional="true" active-class="font-weight-bold" class="subtitle-2">
-                <v-tab to="welcome"><v-icon class="mr-3" dense>mdi-view-dashboard</v-icon>Dashboard</v-tab>
-                <v-tab to="universities"><v-icon class="mr-3" dense>mdi-school-outline</v-icon>Uniwersytet</v-tab>
-                <v-tab to="companies"><v-icon class="mr-3" dense>mdi-briefcase-outline</v-icon>Firma</v-tab>
-            </v-tabs>
+        <v-navigation-drawer
+            app
+            floating
+            :color="navigationDrawer.miniVariant ? 'transparent' : ' navigationDrawerExpanded'"
+            :mini-variant="navigationDrawer.miniVariant"
+            :permanent="navigationDrawer.permanent"
+        >
+            <v-list nav dense>
+                <v-list-item-group
+                    active-class="primary--text primary--darken-1"
+                >
+                    <v-list-item link to="/" dense>
+                        <v-list-item-icon>
+                            <v-icon dense>mdi-view-dashboard</v-icon>
+                        </v-list-item-icon>
+                        <v-list-item-title>Dashboard</v-list-item-title>
+                    </v-list-item>
+                </v-list-item-group>
+
+                <v-list-item-group
+                    class="mt-1"
+                    active-class="primary--text primary--darken-1"
+                >
+                    <v-subheader v-bind:class="{'hidden': navigationDrawer.miniVariant}" class="caption font-weight-medium text-uppercase">Ogólne</v-subheader>
+                    <v-list-item link to="universities" dense>
+                        <v-list-item-icon>
+                            <v-icon dense>mdi-school-outline</v-icon>
+                        </v-list-item-icon>
+                        <v-list-item-title>Uczelnia</v-list-item-title>
+                    </v-list-item>
+                    <v-list-item link to="companies" dense>
+                        <v-list-item-icon>
+                            <v-icon dense>mdi-briefcase-outline</v-icon>
+                        </v-list-item-icon>
+                        <v-list-item-title>Firma</v-list-item-title>
+                    </v-list-item>
+                    <v-list-item link to="offers" dense>
+                        <v-list-item-icon>
+                            <v-icon dense>mdi-format-list-bulleted</v-icon>
+                        </v-list-item-icon>
+                        <v-list-item-title>Oferty Praktyk</v-list-item-title>
+                    </v-list-item>
+                </v-list-item-group>
+
+                <v-list-item-group
+                    class="mt-1"
+                    active-class="primary--text primary--darken-1"
+                >
+                    <v-subheader v-bind:class="{'hidden': navigationDrawer.miniVariant}" class="caption font-weight-medium text-uppercase">Użytkownik</v-subheader>
+                    <v-list-item link dense>
+                        <v-list-item-icon>
+                            <v-icon dense>mdi-account</v-icon>
+                        </v-list-item-icon>
+                        <v-list-item-title>Profil</v-list-item-title>
+                    </v-list-item>
+                    <v-list-item link dense>
+                        <v-list-item-icon>
+                            <v-badge color="red" dot>
+                                <v-icon dense>mdi-email-outline</v-icon>
+                            </v-badge>
+                        </v-list-item-icon>
+                        <v-list-item-title>Wiadomości</v-list-item-title>
+                    </v-list-item>
+                    <v-list-item link dense>
+                        <v-list-item-icon>
+                            <v-icon dense>mdi-cog</v-icon>
+                        </v-list-item-icon>
+                        <v-list-item-title>Ustawienia</v-list-item-title>
+                    </v-list-item>
+                    <v-list-item link dense>
+                        <v-list-item-icon>
+                            <v-icon dense>mdi-logout-variant</v-icon>
+                        </v-list-item-icon>
+                        <v-list-item-title>Wyloguj</v-list-item-title>
+                    </v-list-item>
+                </v-list-item-group>
+            </v-list>
+            <template v-slot:append>
+                <v-list nav class="text--secondary">
+                    <v-list-item dense @click.stop="navigationDrawer.miniVariant = !navigationDrawer.miniVariant" >
+                        <v-list-item-icon>
+                            <v-icon dense v-if="navigationDrawer.miniVariant">mdi-chevron-right</v-icon>
+                            <v-icon dense v-else>mdi-chevron-left</v-icon>
+                        </v-list-item-icon>
+                        <v-list-item-title class="caption text-uppercase">Ukryj</v-list-item-title>
+                    </v-list-item>
+                </v-list>
+            </template>
+        </v-navigation-drawer>
+
+        <v-app-bar app flat color="background" class="pr-5">
+            <v-toolbar-title class="font-weight-bold">Dashboard</v-toolbar-title>
             <v-spacer></v-spacer>
-            <template v-slot:extension >
-                <v-tabs dark show-arrows hide-slider height="50px" color="primary-light" background-color="primary" class="subtitle-2">
-                    <v-tab to="/"><v-icon dense class="mr-3">mdi-file-document</v-icon>Ogólne</v-tab>
-                    <v-tab to="/universities/agreements"><v-icon dense class="mr-3">mdi-file-document</v-icon>Umowy</v-tab>
-                    <v-tab><v-icon dense class="mr-3">mdi-account</v-icon>Studenci</v-tab>
-                    <v-tab><v-icon dense class="mr-3">mdi-account-tie</v-icon>Pracownicy</v-tab>
-                    <v-tab><v-icon dense class="mr-3">mdi-cog-outline</v-icon>Ustawienia</v-tab>
-                </v-tabs>
+            <template>
+                <span class="mr-3 body-2 font-weight-light"><b>{{user.first_name + " " + user.last_name}}</b></span>
+                <v-avatar color="primary" size="30"></v-avatar>
             </template>
         </v-app-bar>
 
-        <v-main class="secondary">
-            <router-view></router-view>
+        <v-main>
+            <v-container fluid>
+                <router-view></router-view>
+            </v-container>
         </v-main>
     </v-app>
 </template>
@@ -33,39 +115,10 @@
         components: {Sidebar},
         data() {
             return {
-                menu: {
-                    links: [
-                        {name: 'Dashboard', href: {name: 'dashboard'}, icon: 'mdi-view-dashboard', can: [], has: []},
-                        {
-                            name: 'Uniwersytet',
-                            href: {name: 'universities'},
-                            icon: 'mdi-school-outline',
-                            can: [],
-                            has: []
-                        },
-                        {name: 'Firma', href: {name: 'companies'}, icon: 'mdi-briefcase-outline', can: [], has: []},
-                        {
-                            name: 'Oferty',
-                            href: {name: 'offers'},
-                            icon: 'mdi-newspaper-variant-multiple',
-                            can: [],
-                            has: []
-                        },
-                        {
-                            name: 'Praktyki i staże',
-                            href: {name: 'internships'},
-                            icon: 'mdi-newspaper',
-                            can: [],
-                            has: []
-                        },
-                        {
-                            name: 'Dziennik praktyk',
-                            href: {name: 'journal'},
-                            icon: 'mdi-notebook-outline',
-                            can: [],
-                            has: []
-                        },
-                    ]
+                navigationDrawer: {
+                    drawer: true,
+                    miniVariant: true,
+                    permanent: true,
                 }
             }
         },
@@ -79,17 +132,13 @@
 </script>
 
 <style lang="scss" scoped>
-    .logo {
-        max-width: 60px;
-        min-width: 60px;
-        height: 60px;
-        background: #223345;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        color: #fff;
-        font-size: 14px;
-        position: relative;
-        left: -16px;
+    #app {
+        background-color: #f7f7fa;
+        font-family: 'Montserrat', sans-serif;
     }
+
+    .hidden {
+        opacity: 0;
+    }
+
 </style>
