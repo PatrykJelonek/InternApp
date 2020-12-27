@@ -11,10 +11,28 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
+/**
+ * @authenticated
+ * @group University
+ * APIs return university students
+ *
+ * Class UniversityStudentController
+ * @package App\Http\Controllers\Api
+ */
+
 class UniversityStudentController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Students
+     * Display a university students collection.
+     *
+     * @queryParam university_id required The id of university
+     * @apiResourceCollection App\Http\Resources\Collections\StudentCollection
+     * @apiResourceModel App\Student
+     *
+     * @response 404 {
+     *  "message": "Not found students at this university!"
+     * }
      *
      * @param $university_id
      * @return JsonResponse
