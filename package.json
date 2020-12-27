@@ -10,6 +10,7 @@
         "watch-poll": "npm run watch -- --watch-poll"
     },
     "dependencies": {
+        "clockwork-browser": "^1.0.0",
         "moment": "^2.27.0",
         "vee-validate": "^3.3.0",
         "vue": "^2.6.11",
