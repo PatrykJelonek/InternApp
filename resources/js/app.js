@@ -3,6 +3,7 @@ import '@fortawesome/fontawesome-free/js/all.js';
 import store from './store';
 import vuetify from "./plugins/vuetify";
 import Routes from './router/routers';
+import 'clockwork-browser/metrics';
 
 require('./bootstrap');
 require('./store/subscriber');
