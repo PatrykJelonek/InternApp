@@ -50,3 +50,8 @@
     ```
     php artisan db:seed
     ```
+13. Run a server & queues
+    ```
+    php artisan serve
+    php artisan queue:work
+    ```
