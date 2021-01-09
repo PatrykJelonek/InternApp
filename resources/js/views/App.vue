@@ -3,12 +3,13 @@
         <v-navigation-drawer
             app
             floating
-            :color="navigationDrawer.miniVariant ? 'transparent' : ' navigationDrawerExpanded'"
-            :mini-variant="navigationDrawer.miniVariant"
-            :permanent="navigationDrawer.permanent"
+            :mobile-breakpoint="$vuetify.breakpoint.xs ? 'xs' : 'sm'"
+            v-model="navigationDrawer.drawer"
+            :mini-variant="navigationDrawer.miniVariant && $vuetify.breakpoint.mdAndUp"
+            :color="navigationDrawer.miniVariant && $vuetify.breakpoint.mdAndUp ? 'transparent' : ' navigationDrawerExpanded'"
         >
             <v-list nav dense>
-                <v-list-item-group active-class="primary--text primary--darken-1">
+                <v-list-item-group active-class="primary--text primary--darken-1" v-model="navigationDrawer.group">
                     <v-list-item link to="/" dense>
                         <v-list-item-icon>
                             <v-icon dense>mdi-view-dashboard</v-icon>
@@ -65,19 +66,19 @@
             <!--            <v-app-bar-nav-icon v-if="$vuetify.breakpoint.smAndUp" @click.stop="navigationDrawer.drawer = !navigationDrawer.drawer"></v-app-bar-nav-icon>-->
             <v-toolbar-title class="font-weight-bold">Intern</v-toolbar-title>
             <v-spacer></v-spacer>
-            <v-badge color="error" dot overlap bordered>
+            <v-badge color="error" dot overlap bordered class="hidden-xs-only">
                 <v-btn icon small class="ml-5">
                     <v-icon dense>mdi-bell-outline</v-icon>
                 </v-btn>
             </v-badge>
-            <v-badge color="error" dot overlap bordered>
+            <v-badge color="error" dot overlap bordered class="hidden-xs-only">
                 <v-btn icon small class="ml-5">
                     <v-icon dense>mdi-email-outline</v-icon>
                 </v-btn>
             </v-badge>
             <v-menu left bottom offset-y nudge-bottom="10">
                 <template v-slot:activator="{ on, attrs }">
-                    <v-btn text v-on="on" v-bind="attrs" class="ml-5">
+                    <v-btn text v-on="on" v-bind="attrs" class="ml-5 hidden-sm-and-down">
                         {{user.first_name + " " + user.last_name}}
                         <v-icon class="ml-3">mdi-chevron-down</v-icon>
                     </v-btn>
@@ -103,6 +104,11 @@
                     </v-list-item>
                 </v-list>
             </v-menu>
+            <v-app-bar-nav-icon
+                class="ml-3"
+                v-if="$vuetify.breakpoint.smAndDown"
+                @click.stop="navigationDrawer.drawer = !navigationDrawer.drawer"
+            ></v-app-bar-nav-icon>
         </v-app-bar>
 
         <v-main>
@@ -122,9 +128,9 @@
         data() {
             return {
                 navigationDrawer: {
-                    drawer: true,
+                    drawer: null,
                     miniVariant: true,
-                    permanent: true,
+                    group: null,
                 }
             }
         },
@@ -133,7 +139,13 @@
             ...mapGetters({
                 user: 'auth/user',
             }),
-        }
+        },
+
+        watch: {
+            group () {
+                this.drawer = false
+            },
+        },
     }
 </script>
 
