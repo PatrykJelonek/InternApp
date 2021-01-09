@@ -44,12 +44,35 @@
                         <v-list-item-title>Oferty Praktyk</v-list-item-title>
                     </v-list-item>
                 </v-list-item-group>
+
+                <v-subheader class="hidden hidden-md-and-up"></v-subheader>
+
+                <v-list-group
+                    no-action
+                    prepend-icon="mdi-account"
+                    class="mt-1 hidden-md-and-up"
+                    active-class="primary--text primary--darken-1"
+                >
+                    <template v-slot:activator>
+                        <v-list-item-title>Konto</v-list-item-title>
+                    </template>
+                    <v-list-item link dense>
+                        <v-list-item-title>Profil</v-list-item-title>
+                    </v-list-item>
+                    <v-list-item link dense>
+                        <v-list-item-title>Ustawienia</v-list-item-title>
+                    </v-list-item>
+                    <v-list-item link dense>
+                        <v-list-item-title>Wyloguj</v-list-item-title>
+                    </v-list-item>
+                </v-list-group>
             </v-list>
             <template v-slot:append>
                 <v-list nav>
                     <v-list-item
                         dense
                         active-class="none"
+                        class="hidden-sm-and-down"
                         @click.stop="navigationDrawer.miniVariant = !navigationDrawer.miniVariant"
                     >
                         <v-list-item-icon>
