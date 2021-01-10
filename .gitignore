@@ -62,4 +62,3 @@ _ide_helper.php
 /storage
 storage/*.key
 composer.lock
-/public/js/app.js
