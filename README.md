@@ -1,8 +1,8 @@
-# Team Project
+# InternApp 👨🏼‍🎓 
 
 ### Technology Stack:
 **Backend:** Laravel 7.x   
-**Frontend:** Vue.js  
+**Frontend:** Vue.js 2  
 **Database:** MySQL
  
  

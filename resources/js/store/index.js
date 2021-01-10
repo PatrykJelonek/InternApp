@@ -17,6 +17,7 @@ import agreement from "./modules/agreement";
 import internship from "./modules/internship";
 import journal from "./modules/journal";
 import tabs from "./modules/tabs";
+import sidebar from "./modules/sidebar";
 
 Vue.use(Vuex);
 
@@ -40,6 +41,7 @@ export default new Vuex.Store({
         internship,
         journal,
         tabs,
+        sidebar,
     },
     strict: debug
 });

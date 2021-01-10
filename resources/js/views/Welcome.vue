@@ -24,10 +24,56 @@
 
 <script>
     import VuexTabsItems from "../components/_Helpers/VuexTabsItems";
+    import Sidebar from "../components/_Helpers/Sidebar";
+    import {mapActions} from "vuex";
 
     export default {
         name: "Welcome",
-        components: {VuexTabsItems},
+        components: {VuexTabsItems, Sidebar},
+
+        data() {
+            return {
+                sidebarItems: [
+                    {
+                        header: 'Inne',
+                        items: [
+                            {
+                                text: 'Umowy',
+                                link: 'agreements',
+                            },
+                            {
+                                text: 'Studenci',
+                                link: 'students',
+                            }
+
+                        ]
+                    },
+                    {
+                        header: 'Inne',
+                        items: [
+                            {
+                                text: 'Inne',
+                                link: 'other'
+                            },
+                            {
+                                text: 'Ustawienia',
+                                link: 'settings'
+                            }
+                        ]
+                    }
+                ],
+            }
+        },
+
+        methods: {
+            ...mapActions({
+                setSidebarItems: 'sidebar/setItems'
+            }),
+        },
+
+        created() {
+            this.setSidebarItems(this.sidebarItems);
+        },
     }
 </script>
 
