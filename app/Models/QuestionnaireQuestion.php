@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -10,6 +10,6 @@ class QuestionnaireQuestion extends Model
 
     public function questionnaire()
     {
-        return $this->hasOne('App\Questionnaire');
+        return $this->hasOne('App\Models\Questionnaire');
     }
 }

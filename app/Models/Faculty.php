@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -10,6 +10,6 @@ class Faculty extends Model
 
     public function fields()
     {
-        return $this->belongsToMany('App\Field', 'faculties_fields', 'faculty_id', 'field_id');
+        return $this->belongsToMany('App\Models\Field', 'faculties_fields', 'faculty_id', 'field_id');
     }
 }

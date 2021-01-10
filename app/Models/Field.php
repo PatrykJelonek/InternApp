@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -10,6 +10,6 @@ class Field extends Model
 
     public function specializations()
     {
-        return $this->belongsToMany('App\Specialization', 'fields_specializations', 'field_id', 'specialization_id');
+        return $this->belongsToMany('App\Models\Specialization', 'fields_specializations', 'field_id', 'specialization_id');
     }
 }

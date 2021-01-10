@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -12,22 +12,22 @@ class Company extends Model
 
     public function category()
     {
-        return $this->belongsTo('App\CompanyCategory', 'company_category_id', 'id');
+        return $this->belongsTo('App\Models\CompanyCategory', 'company_category_id', 'id');
     }
 
     public function city()
     {
-        return $this->belongsTo('App\City');
+        return $this->belongsTo('App\Models\City');
     }
 
     public function offers()
     {
-        return $this->hasMany('App\Offer', 'company_id', 'id');
+        return $this->hasMany('App\Models\Offer', 'company_id', 'id');
     }
 
     public function users()
     {
-        return $this->belongsToMany('App\User', 'users_companies', 'company_id', 'user_id');
+        return $this->belongsToMany('App\Models\User', 'users_companies', 'company_id', 'user_id');
     }
 
     public static function messages()

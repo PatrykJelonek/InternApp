@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -10,11 +10,11 @@ class Journal extends Model
 
     public function internship()
     {
-        return $this->belongsTo('App\Internship', 'internship_id', 'id');
+        return $this->belongsTo('App\Models\Internship', 'internship_id', 'id');
     }
 
     public function author()
     {
-        return $this->belongsTo('App\User', 'user_id', 'id');
+        return $this->belongsTo('App\Models\User', 'user_id', 'id');
     }
 }

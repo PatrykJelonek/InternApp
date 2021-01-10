@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Agreement;
+use App\Models\Agreement;
 use App\Http\Controllers\Controller;
-use App\InternshipStatus;
-use App\Internship;
-use App\Offer;
-use App\Student;
-use App\User;
+use App\Models\InternshipStatus;
+use App\Models\Internship;
+use App\Models\Offer;
+use App\Models\Student;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Arr;

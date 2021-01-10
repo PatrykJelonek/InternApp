@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -10,11 +10,11 @@ class Student extends Model
 
     public function user()
     {
-        return $this->hasOne('App\User', 'id', 'user_id');
+        return $this->hasOne('App\Models\User', 'id', 'user_id');
     }
 
     public function internships()
     {
-        return $this->hasMany('App\Internship', 'student_id', 'id');
+        return $this->hasMany('App\Models\Internship', 'student_id', 'id');
     }
 }

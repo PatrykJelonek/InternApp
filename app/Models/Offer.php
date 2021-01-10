@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -10,32 +10,32 @@ class Offer extends Model
 
     public function company()
     {
-        return $this->belongsTo('App\Company');
+        return $this->belongsTo('App\Models\Company');
     }
 
     public function user()
     {
-        return $this->belongsTo('App\User');
+        return $this->belongsTo('App\Models\User');
     }
 
     public function offerCategory()
     {
-        return $this->belongsTo('App\OfferCategory');
+        return $this->belongsTo('App\Models\OfferCategory');
     }
 
     public function offerStatus()
     {
-        return $this->belongsTo('App\OfferStatus');
+        return $this->belongsTo('App\Models\OfferStatus');
     }
 
     public function supervisor()
     {
-        return $this->hasOne('App\User', 'id', 'company_supervisor_id');
+        return $this->hasOne('App\Models\User', 'id', 'company_supervisor_id');
     }
 
     public function internships()
     {
-        return $this->hasMany('App\Internship', 'offer_id', 'id');
+        return $this->hasMany('App\Models\Internship', 'offer_id', 'id');
 
     }
 

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\InternshipStatus;
+use App\Models\InternshipStatus;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -47,7 +47,7 @@ class InternshipStatusController extends Controller
         if (isset($internshipStatus)) {
             $internshipStatus->name = $request->input("name");
             $internshipStatus->created_at = date('Y-m-d H:i:s');
-        
+
 
             if ($internshipStatus->save())
                 return response($internshipStatus, Response::HTTP_OK);

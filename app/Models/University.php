@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -11,27 +11,27 @@ class University extends Model
 
     public function type()
     {
-        return $this->belongsTo('App\UniversityType', 'university_type_id', 'id');
+        return $this->belongsTo('App\Models\UniversityType', 'university_type_id', 'id');
     }
 
     public function city()
     {
-        return $this->belongsTo('App\City');
+        return $this->belongsTo('App\Models\City');
     }
 
     public function users()
     {
-        return $this->belongsToMany('App\User', 'users_universities', 'university_id', 'user_id');
+        return $this->belongsToMany('App\Models\User', 'users_universities', 'university_id', 'user_id');
     }
 
     public function faculties()
     {
-        return $this->belongsToMany('App\Faculty', 'universities_faculties', 'university_id', 'faculty_id');
+        return $this->belongsToMany('App\Models\Faculty', 'universities_faculties', 'university_id', 'faculty_id');
     }
 
     public function agreements()
     {
-        return $this->hasMany('App\Agreement', 'university_id', 'id');
+        return $this->hasMany('App\Models\Agreement', 'university_id', 'id');
     }
 
     public static function messages()

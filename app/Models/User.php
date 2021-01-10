@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
@@ -23,47 +23,47 @@ class User extends Model implements AuthenticatableContract, JWTSubject
 
     public function status()
     {
-        return $this->hasOne('App\UserStatuses');
+        return $this->hasOne('App\Models\UserStatuses');
     }
 
     public function student()
     {
-        return $this->hasOne('App\Student', 'user_id', 'id');
+        return $this->hasOne('App\Models\Student', 'user_id', 'id');
     }
 
     public function roles()
     {
-        return $this->belongsToMany('App\Role', 'users_roles', 'user_id', 'role_id');
+        return $this->belongsToMany('App\Models\Role', 'users_roles', 'user_id', 'role_id');
     }
 
     public function permissions()
     {
-        return $this->belongsToMany('App\Permission', 'users_permissions', 'user_id', 'permission_id');
+        return $this->belongsToMany('App\Models\Permission', 'users_permissions', 'user_id', 'permission_id');
     }
 
     public function journals()
     {
-        return $this->hasMany('App\Journal', 'user_id', 'id');
+        return $this->hasMany('App\Models\Journal', 'user_id', 'id');
     }
 
     public function companySupervisorInternships()
     {
-        return $this->hasMany('App\Internship', 'company_supervisor_id', 'id');
+        return $this->hasMany('App\Models\Internship', 'company_supervisor_id', 'id');
     }
 
     public function universitySupervisorInternships()
     {
-        return $this->hasMany('App\Internship', 'university_supervisor_id', 'id');
+        return $this->hasMany('App\Models\Internship', 'university_supervisor_id', 'id');
     }
 
     public function universities()
     {
-          return $this->belongsToMany('App\University', 'users_universities', 'user_id', 'university_id')->with(['city','type']);
+          return $this->belongsToMany('App\Models\University', 'users_universities', 'user_id', 'university_id')->with(['city','type']);
     }
 
     public function companies()
     {
-        return $this->belongsToMany('App\Company', 'users_companies', 'user_id', 'company_id')->with(['city', 'category']);
+        return $this->belongsToMany('App\Models\Company', 'users_companies', 'user_id', 'company_id')->with(['city', 'category']);
     }
 
     public function getJWTIdentifier()

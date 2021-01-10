@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\AgreementAttachment;
+use App\Models\AgreementAttachment;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 

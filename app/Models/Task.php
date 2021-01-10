@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -10,11 +10,11 @@ class Task extends Model
 
     public function internship()
     {
-        return $this->hasOne('App\Internship');
+        return $this->hasOne('App\Models\Internship');
     }
 
     public function user()
     {
-        return $this->hasOne('App\User');
+        return $this->hasOne('App\Models\User');
     }
 }

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\UniversityType;
+use App\Models\UniversityType;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 

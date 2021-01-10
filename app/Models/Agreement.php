@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -10,26 +10,26 @@ class Agreement extends Model
 
     public function company()
     {
-        return $this->belongsTo('App\Company');
+        return $this->belongsTo('App\Models\Company');
     }
 
     public function university()
     {
-        return $this->belongsTo('App\University');
+        return $this->belongsTo('App\Models\University');
     }
 
     public function offer()
     {
-        return $this->belongsTo('App\Offer');
+        return $this->belongsTo('App\Models\Offer');
     }
 
     public function author()
     {
-        return $this->belongsTo('App\User', 'user_id', 'id');
+        return $this->belongsTo('App\Models\User', 'user_id', 'id');
     }
 
     public function universitySupervisor()
     {
-        return $this->belongsTo('App\User','university_supervisor_id', 'id');
+        return $this->belongsTo('App\Models\User','university_supervisor_id', 'id');
     }
 }
