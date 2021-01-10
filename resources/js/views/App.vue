@@ -19,12 +19,7 @@
                 </v-list-item-group>
 
                 <v-list-item-group class="mt-1" active-class="primary--text primary--darken-1">
-                    <v-subheader
-                        v-bind:class="{'hidden': navigationDrawer.miniVariant}"
-                        class="caption font-weight-medium text-uppercase"
-                    >
-                        Ogólne
-                    </v-subheader>
+                    <v-subheader class="caption font-weight-medium text-uppercase hidden hidden-md-and-up">Ogólne</v-subheader>
                     <v-list-item link to="universities" dense>
                         <v-list-item-icon>
                             <v-icon dense>mdi-school-outline</v-icon>
@@ -44,9 +39,7 @@
                         <v-list-item-title>Oferty Praktyk</v-list-item-title>
                     </v-list-item>
                 </v-list-item-group>
-
-                <v-subheader class="hidden hidden-md-and-up"></v-subheader>
-
+                <v-subheader class="caption font-weight-medium text-uppercase hidden hidden-md-and-up">Użytkownik</v-subheader>
                 <v-list-group
                     no-action
                     prepend-icon="mdi-account"
