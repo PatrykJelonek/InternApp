@@ -1,11 +1,13 @@
 <?php
 
+namespace Database\Seeders;
+
 use Illuminate\Database\Seeder;
 
 class QuestionnairesSeeder extends Seeder
 {
     /**
-     * Run the database seeds.
+     * Run the database seeders.
      *
      * @return void
      */
@@ -16,28 +18,28 @@ class QuestionnairesSeeder extends Seeder
         	'description' => 'Kwestionariusz studenta',
             'created_at' => date('Y-m-d H:i:s'),
             'updated_at' => date('Y-m-d H:i:s')
-        ]);  
+        ]);
 
         DB::table('questionnaires')->insert([
         	'name' => 'Kwestionariusz zakładowego opiekuna praktyki',
         	'description' => 'Kwestionariusz zakładowego opiekuna praktyki',
             'created_at' => date('Y-m-d H:i:s'),
             'updated_at' => date('Y-m-d H:i:s')
-        ]);  
+        ]);
 
         DB::table('questionnaires')->insert([
         	'name' => 'Kwestionariusz zakładowego koordynatora praktyki',
         	'description' => 'Kwestionariusz zakładowego koordynatora praktyki',
             'created_at' => date('Y-m-d H:i:s'),
             'updated_at' => date('Y-m-d H:i:s')
-        ]);    
+        ]);
 
         DB::table('questionnaires')->insert([
         	'name' => 'Kwestionariusz uczelnianego koordynatora praktyki',
         	'description' => 'Kwestionariusz uczelnianego koordynatora praktyki',
             'created_at' => date('Y-m-d H:i:s'),
             'updated_at' => date('Y-m-d H:i:s')
-        ]);    
+        ]);
 
 
         DB::table('questionnaires')->insert([
@@ -45,7 +47,7 @@ class QuestionnairesSeeder extends Seeder
         	'description' => 'Kwestionariusz ogólny',
             'created_at' => date('Y-m-d H:i:s'),
             'updated_at' => date('Y-m-d H:i:s')
-        ]);  
+        ]);
 
     }
 }

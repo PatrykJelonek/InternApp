@@ -1,17 +1,19 @@
 <?php
 
+namespace Database\Seeders;
+
 use Illuminate\Database\Seeder;
 
 class Questionnaire_QuestionsSeeder extends Seeder
 {
     /**
-     * Run the database seeds.
+     * Run the database seeders.
      *
      * @return void
      */
     public function run()
     {
-    	
+
         DB::table('questionnaire_questions')->insert([
         	'questionnaire_id' => 1,
         	'content' => 'Opis praktyki',

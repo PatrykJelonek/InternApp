@@ -1,11 +1,13 @@
 <?php
 
+namespace Database\Seeders;
+
 use Illuminate\Database\Seeder;
 
 class Universities_FacultiesSeeder extends Seeder
 {
     /**
-     * Run the database seeds.
+     * Run the database seeders.
      *
      * @return void
      */
@@ -30,6 +32,6 @@ class Universities_FacultiesSeeder extends Seeder
             'university_id' => 2,
             'faculty_id' => 3,
             'created_at' => date('Y-m-d H:i:s')
-        ]);        
+        ]);
     }
 }

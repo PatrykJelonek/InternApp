@@ -1,11 +1,13 @@
 <?php
 
+namespace Database\Seeders;
+
 use Illuminate\Database\Seeder;
 
 class Company_CategoriesSeeder extends Seeder
 {
     /**
-     * Run the database seeds.
+     * Run the database seeders.
      *
      * @return void
      */
@@ -50,4 +52,3 @@ class Company_CategoriesSeeder extends Seeder
         ]);
     }
 }
-        

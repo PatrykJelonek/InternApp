@@ -1,11 +1,13 @@
 <?php
 
+namespace Database\Seeders;
+
 use Illuminate\Database\Seeder;
 
 class TasksSeeder extends Seeder
 {
     /**
-     * Run the database seeds.
+     * Run the database seeders.
      *
      * @return void
      */
@@ -18,7 +20,7 @@ class TasksSeeder extends Seeder
             'user_id' => 1,
 			'done' => true,
 			'created_at' => date('Y-m-d H:i:s'),
-			'updated_at' => date('Y-m-d H:i:s')   
+			'updated_at' => date('Y-m-d H:i:s')
         ]);
 
 		DB::table('tasks')->insert([
@@ -28,7 +30,7 @@ class TasksSeeder extends Seeder
             'user_id' => 2,
 			'done' => true,
 			'created_at' => date('Y-m-d H:i:s'),
-			'updated_at' => date('Y-m-d H:i:s')   
+			'updated_at' => date('Y-m-d H:i:s')
         ]);
 
 		DB::table('tasks')->insert([
@@ -38,7 +40,7 @@ class TasksSeeder extends Seeder
             'user_id' => 3,
 			'done' => true,
 			'created_at' => date('Y-m-d H:i:s'),
-			'updated_at' => date('Y-m-d H:i:s')   
+			'updated_at' => date('Y-m-d H:i:s')
         ]);
 
 		DB::table('tasks')->insert([
@@ -48,7 +50,7 @@ class TasksSeeder extends Seeder
             'user_id' => 1,
 			'done' => true,
 			'created_at' => date('Y-m-d H:i:s'),
-			'updated_at' => date('Y-m-d H:i:s')   
+			'updated_at' => date('Y-m-d H:i:s')
         ]);
 
 		DB::table('tasks')->insert([
@@ -58,7 +60,7 @@ class TasksSeeder extends Seeder
             'user_id' => 2,
 			'done' => true,
 			'created_at' => date('Y-m-d H:i:s'),
-			'updated_at' => date('Y-m-d H:i:s')   
+			'updated_at' => date('Y-m-d H:i:s')
         ]);
 
 		DB::table('tasks')->insert([
@@ -68,7 +70,7 @@ class TasksSeeder extends Seeder
             'user_id' => 3,
 			'done' => true,
 			'created_at' => date('Y-m-d H:i:s'),
-			'updated_at' => date('Y-m-d H:i:s')   
+			'updated_at' => date('Y-m-d H:i:s')
         ]);
     }
 }
