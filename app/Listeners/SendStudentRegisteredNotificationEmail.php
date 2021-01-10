@@ -30,7 +30,6 @@ class SendStudentRegisteredNotificationEmail implements ShouldQueue
      */
     public function handle(StudentRegistered $event)
     {
-        clock()->info('Wysłano maila!');
         Mail::to('pj210@wp.pl')->send(new StudentRegisteredNotificationEmail($event->student));
     }
 
