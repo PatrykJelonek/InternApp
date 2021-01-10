@@ -15,6 +15,10 @@ class StudentRegisteredNotificationEmail extends Mailable
      * @var Student
      */
     public $student;
+    /**
+     * @var string
+     */
+    public $subject = 'Nowy student dołączył do Twojej uczelni!';
 
     /**
      * Create a new message instance.
@@ -34,7 +38,6 @@ class StudentRegisteredNotificationEmail extends Mailable
     public function build()
     {
         return $this->view('emails.student_registered_notification_email')
-            ->from(config('mail.from.address'), 'Nowy student dołączył do Twojej uczelni!')
             ->with([
                 'studentFullName' => $this->student->user->first_name . ' ' . $this->student->user->last_name,
             ]);
