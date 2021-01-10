@@ -2,7 +2,7 @@
 
 ### Technology Stack:
 **Backend:** Laravel 7.x   
-**Frontend:** Vue.js 2
+**Frontend:** Vue.js 2  
 **Database:** MySQL
  
  
