@@ -1,29 +1,82 @@
 <template>
-    <v-container fluid>
-        <v-select
-            v-model="chosenUniversity"
-            :items="userUniversities"
-            item-text="name"
-            item-value="id"
-            label="Wybierz Uniwersytet"
-            outlined
-            dense
-            hide-details
-            @change="alla()"
-        ></v-select>
-        <v-tabs
-            centered
-            background-color="transparent"
-        >
-            <v-tab :to="{name: 'university-overview', params: {slug: this.chosenUniversity.name.replace(/\s+/g, '-').toLowerCase()}}">Przegląd</v-tab>
-            <v-tab :to="{name: 'university-internships-list', params: {slug: this.chosenUniversity.name.replace(/\s+/g, '-').toLowerCase()}}">Praktyki</v-tab>
-            <v-tab :to="{name: 'university-workers-list', params: {slug: this.chosenUniversity.name.replace(/\s+/g, '-').toLowerCase()}}">Pracownicy</v-tab>
-            <v-tab :to="{name: 'university-students-list', params: {slug: this.chosenUniversity.name.replace(/\s+/g, '-').toLowerCase()}}">Studenci</v-tab>
-        </v-tabs>
-        <v-divider></v-divider>
-        <v-container fluid>
-            <router-view></router-view>
-        </v-container>
+    <v-container fluid class="pa-10" v-bind:class="{ 'fill-height': userUniversities.length == 0 }">
+        <v-row v-if="userUniversities.length > 0" class="d-flex flex-column px-5">
+            <v-row class="d-flex align-center justify-space-between">
+                <v-col class="pa-0">
+                    <h2 class="text-uppercase title font-weight-black grey--text text--darken-4">Zarządzaj Uczelnią</h2>
+                </v-col>
+                <v-col cols="4" class="d-flex align-center justify-center">
+                    <v-select
+                        v-model="chosenUniversity"
+                        :items="userUniversities"
+                        item-text="name"
+                        item-value="id"
+                        label="Wybierz Uniwersytet"
+                        outlined
+                        dense
+                        hide-details
+                        @change="selectUniversity(getSelectedUniversity())"
+                    ></v-select>
+                    <v-menu offset-y>
+                        <template v-slot:activator="{ on }">
+                            <v-btn icon color="grey darken-2" class="ml-4" v-on="on">
+                                <v-icon>mdi-plus</v-icon>
+                            </v-btn>
+                        </template>
+                        <v-list dense>
+                            <university-access-code-dialog></university-access-code-dialog>
+                            <v-list-item  to="create-university" dense>
+                                <v-list-item-title>Stwórz nową</v-list-item-title>
+                            </v-list-item>
+                        </v-list>
+                    </v-menu>
+                </v-col>
+            </v-row>
+            <v-row v-if="!isLoading">
+                <university-access-code></university-access-code>
+            </v-row>
+
+            <v-row class="mt-10">
+                <v-col>
+                    <v-tabs v-model="tab" background-color="transparent" color="blue accent-4">
+                        <v-tab>Umowy</v-tab>
+                        <v-tab>Praktyki</v-tab>
+                        <v-tab v-can="['view-university-students']">Studenci</v-tab>
+                    </v-tabs>
+                    <v-tabs-items class="transparent mt-5 body-2 text-justify" v-model="tab">
+                        <v-tab-item>
+                            <v-card outlined>
+                                <v-data-table
+                                    :headers="headers"
+                                    :items="universityAgreements"
+                                    :items-per-page="5"
+                                    :loading="isLoading"
+                                    @click:row="(item) => {this.$router.push({name: '/agreement', params: {id: item.id}})}"
+                                >
+                                    <template v-slot:item.is_active="{ item }">
+                                        <v-chip :color="item.is_active ? 'success':'error' " dark>
+                                            {{item.is_active ? 'Aktywny':'Nieaktywny'}}
+                                        </v-chip>
+                                    </template>
+                                </v-data-table>
+                            </v-card>
+                        </v-tab-item>
+                        <v-tab-item>
+                            <universities-internships-list></universities-internships-list>
+                        </v-tab-item>
+                        <v-tab-item>
+                            <university-interns-list></university-interns-list>
+                        </v-tab-item>
+                    </v-tabs-items>
+                </v-col>
+            </v-row>
+        </v-row>
+
+        <v-row class="d-flex" v-else>
+            <v-col cols="12">
+                <universities-not-found></universities-not-found>
+            </v-col>
+        </v-row>
     </v-container>
 </template>
 
@@ -34,7 +87,6 @@
     import UniversityAccessCodeDialog from "../components/Universities/UniversityAccessCodeDialog";
     import UniversitiesInternshipsList from "../components/Universities/UniversitiesInternshipsList";
     import UniversityInternsList from "../components/Universities/UniversityInternsList";
-    import router from "../router/routers";
 
     export default {
         name: "Universities",
@@ -47,6 +99,7 @@
 
         data() {
             return {
+
                 chosenUniversity: '',
                 isLoading: true,
                 headers: [
@@ -96,7 +149,6 @@
                 userUniversities: 'user/userUniversities',
                 universityAgreements: 'university/universityAgreements',
                 internships: 'university/internships',
-                selectedUniversity: 'university/selectedUniversity',
             }),
         },
 
@@ -119,11 +171,6 @@
                         return true;
                     }
                 });
-            },
-
-            alla() {
-                this.selectUniversity(this.getSelectedUniversity());
-                router.push({name: 'university-internships-list', params: {slug: this.selectedUniversity.name.replace(/\s+/g, '-').toLowerCase()}});
             }
         },
 

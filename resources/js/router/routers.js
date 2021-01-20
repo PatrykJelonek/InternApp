@@ -111,7 +111,29 @@ const router = new VueRouter({
                         default: Universities,
                         tabs: UniversitiesTabs
                     },
-                    meta: { have: ['admin']}
+                    meta: { have: ['admin']},
+                    children: [
+                        {
+                            path: '/universities/:slug?/overview',
+                            name: 'university-overview',
+                            component: Companies
+                        },
+                        {
+                            path: '/universities/:slug?/internships-list',
+                            name: 'university-internships-list',
+                            component: Companies
+                        },
+                        {
+                            path: '/universities/:slug?/workers-list',
+                            name: 'university-workers-list',
+                            component: Companies
+                        },
+                        {
+                            path: '/universities/:slug?/students-list',
+                            name: 'university-students-list',
+                            component: Companies
+                        },
+                    ],
                 },
                 {
                     path: '/create-university',
