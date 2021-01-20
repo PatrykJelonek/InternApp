@@ -73,7 +73,7 @@ return [
     |
     */
     'user_models' => [
-        'users' => 'App\User',
+        'users' => 'App\Models\User',
     ],
 
     /*

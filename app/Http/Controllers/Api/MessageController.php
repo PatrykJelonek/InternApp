@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Message;
+use App\Models\Message;
 use Illuminate\Http\Request;
 
 class MessageController extends Controller
@@ -52,16 +52,16 @@ class MessageController extends Controller
         $vallidatedData  = $request->validate([
             'content' => 'required|max:254',
             'fromUserId' => 'required',
-            'toUserId' => 'required'            
+            'toUserId' => 'required'
         ]);
 
         $message = new Message;
-        
+
         $message->content = $request->input('content');
         $message->from_user_id = $request->input('fromUserId');
         $message->to_user_id = $request->input('toUserId');
         $message->created_at = date('Y-m-d H:i:s');
-        
+
         if($message->save())
         {
             return response([
@@ -101,7 +101,7 @@ class MessageController extends Controller
      */
     public function edit(Message $message)
     {
-        
+
     }
 
     /**

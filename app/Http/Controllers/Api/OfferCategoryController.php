@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\OfferCategory;
+use App\Models\OfferCategory;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -52,7 +52,7 @@ class OfferCategoryController extends Controller
     {
         $offerCategory = new OfferCategory;
 
-        
+
             $offerCategory->name = $request->input("name");
             $offerCategory->description = $request->input("description");
             $offerCategory->created_at = date('Y-m-d H:i:s');

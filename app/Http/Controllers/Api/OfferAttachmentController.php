@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\OfferAttachment;
+use App\Models\OfferAttachment;
 use Illuminate\Http\Request;
 
 class OfferAttachmentController extends Controller
@@ -38,7 +38,7 @@ class OfferAttachmentController extends Controller
      */
     public function create()
     {
-        
+
     }
 
     /**
@@ -55,7 +55,7 @@ class OfferAttachmentController extends Controller
         ]);
 
         $offer_attachment = new OfferAttachment;
-        
+
         $offer_attachment->odder_id = $request->input('odder_id');
         $offer_attachment->attachment_id = $request->input('attachment_id');
 

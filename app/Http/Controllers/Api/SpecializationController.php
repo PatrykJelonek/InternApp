@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Specialization;
+use App\Models\Specialization;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 

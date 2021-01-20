@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\InternshipAttachment;
+use App\Models\InternshipAttachment;
 use Illuminate\Http\Request;
 
 class InternshipAttachmentController extends Controller
@@ -68,7 +68,7 @@ class InternshipAttachmentController extends Controller
         ]);
 
         $intership_attachment = new IntershipAttachment;
-        
+
         $intership_attachment->intership_id = $request->input('intership_id');
         $intership_attachment->attachment_id = $request->input('attachment_id');
 

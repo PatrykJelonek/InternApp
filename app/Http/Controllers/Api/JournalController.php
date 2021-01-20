@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Internship;
-use App\InternshipStatus;
-use App\Journal;
-use App\Student;
+use App\Models\Internship;
+use App\Models\InternshipStatus;
+use App\Models\Journal;
+use App\Models\Student;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Arr;

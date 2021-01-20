@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Agreement;
-use App\Internship;
-use App\Role;
-use App\University;
-use App\User;
+use App\Models\Agreement;
+use App\Models\Internship;
+use App\Models\Role;
+use App\Models\University;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Arr;
