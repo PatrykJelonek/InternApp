@@ -114,23 +114,28 @@ const router = new VueRouter({
                     meta: { have: ['admin']},
                     children: [
                         {
-                            path: '/universities/:slug?/overview',
+                            path: '/universities/overview',
                             name: 'university-overview',
                             component: Companies
                         },
                         {
-                            path: '/universities/:slug?/internships-list',
+                            path: '/universities/internships-list',
                             name: 'university-internships-list',
                             component: Companies
                         },
                         {
-                            path: '/universities/:slug?/workers-list',
+                            path: '/universities/workers-list',
                             name: 'university-workers-list',
                             component: Companies
                         },
                         {
-                            path: '/universities/:slug?/students-list',
+                            path: '/universities/students-list',
                             name: 'university-students-list',
+                            component: Companies
+                        },
+                        {
+                            path: '/universities/settings',
+                            name: 'university-settings',
                             component: Companies
                         },
                     ],

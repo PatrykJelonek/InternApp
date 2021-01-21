@@ -1,29 +1,44 @@
 <template>
     <v-container fluid>
-        <v-select
-            v-model="chosenUniversity"
-            :items="userUniversities"
-            item-text="name"
-            item-value="id"
-            label="Wybierz Uniwersytet"
-            outlined
-            dense
-            hide-details
-            @change="alla()"
-        ></v-select>
-        <v-tabs
-            centered
-            background-color="transparent"
-        >
-            <v-tab :to="{name: 'university-overview', params: {slug: this.chosenUniversity.name.replace(/\s+/g, '-').toLowerCase()}}">Przegląd</v-tab>
-            <v-tab :to="{name: 'university-internships-list', params: {slug: this.chosenUniversity.name.replace(/\s+/g, '-').toLowerCase()}}">Praktyki</v-tab>
-            <v-tab :to="{name: 'university-workers-list', params: {slug: this.chosenUniversity.name.replace(/\s+/g, '-').toLowerCase()}}">Pracownicy</v-tab>
-            <v-tab :to="{name: 'university-students-list', params: {slug: this.chosenUniversity.name.replace(/\s+/g, '-').toLowerCase()}}">Studenci</v-tab>
-        </v-tabs>
+        <v-row>
+            <v-col
+                offset-sm="5"
+                offset-md="6"
+                offset-lg="8"
+            >
+                <v-select
+                    v-model="chosenUniversity"
+                    :items="userUniversities"
+                    item-text="name"
+                    item-value="id"
+                    label="Wybierz Uniwersytet"
+                    outlined
+                    dense
+                    hide-details
+                    class="mb-10"
+                    @change="alla()"
+                ></v-select>
+            </v-col>
+        </v-row>
+        <v-row no-gutters>
+            <v-col>
+                <v-tabs
+                    centered
+                    show-arrows
+                    background-color="transparent"
+                >
+                    <v-tab :to="{name: 'university-overview'}">Przegląd</v-tab>
+                    <v-tab :to="{name: 'university-internships-list'}">Praktyki</v-tab>
+                    <v-tab :to="{name: 'university-workers-list'}">Pracownicy</v-tab>
+                    <v-tab :to="{name: 'university-students-list'}">Studenci</v-tab>
+                    <v-tab :to="{name: 'university-settings'}">Ustawienia</v-tab>
+                </v-tabs>
+            </v-col>
+        </v-row>
         <v-divider></v-divider>
-        <v-container fluid>
+        <v-row class="mt-5">
             <router-view></router-view>
-        </v-container>
+        </v-row>
     </v-container>
 </template>
 
