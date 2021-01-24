@@ -1,5 +1,8 @@
 <template>
     <v-container fluid>
+        <v-app-bar color="transparent" flat app>
+            <v-toolbar-title>{{selectedUniversity.name}}</v-toolbar-title>
+        </v-app-bar>
         <v-row>
             <v-col
                 offset-sm="5"
@@ -35,7 +38,6 @@
                 </v-tabs>
             </v-col>
         </v-row>
-        <v-divider></v-divider>
         <v-row class="mt-5">
             <router-view></router-view>
         </v-row>
@@ -49,7 +51,6 @@
     import UniversityAccessCodeDialog from "../components/Universities/UniversityAccessCodeDialog";
     import UniversitiesInternshipsList from "../components/Universities/UniversitiesInternshipsList";
     import UniversityInternsList from "../components/Universities/UniversityInternsList";
-    import router from "../router/routers";
 
     export default {
         name: "Universities",
@@ -138,7 +139,6 @@
 
             alla() {
                 this.selectUniversity(this.getSelectedUniversity());
-                router.push({name: 'university-internships-list', params: {slug: this.selectedUniversity.name.replace(/\s+/g, '-').toLowerCase()}});
             }
         },
 

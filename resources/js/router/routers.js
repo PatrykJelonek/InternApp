@@ -249,12 +249,6 @@ const router = new VueRouter({
                     path: '/journal',
                     name: 'journal',
                     component: Journal,
-                    beforeEnter: (to, from, next) => {
-                        if(haveRole(['student']))
-                            return next();
-                        else
-                            return next({name: 'no-permissions'});
-                    }
                 },
                 {
                     path: '/internship/:id/journal',

@@ -4,33 +4,53 @@
             v-model="menuDialog"
             fullscreen
             transition="dialog-bottom-transition"
-            content-class="mt-10"
+            content-class="mt-20"
         >
-           <v-card light>
-               <v-card-text>ABC</v-card-text>
+           <v-card color="navBackground">
+              <v-container>
+                  <h2 class="pl-4">Menu</h2>
+                  <v-list
+                      flat
+                      nav
+                      color="transparent"
+                  >
+                      <v-list-item
+                          :ripple="false"
+                          :to="{name: menuItem.link}"
+                          active-class="primary"
+                          @click="menuDialog = !menuDialog"
+                          v-for="menuItem in menuItems"
+                          :key="menuItem.title"
+                      >
+                          <v-list-item-icon>
+                              <v-icon>{{menuItem.icon}}</v-icon>
+                          </v-list-item-icon>
+                          <v-list-item-title>{{menuItem.title}}</v-list-item-title>
+                      </v-list-item>
+                  </v-list>
+              </v-container>
            </v-card>
         </v-dialog>
         <v-main>
             <v-container fluid>
-                <!--<router-view></router-view>-->
+                <router-view></router-view>
             </v-container>
         </v-main>
         <v-bottom-navigation
-            background-color="#181A20"
-            active-class="abc"
+            background-color="navBackground"
             class="rounded-t-lg"
             grow
             absolute
             app
             fixed
         >
-            <v-btn icon>
+            <v-btn :to="{name: 'dashboard'}" icon>
                 <v-icon>mdi-view-dashboard</v-icon>
             </v-btn>
-            <v-btn icon>
+            <v-btn :to="{name: 'universities'}" icon>
                 <v-icon>mdi-school-outline</v-icon>
             </v-btn>
-            <v-btn icon>
+            <v-btn :to="{name: 'companies'}" icon>
                 <v-icon>mdi-briefcase-outline</v-icon>
             </v-btn>
             <v-btn icon @click="menuDialog=!menuDialog">
@@ -47,11 +67,33 @@
         data() {
             return {
                 menuDialog: false,
-                navigationDrawer: {
-                    drawer: null,
-                    miniVariant: true,
-                    group: null,
-                }
+                menuItems: [
+                    {
+                        link: 'dashboard',
+                        icon: 'mdi-view-dashboard',
+                        title: 'Dashboard'
+                    },
+                    {
+                        link: 'universities',
+                        icon: 'mdi-school-outline',
+                        title: 'Uczelnia'
+                    },
+                    {
+                        link: 'companies',
+                        icon: 'mdi-briefcase-outline',
+                        title: 'Firma'
+                    },
+                    {
+                        link: 'offers',
+                        icon: 'mdi-briefcase-outline',
+                        title: 'Oferty Praktyk'
+                    },
+                    {
+                        link: 'journal',
+                        icon: 'mdi-notebook',
+                        title: 'Dziennik Praktyk'
+                    },
+                ],
             }
         },
 
@@ -85,5 +127,9 @@
 
     .hidden {
         opacity: 0;
+    }
+
+    .mt-20 {
+        margin-top: 20% !important;
     }
 </style>

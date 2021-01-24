@@ -25,6 +25,7 @@ export default new Vuetify({
                 success: '#4CAF50',
                 warning: '#FFC107',
                 background: '#0F1115',
+                navBackground: '#181A20',
             }
         },
     },

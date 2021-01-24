@@ -1,31 +1,13 @@
 <template>
     <v-container fluid >
-        <h2>Welcome to the dashboard</h2>
-
-        <vuex-tabs-items>
-            <v-tab-item>
-                <v-card flat>
-                    <v-card-text>1</v-card-text>
-                </v-card>
-            </v-tab-item>
-            <v-tab-item>
-                <v-card flat>
-                    <v-card-text>2</v-card-text>
-                </v-card>
-            </v-tab-item>
-            <v-tab-item>
-                <v-card flat>
-                    <v-card-text>3</v-card-text>
-                </v-card>
-            </v-tab-item>
-        </vuex-tabs-items>
+        <h2 class="text--welcome">Cześć, <br> {{user.first_name + " " + user.last_name}}</h2>
     </v-container>
 </template>
 
 <script>
     import VuexTabsItems from "../components/_Helpers/VuexTabsItems";
     import Sidebar from "../components/_Helpers/Sidebar";
-    import {mapActions} from "vuex";
+    import {mapActions, mapGetters} from "vuex";
 
     export default {
         name: "Welcome",
@@ -65,6 +47,12 @@
             }
         },
 
+        computed: {
+            ...mapGetters({
+                user: 'auth/user',
+            }),
+        },
+
         methods: {
             ...mapActions({
                 setSidebarItems: 'sidebar/setItems'
@@ -78,5 +66,7 @@
 </script>
 
 <style scoped>
-
+    .text--welcome {
+        font-size: 35px;
+    }
 </style>
