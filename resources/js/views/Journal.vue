@@ -2,6 +2,15 @@
     <v-container fluid>
         <v-row>
             <v-col cols="12">
+                <v-card color="cardBackground">
+                    <v-card-title>Furgonetka</v-card-title>
+                    <v-card-subtitle>11.11.2020 - 01.01.2021</v-card-subtitle>
+                    <v-progress-linear value="65" color="success"></v-progress-linear>
+                </v-card>
+            </v-col>
+        </v-row>
+        <v-row>
+            <v-col cols="12">
                 <h2 class="text-m">
                     <v-icon>mdi-text-box-multiple-outline</v-icon>
                     Wpisy
