@@ -26,6 +26,7 @@ export default new Vuetify({
                 warning: '#FFC107',
                 background: '#0F1115',
                 navBackground: '#181A20',
+                cardBackground: '#181A20',
             }
         },
     },

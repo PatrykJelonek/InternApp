@@ -1,8 +1,5 @@
 <template>
     <v-container fluid>
-        <v-app-bar color="transparent" flat app>
-            <v-toolbar-title>{{selectedUniversity.name}}</v-toolbar-title>
-        </v-app-bar>
         <v-row>
             <v-col
                 offset-sm="5"

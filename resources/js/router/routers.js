@@ -92,11 +92,14 @@ const router = new VueRouter({
             children: [
                 {
                     title: 'Dashboard',
-                    path: '/',
+                    path: '/dashboard',
                     name: 'dashboard',
                     components: {
                         default: Welcome,
                         tabs: WelcomeTabs,
+                    },
+                    meta: {
+                        title: 'Dashboard'
                     }
                 },
                 {
@@ -111,7 +114,7 @@ const router = new VueRouter({
                         default: Universities,
                         tabs: UniversitiesTabs
                     },
-                    meta: { have: ['admin']},
+                    meta: { have: ['admin'], title: 'Uczelnia'},
                     children: [
                         {
                             path: '/universities/overview',
@@ -155,7 +158,7 @@ const router = new VueRouter({
                     path: '/companies',
                     name: 'companies',
                     component: Companies,
-                    meta: { have: ['admin'] }
+                    meta: { have: ['admin'], title: 'Firma'}
                 },
                 {
                     path: '/company/:id',
@@ -183,12 +186,7 @@ const router = new VueRouter({
                     path: '/offers',
                     name: 'offers',
                     component: Offers,
-                    beforeEnter: (to, from, next) => {
-                        if(!haveRole(['student']))
-                            return next();
-                        else
-                            return next({name: 'no-permissions'});
-                    }
+                    meta: {title: 'Oferty Praktyk'}
                 },
                 {
                     path: '/offer/:id',
@@ -249,6 +247,7 @@ const router = new VueRouter({
                     path: '/journal',
                     name: 'journal',
                     component: Journal,
+                    meta: {title: 'Dziennik Praktyk'}
                 },
                 {
                     path: '/internship/:id/journal',
