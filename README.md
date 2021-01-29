@@ -17,7 +17,7 @@
     ```
 3. Create directories
    ``` 
-   mkdir -p storage/framework/{cache,sess,views} 
+   mkdir -p storage/framework/{cache,sessions,views} 
    ```
 4. Create a copy of `.env` files
     ```
