@@ -19,7 +19,7 @@
             transition="dialog-bottom-transition"
             content-class="mt-20"
         >
-           <v-card color="navBackground">
+           <v-card color="navBackground" class="rounded-t-lg">
               <v-container>
                   <h2 class="pl-4">Menu</h2>
                   <v-list

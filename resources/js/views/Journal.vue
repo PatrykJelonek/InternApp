@@ -17,17 +17,7 @@
                 </h2>
             </v-col>
         </v-row>
-        <v-row>
-            <v-col cols="12">
-                <v-card
-                    color="cardBackground"
-                    elevation="0"
-                    class="pa-3 text-center"
-                >
-                    <v-icon>mdi-plus</v-icon>
-                </v-card>
-            </v-col>
-        </v-row>
+        <_-new-journal-entry-dialog></_-new-journal-entry-dialog>
         <v-row>
             <v-col cols="12">
                 <v-card
@@ -72,10 +62,11 @@
     import PageDetailsHeader from "../components/Page/PageDetailsHeader";
     import JournalsList from "../components/Journals/JournalsList";
     import JournalFormModal from "../components/Journals/JournalFormModal";
+    import _NewJournalEntryDialog from "../components/Journals/_NewJournalEntryDialog";
 
     export default {
         name: "Journal",
-        components: {JournalFormModal, JournalsList, PageDetailsHeader}
+        components: {_NewJournalEntryDialog, JournalFormModal, JournalsList, PageDetailsHeader}
     }
 </script>
 
