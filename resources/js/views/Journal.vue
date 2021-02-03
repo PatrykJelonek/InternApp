@@ -5,7 +5,7 @@
                 <v-card color="cardBackground">
                     <v-card-title>Furgonetka</v-card-title>
                     <v-card-subtitle>11.11.2020 - 01.01.2021</v-card-subtitle>
-                    <v-progress-linear value="65" color="success"></v-progress-linear>
+                    <v-progress-linear :value="getPercentOfInternships()" color="success"></v-progress-linear>
                 </v-card>
             </v-col>
         </v-row>
@@ -17,56 +17,81 @@
                 </h2>
             </v-col>
         </v-row>
-        <_-new-journal-entry-dialog></_-new-journal-entry-dialog>
-        <v-row>
+        <the-new-journal-entry-dialog></the-new-journal-entry-dialog>
+        <v-row v-if="isLoadingJournalEntryCards">
+            <v-col cols="12" class="d-flex justify-center mt-5">
+                <v-progress-circular
+                    indeterminate
+                    color="#262A34"
+                    size="60"
+                ></v-progress-circular>
+            </v-col>
+        </v-row>
+        <v-row v-else-if="journalEntries.length === 0">
             <v-col cols="12">
-                <v-card
-                    color="cardBackground"
-                    elevation="0"
-                >
-                    <v-list flat two-line color="transparent">
-                        <v-list-item-group multiple>
-                            <v-list-item :ripple="false">
-                                <v-list-item-content>
-                                    <v-list-item-title class="text-m font-weight-bold">Dzień 1</v-list-item-title>
-                                    <v-list-item-subtitle class="text-m">20.01.2021</v-list-item-subtitle>
-                                </v-list-item-content>
-                                <v-list-item-action>
-                                    <v-menu bottom left nudge-left="30px">
-                                        <template v-slot:activator="{ on, attrs }">
-                                            <v-icon
-                                                v-bind="attrs"
-                                                v-on="on"
-                                            >mdi-dots-vertical</v-icon>
-                                        </template>
-                                        <v-list>
-                                            <v-list-item>
-                                                <v-list-item-title>Edytuj wpis</v-list-item-title>
-                                            </v-list-item>
-                                            <v-list-item>
-                                                <v-list-item-title>Usuń wpis</v-list-item-title>
-                                            </v-list-item>
-                                        </v-list>
-                                    </v-menu>
-                                </v-list-item-action>
-                            </v-list-item>
-                        </v-list-item-group>
-                    </v-list>
-                </v-card>
+                <the-empty-journal-list-message></the-empty-journal-list-message>
+            </v-col>
+        </v-row>
+        <v-row v-else>
+            <v-col cols="12">
+                <JournalEntrySmallCard
+                    internship-start-date="2020-01-30"
+                    journal-entry-date="2020-01-30"
+                ></JournalEntrySmallCard>
             </v-col>
         </v-row>
     </v-container>
 </template>
 
 <script>
+    import {mapActions, mapGetters} from "vuex";
     import PageDetailsHeader from "../components/Page/PageDetailsHeader";
     import JournalsList from "../components/Journals/JournalsList";
     import JournalFormModal from "../components/Journals/JournalFormModal";
-    import _NewJournalEntryDialog from "../components/Journals/_NewJournalEntryDialog";
+    import TheNewJournalEntryDialog from "../components/Journals/TheNewJournalEntryDialog";
+    import JournalEntrySmallCard from "../components/Journals/JournalEntrySmallCard";
+    import TheEmptyJournalListMessage from "../components/Journals/TheEmptyJournalListMessage";
+    import * as moment from "moment";
 
     export default {
         name: "Journal",
-        components: {_NewJournalEntryDialog, JournalFormModal, JournalsList, PageDetailsHeader}
+
+        components: {
+            TheEmptyJournalListMessage,
+            JournalEntrySmallCard,
+            TheNewJournalEntryDialog,
+            JournalFormModal,
+            JournalsList,
+            PageDetailsHeader
+        },
+
+        data() {
+            return {
+                isLoadingJournalEntryCards: true,
+            }
+        },
+
+        computed: {
+            ...mapGetters({
+                journalEntries: 'user/journalEntries',
+            })
+        },
+
+        methods: {
+            ...mapActions({
+                fetchJournalEntries: 'user/fetchJournalEntries',
+            }),
+
+            getPercentOfInternships() {
+                return ((moment('23.01.2021').diff(moment('20.11.2020')))+1/(moment('23.01.2021').diff(moment('05.11.2020')))+1)*100;
+            }
+        },
+
+        created() {
+            this.fetchJournalEntries().then(() => {
+                this.isLoadingJournalEntryCards = false;
+            });
+        }
     }
 </script>
 
