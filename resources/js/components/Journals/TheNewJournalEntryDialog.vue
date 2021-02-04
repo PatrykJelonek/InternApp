@@ -40,7 +40,7 @@
                             >
                                 <template v-slot:activator="{ on, attrs }">
                                     <v-text-field
-                                        v-model="journalEntryDate"
+                                        v-model="journalEntry.createdAt"
                                         label="Data wpisu"
                                         readonly
                                         outlined
@@ -48,12 +48,14 @@
                                         hide-details
                                         v-bind="attrs"
                                         v-on="on"
-                                        hint="DD.MM.YYYY format"
+                                        hint="YYYY-MM-DD format"
                                     ></v-text-field>
                                 </template>
                                 <v-date-picker
-                                    v-model="journalEntryDate"
+                                    v-model="journalEntry.createdAt"
                                     @input="dateMenu = false"
+                                    :min="minJournalEntryDate"
+                                    :max="maxJournalEntryDate"
                                     show-current
                                     locale="pl-pl"
                                 ></v-date-picker>
@@ -63,6 +65,7 @@
                     <v-row class="px-3">
                         <v-col cols="12">
                             <v-textarea
+                                v-model="journalEntry.content"
                                 outlined
                                 name="input-7-4"
                                 label="Treść wpisu"
@@ -91,18 +94,37 @@
 </template>
 
 <script>
-export default {
-    name: "TheNewJournalEntryDialog",
+    import moment from "moment";
 
-    data() {
-        return {
-            dialog: false,
-            journalEntryDate: null,
-            journalEntryText: null,
-            dateMenu: false,
+    export default {
+        name: "TheNewJournalEntryDialog",
+        props: ['internshipEndDate', 'internshipId'],
+
+        data() {
+            return {
+                dialog: false,
+                dateMenu: false,
+                minJournalEntryDate: null,
+                maxJournalEntryDate: null,
+                journalEntry: {
+                    internshipId: null,
+                    content: null,
+                    userId: null,
+                    createdAt: null,
+                },
+            }
+        },
+
+        created() {
+            let internshipEndDate = moment() < moment(this.internshipEndDate) ? moment() : moment(this.internshipEndDate);
+
+            this.journalEntry.createdAt = internshipEndDate.format('YYYY-MM-DD');
+            this.maxJournalEntryDate = internshipEndDate.format('YYYY-MM-DD');
+            this.minJournalEntryDate = internshipEndDate.subtract(7, 'days').format('YYYY-MM-DD');
+
+            this.journalEntry.internshipId = this.internshipId;
         }
     }
-}
 </script>
 
 <style lang="scss" scoped>

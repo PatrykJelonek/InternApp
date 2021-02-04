@@ -5,7 +5,11 @@
                 <v-card color="cardBackground">
                     <v-card-title>Furgonetka</v-card-title>
                     <v-card-subtitle>11.11.2020 - 01.01.2021</v-card-subtitle>
-                    <v-progress-linear :value="getPercentOfInternships()" color="success"></v-progress-linear>
+                    <v-progress-linear
+                        :value="percentOfInternship"
+                        :indeterminate="percentOfInternship === null"
+                        :color="percentOfInternship === null ? '#262A34' : percentOfInternship >= 100 ? 'success' : 'primary'"
+                    ></v-progress-linear>
                 </v-card>
             </v-col>
         </v-row>
@@ -17,7 +21,7 @@
                 </h2>
             </v-col>
         </v-row>
-        <the-new-journal-entry-dialog></the-new-journal-entry-dialog>
+        <the-new-journal-entry-dialog internship-end-date="2021-01-23"></the-new-journal-entry-dialog>
         <v-row v-if="isLoadingJournalEntryCards">
             <v-col cols="12" class="d-flex justify-center mt-5">
                 <v-progress-circular
@@ -51,7 +55,7 @@
     import TheNewJournalEntryDialog from "../components/Journals/TheNewJournalEntryDialog";
     import JournalEntrySmallCard from "../components/Journals/JournalEntrySmallCard";
     import TheEmptyJournalListMessage from "../components/Journals/TheEmptyJournalListMessage";
-    import * as moment from "moment";
+    import moment from "moment";
 
     export default {
         name: "Journal",
@@ -68,6 +72,7 @@
         data() {
             return {
                 isLoadingJournalEntryCards: true,
+                percentOfInternship: null,
             }
         },
 
@@ -82,14 +87,18 @@
                 fetchJournalEntries: 'user/fetchJournalEntries',
             }),
 
-            getPercentOfInternships() {
-                return ((moment('23.01.2021').diff(moment('20.11.2020')))+1/(moment('23.01.2021').diff(moment('05.11.2020')))+1)*100;
+            getPercentOfInternship(internshipStartDate, internshipEndDate) {
+                let allInternshipDays = (moment(internshipEndDate).diff(moment(internshipStartDate), 'days'))+1;
+                let internshipsDaysToToday = (moment().diff(moment(internshipStartDate), 'days'))+1;
+
+                return Math.round(Math.min(((internshipsDaysToToday/allInternshipDays)*100), 100));
             }
         },
 
         created() {
             this.fetchJournalEntries().then(() => {
                 this.isLoadingJournalEntryCards = false;
+                this.percentOfInternship = this.getPercentOfInternship('2020-10-05','2021-01-23');
             });
         }
     }
