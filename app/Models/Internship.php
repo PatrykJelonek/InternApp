@@ -28,18 +28,18 @@ class Internship extends Model
         return $this->hasOne('App\Models\InternshipStatus');
     }
 
-    public function university_supervisor()
+    public function universitySupervisor()
     {
         return $this->hasOne('App\Models\User', 'id', 'university_supervisor_id');
     }
 
-    public function company_supervisor()
+    public function companySupervisor()
     {
         return $this->hasOne('App\Models\User', 'id', 'company_supervisor_id');
     }
 
-    public function journals()
+    public function journalEntries()
     {
-        return $this->hasMany('App\Models\Journal', 'internship_id', 'id');
+        return $this->hasMany('App\Models\JournalEntry', 'internship_id', 'id');
     }
 }

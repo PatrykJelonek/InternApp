@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Role;
 use Illuminate\Database\Seeder;
 
 class RolesSeeder extends Seeder
@@ -14,43 +15,51 @@ class RolesSeeder extends Seeder
     public function run()
     {
         DB::table('roles')->insert([
-        	'name' => 'admin',
+        	'name' => Role::ROLE_ADMIN,
         	'display_name' => 'Admin',
             'description' =>'Rola superadministratora',
-            'created_at' => date('Y-m-d H:i:s'),
-            'updated_at' => date('Y-m-d H:i:s')
         ]);
 
         DB::table('roles')->insert([
-        	'name' => 'user',
+        	'name' => Role::ROLE_USER,
         	'display_name' => 'User',
             'description' =>'Rola admina',
-            'created_at' => date('Y-m-d H:i:s'),
-            'updated_at' => date('Y-m-d H:i:s')
         ]);
 
         DB::table('roles')->insert([
-        	'name' => 'student',
+        	'name' => Role::ROLE_STUDENT,
         	'display_name' => 'Student',
             'description' =>'Rola studenta - osoba odbywajaca praktyke',
-            'created_at' => date('Y-m-d H:i:s'),
-            'updated_at' => date('Y-m-d H:i:s')
         ]);
 
         DB::table('roles')->insert([
-        	'name' => 'university-worker',
+        	'name' => Role::ROLE_UNIVERSITY_WORKER,
         	'display_name' => 'Pracownik Uczelni',
             'description' =>'Osoba bezpośrednio nadzorująca praktykanta w zakładzie pracy',
-            'created_at' => date('Y-m-d H:i:s'),
-            'updated_at' => date('Y-m-d H:i:s')
         ]);
 
         DB::table('roles')->insert([
-            'name' => 'company-worker',
+        	'name' => Role::ROLE_UNIVERSITY_OWNER,
+        	'display_name' => 'Właściciel Uczelni',
+            'description' =>'Osoba zarządzająca uczelnią',
+        ]);
+
+        DB::table('roles')->insert([
+        	'name' => Role::ROLE_DEANERY_WORKER,
+        	'display_name' => 'Pracownik dziekanatu',
+            'description' =>'Osoba pracująca w dziekanacie',
+        ]);
+
+        DB::table('roles')->insert([
+            'name' => Role::ROLE_COMPANY_WORKER,
             'display_name' => 'Pracownik Firmy',
             'description' =>'Osoba bezpośrednio nadzorująca praktykanta w zakładzie pracy',
-            'created_at' => date('Y-m-d H:i:s'),
-            'updated_at' => date('Y-m-d H:i:s')
+        ]);
+
+        DB::table('roles')->insert([
+            'name' => Role::ROLE_COMPANY_OWNER,
+            'display_name' => 'Właściciel Firmy',
+            'description' =>'Osoba zarządzająca firmą',
         ]);
     }
 }

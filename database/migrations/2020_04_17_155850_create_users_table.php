@@ -20,7 +20,7 @@ class CreateUsersTable extends Migration
             $table->string('password_reset_token', 255);
             $table->string('first_name', 64);
             $table->string('last_name', 64);
-            $table->string('phone_number', 16);
+            $table->string('phone', 16);
             $table->rememberToken();
             $table->foreignId('user_status_id');
             $table->foreign('user_status_id')->references('id')->on('user_statuses');
