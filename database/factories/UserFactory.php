@@ -38,7 +38,10 @@ class UserFactory extends Factory
         ];
     }
 
-    public function active()
+    /**
+     * @return UserFactory
+     */
+    public function active(): UserFactory
     {
         return $this->state(function (array $attributes) {
             return [
@@ -47,7 +50,10 @@ class UserFactory extends Factory
         });
     }
 
-    public function inactive()
+    /**
+     * @return UserFactory
+     */
+    public function inactive(): UserFactory
     {
         return $this->state(function (array $attributes) {
             return [

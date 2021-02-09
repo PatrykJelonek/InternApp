@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\City;
 use App\Models\Company;
 use App\Models\CompanyCategory;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -22,23 +23,17 @@ class CompanyFactory extends Factory
      */
     public function definition()
     {
-        $companyName = $this->faker->company;
-
         return [
-            'name' => $companyName,
-            'city_id' => function (array $attributes) {
-                return CompanyCategory::get()[0]->id;
-            },
+            'name' => $this->faker->company,
+            'city_id' => City::inRandomOrder()->first()->id,
             'street' => $this->faker->streetName,
             'street_number' => $this->faker->randomNumber(2, false),
             'email' => $this->faker->companyEmail,
             'phone' => substr($this->faker->unique()->phoneNumber,0,15),
-            'website' => 'safecontact@'.$companyName.'.'.$this->faker->tld,
+            'website' => $this->faker->domainName,
             'description' => $this->faker->paragraph,
             'access_code' => $this->faker->unique()->numerify('CODE####'),
-            'company_category_id' => function (array $attributes) {
-                return CompanyCategory::where('name', $this->faker->randomElement(CompanyCategory::BASIC_CATEGORIES))->get()[0]->id;
-            },
+            'company_category_id' => CompanyCategory::inRandomOrder()->first()->id,
             'created_at' => now(),
             'updated_at' => now(),
         ];
