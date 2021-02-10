@@ -20,4 +20,9 @@ class Student extends Model
     {
         return $this->hasMany('App\Models\Internship', 'student_id', 'id');
     }
+
+    public function specialization()
+    {
+        return $this->hasOne('App\Models\Specialization', 'id', 'specialization_id');
+    }
 }

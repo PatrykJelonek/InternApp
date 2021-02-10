@@ -1,25 +1,21 @@
 <?php
 
-namespace Database\Seeders;
+namespace Database\Seeders\Test;
 
-use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class UsersSeeder extends Seeder
+class UserSeeder extends Seeder
 {
-    protected $model = User::class;
-
     /**
-     * Run the database seeders.
+     * Run the database seeds.
      *
      * @return void
      */
     public function run()
     {
-        //1
         DB::table('users')->insert([
-            'email' => 'admin@example.com',
+            'email' => 'admin2@example.com',
             'password_hash' => 'password',
             'password_reset_token' => 'token',
             'first_name' => 'Jan',

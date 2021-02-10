@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class UniversitiesSeeder extends Seeder
 {
@@ -22,6 +23,7 @@ class UniversitiesSeeder extends Seeder
             'email' => 'kontakt@pwsz.elblag.pl',
             'phone' => '545545545',
             'website' => 'pwsz.elblag.pl',
+            'slug' => 'pwsz',
             'created_at' => date('Y-m-d H:i:s'),
             'updated_at' => date('Y-m-d H:i:s')
         ]);
@@ -35,6 +37,7 @@ class UniversitiesSeeder extends Seeder
             'email' => 'kontakt@pg.edu.pl',
             'phone' => '583471100',
             'website' => 'pg.edu.pl',
+            'slug' => 'pg',
             'created_at' => date('Y-m-d H:i:s'),
             'updated_at' => date('Y-m-d H:i:s')
         ]);
