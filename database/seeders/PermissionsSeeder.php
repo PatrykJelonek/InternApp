@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use Config\Constants\PermissionConstants;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -14,17 +15,12 @@ class PermissionsSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('permissions')->insert([
-            [
-                'name' => 'view-university-students',
-                'display_name' => 'Wyświetl studentów uniwersytetu',
-                'description' => 'Pozwala wyświetlić studentów z danego uniwersytetu',
-            ],
-            [
-                'name' => 'view-student',
-                'display_name' => 'Wyświetl studenta',
-                'description' => 'Pozwala wyświetlić danego studenta',
-            ],
-        ]);
+        foreach (PermissionConstants::PERMISSIONS as $PERMISSION) {
+            DB::table('permissions')->insert([
+                'name' => $PERMISSION,
+                'display_name' => PermissionConstants::PERMISSIONS_DISPLAY_NAMES[$PERMISSION],
+                'description' => PermissionConstants::PERMISSIONS_DESCRIPTIONS[$PERMISSION]
+            ]);
+        }
     }
 }

@@ -42,27 +42,27 @@ class InitDatabase extends Command
 
         try {
             $exitCode = Artisan::call('migrate:refresh', []);
-            echo "[✔] Successful Migrate Database \n";
+            $this->line('<fg=green>[✔] Successful Migrate Database</>');
         } catch (\Exception $e) {
-            echo "[✘] Unsuccessful Migrate Database \n\n";
-            echo $e->getMessage();
+            $this->line('<fg=red>[✘] Unsuccessful Migrate Database</>');
+            $this->line($e->getMessage());
         }
 
         try {
             $exitCode = Artisan::call('db:seed', []);
-            echo "[✔] Successful Migrate Database \n";
+            $this->line('<fg=green>[✔] Successful Seeding</>');
         } catch (\Exception $e) {
-            echo "[✘] Unsuccessful Seeding \n\n";
-            echo $e->getMessage();
+            $this->line('<fg=red>[✘] Unsuccessful Seeding</>');
+            $this->line($e->getMessage());
         }
 
         if(!empty($this->option('test'))) {
             try {
                 $exitCode = Artisan::call('db:seed', ['--class' => 'Database\\Seeders\\Test\\DatabaseSeeder']);
-                echo "[✔] Successful Migrate Database \n";
+                $this->line('<fg=green>[✔] Successful Seeding Test Data</>');
             } catch (\Exception $e) {
-                echo "[✘] Unsuccessful Seeding Test Data \n\n";
-                echo $e->getMessage();
+                $this->line('<fg=red>[✘] Unsuccessful Seeding Test Data</>');
+                $this->line($e->getMessage());
             }
         }
 

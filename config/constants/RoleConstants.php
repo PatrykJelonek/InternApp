@@ -15,18 +15,18 @@ class RoleConstants
     const ROLE_STUDENT = 'student';
 
     const BASIC_ROLES = [
-        self::ROLE_USER,
         self::ROLE_ADMIN,
-        self::ROLE_COMPANY_WORKER,
-        self::ROLE_COMPANY_OWNER,
+        self::ROLE_STUDENT,
         self::ROLE_UNIVERSITY_WORKER,
         self::ROLE_UNIVERSITY_OWNER,
         self::ROLE_DEANERY_WORKER,
+        self::ROLE_COMPANY_WORKER,
+        self::ROLE_COMPANY_OWNER,
         self::ROLE_INTERN,
-        self::ROLE_STUDENT,
+        self::ROLE_USER,
     ];
 
-    const ROLE_USER_TYPES = [
+    const BASIC_ROLE_USER_TYPES = [
         self::ROLE_USER => 'User type: ' . self::ROLE_USER,
         self::ROLE_ADMIN => 'User type: ' . self::ROLE_ADMIN,
         self::ROLE_COMPANY_WORKER => 'User type: ' . self::ROLE_COMPANY_WORKER,
@@ -38,7 +38,7 @@ class RoleConstants
         self::ROLE_STUDENT => 'User type: ' . self::ROLE_STUDENT,
     ];
 
-    const ROLE_DISPLAY_NAMES = [
+    const BASIC_ROLE_DISPLAY_NAMES = [
         self::ROLE_USER => 'Użytkownik',
         self::ROLE_ADMIN => 'Administrator',
         self::ROLE_COMPANY_WORKER => 'Pracownik Firmy',
@@ -50,7 +50,7 @@ class RoleConstants
         self::ROLE_STUDENT => 'Student',
     ];
 
-    const ROLE_DESCRIPTIONS = [
+    const BASIC_ROLE_DESCRIPTIONS = [
         self::ROLE_USER => 'Podstawowy użytkownik',
         self::ROLE_ADMIN => 'Administrator serwisu',
         self::ROLE_COMPANY_WORKER => 'Pracownik firmy',

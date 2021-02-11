@@ -1,8 +1,7 @@
 <?php
 
-namespace Database\Seeders;
+namespace Database\Seeders\Test;
 
-use App\Models\Company;
 use Illuminate\Database\Seeder;
 
 class CompaniesSeeder extends Seeder
@@ -14,8 +13,6 @@ class CompaniesSeeder extends Seeder
      */
     public function run()
     {
-        Company::factory()
-            ->count(1)
-            ->create();
+        //
     }
 }

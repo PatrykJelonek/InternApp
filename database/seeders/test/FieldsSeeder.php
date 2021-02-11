@@ -1,12 +1,12 @@
 <?php
 
-namespace Database\Seeders;
+namespace Database\Seeders\Test;
 
-use Config\Constants\OfferConstants;
+use Config\Constants\InternshipConstants;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class OfferStatusesSeeder extends Seeder
+class FieldsSeeder extends Seeder
 {
     /**
      * Run the database seeders.
@@ -15,10 +15,9 @@ class OfferStatusesSeeder extends Seeder
      */
     public function run()
     {
-        foreach (OfferConstants::OFFER_STATUSES as $STATUS) {
-            DB::table('offer_statuses')->insert([
+        foreach (InternshipConstants::INTERNSHIP_STATUSES as $STATUS) {
+            DB::table('fields')->insert([
                 'name' => $STATUS,
-                'description' => OfferConstants::OFFER_STATUS_DESCRIPTIONS[$STATUS],
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
             ]);

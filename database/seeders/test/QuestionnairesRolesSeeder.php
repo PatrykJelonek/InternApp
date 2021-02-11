@@ -1,11 +1,11 @@
 <?php
 
-namespace Database\Seeders;
+namespace Database\Seeders\Test;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class Questionnaires_RolesSeeder extends Seeder
+class QuestionnairesRolesSeeder extends Seeder
 {
     /**
      * Run the database seeders.
@@ -16,53 +16,53 @@ class Questionnaires_RolesSeeder extends Seeder
     {
 
         DB::table('questionnaires_roles')->insert([
-        	'role_id' => 1,
-        	'questionnaire_id' => 1,
+            'role_id' => 1,
+            'questionnaire_id' => 1,
             'created_at' => date('Y-m-d H:i:s')
         ]);
 
         DB::table('questionnaires_roles')->insert([
-        	'role_id' => 2,
-        	'questionnaire_id' => 2,
+            'role_id' => 2,
+            'questionnaire_id' => 2,
             'created_at' => date('Y-m-d H:i:s')
         ]);
 
         DB::table('questionnaires_roles')->insert([
-        	'role_id' => 3,
-        	'questionnaire_id' => 3,
+            'role_id' => 3,
+            'questionnaire_id' => 3,
             'created_at' => date('Y-m-d H:i:s')
         ]);
 
         DB::table('questionnaires_roles')->insert([
-        	'role_id' => 4,
-        	'questionnaire_id' => 4,
+            'role_id' => 4,
+            'questionnaire_id' => 4,
             'created_at' => date('Y-m-d H:i:s')
         ]);
 
         DB::table('questionnaires_roles')->insert([
-        	'role_id' => 1,
-        	'questionnaire_id' => 5,
-            'created_at' => date('Y-m-d H:i:s')
-        ]);
-
-
-        DB::table('questionnaires_roles')->insert([
-        	'role_id' => 2,
-        	'questionnaire_id' => 5,
+            'role_id' => 1,
+            'questionnaire_id' => 5,
             'created_at' => date('Y-m-d H:i:s')
         ]);
 
 
         DB::table('questionnaires_roles')->insert([
-        	'role_id' => 3,
-        	'questionnaire_id' => 5,
+            'role_id' => 2,
+            'questionnaire_id' => 5,
             'created_at' => date('Y-m-d H:i:s')
         ]);
 
 
         DB::table('questionnaires_roles')->insert([
-        	'role_id' => 4,
-        	'questionnaire_id' => 5,
+            'role_id' => 3,
+            'questionnaire_id' => 5,
+            'created_at' => date('Y-m-d H:i:s')
+        ]);
+
+
+        DB::table('questionnaires_roles')->insert([
+            'role_id' => 4,
+            'questionnaire_id' => 5,
             'created_at' => date('Y-m-d H:i:s')
         ]);
 
