@@ -46,6 +46,8 @@ class InitDatabase extends Command
         } catch (\Exception $e) {
             $this->line('<fg=red>[✘] Unsuccessful Migrate Database</>');
             $this->line($e->getMessage());
+
+            return 1;
         }
 
         try {
@@ -54,6 +56,8 @@ class InitDatabase extends Command
         } catch (\Exception $e) {
             $this->line('<fg=red>[✘] Unsuccessful Seeding</>');
             $this->line($e->getMessage());
+
+            return 1;
         }
 
         if(!empty($this->option('test'))) {
@@ -63,6 +67,8 @@ class InitDatabase extends Command
             } catch (\Exception $e) {
                 $this->line('<fg=red>[✘] Unsuccessful Seeding Test Data</>');
                 $this->line($e->getMessage());
+
+                return 1;
             }
         }
 

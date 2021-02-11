@@ -3,6 +3,8 @@
 namespace Database\Seeders\Test;
 
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class UniversitiesSeeder extends Seeder
 {
@@ -13,19 +15,19 @@ class UniversitiesSeeder extends Seeder
      */
     public function run()
     {
-//        DB::table('universities')->insert([
-//            'name' => 'Państwowa Wyższa Szkoła Państwowa',
-//            'university_type_id' => 2,
-//            'city_id' => 5,
-//            'street' => 'Wojska Polskiego',
-//            'street_number' => '1',
-//            'email' => 'kontakt@pwsz.elblag.pl',
-//            'phone' => '545545545',
-//            'website' => 'pwsz.elblag.pl',
-//            'slug' => 'pwsz',
-//            'created_at' => date('Y-m-d H:i:s'),
-//            'updated_at' => date('Y-m-d H:i:s')
-//        ]);
+        DB::table('universities')->insert([
+            'name' => 'Państwowa Wyższa Szkoła Państwowa',
+            'university_type_id' => 2,
+            'city_id' => 5,
+            'street' => 'Wojska Polskiego',
+            'street_number' => '1',
+            'email' => 'kontakt@pwsz.elblag.pl',
+            'phone' => '545545545',
+            'website' => 'pwsz.elblag.pl',
+            'slug' => Str::slug('Państwowa Wyższa Szkoła Państwowa'),
+            'created_at' => date('Y-m-d H:i:s'),
+            'updated_at' => date('Y-m-d H:i:s')
+        ]);
 //
 //        DB::table('universities')->insert([
 //            'name' => 'Politechnika Gdańska',

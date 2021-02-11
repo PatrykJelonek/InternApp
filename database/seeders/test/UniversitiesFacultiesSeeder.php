@@ -3,6 +3,7 @@
 namespace Database\Seeders\Test;
 
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class UniversitiesFacultiesSeeder extends Seeder
 {
@@ -13,12 +14,12 @@ class UniversitiesFacultiesSeeder extends Seeder
      */
     public function run()
     {
-//        //PWSZ-WYDZIAL INFORMATYKI
-//        DB::table('universities_faculties')->insert([
-//            'university_id' => 1,
-//            'faculty_id' => 1,
-//            'created_at' => date('Y-m-d H:i:s')
-//        ]);
+        # PWSZ - Informatyka
+        DB::table('universities_faculties')->insert([
+            'university_id' => 1,
+            'faculty_id' => 1,
+            'created_at' => date('Y-m-d H:i:s')
+        ]);
 //
 //		//PWSZ-WYDZIAL EKONOMICZNY
 //        DB::table('universities_faculties')->insert([

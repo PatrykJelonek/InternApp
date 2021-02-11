@@ -114,7 +114,7 @@ const router = new VueRouter({
                         default: Universities,
                         tabs: UniversitiesTabs
                     },
-                    meta: { have: ['admin'], title: 'Uczelnia'},
+                    meta: { have: ['admin','student'], title: 'Uczelnia'},
                     children: [
                         {
                             path: '/universities/overview',

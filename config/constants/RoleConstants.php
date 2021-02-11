@@ -1,6 +1,6 @@
 <?php
 
-namespace config\constants;
+namespace Config\Constants;
 
 class RoleConstants
 {

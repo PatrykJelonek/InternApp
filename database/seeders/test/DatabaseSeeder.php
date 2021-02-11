@@ -18,6 +18,15 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             UsersRolesSeeder::class,
             CompaniesSeeder::class,
+            FacultiesSeeder::class,
+            FieldsSeeder::class,
+            SpecializationsSeeder::class,
+            FacultiesFieldsSeeder::class,
+            FieldsSpecializationsSeeder::class,
+            UniversitiesSeeder::class,
+            UniversitiesFacultiesSeeder::class,
+            UsersUniversitiesSeeder::class,
+            StudentsSeeder::class
         ]);
     }
 }
