@@ -14,10 +14,29 @@ class UsersUniversitiesSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('users_universities')->insert([
-            'user_id' => 2,
-            'university_id' => 1,
-            'created_at' => now()
-        ]);
+        DB::table('users_universities')->insert(
+            [
+                [
+                    'user_id' => 2,
+                    'university_id' => 1,
+                    'created_at' => now(),
+                ],
+                [
+                    'user_id' => 3,
+                    'university_id' => 1,
+                    'created_at' => now(),
+                ],
+                [
+                    'user_id' => 4,
+                    'university_id' => 1,
+                    'created_at' => now(),
+                ],
+                [
+                    'user_id' => 5,
+                    'university_id' => 1,
+                    'created_at' => now(),
+                ]
+            ]
+        );
     }
 }

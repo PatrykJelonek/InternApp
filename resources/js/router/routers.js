@@ -158,7 +158,7 @@ const router = new VueRouter({
                     path: '/companies',
                     name: 'companies',
                     component: Companies,
-                    meta: { have: ['admin'], title: 'Firma'}
+                    meta: { have: ['admin','company_worker'], title: 'Firma'}
                 },
                 {
                     path: '/company/:id',

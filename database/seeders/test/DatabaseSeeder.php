@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             UsersRolesSeeder::class,
             CompaniesSeeder::class,
+            UsersCompaniesSeeder::class,
             FacultiesSeeder::class,
             FieldsSeeder::class,
             SpecializationsSeeder::class,
