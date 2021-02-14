@@ -8,6 +8,8 @@
         "production": "mix --production"
     },
     "dependencies": {
+        "@sentry/tracing": "^6.1.0",
+        "@sentry/vue": "^6.1.0",
         "clockwork-browser": "^1.0.0",
         "moment": "^2.29.1",
         "vee-validate": "^3.4.5",
