@@ -10,6 +10,8 @@
         "watch-poll": "npm run watch -- --watch-poll"
     },
     "dependencies": {
+        "@sentry/tracing": "^6.1.0",
+        "@sentry/vue": "^6.1.0",
         "clockwork-browser": "^1.0.0",
         "moment": "^2.27.0",
         "vee-validate": "^3.3.0",
@@ -20,7 +22,7 @@
     },
     "devDependencies": {
         "@fortawesome/fontawesome-free": "^5.13.0",
-        "axios": "^0.19.2",
+        "axios": "^0.21.1",
         "cross-env": "^7.0",
         "laravel-mix": "^5.0.9",
         "lodash": "^4.17.20",
