@@ -19,6 +19,10 @@ Route::post('/login', [
     'uses' => 'Api\Auth\AuthController@login'
 ]);
 
+Route::get('/debug-sentry', function () {
+    throw new \RuntimeException('My first Sentry error!');
+});
+
 Route::post('/logout', [
     'as' => 'login.logout',
     'uses' => 'Api\Auth\AuthController@logout'
