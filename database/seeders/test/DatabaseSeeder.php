@@ -27,7 +27,11 @@ class DatabaseSeeder extends Seeder
             UniversitiesSeeder::class,
             UniversitiesFacultiesSeeder::class,
             UsersUniversitiesSeeder::class,
-            StudentsSeeder::class
+            StudentsSeeder::class,
+            OffersSeeder::class,
+            AgreementsSeeder::class,
+            InternshipsSeeder::class,
+            JournalEntriesSeeder::class,
         ]);
     }
 }
