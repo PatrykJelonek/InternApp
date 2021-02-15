@@ -2,6 +2,7 @@
     <v-card
         color="cardBackground"
         elevation="0"
+        class="mb-3"
     >
         <v-list flat two-line color="transparent">
             <v-list-item-group multiple>
@@ -10,7 +11,7 @@
                         <v-list-item-title class="text-m font-weight-bold">
                             Dzień {{getInternshipDay(internshipStartDate, journalEntryDate)}}
                         </v-list-item-title>
-                        <v-list-item-subtitle class="text-m">{{journalEntryDate}}</v-list-item-subtitle>
+                        <v-list-item-subtitle class="text-m">{{formatDate(journalEntryDate,'DD.MM.YYYY')}}</v-list-item-subtitle>
                     </v-list-item-content>
                     <v-list-item-action>
                         <v-menu bottom left nudge-left="30px">
@@ -53,7 +54,10 @@
         methods: {
             getInternshipDay: (internshipStartDate, journalEntryDate) => {
                 return moment(journalEntryDate).diff(moment(internshipStartDate), 'days') + 1;
-            }
+            },
+            formatDate(date, format) {
+                return moment(date).format(format);
+            },
         },
 
         created() {

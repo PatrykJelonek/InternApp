@@ -71,6 +71,8 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::get('/user/internships', 'Api\UserController@getInternships');
     Route::get('/user/journals', 'Api\UserController@getJournals');
     Route::get('/user/interns', 'Api\UserController@getInterns');
+    Route::get('/users/{user_id}/internships/{internship_id}/tasks', 'Api\TaskController@index');
+    Route::get('/users/{user_id}/internships/{internship_id}/journal_entries', '');
 
     Route::get('/me', [
         'as' => 'login.me',

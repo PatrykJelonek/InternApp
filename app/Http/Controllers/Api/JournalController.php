@@ -21,7 +21,7 @@ class JournalController extends Controller
     {
         $student_id = Student::select(['id'])->where(['user_id' => auth()->id()])->first();
         $user_internships = Internship::select(['id'])->where(['student_id' => $student_id->id])->get();
-        $journal_entries = JournalEntry::with(['internship.offer', 'author'])->whereIn('internship_id', Arr::pluck($user_internships->toArray(), ['id']))
+        $journal_entries = JournalEntry::with(['internship.offer','internship.agreement', 'author'])->whereIn('internship_id', Arr::pluck($user_internships->toArray(), ['id']))
             ->orderBy('created_at','DESC')
             ->get();
 

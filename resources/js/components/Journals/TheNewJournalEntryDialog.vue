@@ -7,7 +7,7 @@
     >
         <template v-slot:activator="{ on, attrs }">
             <v-row>
-                <v-col cols="12">
+                <v-col>
                     <v-card
                         color="cardBackground"
                         elevation="0"

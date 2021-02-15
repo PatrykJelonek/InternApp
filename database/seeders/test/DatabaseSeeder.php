@@ -32,6 +32,7 @@ class DatabaseSeeder extends Seeder
             AgreementsSeeder::class,
             InternshipsSeeder::class,
             JournalEntriesSeeder::class,
+            TasksSeeder::class,
         ]);
     }
 }

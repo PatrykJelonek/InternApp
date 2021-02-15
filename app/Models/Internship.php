@@ -45,4 +45,9 @@ class Internship extends Model
     {
         return $this->hasMany('App\Models\JournalEntry', 'internship_id', 'id');
     }
+
+    public function tasks()
+    {
+        return $this->hasMany('App\Models\Task','internship_id','id');
+    }
 }
