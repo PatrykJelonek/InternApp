@@ -43,8 +43,7 @@
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/",
-            "Database\\Seeders\\Test\\": "database/seeders/test",
-            "Config\\Constants\\": "config/constants"
+            "Database\\Seeders\\Test\\": "database/seeders/test"
         }
     },
     "autoload-dev": {

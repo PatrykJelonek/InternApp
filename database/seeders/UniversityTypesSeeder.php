@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use Config\Constants\UniversityConstants;
+use App\Models\UniversityType;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -15,10 +15,10 @@ class UniversityTypesSeeder extends Seeder
      */
     public function run()
     {
-        foreach (UniversityConstants::BASIC_UNIVERSITY_TYPES as $BASIC_UNIVERSITY_TYPE) {
+        foreach (UniversityType::BASIC_UNIVERSITY_TYPES as $BASIC_UNIVERSITY_TYPE) {
             DB::table('university_types')->insert([
                 'name' => $BASIC_UNIVERSITY_TYPE,
-                'description' => UniversityConstants::BASIC_UNIVERSITY_TYPE_DESCRIPTION[$BASIC_UNIVERSITY_TYPE],
+                'description' => UniversityType::BASIC_UNIVERSITY_TYPE_DESCRIPTION[$BASIC_UNIVERSITY_TYPE],
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
             ]);

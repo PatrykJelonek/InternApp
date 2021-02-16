@@ -4,24 +4,35 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Task;
+use App\Repositories\TaskRepository;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 class TaskController extends Controller
 {
     /**
+     * @var TaskRepository
+     */
+    private $taskRepository;
+
+    /**
+     * TaskController constructor.
+     * @param TaskRepository $taskRepository
+     */
+    public function __construct(TaskRepository $taskRepository)
+    {
+        $this->taskRepository = $taskRepository;
+    }
+
+    /**
      * Display a listing of the resource.
      *
+     * @param int $internshipId
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(int $internshipId)
     {
-        $tasks = Task::all();
-
-        if (isset($tasks))
-            return response($tasks, Response::HTTP_OK);
-        else
-            return response("Tasks not found!", Response::HTTP_NOT_FOUND);
+        return response($this->taskRepository->getByInternship($internshipId), Response::HTTP_OK);
     }
 
     /**
@@ -51,14 +62,9 @@ class TaskController extends Controller
      * @param  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($taskId)
     {
-        $task = Task::find($id);
-
-        if (isset($task))
-            return response($task, Response::HTTP_OK);
-        else
-            return response("Task not found!", Response::HTTP_NOT_FOUND);
+        return response($this->taskRepository->one($taskId), Response::HTTP_OK);
     }
 
     /**

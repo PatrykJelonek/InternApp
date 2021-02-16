@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use config\constants\RoleConstants;
+use App\Models\Role;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -15,11 +15,11 @@ class RolesSeeder extends Seeder
      */
     public function run()
     {
-        foreach (RoleConstants::BASIC_ROLES as $ROLE) {
+        foreach (Role::BASIC_ROLES as $ROLE) {
             DB::table('roles')->insert([
                 'name' => $ROLE,
-                'display_name' => RoleConstants::BASIC_ROLE_DISPLAY_NAMES[$ROLE],
-                'description' => RoleConstants::BASIC_ROLE_DESCRIPTIONS[$ROLE],
+                'display_name' => Role::BASIC_ROLE_DISPLAY_NAMES[$ROLE],
+                'description' => Role::BASIC_ROLE_DESCRIPTIONS[$ROLE],
             ]);
         }
     }

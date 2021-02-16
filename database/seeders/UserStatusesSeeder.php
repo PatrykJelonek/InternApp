@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use Config\Constants\UserConstants;
+use App\Models\UserStatus;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -15,10 +15,10 @@ class UserStatusesSeeder extends Seeder
      */
     public function run()
     {
-        foreach (UserConstants::USER_STATUSES as $STATUS) {
+        foreach (UserStatus::USER_STATUSES as $STATUS) {
             DB::table('user_statuses')->insert([
                 'name' => $STATUS,
-                'description' => UserConstants::USER_STATUS_DESCRIPTIONS[$STATUS],
+                'description' => UserStatus::USER_STATUS_DESCRIPTIONS[$STATUS],
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
             ]);

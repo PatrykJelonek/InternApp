@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Permission;
 use Config\Constants\PermissionConstants;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -15,11 +16,11 @@ class PermissionsSeeder extends Seeder
      */
     public function run()
     {
-        foreach (PermissionConstants::PERMISSIONS as $PERMISSION) {
+        foreach (Permission::PERMISSIONS as $PERMISSION) {
             DB::table('permissions')->insert([
                 'name' => $PERMISSION,
-                'display_name' => PermissionConstants::PERMISSIONS_DISPLAY_NAMES[$PERMISSION],
-                'description' => PermissionConstants::PERMISSIONS_DESCRIPTIONS[$PERMISSION]
+                'display_name' => Permission::PERMISSIONS_DISPLAY_NAMES[$PERMISSION],
+                'description' => Permission::PERMISSIONS_DESCRIPTIONS[$PERMISSION]
             ]);
         }
     }

@@ -15,10 +15,16 @@ class OfferStatus extends Model
     const STATUS_ACCEPTED = 'accepted';
     const STATUS_REJECTED = 'rejected';
 
-    const BASIC_STATUSES = [
+    const STATUSES = [
         self::STATUS_NEW,
         self::STATUS_ACCEPTED,
-        self::STATUS_REJECTED
+        self::STATUS_REJECTED,
+    ];
+
+    const STATUS_DESCRIPTIONS = [
+        self::STATUS_NEW => 'Nowa',
+        self::STATUS_ACCEPTED => 'Zaakceptowana',
+        self::STATUS_REJECTED => 'Odrzucona',
     ];
 
     protected $table = 'offer_statuses';

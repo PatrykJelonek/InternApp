@@ -18,6 +18,7 @@ import internship from "./modules/internship";
 import journal from "./modules/journal";
 import tabs from "./modules/tabs";
 import sidebar from "./modules/sidebar";
+import task from "./modules/task";
 
 Vue.use(Vuex);
 
@@ -42,6 +43,7 @@ export default new Vuex.Store({
         journal,
         tabs,
         sidebar,
+        task,
     },
     strict: debug
 });

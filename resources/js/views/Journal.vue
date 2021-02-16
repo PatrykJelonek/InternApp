@@ -23,45 +23,18 @@
                         </h2>
                     </v-col>
                 </v-row>
-                <the-new-journal-entry-dialog internship-end-date="2021-01-23"></the-new-journal-entry-dialog>
-                <v-row v-if="isLoadingJournalEntryCards">
-                    <v-col
-                        cols="12"
-                        class="d-flex justify-center mt-5">
-                        <v-progress-circular
-                            indeterminate
-                            color="#262A34"
-                            size="60"
-                        ></v-progress-circular>
-                    </v-col>
-                </v-row>
-                <v-row v-else-if="journalEntries.length === 0">
-                    <v-col
-                        cols="12"
-                    >
-                        <the-empty-journal-list-message></the-empty-journal-list-message>
-                    </v-col>
-                </v-row>
-                <v-row v-else>
-                    <v-col
-                        cols="12"
-                    >
-                        <JournalEntrySmallCard v-for="journalEntry in journalEntries" :key="journalEntry.id"
-                                               :internship-start-date="journalEntry.internship.agreement.date_from"
-                                               :journal-entry-date="journalEntry.created_at"
-                        ></JournalEntrySmallCard>
-                    </v-col>
-                </v-row>
+                <the-journal-entries-list></the-journal-entries-list>
             </v-col>
             <v-col cols="12" lg="4">
                 <v-row>
-                    <v-col cols="12" lg="4" offset-lg="1">
+                    <v-col cols="12" lg="4">
                         <h2 class="text-m">
                             <v-icon>mdi-calendar-check</v-icon>
                             Zadania
                         </h2>
                     </v-col>
                 </v-row>
+                <the-tasks-list></the-tasks-list>
             </v-col>
         </v-row>
     </v-container>
@@ -76,11 +49,15 @@
     import JournalEntrySmallCard from "../components/Journals/JournalEntrySmallCard";
     import TheEmptyJournalListMessage from "../components/Journals/TheEmptyJournalListMessage";
     import moment from "moment";
+    import TheJournalEntriesList from "../components/Journals/TheJournalEntriesList";
+    import TheTasksList from "../components/Journals/TheTasksList";
 
     export default {
         name: "Journal",
 
         components: {
+            TheTasksList,
+            TheJournalEntriesList,
             TheEmptyJournalListMessage,
             JournalEntrySmallCard,
             TheNewJournalEntryDialog,

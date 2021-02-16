@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use Config\Constants\OfferConstants;
+use App\Models\OfferStatus;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -15,10 +15,10 @@ class OfferStatusesSeeder extends Seeder
      */
     public function run()
     {
-        foreach (OfferConstants::OFFER_STATUSES as $STATUS) {
+        foreach (OfferStatus::STATUSES as $STATUS) {
             DB::table('offer_statuses')->insert([
                 'name' => $STATUS,
-                'description' => OfferConstants::OFFER_STATUS_DESCRIPTIONS[$STATUS],
+                'description' => OfferStatus::STATUS_DESCRIPTIONS[$STATUS],
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
             ]);
