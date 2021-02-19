@@ -10,7 +10,7 @@
     "dependencies": {
         "@sentry/cli": "^1.62.0",
         "@sentry/tracing": "^6.1.0",
-        "@sentry/vue": "^6.1.0",
+        "@sentry/vue": "^6.2.0",
         "clockwork-browser": "^1.0.0",
         "moment": "^2.29.1",
         "vee-validate": "^3.4.5",
@@ -21,6 +21,7 @@
     },
     "devDependencies": {
         "@fortawesome/fontawesome-free": "^5.15.2",
+        "@sentry/integrations": "^6.2.0",
         "@sentry/webpack-plugin": "^1.14.0",
         "axios": "^0.21.1",
         "cross-env": "^7.0.3",

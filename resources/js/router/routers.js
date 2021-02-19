@@ -28,6 +28,7 @@ import NoPermissions from "../views/NoPermissions";
 import Welcome from "../views/Welcome";
 import WelcomeTabs from "../components/Tabs/WelcomeTabs";
 import UniversitiesTabs from "../components/Tabs/UniversitiesTabs";
+import Internship from "../views/Internship";
 
 Vue.use(VueRouter);
 
@@ -232,17 +233,17 @@ const router = new VueRouter({
                             return next({name: 'no-permissions'});
                     }
                 },
-                {
-                    path: '/internships',
-                    name: 'internships',
-                    component: Internships,
-                    beforeEnter: (to, from, next) => {
-                        if(haveRole(['user']))
-                            return next();
-                        else
-                            return next({name: 'no-permissions'});
-                    }
-                },
+                // {
+                //     path: '/internships',
+                //     name: 'internships',
+                //     component: Internships,
+                //     beforeEnter: (to, from, next) => {
+                //         if(haveRole(['user']))
+                //             return next();
+                //         else
+                //             return next({name: 'no-permissions'});
+                //     }
+                // },
                 {
                     path: '/journal',
                     name: 'journal',
@@ -270,6 +271,18 @@ const router = new VueRouter({
                         else
                             return next({name: 'no-permissions'});
                     }
+                },
+                {
+                    path: '/internships',
+                    name: 'internships',
+                    component: Internships,
+                    meta: {have: ['admin','student'], title: 'Staże i praktyki'},
+                },
+                {
+                    path: '/internships/:agreementId',
+                    name: 'internship',
+                    component: Internship,
+                    meta: {have: ['admin','student']},
                 }
             ],
         },

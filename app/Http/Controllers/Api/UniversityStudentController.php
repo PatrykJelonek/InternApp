@@ -11,15 +11,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
-/**
- * @authenticated
- * @group University
- * APIs return university students
- *
- * Class UniversityStudentController
- * @package App\Http\Controllers\Api
- */
-
 class UniversityStudentController extends Controller
 {
     /**

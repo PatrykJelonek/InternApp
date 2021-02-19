@@ -37,6 +37,16 @@ export default {
 
         confirmJournalEntries({commit}, data) {
             commit('CONFIRM_JOURNAL_ENTRIES', data);
-        }
+        },
+
+        async fetchJournalEntries({commit}, {agreementId, studentId}) {
+            try {
+                let response = await axios.get(`/api/internships/${agreementId}/students/${studentId}/journal-entries`);
+                commit('SET_JOURNAL_ENTRIES', response.data);
+            } catch(e) {
+                commit('SET_JOURNAL_ENTRIES', []);
+                throw new Error('Error test');
+            }
+        },
     },
 }

@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\TaskResource;
 use App\Models\Task;
 use App\Repositories\TaskRepository;
+use App\Services\TaskService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 
 class TaskController extends Controller
 {
@@ -14,14 +17,19 @@ class TaskController extends Controller
      * @var TaskRepository
      */
     private $taskRepository;
+    /**
+     * @var TaskService
+     */
+    private $taskService;
 
     /**
      * TaskController constructor.
      * @param TaskRepository $taskRepository
      */
-    public function __construct(TaskRepository $taskRepository)
+    public function __construct(TaskRepository $taskRepository, TaskService $taskService)
     {
         $this->taskRepository = $taskRepository;
+        $this->taskService = $taskService;
     }
 
     /**
@@ -64,16 +72,22 @@ class TaskController extends Controller
      */
     public function show($taskId)
     {
-        return response($this->taskRepository->one($taskId), Response::HTTP_OK);
+        $task = $this->taskRepository->one($taskId);
+
+        if(!$this->taskService->isAuthor($task, Auth::user())) {
+            abort(403);
+        }
+
+        return response(new TaskResource($task), Response::HTTP_OK);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Task  $task
-     * @return \Illuminate\Http\Response
+     * @param int $id
+     * @return void
      */
-    public function edit(Task $task)
+    public function edit(int $id): void
     {
         //
     }
