@@ -33,6 +33,9 @@ class DatabaseSeeder extends Seeder
             InternshipsSeeder::class,
             JournalEntriesSeeder::class,
             TasksSeeder::class,
+            InternshipsStudentsSeeder::class,
+            StudentsTasksSeeder::class,
+            StudentsJournalEntriesSeeder::class,
         ]);
     }
 }

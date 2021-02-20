@@ -18,11 +18,11 @@ class StudentsJournalEntriesSeeder extends Seeder
             [
                 [
                     'student_id' => 1,
-                    'journal_entry' => 1,
+                    'journal_entry_id' => 1,
                 ],
                 [
                     'student_id' => 1,
-                    'journal_entry' => 2,
+                    'journal_entry_id' => 2,
                 ],
             ]
         );

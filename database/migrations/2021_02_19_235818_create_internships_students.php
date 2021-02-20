@@ -20,7 +20,7 @@ class CreateInternshipsStudents extends Migration
             $table->foreignId('student_id');
             $table->foreign('student_id')->references('id')->on('students');
             $table->integer('grade')->nullable();
-            $table->date('interview_date');
+            $table->date('interview_date')->nullable();
             $table->timestamps();
         });
     }

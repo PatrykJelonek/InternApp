@@ -14,7 +14,7 @@ class InternshipsStudentsSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('internship_students')->insert(
+        DB::table('internships_students')->insert(
             [
                 [
                     'internship_id' => 1,
