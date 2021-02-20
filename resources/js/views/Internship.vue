@@ -3,9 +3,10 @@
         <v-row>
             <v-col cols="12" lg="4">
                 <the-internship-info-card
-                    internship-name="Furgonetka"
-                    internship-start-date="2020.10.05"
-                    internship-end-date="2021.03.23"
+                    :v-if="internship !== null && internship.agreement !== null"
+                    :internship-name="internship.agreement.program"
+                    :internship-start-date="internship.agreement.date_from"
+                    :internship-end-date="internship.agreement.date_to"
                 ></the-internship-info-card>
             </v-col>
         </v-row>
@@ -13,17 +14,15 @@
             <v-col
                 cols="12"
                 lg="3"
-                v-has="['admin']"
+                v-has="['admin','company_worker','university_worker']"
             >
                 <internship-column-header
                     icon="mdi-account-group-outline"
                     title="Studenci"
                 ></internship-column-header>
                 <the-internship-students-list
-                    :agreement-id="$route.params.agreementId"
-                >
-
-                </the-internship-students-list>
+                    :internship-id="$route.params.id"
+                ></the-internship-students-list>
                 <!-- Lista studentów -->
             </v-col>
             <v-col cols="12" lg="3">
@@ -64,26 +63,36 @@
         computed: {
             ...mapGetters({
                 currentUser: 'auth/user',
+                internship: 'internship/internship'
             })
         },
 
         methods: {
             ...mapActions({
                 fetchJournalEntries: 'journal/fetchJournalEntries',
+                fetchInternship: 'internship/fetchInternship'
             }),
         },
 
         created() {
-            console.log(this.currentUser.roles);
-            if(this.currentUser.roles.find((role) => {
-                return role.name.toLowerCase() === 'student';
-            })) {
-                this.fetchJournalEntries({agreementId: 2, studentId: 3}).then(() => {
-                    console.log('MAMY TO');
-                }).catch((e) => {
-                    console.error("DUMP");
-                });
-            }
+            this.fetchInternship(this.$route.params.id).then(() => {
+
+            }).catch((e) => {
+               console.error(e);
+            });
+
+
+
+
+            // if(this.currentUser.roles.find((role) => {
+            //     return role.name.toLowerCase() === 'student';
+            // })) {
+            //     this.fetchJournalEntries({internshipId: 2, studentId: 3}).then(() => {
+            //         console.log('MAMY TO');
+            //     }).catch((e) => {
+            //         console.error("DUMP");
+            //     });
+            // }
         }
     }
 </script>

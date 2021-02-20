@@ -22,6 +22,12 @@ class InternshipsStudentsSeeder extends Seeder
                     'grade' => null,
                     'interview_date' => null,
                 ],
+                [
+                    'internship_id' => 1,
+                    'student_id' => 2,
+                    'grade' => null,
+                    'interview_date' => null,
+                ],
             ]
         );
     }

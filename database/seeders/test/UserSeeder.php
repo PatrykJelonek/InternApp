@@ -87,5 +87,17 @@ class UserSeeder extends Seeder
             'created_at' => date('Y-m-d H:i:s'),
             'updated_at' => date('Y-m-d H:i:s')
         ]);
+
+        DB::table('users')->insert([
+            'email' => 'student2@example.com',
+            'password_hash' => Hash::make('password'),
+            'password_reset_token' => Hash::make(Str::random(32)),
+            'first_name' => 'Małgorzata',
+            'last_name' => 'Raduńska',
+            'phone' => '345132412',
+            'user_status_id' => 1,
+            'created_at' => date('Y-m-d H:i:s'),
+            'updated_at' => date('Y-m-d H:i:s')
+        ]);
     }
 }

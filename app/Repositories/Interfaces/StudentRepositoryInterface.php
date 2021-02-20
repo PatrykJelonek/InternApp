@@ -2,11 +2,9 @@
 
 namespace App\Repositories\Interfaces;
 
-interface InternshipRepositoryInterface
+interface StudentRepositoryInterface
 {
     public function one($id);
 
     public function all();
-
-    public function getInternshipStudents($id);
 }

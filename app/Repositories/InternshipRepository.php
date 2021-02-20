@@ -2,22 +2,41 @@
 
 namespace App\Repositories;
 
-use App\Models\Agreement;
+use App\Constants\RoleConstants;
+use App\Models\Internship;
 use App\Repositories\Interfaces\InternshipRepositoryInterface;
+use Illuminate\Support\Facades\Auth;
 
 class InternshipRepository implements InternshipRepositoryInterface {
 
     /**
-     * @param $agreementId
-     * @return mixed
+     * @param $id // InternshipId
+     * @return mixed // Return specific internship
      */
-    public function one($agreementId)
+    public function one($id)
     {
-        return Agreement::find($agreementId)->internships;
+        $internship = null;
+
+        if(Auth::user()->hasRole(RoleConstants::ROLE_ADMIN)) {
+            $internship = Internship::find($id);
+        } else {
+            $internship = Internship::where('id', $id)
+                ->where(function ($query) {
+                    $query->where('university_supervisor_id', Auth::user()->id)
+                        ->orWhere('company_supervisor_id', Auth::user()->id);
+                })->first();
+        }
+
+        return $internship;
     }
 
     public function all()
     {
         // TODO: Implement all() method.
+    }
+
+    public function getInternshipStudents($id)
+    {
+        return $this->one($id)->students;
     }
 }

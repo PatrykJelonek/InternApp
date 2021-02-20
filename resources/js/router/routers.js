@@ -279,10 +279,10 @@ const router = new VueRouter({
                     meta: {have: ['admin','student'], title: 'Staże i praktyki'},
                 },
                 {
-                    path: '/internships/:agreementId',
+                    path: '/internships/:id',
                     name: 'internship',
                     component: Internship,
-                    meta: {have: ['admin','student']},
+                    meta: {have: ['admin','student','company_worker','university_worker']},
                 }
             ],
         },

@@ -2,19 +2,35 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Models\Agreement;
 use App\Http\Controllers\Controller;
-use App\Models\InternshipStatus;
+use App\Http\Resources\InternshipResource;
+use App\Models\Agreement;
 use App\Models\Internship;
+use App\Models\InternshipStatus;
 use App\Models\Offer;
 use App\Models\Student;
 use App\Models\User;
+use App\Repositories\InternshipRepository;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Arr;
 
 class InternshipController extends Controller
 {
+    /**
+     * @var InternshipRepository
+     */
+    private $internshipRepository;
+
+    /**
+     * InternshipController constructor.
+     * @param InternshipRepository $internshipRepository
+     */
+    public function __construct(InternshipRepository $internshipRepository)
+    {
+        $this->internshipRepository = $internshipRepository;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -91,20 +107,13 @@ class InternshipController extends Controller
      */
     public function show($id)
     {
-        $internship = Internship::with(['journals.author'])->find($id);
+        $internship = $this->internshipRepository->one($id);
 
-        if (isset($internship))
-            return response([
-                'status' => 'success',
-                'data' => $internship,
-                'message' => 'Test'
-            ], Response::HTTP_OK);
-        else
-            return response([
-                'status' => 'error',
-                'data' => null,
-                'message' => 'Przepraszamy, ale cos poszło nie tak!'
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        if(!empty($internship)) {
+            return response(new InternshipResource($internship), Response::HTTP_OK);
+        }
+
+        return response(null,Response::HTTP_NO_CONTENT);
     }
 
     /**

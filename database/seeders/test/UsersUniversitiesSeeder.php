@@ -35,6 +35,11 @@ class UsersUniversitiesSeeder extends Seeder
                     'user_id' => 5,
                     'university_id' => 1,
                     'created_at' => now(),
+                ],
+                [
+                    'user_id' => 8,
+                    'university_id' => 1,
+                    'created_at' => now(),
                 ]
             ]
         );

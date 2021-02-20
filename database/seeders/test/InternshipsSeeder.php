@@ -20,7 +20,6 @@ class InternshipsSeeder extends Seeder
                 [
                     'offer_id' => 1,
                     'agreement_id' => 1,
-                    'student_id' => 1,
                     'company_supervisor_id' => 6,
                     'university_supervisor_id' => 3,
                     'interview_date' => Carbon::today()->addDays(23),

@@ -74,12 +74,12 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::get('/internships/{internship}/tasks', 'Api\TaskController@index');
 
     //NEW ENDPOINTS
-    Route::get('/internships','Api\InternshipController@index');
+    //Route::get('/internships','Api\InternshipController@index');
     Route::get('/internships/{internship}','Api\InternshipController@show');
-    Route::get('/internships/{internship}/students','Api\InternshipController@show');
+    Route::get('/internships/{internship}/students','Api\InternshipStudentController@index');
     Route::get('/internships/{internship}/students/{student}/tasks', 'Api\TaskController@index');
     Route::get('/internships/{internship}/students/{student}/tasks/{task}', 'Api\TaskController@show');
-    Route::get('/internships/{internship}/students/{student}/journal_entries', 'Api\JournalContraoller@index');
+    Route::get('/internships/{internship}/students/{student}/journal_entries', 'Api\JournalController@index');
     Route::get('/internships/{internship}/students/{student}/journal_entries/{journalEntry}','Api\JournalController@show');
 //    Route::get('/users/{user_id}/internships/{internship_id}/journal_entries', '');
 
