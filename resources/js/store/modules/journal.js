@@ -45,7 +45,9 @@ export default {
                 commit('SET_JOURNAL_ENTRIES', response.data);
             } catch(e) {
                 commit('SET_JOURNAL_ENTRIES', []);
-                throw new Error('Error test');
+                console.error(
+                    `Błąd pobrania danych z endpoint'u /api/internships/{agreement}/students/{student}/journal-entries`,
+                    {agreementId: agreementId, studentId: studentId, dump: e})
             }
         },
     },

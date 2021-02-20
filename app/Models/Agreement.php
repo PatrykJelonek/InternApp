@@ -35,4 +35,9 @@ class Agreement extends Model
     {
         return $this->belongsTo('App\Models\User','university_supervisor_id', 'id');
     }
+
+    public function internships()
+    {
+        return $this->hasMany('App\Models\Internship', 'agreement_id','id');
+    }
 }
