@@ -30,4 +30,9 @@ class Student extends Model
     {
         return $this->belongsToMany('App\Models\JournalEntry','students_journal_entries','student_id','journal_entry_id');
     }
+
+    public function tasks()
+    {
+        return $this->belongsToMany('App\Models\Task', 'students_tasks','student_id','task_id');
+    }
 }

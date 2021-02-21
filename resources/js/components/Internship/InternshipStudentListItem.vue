@@ -30,12 +30,14 @@
 
         methods: {
             ...mapActions({
-                fetchJournalEntries: 'student/fetchStudentJournalEntries',
+                fetchStudentJournalEntries: 'student/fetchStudentJournalEntries',
+                fetchStudentTasks: 'student/fetchStudentTasks',
             }),
 
             cardOnClick() {
                 router.push({ name: 'internship-student', params: { studentIndex: this.studentIndex } });
-                this.fetchJournalEntries({internshipId: 1, studentIndex: this.studentIndex});
+                this.fetchStudentJournalEntries({internshipId: 1, studentIndex: this.studentIndex});
+                this.fetchStudentTasks({internshipId: 1, studentIndex: this.studentIndex});
             },
         }
     }

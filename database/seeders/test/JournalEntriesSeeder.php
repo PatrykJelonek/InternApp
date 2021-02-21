@@ -33,6 +33,14 @@ class JournalEntriesSeeder extends Seeder
                     'created_at' => Carbon::today()->addDays(17),
                     'updated_at' => Carbon::today()->addDays(17),
                 ],
+                [
+                    'internship_id' => 1,
+                    'content' => 'Trzeci wpis',
+                    'user_id' => 2,
+                    'accepted' => false,
+                    'created_at' => Carbon::today()->addDays(20),
+                    'updated_at' => Carbon::today()->addDays(20),
+                ],
             ]
         );
     }

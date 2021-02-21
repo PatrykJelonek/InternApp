@@ -53,9 +53,7 @@
             background-color="navBackground"
             class="rounded-t-lg"
             grow
-            absolute
             app
-            fixed
         >
             <v-btn :to="{name: 'dashboard'}" icon>
                 <v-icon>mdi-view-dashboard</v-icon>

@@ -7,6 +7,10 @@ use App\Repositories\Interfaces\StudentRepositoryInterface;
 
 class StudentRepository implements StudentRepositoryInterface
 {
+    /**
+     * @param $studentIndex
+     * @return mixed
+     */
     public function one($studentIndex)
     {
         return Student::where('student_index', $studentIndex)->first();
@@ -26,7 +30,22 @@ class StudentRepository implements StudentRepositoryInterface
         $student = $this->one($studentIndex);
 
         if(!empty($student)) {
-            return $student->journalEntries;
+            return $student->journalEntries()->orderByDesc('created_at')->get();
+        }
+
+        return null;
+    }
+
+    /**
+     * @param $studentIndex
+     * @return mixed
+     */
+    public function getStudentTasks($studentIndex)
+    {
+        $student = $this->one($studentIndex);
+
+        if(!empty($student)) {
+            return $student->tasks()->orderByDesc('created_at')->get();
         }
 
         return null;

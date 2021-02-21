@@ -24,6 +24,10 @@ class StudentsJournalEntriesSeeder extends Seeder
                     'student_id' => 1,
                     'journal_entry_id' => 2,
                 ],
+                [
+                    'student_id' => 1,
+                    'journal_entry_id' => 3,
+                ],
             ]
         );
     }

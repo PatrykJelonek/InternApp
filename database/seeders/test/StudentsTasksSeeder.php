@@ -19,6 +19,14 @@ class StudentsTasksSeeder extends Seeder
                 'student_id' => 1,
                 'task_id' => 1,
             ],
+            [
+                'student_id' => 1,
+                'task_id' => 2,
+            ],
+            [
+                'student_id' => 2,
+                'task_id' => 1,
+            ],
         ]);
     }
 }

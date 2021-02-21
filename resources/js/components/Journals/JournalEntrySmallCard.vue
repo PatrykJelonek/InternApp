@@ -10,9 +10,9 @@
                 <v-list-item :ripple="false">
                     <v-list-item-content>
                         <v-list-item-title class="text-m font-weight-bold">
-                            Dzień
+                            Dzień {{getInternshipDay(internshipStartDate, journalEntryDate)}}
                         </v-list-item-title>
-                        <v-list-item-subtitle class="text-m">123</v-list-item-subtitle>
+                        <v-list-item-subtitle class="text-m">{{formatDate(journalEntryDate,'DD.MM.YYYY')}}</v-list-item-subtitle>
                     </v-list-item-content>
                     <v-list-item-action>
                         <v-menu bottom left nudge-left="30px">

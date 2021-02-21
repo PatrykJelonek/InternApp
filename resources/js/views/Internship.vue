@@ -31,7 +31,9 @@
                     title="Wpisy"
                 ></internship-column-header>
                 <!-- Wpisy -->
-                <the-journal-entries-list></the-journal-entries-list>
+                <the-internship-student-journal-entries-list
+                    :internship-start-date="internship.agreement.date_from"
+                ></the-internship-student-journal-entries-list>
             </v-col>
             <v-col cols="12" lg="3">
                 <internship-column-header
@@ -39,6 +41,7 @@
                     title="Zadania"
                 ></internship-column-header>
                 <!-- Zadania -->
+                <the-internship-student-tasks-list></the-internship-student-tasks-list>
             </v-col>
             <v-col cols="12" lg="3" class="hidden-md-and-down">
                 <internship-column-header
@@ -53,15 +56,25 @@
 </template>
 
 <script>
+    import {mapActions, mapGetters} from "vuex";
     import TheInternshipInfoCard from "../components/Internship/TheInternshipInfoCard";
     import InternshipColumnHeader from "../components/Internship/InternshipColumnHeader";
     import TheInternshipStudentsList from "../components/Internship/TheInternshipStudentsList";
-    import {mapActions, mapGetters} from "vuex";
     import TheJournalEntriesList from "../components/Journals/TheJournalEntriesList";
+    import TheInternshipStudentJournalEntriesList
+        from "../components/Internship/TheInternshipStudentJournalEntriesList";
+    import TheInternshipStudentTasksList from "../components/Internship/TheInternshipStudentTasksList";
 
     export default {
         name: "Internship",
-        components: {TheJournalEntriesList, TheInternshipStudentsList, InternshipColumnHeader, TheInternshipInfoCard},
+        components: {
+            TheInternshipStudentTasksList,
+            TheInternshipStudentJournalEntriesList,
+            TheJournalEntriesList,
+            TheInternshipStudentsList,
+            InternshipColumnHeader,
+            TheInternshipInfoCard
+        },
 
         computed: {
             ...mapGetters({
@@ -73,7 +86,6 @@
 
         methods: {
             ...mapActions({
-                fetchJournalEntries: 'journal/fetchJournalEntries',
                 fetchInternship: 'internship/fetchInternship'
             }),
         },
