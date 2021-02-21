@@ -1,8 +1,10 @@
 <template>
-    <h3 class="mb-5">
-        <v-icon class="ml-2">{{icon}}</v-icon>
-        {{title}}
-    </h3>
+    <v-expansion-panel-header class="mb-5 px-0" color="transparent">
+        <h3>
+            <v-icon class="ml-2">{{icon}}</v-icon>
+            {{title}}
+        </h3>
+    </v-expansion-panel-header>
 </template>
 
 <script>
@@ -12,6 +14,9 @@
     }
 </script>
 
-<style scoped>
-
+<style lang="scss" scoped>
+    .expansion-panel__container {
+        // uncomment below
+        background-color: transparent !important;
+    }
 </style>

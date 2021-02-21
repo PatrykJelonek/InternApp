@@ -1,7 +1,7 @@
 <template>
     <v-container fluid>
         <v-row>
-            <v-col cols="12" lg="4">
+            <v-col cols="12" md="6" lg="4">
                 <the-internship-info-card
                     :v-if="internship !== null && internship.agreement !== null"
                     :internship-name="internship.agreement.program"
@@ -13,43 +13,64 @@
         <v-row class="mt-10">
             <v-col
                 cols="12"
+                md="4"
                 lg="3"
                 v-has="['admin','company_worker','university_worker']"
             >
-                <internship-column-header
-                    icon="mdi-account-group-outline"
-                    title="Studenci"
-                ></internship-column-header>
-                <the-internship-students-list
-                    :internship-id="$route.params.id"
-                ></the-internship-students-list>
-                <!-- Lista studentów -->
+                <v-expansion-panels v-model="studentListExpansionPanel" flat>
+                    <v-expansion-panel class="transparent">
+                        <internship-column-header
+                            icon="mdi-account-group-outline"
+                            title="Studenci"
+                        ></internship-column-header>
+                        <v-expansion-panel-content color="transparent">
+                            <the-internship-students-list
+                                :internship-id="$route.params.id"
+                            ></the-internship-students-list>
+                        </v-expansion-panel-content>
+                    </v-expansion-panel>
+                </v-expansion-panels>
             </v-col>
-            <v-col cols="12" lg="3">
-                <internship-column-header
-                    icon="mdi-text-box-multiple-outline"
-                    title="Wpisy"
-                ></internship-column-header>
-                <!-- Wpisy -->
-                <the-internship-student-journal-entries-list
-                    :internship-start-date="internship.agreement.date_from"
-                ></the-internship-student-journal-entries-list>
+            <v-col cols="12" md="4" lg="3">
+                <v-expansion-panels v-model="journalEntriesExpansionPanel" flat>
+                    <v-expansion-panel class="transparent">
+                        <internship-column-header
+                            icon="mdi-text-box-multiple-outline"
+                            title="Wpisy"
+                        ></internship-column-header>
+                        <v-expansion-panel-content class="transparent">
+                            <the-internship-student-journal-entries-list
+                                :internship-start-date="internship.agreement.date_from"
+                            ></the-internship-student-journal-entries-list>
+                        </v-expansion-panel-content>
+                    </v-expansion-panel>
+                </v-expansion-panels>
             </v-col>
-            <v-col cols="12" lg="3">
-                <internship-column-header
-                    icon="mdi-calendar-check"
-                    title="Zadania"
-                ></internship-column-header>
-                <!-- Zadania -->
-                <the-internship-student-tasks-list></the-internship-student-tasks-list>
+            <v-col cols="12" md="4" lg="3">
+                <v-expansion-panels v-model="tasksExpansionPanel" flat>
+                    <v-expansion-panel class="transparent">
+                        <internship-column-header
+                            icon="mdi-calendar-check"
+                            title="Zadania"
+                        ></internship-column-header>
+                        <v-expansion-panel-content class="transparent">
+                            <the-internship-student-tasks-list></the-internship-student-tasks-list>
+                        </v-expansion-panel-content>
+                    </v-expansion-panel>
+                </v-expansion-panels>
             </v-col>
             <v-col cols="12" lg="3" class="hidden-md-and-down">
-                <internship-column-header
-                    icon="mdi-eye-outline"
-                    title="Podgląd"
-                ></internship-column-header>
-                <!-- Podgląd -->
-                <p>{{preview}}</p>
+                <v-expansion-panels v-model="previewExpansionPanel" flat>
+                    <v-expansion-panel class="transparent">
+                        <internship-column-header
+                            icon="mdi-eye-outline"
+                            title="Podgląd"
+                        ></internship-column-header>
+                        <v-expansion-panel-content class="transparent">
+                            <p>{{preview}}</p>
+                        </v-expansion-panel-content>
+                    </v-expansion-panel>
+                </v-expansion-panels>
             </v-col>
         </v-row>
     </v-container>
@@ -64,16 +85,27 @@
     import TheInternshipStudentJournalEntriesList
         from "../components/Internship/TheInternshipStudentJournalEntriesList";
     import TheInternshipStudentTasksList from "../components/Internship/TheInternshipStudentTasksList";
+    import TheInternshipActions from "../components/Internship/TheInternshipActions";
 
     export default {
         name: "Internship",
         components: {
+            TheInternshipActions,
             TheInternshipStudentTasksList,
             TheInternshipStudentJournalEntriesList,
             TheJournalEntriesList,
             TheInternshipStudentsList,
             InternshipColumnHeader,
             TheInternshipInfoCard
+        },
+
+        data() {
+            return {
+                studentListExpansionPanel: 0,
+                journalEntriesExpansionPanel: 0,
+                tasksExpansionPanel: 0,
+                previewExpansionPanel: 0,
+            }
         },
 
         computed: {

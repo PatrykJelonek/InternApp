@@ -3,7 +3,7 @@
         color="cardBackground"
         elevation="0"
         class="mb-3"
-        @click="setPreview(content)"
+        @click="cardOnClick"
     >
         <v-list flat two-line color="transparent">
             <v-list-item-group multiple>
@@ -17,6 +17,20 @@
                 </v-list-item>
             </v-list-item-group>
         </v-list>
+        <v-dialog
+            v-model="dialog"
+            max-width="600px"
+            class="mx-10"
+        >
+            <v-card
+                class="pa-1"
+                color="cardBackground"
+            >
+                <v-card-title>Abc</v-card-title>
+                <v-card-subtitle>Data: {{formatDate(journalEntryDate,'DD.MM.YYYY')}}</v-card-subtitle>
+                <v-card-text>{{content}}</v-card-text>
+            </v-card>
+        </v-dialog>
     </v-card>
 </template>
 
@@ -26,7 +40,13 @@
 
     export default {
         name: "InternshipStudentJournalEntriesListItem",
-        props: ['internshipStartDate', 'journalEntryDate','content'],
+        props: ['internshipStartDate', 'journalEntryDate', 'content'],
+
+        data() {
+            return {
+                dialog: false,
+            }
+        },
 
         methods: {
             ...mapActions({
@@ -40,6 +60,14 @@
             formatDate(date, format) {
                 return moment(date).format(format);
             },
+
+            cardOnClick() {
+                if(this.$vuetify.breakpoint.lgAndUp) {
+                    this.setPreview(this.content);
+                } else {
+                    this.dialog = !this.dialog;
+                }
+            }
         },
     }
 </script>
