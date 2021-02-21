@@ -5,6 +5,7 @@ export default {
         internships: [],
         internship: null,
         internshipStudents: [],
+        preview: null,
     },
 
     getters: {
@@ -18,6 +19,10 @@ export default {
 
         internshipStudents(state) {
             return state.internshipStudents;
+        },
+
+        preview(state) {
+            return state.preview;
         }
     },
 
@@ -32,6 +37,10 @@ export default {
 
         SET_INTERNSHIP_STUDENTS(state, data) {
             state.internshipStudents = data;
+        },
+
+        SET_PREVIEW(state, data) {
+            state.preview = data;
         }
     },
 
@@ -70,5 +79,9 @@ export default {
         confirm({commit}, id) {
             return axios.get(`/api/internships/${id}/confirm`);
         },
+
+        setPreview({commit}, data) {
+            commit('SET_PREVIEW', data);
+        }
     },
 }

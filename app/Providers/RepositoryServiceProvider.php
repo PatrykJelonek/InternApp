@@ -21,7 +21,7 @@ class RepositoryServiceProvider extends ServiceProvider
     {
         $this->app->bind(TasksRepositoryInterface::class,TaskRepository::class);
         $this->app->bind(InternshipRepositoryInterface::class,InternshipRepository::class);
-        $this->app->bind(StudentRepository::class, StudentRepositoryInterface::class);
+        $this->app->bind(StudentRepositoryInterface::class, StudentRepository::class);
     }
 
     /**

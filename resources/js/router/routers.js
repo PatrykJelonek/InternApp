@@ -283,6 +283,13 @@ const router = new VueRouter({
                     name: 'internship',
                     component: Internship,
                     meta: {have: ['admin','student','company_worker','university_worker']},
+                    children: [
+                        {
+                            path: '/internships/:id/students/:studentIndex',
+                            name: 'internship-student',
+                            meta: {have: ['admin','student','company_worker','university_worker']},
+                        }
+                    ]
                 }
             ],
         },

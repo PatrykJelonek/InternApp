@@ -25,4 +25,9 @@ class Student extends Model
     {
         return $this->hasOne('App\Models\Specialization', 'id', 'specialization_id');
     }
+
+    public function journalEntries()
+    {
+        return $this->belongsToMany('App\Models\JournalEntry','students_journal_entries','student_id','journal_entry_id');
+    }
 }

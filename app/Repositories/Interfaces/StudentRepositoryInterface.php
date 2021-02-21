@@ -7,4 +7,6 @@ interface StudentRepositoryInterface
     public function one($id);
 
     public function all();
+
+    public function getStudentJournalEntries($studentId);
 }

@@ -3,15 +3,16 @@
         color="cardBackground"
         elevation="0"
         class="mb-3"
+        @click="setPreview(content)"
     >
         <v-list flat two-line color="transparent">
             <v-list-item-group multiple>
                 <v-list-item :ripple="false">
                     <v-list-item-content>
                         <v-list-item-title class="text-m font-weight-bold">
-                            Dzień {{getInternshipDay(internshipStartDate, journalEntryDate)}}
+                            Dzień
                         </v-list-item-title>
-                        <v-list-item-subtitle class="text-m">{{formatDate(journalEntryDate,'DD.MM.YYYY')}}</v-list-item-subtitle>
+                        <v-list-item-subtitle class="text-m">123</v-list-item-subtitle>
                     </v-list-item-content>
                     <v-list-item-action>
                         <v-menu bottom left nudge-left="30px">
@@ -39,11 +40,12 @@
 </template>
 
 <script>
-    import moment from "moment";
+    import {mapActions} from "vuex";
 
     export default {
         name: "JournalEntrySmallCard",
-        props: ['internshipStartDate','journalEntryDate'],
+        props: ['content'],
+
 
         data() {
             return {
@@ -52,12 +54,16 @@
         },
 
         methods: {
-            getInternshipDay: (internshipStartDate, journalEntryDate) => {
-                return moment(journalEntryDate).diff(moment(internshipStartDate), 'days') + 1;
-            },
-            formatDate(date, format) {
-                return moment(date).format(format);
-            },
+            ...mapActions({
+                setPreview: 'internship/setPreview',
+            }),
+
+            // getInternshipDay: (internshipStartDate, journalEntryDate) => {
+            //     return moment(journalEntryDate).diff(moment(internshipStartDate), 'days') + 1;
+            // },
+            // formatDate(date, format) {
+            //     return moment(date).format(format);
+            // },
         },
 
         created() {

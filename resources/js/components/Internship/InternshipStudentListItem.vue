@@ -1,9 +1,10 @@
 <template>
     <v-card>
         <v-card
-            color="cardBackground"
+            :color="$route.params.studentIndex === studentIndex ? 'success' : 'cardBackground'"
             elevation="0"
             class="mb-3"
+            @click="cardOnClick"
         >
             <v-list flat two-line color="transparent">
                 <v-list-item-group multiple>
@@ -20,9 +21,23 @@
 </template>
 
 <script>
+    import router from "../../router/routers";
+    import {mapActions} from "vuex";
+
     export default {
         name: "InternshipStudentListItem",
-        props: ['studentFullName','studentIndex']
+        props: ['studentFullName','studentIndex'],
+
+        methods: {
+            ...mapActions({
+                fetchJournalEntries: 'student/fetchStudentJournalEntries',
+            }),
+
+            cardOnClick() {
+                router.push({ name: 'internship-student', params: { studentIndex: this.studentIndex } });
+                this.fetchJournalEntries({internshipId: 1, studentIndex: this.studentIndex});
+            },
+        }
     }
 </script>
 

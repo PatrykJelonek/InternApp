@@ -31,6 +31,7 @@
                     title="Wpisy"
                 ></internship-column-header>
                 <!-- Wpisy -->
+                <the-journal-entries-list></the-journal-entries-list>
             </v-col>
             <v-col cols="12" lg="3">
                 <internship-column-header
@@ -45,6 +46,7 @@
                     title="Podgląd"
                 ></internship-column-header>
                 <!-- Podgląd -->
+                <p>{{preview}}</p>
             </v-col>
         </v-row>
     </v-container>
@@ -55,15 +57,17 @@
     import InternshipColumnHeader from "../components/Internship/InternshipColumnHeader";
     import TheInternshipStudentsList from "../components/Internship/TheInternshipStudentsList";
     import {mapActions, mapGetters} from "vuex";
+    import TheJournalEntriesList from "../components/Journals/TheJournalEntriesList";
 
     export default {
         name: "Internship",
-        components: {TheInternshipStudentsList, InternshipColumnHeader, TheInternshipInfoCard},
+        components: {TheJournalEntriesList, TheInternshipStudentsList, InternshipColumnHeader, TheInternshipInfoCard},
 
         computed: {
             ...mapGetters({
                 currentUser: 'auth/user',
-                internship: 'internship/internship'
+                internship: 'internship/internship',
+                preview: 'internship/preview'
             })
         },
 

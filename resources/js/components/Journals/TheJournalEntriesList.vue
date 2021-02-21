@@ -22,8 +22,7 @@
             <v-col cols="12">
                 <JournalEntrySmallCard
                     v-for="journalEntry in journalEntries" :key="journalEntry.id"
-                    :internship-start-date="journalEntry.internship.agreement.date_from"
-                    :journal-entry-date="journalEntry.created_at"
+                    :content="journalEntry.content"
                 ></JournalEntrySmallCard>
             </v-col>
         </v-row>
@@ -61,13 +60,13 @@
 
         computed: {
             ...mapGetters({
-                journalEntries: 'user/journalEntries',
+                journalEntries: 'student/studentJournalEntries',
             })
         },
 
         methods: {
             ...mapActions({
-                fetchJournalEntries: 'user/fetchJournalEntries',
+                fetchJournalEntries: 'student/fetchStudentJournalEntries',
             }),
 
             getPercentOfInternship(internshipStartDate, internshipEndDate) {
@@ -83,7 +82,7 @@
         },
 
         created() {
-            this.fetchJournalEntries().then(() => {
+            this.fetchJournalEntries({internshipId: 1, studentIndex: this.$route.params.studentIndex}).then(() => {
                 this.isLoadingJournalEntryCards = false;
                 this.percentOfInternship = this.getPercentOfInternship(this.journalEntries[0].internship.agreement.date_from, this.journalEntries[0].internship.agreement.date_to);
             });
