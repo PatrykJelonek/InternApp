@@ -18,14 +18,17 @@ class StudentsTasksSeeder extends Seeder
             [
                 'student_id' => 1,
                 'task_id' => 1,
+                'done' => true,
             ],
             [
                 'student_id' => 1,
                 'task_id' => 2,
+                'done' => true,
             ],
             [
                 'student_id' => 2,
                 'task_id' => 1,
+                'done' => false,
             ],
         ]);
     }

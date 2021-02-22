@@ -10,6 +10,7 @@
                 ></the-internship-info-card>
             </v-col>
         </v-row>
+        <!-- Students -->
         <v-row class="mt-10">
             <v-col
                 cols="12"
@@ -26,11 +27,13 @@
                         <v-expansion-panel-content color="transparent">
                             <the-internship-students-list
                                 :internship-id="$route.params.id"
+                                :internship-end-date="internship.agreement.date_to"
                             ></the-internship-students-list>
                         </v-expansion-panel-content>
                     </v-expansion-panel>
                 </v-expansion-panels>
             </v-col>
+            <!-- Journal Entries -->
             <v-col cols="12" md="4" lg="3">
                 <v-expansion-panels v-model="journalEntriesExpansionPanel" flat>
                     <v-expansion-panel class="transparent">
@@ -39,6 +42,7 @@
                             title="Wpisy"
                         ></internship-column-header>
                         <v-expansion-panel-content class="transparent">
+                            <the-internship-create-student-journal-entry-dialog></the-internship-create-student-journal-entry-dialog>
                             <the-internship-student-journal-entries-list
                                 :internship-start-date="internship.agreement.date_from"
                             ></the-internship-student-journal-entries-list>
@@ -46,6 +50,7 @@
                     </v-expansion-panel>
                 </v-expansion-panels>
             </v-col>
+            <!-- Tasks -->
             <v-col cols="12" md="4" lg="3">
                 <v-expansion-panels v-model="tasksExpansionPanel" flat>
                     <v-expansion-panel class="transparent">
@@ -54,11 +59,13 @@
                             title="Zadania"
                         ></internship-column-header>
                         <v-expansion-panel-content class="transparent">
+                            <the-internship-create-student-task-dialog></the-internship-create-student-task-dialog>
                             <the-internship-student-tasks-list></the-internship-student-tasks-list>
                         </v-expansion-panel-content>
                     </v-expansion-panel>
                 </v-expansion-panels>
             </v-col>
+            <!-- Preview -->
             <v-col cols="12" lg="3" class="hidden-md-and-down">
                 <v-expansion-panels v-model="previewExpansionPanel" flat>
                     <v-expansion-panel class="transparent">
@@ -86,10 +93,15 @@
         from "../components/Internship/TheInternshipStudentJournalEntriesList";
     import TheInternshipStudentTasksList from "../components/Internship/TheInternshipStudentTasksList";
     import TheInternshipActions from "../components/Internship/TheInternshipActions";
+    import TheInternshipCreateStudentJournalEntryDialog
+        from "../components/Internship/TheInternshipCreateStudentJournalEntryDialog";
+    import TheInternshipCreateStudentTaskDialog from "../components/Internship/TheInternshipCreateStudentTaskDialog";
 
     export default {
         name: "Internship",
         components: {
+            TheInternshipCreateStudentTaskDialog,
+            TheInternshipCreateStudentJournalEntryDialog,
             TheInternshipActions,
             TheInternshipStudentTasksList,
             TheInternshipStudentJournalEntriesList,

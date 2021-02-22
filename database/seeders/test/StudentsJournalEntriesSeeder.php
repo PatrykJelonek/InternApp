@@ -19,14 +19,17 @@ class StudentsJournalEntriesSeeder extends Seeder
                 [
                     'student_id' => 1,
                     'journal_entry_id' => 1,
+                    'accepted' => true,
                 ],
                 [
                     'student_id' => 1,
                     'journal_entry_id' => 2,
+                    'accepted' => true,
                 ],
                 [
                     'student_id' => 1,
                     'journal_entry_id' => 3,
+                    'accepted' => false,
                 ],
             ]
         );

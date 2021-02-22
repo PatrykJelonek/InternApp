@@ -5,6 +5,7 @@
             :key="internshipStudent.id"
             :student-full-name="internshipStudent.user.first_name + ' ' + internshipStudent.user.last_name"
             :student-index="internshipStudent.student_index"
+            :internship-end-date="internshipEndDate"
         ></internship-student-list-item>
     </div>
 </template>
@@ -16,7 +17,7 @@
     export default {
         name: "TheInternshipStudentsList",
         components: {InternshipStudentListItem},
-        props: ['internshipId'],
+        props: ['internshipId','internshipEndDate'],
 
         computed: {
             ...mapGetters({
