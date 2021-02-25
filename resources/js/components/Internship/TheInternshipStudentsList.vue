@@ -32,7 +32,7 @@
         },
 
         created() {
-            this.fetchInternshipStudents(this.$route.params.id ? this.$route.params.id : this.internshipId).then(() => {
+            this.fetchInternshipStudents(this.$route.params.internshipId ? this.$route.params.internshipId : this.internshipId).then(() => {
 
             }).catch((e) => {
                 console.error(e);

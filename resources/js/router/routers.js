@@ -279,13 +279,13 @@ const router = new VueRouter({
                     meta: {have: ['admin','student'], title: 'Staże i praktyki'},
                 },
                 {
-                    path: '/internships/:id',
+                    path: '/internships/:internshipId',
                     name: 'internship',
                     component: Internship,
                     meta: {have: ['admin','student','company_worker','university_worker']},
                     children: [
                         {
-                            path: '/internships/:id/students/:studentIndex',
+                            path: '/internships/:internshipId/students/:studentIndex',
                             name: 'internship-student',
                             meta: {have: ['admin','student','company_worker','university_worker']},
                         }

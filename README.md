@@ -42,15 +42,11 @@
    ```
 9. Create an empty database
 10. Change `.env` files by data to connect with database
-11. Migrate the database
+11. Initialize the database
     ```
-    php artisan migrate
+    php artisan init:databse [--test]
     ```
-12. Seed the database
-    ```
-    php artisan db:seed
-    ```
-13. Run a server & queues
+12. Run a server & queues
     ```
     php artisan serve
     php artisan queue:work

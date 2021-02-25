@@ -26,7 +26,7 @@
                         ></internship-column-header>
                         <v-expansion-panel-content color="transparent">
                             <the-internship-students-list
-                                :internship-id="$route.params.id"
+                                :internship-id="$route.params.internshipId"
                                 :internship-end-date="internship.agreement.date_to"
                             ></the-internship-students-list>
                         </v-expansion-panel-content>
@@ -42,7 +42,9 @@
                             title="Wpisy"
                         ></internship-column-header>
                         <v-expansion-panel-content class="transparent">
-                            <the-internship-create-student-journal-entry-dialog></the-internship-create-student-journal-entry-dialog>
+                            <the-internship-create-student-journal-entry-dialog
+                                :internship-end-date="internship.agreement.date_to"
+                            ></the-internship-create-student-journal-entry-dialog>
                             <the-internship-student-journal-entries-list
                                 :internship-start-date="internship.agreement.date_from"
                             ></the-internship-student-journal-entries-list>
@@ -135,7 +137,7 @@
         },
 
         created() {
-            this.fetchInternship(this.$route.params.id).then(() => {
+            this.fetchInternship(this.$route.params.internshipId).then(() => {
 
             }).catch((e) => {
                console.error(e);

@@ -21,8 +21,8 @@ class CreateJournalEntriesTable extends Migration
             $table->foreignId('user_id');
             $table->foreign('user_id')->references('id')->on('users');
             $table->boolean('accepted')->default(false);
-            $table->dateTime('created_at', 0);
-            $table->dateTime('updated_at', 0);
+            $table->dateTime('date',0);
+            $table->timestamps();
         });
     }
 
