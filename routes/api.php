@@ -80,6 +80,7 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::get('/internships/{internship}/students/{student}/tasks', 'Api\StudentTaskController@index');
     Route::get('/internships/{internship}/students/{student}/tasks/{task}', 'Api\TaskController@show');
     Route::get('/internships/{internship}/students/{student}/journal-entries', 'Api\StudentJournalEntryController@index');
+    Route::post('/internships/{internship}/students/{student}/journal-entries', 'Api\StudentJournalEntryController@store');
     Route::get('/internships/{internship}/students/{student}/journal-entries/{journalEntry}','Api\JournalController@show');
 //    Route::get('/users/{user_id}/internships/{internship_id}/journal_entries', '');
 

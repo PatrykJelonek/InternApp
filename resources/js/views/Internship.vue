@@ -3,7 +3,6 @@
         <v-row>
             <v-col cols="12" md="6" lg="4">
                 <the-internship-info-card
-                    :v-if="internship !== null && internship.agreement !== null"
                     :internship-name="internship.agreement.program"
                     :internship-start-date="internship.agreement.date_from"
                     :internship-end-date="internship.agreement.date_to"
@@ -119,6 +118,7 @@
                 journalEntriesExpansionPanel: 0,
                 tasksExpansionPanel: 0,
                 previewExpansionPanel: 0,
+                showInfoCard: false,
             }
         },
 
@@ -138,7 +138,7 @@
 
         created() {
             this.fetchInternship(this.$route.params.internshipId).then(() => {
-
+                this.showInfoCard = true;
             }).catch((e) => {
                console.error(e);
             });

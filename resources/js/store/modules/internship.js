@@ -6,6 +6,7 @@ export default {
         internship: null,
         internshipStudents: [],
         preview: null,
+        internshipLoading: true,
     },
 
     getters: {
@@ -23,6 +24,10 @@ export default {
 
         preview(state) {
             return state.preview;
+        },
+
+        internshipLoading(state) {
+            return state.internshipLoading
         }
     },
 
@@ -41,7 +46,11 @@ export default {
 
         SET_PREVIEW(state, data) {
             state.preview = data;
-        }
+        },
+
+        SET_INTERNSHIP_LOADING(state, data) {
+            state.internshipLoading = data;
+        },
     },
 
     actions: {
@@ -55,9 +64,12 @@ export default {
         },
 
         async fetchInternship({commit}, id) {
+            commit('SET_INTERNSHIP_LOADING', true);
+
             try {
                 let response = await axios.get(`/api/internships/${id}`);
                 commit('SET_INTERNSHIP', response.data);
+                commit('SET_INTERNSHIP_LOADING', false);
             } catch(e) {
                 commit('SET_INTERNSHIP', []);
             }

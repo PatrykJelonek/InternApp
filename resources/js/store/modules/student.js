@@ -59,6 +59,10 @@ export default {
 
         SET_LOADING_STUDENT_TASKS(state, data) {
             state.loadingStudentTasks = data;
+        },
+
+        PUSH_STUDENT_JOURNAL_ENTRY(state, data) {
+            state.studentJournalEntries.push(data);
         }
     },
 
@@ -91,6 +95,12 @@ export default {
             }
 
             commit('SET_LOADING_STUDENT_TASKS', false);
-        }
+        },
+
+
+
+        createStudentJournalEntry({commit}, {internshipId, studentIndex, journalEntry}) {
+            return axios.post(`/api/internships/${internshipId}/students/${studentIndex}/journal-entries`, journalEntry);
+        },
     },
 }

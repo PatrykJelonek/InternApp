@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreStudentJournalEntryRequest;
 use App\Http\Resources\Collections\JournalEntryCollection;
+use App\Http\Resources\JournalEntryResource;
 use App\Repositories\StudentRepository;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 
 class StudentJournalEntryController extends Controller
 {
@@ -35,7 +38,7 @@ class StudentJournalEntryController extends Controller
     {
         $studentJournalEntries = $this->studentRepository->getStudentJournalEntries($studentIndex);
 
-        if(!empty($studentJournalEntries)) {
+        if (!empty($studentJournalEntries)) {
             return response(new JournalEntryCollection($studentJournalEntries), Response::HTTP_OK);
         }
 
@@ -55,18 +58,30 @@ class StudentJournalEntryController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param int $internshipId
+     * @param string $studentIndex
+     * @param StoreStudentJournalEntryRequest $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(int $internshipId, string $studentIndex, StoreStudentJournalEntryRequest $request)
     {
-        //
+        $result = $this->studentRepository->storeStudentJournalEntry(
+            $internshipId,
+            $request->input('content'),
+            $request->input('students_ids'),
+            false,
+            $request->input('date')
+        );
+
+        if (!empty($result)) {
+            return response(new JournalEntryResource($result), Response::HTTP_CREATED);
+        }
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -77,7 +92,7 @@ class StudentJournalEntryController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -88,8 +103,8 @@ class StudentJournalEntryController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -100,7 +115,7 @@ class StudentJournalEntryController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
