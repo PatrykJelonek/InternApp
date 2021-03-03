@@ -81,6 +81,7 @@
                 </v-expansion-panels>
             </v-col>
         </v-row>
+        <snackbar></snackbar>
     </v-container>
 </template>
 
@@ -97,10 +98,12 @@
     import TheInternshipCreateStudentJournalEntryDialog
         from "../components/Internship/TheInternshipCreateStudentJournalEntryDialog";
     import TheInternshipCreateStudentTaskDialog from "../components/Internship/TheInternshipCreateStudentTaskDialog";
+    import Snackbar from "../components/Snackbar";
 
     export default {
         name: "Internship",
         components: {
+            Snackbar,
             TheInternshipCreateStudentTaskDialog,
             TheInternshipCreateStudentJournalEntryDialog,
             TheInternshipActions,

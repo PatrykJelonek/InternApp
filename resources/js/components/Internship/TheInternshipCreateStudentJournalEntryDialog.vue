@@ -135,11 +135,14 @@ export default {
     methods: {
         ...mapActions({
             createStudentJournalEntry: 'student/createStudentJournalEntry',
+            setSnackbar: 'snackbar/setSnackbar',
         }),
+
         getStudentIdByStudentIndex(studentIndex) {
             if (this.internshipStudents.length > 0) {
+                console.log(this.internshipStudents);
                 this.internshipStudents.forEach((student) => {
-                    console.log(student);
+
                     if (student.student_index === studentIndex) {
                         return student.id;
                     }
@@ -153,6 +156,8 @@ export default {
                 'studentIndex': this.$route.params.studentIndex,
                 'journalEntry': this.journalEntry
             }).then(() => {
+                this.dialog = false;
+                this.setSnackbar({message: 'Udało się', color: 'success'});
             }).catch((e) => {
             });
         }
@@ -167,8 +172,7 @@ export default {
         this.journalEntry.internship_id = this.$route.params.internshipId;
 
         if (this.$route.params.studentIndex) {
-            console.log(this.$route.params.studentIndex);
-            this.journalEntry.students.push(this.getStudentIdByStudentIndex(this.$route.params.studentIndex));
+            //this.journalEntry.students_ids.push(this.getStudentIdByStudentIndex(this.$route.params.studentIndex));
         }
     }
 }

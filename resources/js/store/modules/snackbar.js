@@ -2,32 +2,42 @@ export default {
     namespaced: true,
 
     state: {
-        show: false,
-        message: '',
-        color: ''
+        snackbarShow: false,
+        snackbarMessage: '',
+        snackbarColor: ''
     },
 
     getters: {
-        message(state) {
-            return state.message;
-        },
-
-        color(state) {
-            return state.color;
+        getSnackbar(state) {
+            return {
+                snackbarShow: state.snackbarShow,
+                snackbarMessage: state.snackbarMessage,
+                snackbarColor: state.snackbarColor
+            }
         }
     },
 
     mutations: {
-        SET_MESSAGE(state, {message, color}) {
-            state.message = message;
-            state.color = color;
-            state.show = true;
+        SET_SNACKBAR(state, {message, color}) {
+            state.snackbarMessage = message;
+            state.snackbarColor = color;
+            state.snackbarShow = true;
+        },
+
+        CLOSE_SNACKBAR(state) {
+            state.snackbarShow = false;
+            state.snackbarMessage = '';
+            state.snackbarColor = '';
         }
     },
 
     actions: {
         setSnackbar({commit}, settings) {
-            commit('SET_MESSAGE', settings);
+            commit('SET_SNACKBAR', settings);
+        },
+
+        closeSnackbar({commit}) {
+            commit('CLOSE_SNACKBAR');
         }
     },
 }
