@@ -1,179 +1,49 @@
 <template>
-    <v-dialog v-model="dialog" max-width="500">
-        <template v-slot:activator="{ on, attrs }">
-            <v-card
-                class="pa-3 mb-3 text-center"
-                color="cardBackground"
-                v-bind="attrs"
-                elevation="0"
-                v-on="on"
-                ripple
-            >
-                <v-icon>mdi-plus</v-icon>
-            </v-card>
-        </template>
-        <v-card color="cardBackground" class="pa-5">
-            <v-form>
-                <v-row>
-                    <v-col cols="12">
-                        <h3>Nowy wpis</h3>
-                    </v-col>
-                </v-row>
-                <v-row>
-                    <v-col cols="12">
-                        <v-menu
-                            v-model="datePicker"
-                            :close-on-content-click="false"
-                            :nudge-right="40"
-                            transition="scale-transition"
-                            offset-y
-                            min-width="auto"
-                        >
-                            <template v-slot:activator="{ on, attrs }">
-                                <v-text-field
-                                    v-model="journalEntry.date"
-                                    label="Data wpisu"
-                                    readonly
-                                    outlined
-                                    full-width
-                                    hide-details
-                                    v-bind="attrs"
-                                    v-on="on"
-                                    hint="YYYY-MM-DD format"
-                                ></v-text-field>
-                            </template>
-                            <v-date-picker
-                                v-model="journalEntry.date"
-                                @input="datePicker = false"
-                                :min="minJournalEntryDate"
-                                :max="maxJournalEntryDate"
-                                show-current
-                                locale="pl-pl"
-                            ></v-date-picker>
-                        </v-menu>
-                    </v-col>
-                </v-row>
-                <v-row>
-                    <v-col cols="12">
-                        <v-textarea
-                            v-model="journalEntry.content"
-                            outlined
-                            name="input-7-4"
-                            label="Treść wpisu"
-                            placeholder="Przykładowa treść wpisy do dziennika praktyk..."
-                            rows="10"
-                            full-width
-                            hide-details
-                        ></v-textarea>
-                    </v-col>
-                </v-row>
-                <v-row v-has="['admin','university_worker','company_worker']">
-                    <v-col cols="12">
-                        <v-select
-                            v-model="journalEntry.students_ids"
-                            :items="internshipStudents"
-                            :item-text="(item) => item.user.first_name + ' ' + item.user.last_name"
-                            item-value="id"
-                            label="Studenci"
-                            multiple
-                            chips
-                            hint="Wybierz studentów dla których ma zostać dodany ten wpis..."
-                            persistent-hint
-                        ></v-select>
-                    </v-col>
-                </v-row>
-                <v-row>
-                    <v-col cols="12">
-                        <v-btn
-                            block
-                            color="primary"
-                            large
-                            @click="submit"
-                        >
-                            Dodaj wpis
-                        </v-btn>
-                    </v-col>
-                </v-row>
-            </v-form>
+    <div>
+        <v-card
+            class="pa-3 mb-3 text-center"
+            color="cardBackground"
+            @click="toggle"
+            elevation="0"
+            ripple
+        >
+            <v-icon>mdi-plus</v-icon>
         </v-card>
-    </v-dialog>
+        <!-- dialog -->
+        <v-dialog v-model="dialog" max-width="500">
+            <v-card color="cardBackground" class="pa-5">
+                <internship-create-journal-entry-form
+                    :internship-end-date="internshipEndDate"
+                ></internship-create-journal-entry-form>
+            </v-card>
+        </v-dialog>
+    </div>
+
 </template>
 
 <script>
-import InternshipDialogActivator from "../_Helpers/InternshipDialogActivator";
-import moment from "moment";
 import {mapActions, mapGetters} from "vuex";
+import InternshipDialogActivator from "../_Helpers/InternshipDialogActivator";
+import InternshipCreateJournalEntryForm from "./InternshipCreateJournalEntryForm";
 
 export default {
     name: "TheInternshipCreateStudentJournalEntryDialog",
     props: ['internshipEndDate'],
-    components: {InternshipDialogActivator},
+    components: {InternshipCreateJournalEntryForm, InternshipDialogActivator},
 
     computed: {
         ...mapGetters({
-            currentUser: 'auth/user',
-            internshipStudents: 'internship/internshipStudents'
+            dialog: 'helpers/dialog',
         })
-    },
-
-    data() {
-        return {
-            dialog: false,
-            datePicker: false,
-            minJournalEntryDate: null,
-            maxJournalEntryDate: null,
-            journalEntry: {
-                date: null,
-                user_id: null,
-                internship_id: null,
-                content: null,
-                students_ids: [],
-            }
-        }
     },
 
     methods: {
         ...mapActions({
-            createStudentJournalEntry: 'student/createStudentJournalEntry',
-            setSnackbar: 'snackbar/setSnackbar',
+            toggleDialog: 'helpers/toggleDialog'
         }),
 
-        getStudentIdByStudentIndex(studentIndex) {
-            if (this.internshipStudents.length > 0) {
-                console.log(this.internshipStudents);
-                this.internshipStudents.forEach((student) => {
-
-                    if (student.student_index === studentIndex) {
-                        return student.id;
-                    }
-                });
-            }
-        },
-
-        async submit() {
-            await this.createStudentJournalEntry({
-                'internshipId': this.$route.params.internshipId,
-                'studentIndex': this.$route.params.studentIndex,
-                'journalEntry': this.journalEntry
-            }).then(() => {
-                this.dialog = false;
-                this.setSnackbar({message: 'Wpis został dodany!', color: 'success'});
-            }).catch((e) => {
-                this.setSnackbar({message: 'Nie udało się dodać wpisu!', color: 'error'});
-            });
-        }
-    },
-
-    created() {
-        let internshipEndDate = moment() < moment(this.internshipEndDate) ? moment() : moment(this.internshipEndDate);
-        this.maxJournalEntryDate = internshipEndDate.format('YYYY-MM-DD');
-        this.minJournalEntryDate = internshipEndDate.subtract(7, 'days').format('YYYY-MM-DD');
-
-        this.journalEntry.user_id = this.currentUser.id;
-        this.journalEntry.internship_id = this.$route.params.internshipId;
-
-        if (this.$route.params.studentIndex) {
-            //this.journalEntry.students_ids.push(this.getStudentIdByStudentIndex(this.$route.params.studentIndex));
+        toggle() {
+            this.toggleDialog();
         }
     }
 }

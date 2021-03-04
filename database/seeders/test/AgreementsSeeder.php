@@ -18,9 +18,9 @@ class AgreementsSeeder extends Seeder
         DB::table('agreements')->insert(
             [
                 [
-                    'signing_date' => Carbon::today()->addDays(4),
-                    'date_from' => Carbon::today()->addDays(15),
-                    'date_to' => Carbon::today()->addDays(15)->addMonths(6),
+                    'signing_date' => Carbon::today()->subDays(20),
+                    'date_from' => Carbon::today()->subDays(15),
+                    'date_to' => Carbon::today()->subDays(15)->addMonths(6),
                     'program' => 'Praktyki programistyczne',
                     'schedule' => 'Zapoznanie z miejscem pracy. Wdrożenie praktykanata. Systematyczny przydział zadań.',
                     'content' => 'Zapoznanie z miejscem pracy. Wdrożenie praktykanata. Systematyczny przydział zadań.',

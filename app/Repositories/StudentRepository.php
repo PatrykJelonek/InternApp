@@ -8,6 +8,7 @@ use App\Models\StudentJournalEntry;
 use App\Repositories\Interfaces\StudentRepositoryInterface;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class StudentRepository implements StudentRepositoryInterface
 {
@@ -33,8 +34,8 @@ class StudentRepository implements StudentRepositoryInterface
     {
         $student = $this->one($studentIndex);
 
-        if(!empty($student)) {
-            return $student->journalEntries()->orderByDesc('created_at')->get();
+        if (!empty($student)) {
+            return $student->journalEntries()->orderByDesc('date')->get();
         }
 
         return null;
@@ -48,7 +49,7 @@ class StudentRepository implements StudentRepositoryInterface
     {
         $student = $this->one($studentIndex);
 
-        if(!empty($student)) {
+        if (!empty($student)) {
             return $student->tasks()->orderByDesc('created_at')->get();
         }
 
@@ -65,16 +66,17 @@ class StudentRepository implements StudentRepositoryInterface
      */
     public function storeStudentJournalEntry(int $internshipId, string $content, array $studentsIds, bool $accepted, string $date): ?JournalEntry
     {
-        $journalEntry = new JournalEntry();
-        $journalEntry->internship_id = $internshipId;
-        $journalEntry->content = $content;
-        $journalEntry->user_id = Auth::user()->id;
-        $journalEntry->accepted = $accepted;
-        $journalEntry->date= $date;
-        $journalEntry->created_at = Carbon::today();
-        $journalEntry->updated_at = Carbon::today();
+        DB::transaction(function () use ($internshipId, $content, $studentsIds, $accepted, $date) {
+            $journalEntry = new JournalEntry();
+            $journalEntry->internship_id = $internshipId;
+            $journalEntry->content = $content;
+            $journalEntry->user_id = Auth::user()->id;
+            $journalEntry->accepted = $accepted;
+            $journalEntry->date = $date;
+            $journalEntry->created_at = Carbon::today();
+            $journalEntry->updated_at = Carbon::today();
+            $journalEntry->save();
 
-        if($journalEntry->save()) {
             foreach ($studentsIds as $studentId) {
                 $studentJournalEntry = new StudentJournalEntry();
                 $studentJournalEntry->journal_entry_id = $journalEntry->id;
@@ -87,7 +89,7 @@ class StudentRepository implements StudentRepositoryInterface
             }
 
             return $journalEntry;
-        }
+        });
 
         return null;
     }

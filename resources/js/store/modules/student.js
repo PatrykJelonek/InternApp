@@ -63,7 +63,11 @@ export default {
 
         PUSH_STUDENT_JOURNAL_ENTRY(state, data) {
             state.studentJournalEntries.push(data);
-        }
+            state.studentJournalEntries.sort((a, b) => {
+                if(a.date > b.date) return -1;
+                if(a.date <= b.date) return 1;
+            })
+        },
     },
 
     actions: {
@@ -97,10 +101,12 @@ export default {
             commit('SET_LOADING_STUDENT_TASKS', false);
         },
 
-
-
         createStudentJournalEntry({commit}, {internshipId, studentIndex, journalEntry}) {
             return axios.post(`/api/internships/${internshipId}/students/${studentIndex}/journal-entries`, journalEntry);
         },
+
+        addStudentJournalEntry({commit}, data) {
+            commit('PUSH_STUDENT_JOURNAL_ENTRY', data);
+        }
     },
 }

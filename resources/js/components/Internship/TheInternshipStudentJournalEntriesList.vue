@@ -6,7 +6,7 @@
                     v-for="studentJournalEntry in studentJournalEntries"
                     :key="studentJournalEntry.id"
                     :internship-start-date="internshipStartDate"
-                    :journal-entry-date="studentJournalEntry.created_at"
+                    :journal-entry-date="studentJournalEntry.date"
                     :content="studentJournalEntry.content"
                 ></internship-student-journal-entries-list-item>
             </template>

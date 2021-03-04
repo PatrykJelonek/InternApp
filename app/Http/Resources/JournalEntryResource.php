@@ -19,6 +19,7 @@ class JournalEntryResource extends JsonResource
             'content' => $this->content,
             'accepted' => $this->accepted,
             'user_id' => $this->user_id,
+            'date' => $this->date,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at
         ];
