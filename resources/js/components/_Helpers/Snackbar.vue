@@ -1,15 +1,15 @@
 <template>
     <v-snackbar
-        v-model="snackbar.snackbarShow"
+        v-model="snackbar.show"
         :timeout="8000"
         color="cardBackground"
         right
         bottom
     >
-        {{ snackbar.snackbarMessage }}
+        {{ snackbar.message }}
         <template v-slot:action="{ attrs }">
             <v-btn
-                :color="snackbar.snackbarColor"
+                :color="snackbar.color"
                 text
                 v-bind="attrs"
                 @click="closeSnackbar"
@@ -28,7 +28,7 @@ export default {
 
     computed: {
         ...mapGetters({
-            snackbar: 'snackbar/getSnackbar'
+            snackbar: 'snackbar/snackbar'
         })
     },
 

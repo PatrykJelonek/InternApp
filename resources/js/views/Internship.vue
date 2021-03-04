@@ -98,7 +98,7 @@
     import TheInternshipCreateStudentJournalEntryDialog
         from "../components/Internship/TheInternshipCreateStudentJournalEntryDialog";
     import TheInternshipCreateStudentTaskDialog from "../components/Internship/TheInternshipCreateStudentTaskDialog";
-    import Snackbar from "../components/Snackbar";
+    import Snackbar from "../components/_Helpers/Snackbar";
 
     export default {
         name: "Internship",
@@ -129,7 +129,7 @@
             ...mapGetters({
                 currentUser: 'auth/user',
                 internship: 'internship/internship',
-                preview: 'internship/preview'
+                preview: 'internship/preview',
             })
         },
 

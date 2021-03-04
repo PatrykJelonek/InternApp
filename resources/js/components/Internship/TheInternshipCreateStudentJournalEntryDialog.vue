@@ -157,8 +157,9 @@ export default {
                 'journalEntry': this.journalEntry
             }).then(() => {
                 this.dialog = false;
-                this.setSnackbar({message: 'Udało się', color: 'success'});
+                this.setSnackbar({message: 'Wpis został dodany!', color: 'success'});
             }).catch((e) => {
+                this.setSnackbar({message: 'Nie udało się dodać wpisu!', color: 'error'});
             });
         }
     },

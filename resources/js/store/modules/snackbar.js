@@ -2,32 +2,30 @@ export default {
     namespaced: true,
 
     state: {
-        snackbarShow: false,
-        snackbarMessage: '',
-        snackbarColor: ''
+        snackbar: {
+            message: false,
+            text: null,
+            color: null,
+        }
     },
 
     getters: {
-        getSnackbar(state) {
-            return {
-                snackbarShow: state.snackbarShow,
-                snackbarMessage: state.snackbarMessage,
-                snackbarColor: state.snackbarColor
-            }
+        snackbar(state) {
+            return state.snackbar;
         }
     },
 
     mutations: {
         SET_SNACKBAR(state, {message, color}) {
-            state.snackbarMessage = message;
-            state.snackbarColor = color;
-            state.snackbarShow = true;
+            state.snackbar.message = message;
+            state.snackbar.color = color;
+            state.snackbar.show = true;
         },
 
         CLOSE_SNACKBAR(state) {
-            state.snackbarShow = false;
-            state.snackbarMessage = '';
-            state.snackbarColor = '';
+            state.snackbar.message = null;
+            state.snackbar.color = null;
+            state.snackbar.show = false;
         }
     },
 
