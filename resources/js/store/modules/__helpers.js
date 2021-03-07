@@ -2,7 +2,14 @@ export default {
     namespaced: true,
 
     state: {
-        dialog: false,
+        dialog: {
+            TASK_DIALOG: {
+                value: false,
+            },
+            JOURNAL_ENTRY_DIALOG: {
+                value: false,
+            }
+        }
     },
 
     getters: {
@@ -12,14 +19,14 @@ export default {
     },
 
     mutations: {
-        TOGGLE_DIALOG(state) {
-            state.dialog = !state.dialog;
+        TOGGLE_DIALOG(state, name) {
+            state.dialog[name].value = !state.dialog[name].value;
         },
     },
 
     actions: {
-        toggleDialog({commit}) {
-            commit('TOGGLE_DIALOG');
+        toggleDialog({commit}, name) {
+            commit('TOGGLE_DIALOG', name);
         }
     },
 }

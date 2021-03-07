@@ -89,7 +89,7 @@ import moment from "moment";
 
 export default {
     name: "InternshipCreateJournalEntryForm",
-    props: ['internshipEndDate'],
+    props: ['internshipEndDate', 'dialogName'],
 
     data() {
         return {
@@ -149,7 +149,7 @@ export default {
                 'studentIndex': this.$route.params.studentIndex,
                 'journalEntry': this.journalEntry
             }).then((journalEntry) => {
-                this.toggleDialog();
+                this.toggleDialog(this.dialogName);
                 this.clearJournalEntry();
                 this.setSnackbar({message: 'Wpis został dodany!', color: 'success'});
                 this.addStudentJournalEntry(journalEntry);

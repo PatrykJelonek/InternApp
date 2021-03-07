@@ -41,9 +41,12 @@
                             title="Wpisy"
                         ></internship-column-header>
                         <v-expansion-panel-content class="transparent">
-                            <the-internship-create-student-journal-entry-dialog
-                                :internship-end-date="internship.agreement.date_to"
-                            ></the-internship-create-student-journal-entry-dialog>
+                            <internship-dialog name="JOURNAL_ENTRY_DIALOG">
+                                <internship-create-journal-entry-form
+                                    :internship-end-date="internship.agreement.date_to"
+                                    dialog-name="JOURNAL_ENTRY_DIALOG"
+                                ></internship-create-journal-entry-form>
+                            </internship-dialog>
                             <the-internship-student-journal-entries-list
                                 :internship-start-date="internship.agreement.date_from"
                             ></the-internship-student-journal-entries-list>
@@ -60,7 +63,12 @@
                             title="Zadania"
                         ></internship-column-header>
                         <v-expansion-panel-content class="transparent">
-                            <the-internship-create-student-task-dialog></the-internship-create-student-task-dialog>
+                            <internship-dialog name="TASK_DIALOG">
+                                <internship-create-task-form
+                                    dialogName="TASK_DIALOG"
+                                ></internship-create-task-form>
+                            </internship-dialog>
+<!--                            <the-internship-create-student-task-dialog></the-internship-create-student-task-dialog>-->
                             <the-internship-student-tasks-list></the-internship-student-tasks-list>
                         </v-expansion-panel-content>
                     </v-expansion-panel>
@@ -99,10 +107,16 @@
         from "../components/Internship/TheInternshipCreateStudentJournalEntryDialog";
     import TheInternshipCreateStudentTaskDialog from "../components/Internship/TheInternshipCreateStudentTaskDialog";
     import Snackbar from "../components/_Helpers/Snackbar";
+    import InternshipDialog from "../components/Internship/InternshipDialog";
+    import InternshipCreateJournalEntryForm from "../components/Internship/InternshipCreateJournalEntryForm";
+    import InternshipCreateTaskForm from "../components/Internship/InternshipCreateTaskForm";
 
     export default {
         name: "Internship",
         components: {
+            InternshipCreateTaskForm,
+            InternshipCreateJournalEntryForm,
+            InternshipDialog,
             Snackbar,
             TheInternshipCreateStudentTaskDialog,
             TheInternshipCreateStudentJournalEntryDialog,
