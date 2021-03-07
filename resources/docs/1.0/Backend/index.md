@@ -2,6 +2,7 @@
 
 ---
 
+- [DefaultRepository](#defaultRepository)
 - [Repositories](#repositories)
     - [Interfaces](#interfaces)
 
