@@ -10,9 +10,7 @@ interface DefaultRepositoryInterface
 
     public function all();
 
-    public function create(array $resource, array $students_ids = null);
-
-    public function update(array $resource);
+    public function update(array $data);
 
     public function delete(int $id);
 }

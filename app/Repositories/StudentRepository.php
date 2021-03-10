@@ -93,4 +93,14 @@ class StudentRepository implements StudentRepositoryInterface
 
         return null;
     }
+
+    public function update(array $data)
+    {
+        // TODO: Implement update() method.
+    }
+
+    public function delete(int $id)
+    {
+        // TODO: Implement delete() method.
+    }
 }

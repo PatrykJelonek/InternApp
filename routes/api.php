@@ -72,17 +72,25 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::get('/user/journals', 'Api\UserController@getJournals');
     Route::get('/user/interns', 'Api\UserController@getInterns');
     Route::get('/internships/{internship}/tasks', 'Api\TaskController@index');
+    Route::post('/internships/{internship}/tasks', 'Api\TaskController@store');
 
     //NEW ENDPOINTS
     //Route::get('/internships','Api\InternshipController@index');
     Route::get('/internships/{internship}','Api\InternshipController@show');
     Route::get('/internships/{internship}/students','Api\InternshipStudentController@index');
-    Route::get('/internships/{internship}/students/{student}/tasks', 'Api\StudentTaskController@index');
-    Route::get('/internships/{internship}/students/{student}/tasks/{task}', 'Api\TaskController@show');
     Route::get('/internships/{internship}/students/{student}/journal-entries', 'Api\StudentJournalEntryController@index');
     Route::post('/internships/{internship}/students/{student}/journal-entries', 'Api\StudentJournalEntryController@store');
     Route::get('/internships/{internship}/students/{student}/journal-entries/{journalEntry}','Api\JournalController@show');
 //    Route::get('/users/{user_id}/internships/{internship_id}/journal_entries', '');
+
+
+    # New endpoints
+
+    # Internship Tasks
+    Route::get('/internships/{internship}/students/{student}/tasks', 'Api\StudentTaskController@index');
+    Route::post('/internships/{internship}/students/{student}/tasks', 'Api\TaskController@store');
+    Route::get('/internships/{internship}/students/{student}/tasks/{task}', 'Api\TaskController@show');
+
 
     Route::get('/me', [
         'as' => 'login.me',

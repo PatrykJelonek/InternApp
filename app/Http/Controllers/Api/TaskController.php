@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreTaskRequest;
 use App\Http\Resources\TaskResource;
 use App\Models\Task;
 use App\Repositories\TaskRepository;
@@ -17,26 +18,21 @@ class TaskController extends Controller
      * @var TaskRepository
      */
     private $taskRepository;
-    /**
-     * @var TaskService
-     */
-    private $taskService;
 
     /**
      * TaskController constructor.
      * @param TaskRepository $taskRepository
      */
-    public function __construct(TaskRepository $taskRepository, TaskService $taskService)
+    public function __construct(TaskRepository $taskRepository)
     {
         $this->taskRepository = $taskRepository;
-        $this->taskService = $taskService;
     }
 
     /**
      * Display a listing of the resource.
      *
      * @param int $internshipId
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index(int $internshipId)
     {
@@ -46,7 +42,7 @@ class TaskController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function create()
     {
@@ -56,19 +52,31 @@ class TaskController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param StoreTaskRequest $request
+     * @param int $internshipId
+     * @return Response
      */
-    public function store(Request $request)
-    {
-        //Todo
+    public function store(int $internshipId, StoreTaskRequest $request): Response
+    {dd($request->all());
+        $validated = $request->validated();
+
+
+        if($validated) {
+            $result = $this->taskRepository->create($request->all(), $internshipId, null);
+
+            if(!empty($result)) {
+                return response(new TaskResource($result), Response::HTTP_CREATED);
+            }
+        }
+
+        return response(null, Response::HTTP_BAD_REQUEST);
     }
 
     /**
      * Display the specified resource.
      *
      * @param  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function show($taskId)
     {
@@ -95,9 +103,9 @@ class TaskController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param Request $request
      * @param  \App\Task  $task
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(Request $request, Task $task)
     {
@@ -108,7 +116,7 @@ class TaskController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  \App\Task  $task
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy($id)
     {
