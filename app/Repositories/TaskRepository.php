@@ -24,7 +24,7 @@ class TaskRepository implements TasksRepositoryInterface
 
     public function getByInternship(int $internshipId)
     {
-        return Task::where('internship_id',$internshipId)->get();
+        return Task::where('internship_id', $internshipId)->get();
     }
 
     public function delete(int $id)
@@ -39,7 +39,7 @@ class TaskRepository implements TasksRepositoryInterface
 
     public function create(array $data, int $internshipId, ?int $studentId = null)
     {
-        DB::transaction(function () use($data, $internshipId, $studentId) {
+        DB::transaction(function () use ($data, $internshipId, $studentId) {
             $task = new Task();
             $task->name = $data['name'];
             $task->description = $data['description'];
@@ -50,21 +50,38 @@ class TaskRepository implements TasksRepositoryInterface
             $task->updated_at = Carbon::today();
             $task->save();
 
-            if($data['students_ids'] !== null) {
-                foreach ($data['students_ids'] as $student_id) {
-                    $studentTask = new StudentTask();
-                    $studentTask->student_id = $student_id;
-                    $studentTask->task_id = $task->id;
-                    $studentTask->done = $data['done'];
-                    $studentTask->created_at = Carbon::today();
-                    $studentTask->updated_at = Carbon::today();
+            if (isset($data['students_ids']) && is_array($data['students_ids'])) {
+                if($studentId !== null) {
+                    if(!in_array($studentId, $data['students_ids'])) {
+                        $this->linkTaskWithStudent($task->id, $studentId, $data['done']);
+                    }
+                }
 
-                    $studentTask->save();
+                if(!empty($data['students_ids'])) {
+                    foreach ($data['students_ids'] as $student_id) {
+                        $this->linkTaskWithStudent($task->id, $student_id, $data['done']);
+                    }
                 }
             }
 
             return $task;
         });
+
+        return null;
+    }
+
+    public function linkTaskWithStudent(int $taskId, int $studentId, bool $done): ?StudentTask
+    {
+        $studentTask = new StudentTask();
+        $studentTask->student_id = $studentId;
+        $studentTask->task_id = $taskId;
+        $studentTask->done = $done;
+        $studentTask->created_at = Carbon::today();
+        $studentTask->updated_at = Carbon::today();
+
+        if($studentTask->save()) {
+            return $studentTask;
+        }
 
         return null;
     }

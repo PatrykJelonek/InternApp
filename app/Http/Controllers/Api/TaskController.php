@@ -52,17 +52,17 @@ class TaskController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param StoreTaskRequest $request
      * @param int $internshipId
+     * @param int $studentId
+     * @param StoreTaskRequest $request
      * @return Response
      */
-    public function store(int $internshipId, StoreTaskRequest $request): Response
-    {dd($request->all());
+    public function store(int $internshipId, int $studentId = null, StoreTaskRequest $request): Response
+    {
         $validated = $request->validated();
 
-
         if($validated) {
-            $result = $this->taskRepository->create($request->all(), $internshipId, null);
+            $result = $this->taskRepository->create($request->all(), $internshipId, $studentId);
 
             if(!empty($result)) {
                 return response(new TaskResource($result), Response::HTTP_CREATED);

@@ -2,7 +2,7 @@
 
 namespace App\Repositories\Interfaces;
 
-use App\Repositories\TaskRepository;
+use App\Models\StudentTask;
 
 interface TasksRepositoryInterface extends DefaultRepositoryInterface
 {
@@ -15,4 +15,6 @@ interface TasksRepositoryInterface extends DefaultRepositoryInterface
      * @return mixed
      */
     public function create(array $data, int $internshipId, ?int $studentId = null);
+
+    public function linkTaskWithStudent(int $taskId, int $studentId, bool $done): ?StudentTask;
 }
