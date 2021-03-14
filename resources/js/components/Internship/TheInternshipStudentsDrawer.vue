@@ -6,7 +6,7 @@
         permanent
         mini-variant
         expand-on-hover
-        class="component-background rounded-r"
+        class="component-background rounded-r pt-10"
     >
         <v-list nav>
            <the-internship-students-drawer-item
