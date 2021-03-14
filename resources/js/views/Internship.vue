@@ -1,5 +1,6 @@
 <template>
     <v-container fluid>
+        <the-internship-students-drawer></the-internship-students-drawer>
         <v-row>
             <v-col cols="12" md="6" lg="4">
                 <the-internship-info-card
@@ -110,10 +111,12 @@
     import InternshipDialog from "../components/Internship/InternshipDialog";
     import InternshipCreateJournalEntryForm from "../components/Internship/InternshipCreateJournalEntryForm";
     import InternshipCreateTaskForm from "../components/Internship/InternshipCreateTaskForm";
+    import TheInternshipStudentsDrawer from "../components/Internship/TheInternshipStudentsDrawer";
 
     export default {
         name: "Internship",
         components: {
+            TheInternshipStudentsDrawer,
             InternshipCreateTaskForm,
             InternshipCreateJournalEntryForm,
             InternshipDialog,

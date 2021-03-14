@@ -15,6 +15,8 @@ export default new Vuetify({
                 primary: '#2757FF',
                 background: '#f7f7fa',
                 navigationDrawerExpanded: '#efeff5',
+                'base-background': '#FF5252',
+                'component-background': ''
             },
             dark: {
                 primary: '#1976D2',
@@ -27,6 +29,8 @@ export default new Vuetify({
                 background: '#0F1115',
                 navBackground: '#181A20',
                 cardBackground: '#181A20',
+                'base-background': '#0F1115',
+                'component-background': '#181A20'
             }
         },
     },

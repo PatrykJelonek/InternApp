@@ -1,18 +1,8 @@
 <template>
     <v-app dark>
-        <v-app-bar
-            app
-            flat
-            hide-on-scroll
-            color="transparent"
-        >
-            <v-icon
-                @click="$router.go(-1)"
-                v-if="$route.name !== 'dashboard'"
-            >mdi-arrow-left</v-icon>
-            <v-spacer></v-spacer>
-            <v-toolbar-title class="font-m font-weight-bold">{{$route.meta.title ? $route.meta.title : ""}}</v-toolbar-title>
-        </v-app-bar>
+        <the-app-bar-desktop v-if="!$vuetify.breakpoint.mobile"></the-app-bar-desktop>
+        <the-app-bar-mobile v-else></the-app-bar-mobile>
+
         <v-dialog
             v-model="menuDialog"
             fullscreen
@@ -51,7 +41,7 @@
         </v-main>
         <v-bottom-navigation
             background-color="navBackground"
-            class="rounded-t-lg"
+            class="rounded-t-lg hidden-lg-and-up"
             grow
             app
         >
@@ -73,8 +63,12 @@
 
 <script>
     import {mapGetters} from "vuex";
+    import TheAppBarDesktop from "../components/App/TheAppBarDesktop";
+    import TheAppBarMobile from "../components/App/TheAppBarMobile";
+    import TheAppNavigationDrawer from "../components/App/TheAppNavigationDrawer";
 
     export default {
+        components: {TheAppNavigationDrawer, TheAppBarMobile, TheAppBarDesktop},
         data() {
             return {
                 menuDialog: false,
