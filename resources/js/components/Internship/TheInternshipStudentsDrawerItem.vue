@@ -2,13 +2,12 @@
     <v-list-item
         link
         dense
-        @click="cardOnClick"
-        class="py-0"
+        class="px-2"
+        @click="onClick"
     >
         <v-list-item-avatar
-            :color="$route.params.studentIndex === index ? 'success' : 'grey darken-4'"
             rounded
-            size="30"
+            :color="$route.params.studentIndex === index ? 'primary white--text' : 'secondary white--text'"
         >
             {{ firstname[0] + '' + lastname[0] }}
         </v-list-item-avatar>
@@ -26,6 +25,7 @@
 
 <script>
 import router from "../../router/routers";
+import {mapActions} from "vuex";
 
 export default {
     name: "TheInternshipStudentsDrawerItem",
@@ -36,9 +36,15 @@ export default {
         }
     },
     methods: {
-        cardOnClick() {
+        ...mapActions({
+            fetchStudentJournalEntries: 'student/fetchStudentJournalEntries',
+            fetchStudentTasks: 'student/fetchStudentTasks',
+        }),
+
+        onClick() {
             router.push({name: 'internship-student', params: {studentIndex: this.index}});
-            this.color = 'success';
+            this.fetchStudentJournalEntries({internshipId: 1, studentIndex: this.index});
+            this.fetchStudentTasks({internshipId: 1, studentIndex: this.index});
         },
     }
 }

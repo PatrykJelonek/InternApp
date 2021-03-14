@@ -1,6 +1,6 @@
 <template>
     <v-container fluid>
-        <the-internship-students-drawer></the-internship-students-drawer>
+        <the-internship-students-drawer v-if="!$vuetify.breakpoint.mobile"></the-internship-students-drawer>
         <v-row>
             <v-col cols="12" md="6" lg="4">
                 <the-internship-info-card
@@ -15,8 +15,9 @@
             <v-col
                 cols="12"
                 md="4"
-                lg="3"
+                lg="auto"
                 v-has="['admin','company_worker','university_worker']"
+                v-if="$vuetify.breakpoint.mobile"
             >
                 <v-expansion-panels v-model="studentListExpansionPanel" flat>
                     <v-expansion-panel class="transparent">
@@ -76,7 +77,7 @@
                 </v-expansion-panels>
             </v-col>
             <!-- Preview -->
-            <v-col cols="12" lg="3" class="hidden-md-and-down">
+            <v-col cols="12" lg="auto" class="hidden-md-and-down">
                 <v-expansion-panels v-model="previewExpansionPanel" flat>
                     <v-expansion-panel class="transparent">
                         <internship-column-header

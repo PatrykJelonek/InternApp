@@ -3,21 +3,30 @@
         app
         flat
         floating
-        permanent
+        clipped
         mini-variant
         expand-on-hover
-        class="component-background rounded-r pt-10"
+        width="300px"
+        class="component-background"
     >
-        <v-list nav two-line dense subheader>
-           <the-internship-students-drawer-item
-               v-for="internshipStudent in internshipStudents"
-               :key="internshipStudent.id"
-               :firstname="internshipStudent.user.first_name"
-               :lastname="internshipStudent.user.last_name"
-               :index="internshipStudent.student_index"
-           >
-
-           </the-internship-students-drawer-item>
+        <template v-slot:prepend>
+            <v-list-item>
+                <v-list-item-icon>
+                    <v-icon>mdi-account-group</v-icon>
+                </v-list-item-icon>
+                <v-list-item-content>
+                    <v-list-item-title>Lista studentów</v-list-item-title>
+                </v-list-item-content>
+            </v-list-item>
+        </template>
+        <v-list dense>
+            <the-internship-students-drawer-item
+                v-for="internshipStudent in internshipStudents"
+                :key="internshipStudent.id"
+                :firstname="internshipStudent.user.first_name"
+                :lastname="internshipStudent.user.last_name"
+                :index="internshipStudent.student_index"
+            ></the-internship-students-drawer-item>
         </v-list>
     </v-navigation-drawer>
 </template>
@@ -48,11 +57,11 @@ export default {
             let g = (Math.floor(Math.random() * 256) + 8).toString(16).toUpperCase();
             let b = (Math.floor(Math.random() * 256) + 8).toString(16).toUpperCase();
 
-            return '#'+r+g+b;
+            return '#' + r + g + b;
         },
 
-        cardOnClick(a, b) {
-            router.push({ name: 'internship-student', params: { studentIndex: a} });
+        cardOnClick(a) {
+            router.push({name: 'internship-student', params: {studentIndex: a}});
         },
     },
 

@@ -6,21 +6,25 @@ Vue.use(Vuetify);
 
 export default new Vuetify({
     theme: {
-        dark: true,
+        dark: false,
         options: {
             customProperties: true,
         },
         themes: {
             light: {
-                primary: '#2757FF',
-                background: '#f7f7fa',
+                //primary: '#2757FF',
+                primary: '#3cdc96',
+                secondary: '#9DA0A5',
+                //background: '#f7f7fa',
                 navigationDrawerExpanded: '#efeff5',
-                'base-background': '#FF5252',
-                'component-background': ''
+                'base-background': '#E5E6E8',
+                background: '#E5E6E8',
+                'component-background': '#025459'
             },
             dark: {
-                primary: '#1976D2',
-                secondary: '#424242',
+                //primary: '#1976D2',
+                primary: '#0EB251',
+                secondary: '#9DA0A5',
                 accent: '#82B1FF',
                 error: '#FF5252',
                 info: '#2196F3',

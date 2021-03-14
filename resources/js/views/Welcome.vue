@@ -1,6 +1,15 @@
 <template>
     <v-container fluid >
-        <h2 class="text--welcome">Cześć, <br> {{user.first_name + " " + user.last_name}}</h2>
+        <v-row>
+            <v-col>
+                <h2 class="text--welcome text-h3 font-weight-black">Cześć, <br> {{user.first_name + " " + user.last_name}}</h2>
+            </v-col>
+        </v-row>
+        <v-row class="mt-10">
+            <v-col cols="6">
+<!--                <the-dashboard-internships></the-dashboard-internships>-->
+            </v-col>
+        </v-row>
     </v-container>
 </template>
 
@@ -8,42 +17,15 @@
     import VuexTabsItems from "../components/_Helpers/VuexTabsItems";
     import Sidebar from "../components/_Helpers/Sidebar";
     import {mapActions, mapGetters} from "vuex";
+    import TheDashboardInternships from "../components/Dashboard/TheDashboardInternships";
 
     export default {
         name: "Welcome",
-        components: {VuexTabsItems, Sidebar},
+        components: {TheDashboardInternships, VuexTabsItems, Sidebar},
 
         data() {
             return {
-                sidebarItems: [
-                    {
-                        header: 'Inne',
-                        items: [
-                            {
-                                text: 'Umowy',
-                                link: 'agreements',
-                            },
-                            {
-                                text: 'Studenci',
-                                link: 'students',
-                            }
 
-                        ]
-                    },
-                    {
-                        header: 'Inne',
-                        items: [
-                            {
-                                text: 'Inne',
-                                link: 'other'
-                            },
-                            {
-                                text: 'Ustawienia',
-                                link: 'settings'
-                            }
-                        ]
-                    }
-                ],
             }
         },
 
@@ -55,12 +37,12 @@
 
         methods: {
             ...mapActions({
-                setSidebarItems: 'sidebar/setItems'
+
             }),
         },
 
         created() {
-            this.setSidebarItems(this.sidebarItems);
+
         },
     }
 </script>

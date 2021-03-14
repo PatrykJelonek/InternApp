@@ -29,6 +29,10 @@ import Welcome from "../views/Welcome";
 import WelcomeTabs from "../components/Tabs/WelcomeTabs";
 import UniversitiesTabs from "../components/Tabs/UniversitiesTabs";
 import Internship from "../views/Internship";
+import Profile from "../views/Profile";
+import Settings from "../views/Settings";
+import Notifications from "../views/Notifications";
+import Messages from "../views/Messages";
 
 Vue.use(VueRouter);
 
@@ -115,7 +119,7 @@ const router = new VueRouter({
                         default: Universities,
                         tabs: UniversitiesTabs
                     },
-                    meta: { have: ['admin','student'], title: 'Uczelnia'},
+                    meta: {title: 'Uczelnia'},
                     children: [
                         {
                             path: '/universities/overview',
@@ -148,12 +152,6 @@ const router = new VueRouter({
                     path: '/create-university',
                     name: 'create-university',
                     component: UniversityCreate,
-                    beforeEnter: (to, from, next) => {
-                        if(!haveRole(['student']))
-                            return next();
-                        else
-                            return next({name: 'no-permissions'});
-                    }
                 },
                 {
                     path: '/companies',
@@ -165,23 +163,11 @@ const router = new VueRouter({
                     path: '/company/:id',
                     name: 'company',
                     component: Company,
-                    beforeEnter: (to, from, next) => {
-                        if(!haveRole(['student']))
-                            return next();
-                        else
-                            return next({name: 'no-permissions'});
-                    }
                 },
                 {
                     path: '/create-company',
                     name: 'create-company',
                     component: CompanyCreate,
-                    beforeEnter: (to, from, next) => {
-                        if(!haveRole(['student']))
-                            return next();
-                        else
-                            return next({name: 'no-permissions'});
-                    }
                 },
                 {
                     path: '/offers',
@@ -193,45 +179,21 @@ const router = new VueRouter({
                     path: '/offer/:id',
                     name: 'offer',
                     component: Offer,
-                    beforeEnter: (to, from, next) => {
-                        if(!haveRole(['student']))
-                            return next();
-                        else
-                            return next({name: 'no-permissions'});
-                    }
                 },
                 {
                     path: '/create-offer',
                     name: 'create-offer',
                     component: OfferCreate,
-                    beforeEnter: (to, from, next) => {
-                        if(haveRole(['company-worker']))
-                            return next();
-                        else
-                            return next({name: 'no-permissions'});
-                    }
                 },
                 {
                     path: '/create-agreement/:offerId',
                     name: 'create-agreement',
                     component: AgreementCreate,
-                    beforeEnter: (to, from, next) => {
-                        if(haveRole(['university-worker']))
-                            return next();
-                        else
-                            return next({name: 'no-permissions'});
-                    }
                 },
                 {
                     path: '/agreement/:id',
                     name: 'agreement',
                     component: Agreement,
-                    beforeEnter: (to, from, next) => {
-                        if(!haveRole(['student']))
-                            return next();
-                        else
-                            return next({name: 'no-permissions'});
-                    }
                 },
                 // {
                 //     path: '/internships',
@@ -254,29 +216,41 @@ const router = new VueRouter({
                     path: '/internship/:id/journal',
                     name: 'internship-journal',
                     component: InternshipJournal,
-                    beforeEnter: (to, from, next) => {
-                        if(!haveRole(['student']))
-                            return next();
-                        else
-                            return next({name: 'no-permissions'});
-                    }
                 },
                 {
                     path: '/account',
                     name: 'account',
                     component: Account,
-                    beforeEnter: (to, from, next) => {
-                        if(haveRole(['user']))
-                            return next();
-                        else
-                            return next({name: 'no-permissions'});
-                    }
+                },
+                {
+                    path: '/profile',
+                    name: 'profile',
+                    component: Profile,
+                    meta: {title: 'Profil'},
+                },
+                {
+                    path: '/settings',
+                    name: 'setting',
+                    component: Settings,
+                    meta: {title: 'Ustawienia'},
+                },
+                {
+                    path: '/notifications',
+                    name: 'notifications',
+                    component: Notifications,
+                    meta: {title: 'Powiadomienia'},
+                },
+                {
+                    path: '/messages',
+                    name: 'messages',
+                    component: Messages,
+                    meta: {title: 'Wiadomości'},
                 },
                 {
                     path: '/internships',
                     name: 'internships',
                     component: Internships,
-                    meta: {have: ['admin','student'], title: 'Staże i praktyki'},
+                    meta: {have: ['admin','student','company_worker','university_worker'], title: 'Staże i praktyki'},
                 },
                 {
                     path: '/internships/:internshipId',

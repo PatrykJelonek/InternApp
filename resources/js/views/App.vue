@@ -1,5 +1,5 @@
 <template>
-    <v-app dark>
+    <v-app :style="{background: $vuetify.theme.themes[theme].background}">
         <the-app-bar-desktop v-if="!$vuetify.breakpoint.mobile"></the-app-bar-desktop>
         <the-app-bar-mobile v-else></the-app-bar-mobile>
 
@@ -106,6 +106,10 @@
             ...mapGetters({
                 user: 'auth/user',
             }),
+
+            theme(){
+                return (this.$vuetify.theme.dark) ? 'dark' : 'light'
+            }
         },
 
         watch: {
@@ -118,11 +122,11 @@
 
 <style lang="scss">
     body {
-        background-color: #0F1115;
+       // background-color: #0F1115;
     }
 
     #app {
-        background-color: #0F1115;
+        //background-color: #0F1115;
         font-family: 'Montserrat', sans-serif;
     }
 
