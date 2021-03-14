@@ -3,6 +3,7 @@
         link
         dense
         @click="cardOnClick"
+        class="py-0"
     >
         <v-list-item-avatar
             :color="$route.params.studentIndex === index ? 'success' : 'grey darken-4'"
@@ -15,6 +16,11 @@
             <v-list-item-title> {{ firstname + ' ' + lastname }}</v-list-item-title>
             <v-list-item-subtitle>{{ index }}</v-list-item-subtitle>
         </v-list-item-content>
+        <v-list-item-action>
+            <v-btn icon>
+                <v-icon color="grey lighten-1">mdi-information</v-icon>
+            </v-btn>
+        </v-list-item-action>
     </v-list-item>
 </template>
 

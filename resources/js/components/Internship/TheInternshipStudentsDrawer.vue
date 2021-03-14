@@ -8,7 +8,7 @@
         expand-on-hover
         class="component-background rounded-r pt-10"
     >
-        <v-list nav>
+        <v-list nav two-line dense subheader>
            <the-internship-students-drawer-item
                v-for="internshipStudent in internshipStudents"
                :key="internshipStudent.id"
