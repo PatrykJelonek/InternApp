@@ -69,7 +69,7 @@ class UserSeeder extends Seeder
             'password_hash' => Hash::make('password'),
             'password_reset_token' => Hash::make(Str::random(32)),
             'first_name' => 'Adam',
-            'last_name' => 'Janusz',
+            'last_name' => 'Stachursky',
             'phone' => '876234093',
             'user_status_id' => 1,
             'created_at' => date('Y-m-d H:i:s'),

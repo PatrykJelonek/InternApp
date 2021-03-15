@@ -35,7 +35,7 @@
            </v-card>
         </v-dialog>
         <v-main>
-            <v-container fluid>
+            <v-container :fluid="$vuetify.breakpoint.mobile">
                 <router-view></router-view>
             </v-container>
         </v-main>

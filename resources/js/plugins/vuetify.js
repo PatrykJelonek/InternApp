@@ -19,7 +19,7 @@ export default new Vuetify({
                 navigationDrawerExpanded: '#efeff5',
                 'base-background': '#E5E6E8',
                 background: '#E5E6E8',
-                'component-background': '#025459'
+                'component-background': '#FFF'
             },
             dark: {
                 //primary: '#1976D2',

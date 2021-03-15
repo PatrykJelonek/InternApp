@@ -3,7 +3,6 @@
         app
         flat
         clipped-left
-        dark
         color="component-background"
     >
         <v-toolbar-title>
