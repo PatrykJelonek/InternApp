@@ -91,6 +91,9 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::post('/internships/{internship}/students/{student?}/tasks', 'Api\TaskController@store');
     Route::get('/internships/{internship}/students/{student}/tasks/{task}', 'Api\TaskController@show');
 
+    # User
+    Route::get('/me/internships', 'Api\UserController@getUserInternships');
+
 
     Route::get('/me', [
         'as' => 'login.me',

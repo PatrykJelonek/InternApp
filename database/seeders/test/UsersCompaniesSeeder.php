@@ -22,6 +22,11 @@ class UsersCompaniesSeeder extends Seeder
                     'created_at' => now(),
                 ],
                 [
+                    'user_id' => 6,
+                    'company_id' => 2,
+                    'created_at' => now(),
+                ],
+                [
                     'user_id' => 7,
                     'company_id' => 1,
                     'created_at' => now(),

@@ -21,11 +21,6 @@ class Internship extends Model
         return $this->hasOne('App\Models\Agreement','id', 'agreement_id');
     }
 
-//    public function student()
-//    {
-//        return $this->hasOne('App\Models\Student', 'id', 'student_id');
-//    }
-
     public function students()
     {
         return $this->belongsToMany('App\Models\Student','internships_students','internship_id','student_id');

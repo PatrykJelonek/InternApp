@@ -4,7 +4,7 @@
         <v-row>
             <v-col cols="12" md="6" lg="4">
                 <the-internship-info-card
-                    :internship-name="internship.agreement.program"
+                    :internship-name="internship.offer.name"
                     :internship-start-date="internship.agreement.date_from"
                     :internship-end-date="internship.agreement.date_to"
                 ></the-internship-info-card>
@@ -160,6 +160,10 @@
         created() {
             this.fetchInternship(this.$route.params.internshipId).then(() => {
                 this.showInfoCard = true;
+
+                if(this.internship.length < 1) {
+                    this.$router.push({name: 'not-found'});
+                }
             }).catch((e) => {
                console.error(e);
             });

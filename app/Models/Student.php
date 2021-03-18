@@ -18,7 +18,7 @@ class Student extends Model
 
     public function internships()
     {
-        return $this->hasMany('App\Models\Internship', 'student_id', 'id');
+        return $this->belongsToMany('App\Models\Internship','internships_students','student_id','internship_id');
     }
 
     public function specialization()

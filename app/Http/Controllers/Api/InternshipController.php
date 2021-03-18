@@ -11,6 +11,7 @@ use App\Models\Offer;
 use App\Models\Student;
 use App\Models\User;
 use App\Repositories\InternshipRepository;
+use App\Repositories\UserRepository;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Arr;
@@ -21,14 +22,20 @@ class InternshipController extends Controller
      * @var InternshipRepository
      */
     private $internshipRepository;
+    /**
+     * @var UserRepository
+     */
+    private $userRepository;
 
     /**
      * InternshipController constructor.
      * @param InternshipRepository $internshipRepository
+     * @param UserRepository $userRepository
      */
-    public function __construct(InternshipRepository $internshipRepository)
+    public function __construct(InternshipRepository $internshipRepository, UserRepository $userRepository)
     {
         $this->internshipRepository = $internshipRepository;
+        $this->userRepository = $userRepository;
     }
 
     /**

@@ -13,6 +13,8 @@ class RoleConstants
     const ROLE_DEANERY_WORKER = 'deanery_worker';
     const ROLE_INTERN = 'intern';
     const ROLE_STUDENT = 'student';
+    const ROLE_UNIVERSITY_SUPERVISOR = 'university_supervisor';
+    const ROLE_COMPANY_SUPERVISOR = 'company_supervisor';
 
     const BASIC_ROLES = [
         self::ROLE_ADMIN,
@@ -24,6 +26,8 @@ class RoleConstants
         self::ROLE_COMPANY_OWNER,
         self::ROLE_INTERN,
         self::ROLE_USER,
+        self::ROLE_UNIVERSITY_SUPERVISOR,
+        self::ROLE_COMPANY_SUPERVISOR,
     ];
 
     const BASIC_ROLE_USER_TYPES = [
@@ -36,18 +40,22 @@ class RoleConstants
         self::ROLE_DEANERY_WORKER => 'User type: ' . self::ROLE_DEANERY_WORKER,
         self::ROLE_INTERN => 'User type: ' . self::ROLE_INTERN,
         self::ROLE_STUDENT => 'User type: ' . self::ROLE_STUDENT,
+        self::ROLE_UNIVERSITY_SUPERVISOR => 'User type: ' . self::ROLE_UNIVERSITY_SUPERVISOR,
+        self::ROLE_COMPANY_SUPERVISOR => 'User type: ' . self::ROLE_COMPANY_SUPERVISOR,
     ];
 
     const BASIC_ROLE_DISPLAY_NAMES = [
         self::ROLE_USER => 'Użytkownik',
         self::ROLE_ADMIN => 'Administrator',
-        self::ROLE_COMPANY_WORKER => 'Pracownik Firmy',
-        self::ROLE_COMPANY_OWNER => 'Właściciel Firmy',
-        self::ROLE_UNIVERSITY_WORKER => 'Pracownik Uczelni',
-        self::ROLE_UNIVERSITY_OWNER => 'Właściciel Uczelni',
-        self::ROLE_DEANERY_WORKER => 'Pracownik Dziekanatu',
+        self::ROLE_COMPANY_WORKER => 'Pracownik firmy',
+        self::ROLE_COMPANY_OWNER => 'Właściciel firmy',
+        self::ROLE_UNIVERSITY_WORKER => 'Pracownik uczelni',
+        self::ROLE_UNIVERSITY_OWNER => 'Właściciel uczelni',
+        self::ROLE_DEANERY_WORKER => 'Pracownik dziekanatu',
         self::ROLE_INTERN => 'Praktykant/Stażysta',
         self::ROLE_STUDENT => 'Student',
+        self::ROLE_UNIVERSITY_SUPERVISOR => 'Opiekun praktykanta z uczelni',
+        self::ROLE_COMPANY_SUPERVISOR => 'Opiekun praktykanta z firmy',
     ];
 
     const BASIC_ROLE_DESCRIPTIONS = [
@@ -60,5 +68,7 @@ class RoleConstants
         self::ROLE_DEANERY_WORKER => 'Pracownik dziekanatu',
         self::ROLE_INTERN => 'Praktykant/Stażysta',
         self::ROLE_STUDENT => 'Student',
+        self::ROLE_UNIVERSITY_SUPERVISOR => 'Opiekun praktykanta z uczelni',
+        self::ROLE_COMPANY_SUPERVISOR => 'Opiekun praktykanta z firmy',
     ];
 }

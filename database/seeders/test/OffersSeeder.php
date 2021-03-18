@@ -30,6 +30,20 @@ class OffersSeeder extends Seeder
                     'created_at' => date('Y-m-d H:i:s'),
                     'updated_at' => date('Y-m-d H:i:s'),
                 ],
+                [
+                    'company_id' => 2,
+                    'user_id' => 6,
+                    'name' => 'Staż - Junior PHP Developer',
+                    'places_number' => 2,
+                    'program' => 'Staż programistyczny jako młodszy programist PHP',
+                    'schedule' => 'Zapoznanie z miejscem pracy. Wdrożenie praktykanata. Systematyczny przydział zadań.',
+                    'offer_category_id' => 1,
+                    'offer_status_id' => 2,
+                    'company_supervisor_id' => 6,
+                    'interview' => true,
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s'),
+                ],
             ]
         );
     }

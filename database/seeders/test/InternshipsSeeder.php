@@ -27,6 +27,16 @@ class InternshipsSeeder extends Seeder
                     'created_at' => Carbon::today(),
                     'updated_at' => Carbon::today()
                 ],
+                [
+                    'offer_id' => 2,
+                    'agreement_id' => 2,
+                    'company_supervisor_id' => 6,
+                    'university_supervisor_id' => 9,
+                    'interview_date' => Carbon::today()->addDays(23),
+                    'internship_status_id' => 2,
+                    'created_at' => Carbon::today(),
+                    'updated_at' => Carbon::today()
+                ],
             ]
         );
     }
