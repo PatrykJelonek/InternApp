@@ -24,7 +24,7 @@ class InternshipRepository implements InternshipRepositoryInterface {
                 ->where(function ($query) {
                     $query->where('university_supervisor_id', Auth::user()->id)
                         ->orWhere('company_supervisor_id', Auth::user()->id);
-                })->first();
+                })->with(['agreement.university','agreement.company'])->first();
         }
 
         return $internship;

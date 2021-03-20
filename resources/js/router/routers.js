@@ -33,6 +33,7 @@ import Profile from "../views/Profile";
 import Settings from "../views/Settings";
 import Notifications from "../views/Notifications";
 import Messages from "../views/Messages";
+import University from "../views/University"
 
 Vue.use(VueRouter);
 
@@ -163,6 +164,11 @@ const router = new VueRouter({
                     path: '/company/:id',
                     name: 'company',
                     component: Company,
+                },
+                {
+                    path: '/universities/:id',
+                    name: 'university',
+                    component: University,
                 },
                 {
                     path: '/create-company',

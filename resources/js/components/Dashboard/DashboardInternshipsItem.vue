@@ -6,7 +6,7 @@
         </v-list-item-content>
         <v-list-item-content>
             <v-sparkline
-                :value="journalEntriesStats"
+                :value="getSparklineData()"
                 smooth="20"
                 line-width=".5"
                 padding="10"
@@ -27,7 +27,18 @@
 <script>
 export default {
     name: "DashboardInternshipsItem",
-    props: ['name', 'company', 'journalEntriesStats','id']
+    props: ['name', 'company', 'journalEntriesStats','id'],
+
+    methods: {
+        getSparklineData() {
+            console.log(this.journalEntriesStats);
+            if(this.journalEntriesStats.length < 1) {
+                return [0];
+            }
+
+            return this.journalEntriesStats;
+        }
+    }
 }
 </script>
 

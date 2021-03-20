@@ -30,10 +30,15 @@ Sentry.init({
     },
 });
 
+var dateMethods = {
+    methods: {}
+};
+
 store.dispatch('auth/attempt', localStorage.getItem('token')).then(() => {
     new Vue({
         el: '#app',
         router: Routes,
+        mixin: [''],
         store,
         vuetify
     });
