@@ -1,9 +1,9 @@
 <template>
-    <v-card elevation="0">
+    <v-card elevation="0" color="card-background">
         <v-card-title>Aktywność</v-card-title>
         <v-card-subtitle>Ponieżej znajduje się lista aktywności użytkowników powiązanych z twoim kontem.</v-card-subtitle>
         <v-divider></v-divider>
-        <v-list nav>
+        <v-list nav color="card-background">
             <v-list-item ripple to="/internships/1">
                 <v-list-item-content>
                     <v-list-item-title>Nowy wpis w Praktyka Programistyczna</v-list-item-title>

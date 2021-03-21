@@ -6,7 +6,6 @@ Vue.use(Vuetify);
 
 export default new Vuetify({
     theme: {
-        dark: false,
         options: {
             customProperties: true,
         },
@@ -19,7 +18,8 @@ export default new Vuetify({
                 navigationDrawerExpanded: '#efeff5',
                 'base-background': '#E5E6E8',
                 background: '#E5E6E8',
-                'component-background': '#FFF'
+                'component-background': '#FFF',
+                'card-background': '#fff'
             },
             dark: {
                 //primary: '#1976D2',
@@ -34,7 +34,8 @@ export default new Vuetify({
                 navBackground: '#181A20',
                 cardBackground: '#181A20',
                 'base-background': '#0F1115',
-                'component-background': '#181A20'
+                'component-background': '#181A20',
+                'card-background': '#181A20',
             }
         },
     },

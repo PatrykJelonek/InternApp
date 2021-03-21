@@ -72,6 +72,21 @@
                     <v-list-item-title>Ustawienia</v-list-item-title>
                 </v-list-item>
                 <v-divider></v-divider>
+                <v-list-item>
+                    <v-list-item-icon>
+                        <v-icon dense>mdi-theme-light-dark</v-icon>
+                    </v-list-item-icon>
+                    <v-list-item-title>{{ $vuetify.theme.dark ? 'Tryb ciemny' : 'Tryb jasny' }}</v-list-item-title>
+                    <v-list-item-action class="mr-2">
+                        <v-switch
+                            v-model="$vuetify.theme.dark"
+                            inset
+                            dense
+                            persistent-hint
+                            hide-details
+                        ></v-switch>
+                    </v-list-item-action>
+                </v-list-item>
                 <v-list-item to="/logout">
                     <v-list-item-icon>
                         <v-icon dense>mdi-power-standby</v-icon>

@@ -1,9 +1,9 @@
 <template>
-    <v-card elevation="0" :loading="loading">
+    <v-card elevation="0" :loading="loading" color="card-background">
         <v-card-title>Praktyki</v-card-title>
         <v-card-subtitle>Ponieżej znajduje się lista praktyk którymi się opiekujesz.</v-card-subtitle>
         <v-divider></v-divider>
-        <v-list nav v-if="!loading && internships.length > 0">
+        <v-list nav v-if="!loading && internships.length > 0" color="card-background">
             <dashboard-internships-item
                 v-for="internship in internships"
                 :key="internship.id"
@@ -13,7 +13,7 @@
                 :journal-entries-stats="[]"
             ></dashboard-internships-item>
         </v-list>
-        <v-list v-else>
+        <v-list v-else color="card-background">
             <v-list-item>
                 <v-list-item-title class="text-center">{{ emptyInternshipsListMessage }}</v-list-item-title>
             </v-list-item>

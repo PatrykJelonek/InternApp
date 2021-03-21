@@ -1,6 +1,6 @@
 <template>
-    <v-card elevation="0">
-        <v-list>
+    <v-card elevation="0" color="card-background">
+        <v-list color="card-background">
             <v-list-item>
                 <v-list-item-content>
                     <v-list-item-title class="text-h5 font-weight-medium">Informacje podstawowe</v-list-item-title>
@@ -17,7 +17,7 @@
         <v-expand-transition>
             <v-row v-show="show">
                 <v-col cols="6">
-                    <v-list nav dense>
+                    <v-list nav dense color="card-background">
                         <v-list-item>
                             <v-list-item-content class="font-weight-bold">Nazwa:</v-list-item-content>
                             <v-list-item-content>{{ internshipName }}</v-list-item-content>
@@ -37,7 +37,7 @@
                     </v-list>
                 </v-col>
                 <v-col cols="6">
-                    <v-list nav dense>
+                    <v-list nav dense color="card-background">
                         <v-list-item>
                             <v-list-item-content class="font-weight-bold">Okres:</v-list-item-content>
                             <v-list-item-content>{{ getRangeOfInternshipDates(internshipStartDate, internshipEndDate)}}</v-list-item-content>

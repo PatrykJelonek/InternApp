@@ -1,9 +1,9 @@
 <template>
-    <v-card elevation="0">
+    <v-card elevation="0" color="card-background">
         <v-card-title>Osoby</v-card-title>
         <v-card-subtitle>Lista użytkowników z twojej firmy.</v-card-subtitle>
         <v-divider></v-divider>
-        <v-list nav>
+        <v-list nav color="card-background">
             <v-list-item two-line to="/others">
                 <v-list-item-content>
                     <v-list-item-title>Katarzyna Ratus</v-list-item-title>
