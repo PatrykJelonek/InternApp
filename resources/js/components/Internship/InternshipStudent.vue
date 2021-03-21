@@ -38,8 +38,8 @@ export default {
         }),
 
         cardOnClick() {
-            if(this.$route.params.studentIndex !== this.index) {
-                router.push({ name: 'internship-student', params: { studentIndex: this.index } });
+            if (this.$route.params.studentIndex !== this.index) {
+                router.push({name: 'internship-student', params: {studentIndex: this.index}});
                 this.fetchStudentJournalEntries({internshipId: 1, studentIndex: this.index});
                 this.fetchStudentTasks({internshipId: 1, studentIndex: this.index});
             }

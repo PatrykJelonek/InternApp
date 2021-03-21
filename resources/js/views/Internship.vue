@@ -15,55 +15,18 @@
                 ></the-internship-info-card>
             </v-col>
         </v-row>
-        <v-row class="my-10">
+        <v-row class="mt-10 mb-8">
             <v-col cols="12">
                 <the-internship-students></the-internship-students>
             </v-col>
         </v-row>
         <!-- Students -->
-        <v-row class="mt-10">
-<!--            <v-col-->
-<!--                cols="12"-->
-<!--                md="4"-->
-<!--                lg="auto"-->
-<!--                v-has="['admin','company_worker','university_worker']"-->
-<!--            >-->
-<!--                <v-expansion-panels v-model="studentListExpansionPanel" flat>-->
-<!--                    <v-expansion-panel class="transparent">-->
-<!--                        <internship-column-header-->
-<!--                            icon="mdi-account-group-outline"-->
-<!--                            title="Studenci"-->
-<!--                        ></internship-column-header>-->
-<!--                        <v-expansion-panel-content color="transparent">-->
-<!--                            <the-internship-students-list-->
-<!--                                :internship-id="$route.params.internshipId"-->
-<!--                                :internship-end-date="internship.agreement.date_to"-->
-<!--                            ></the-internship-students-list>-->
-<!--                        </v-expansion-panel-content>-->
-<!--                    </v-expansion-panel>-->
-<!--                </v-expansion-panels>-->
-<!--            </v-col>-->
+        <v-row class="mb-10">
             <!-- Journal Entries -->
             <v-col cols="12" md="4" lg="6">
-                <v-expansion-panels v-model="journalEntriesExpansionPanel" flat>
-                    <v-expansion-panel class="transparent">
-                        <internship-column-header
-                            icon="mdi-text-box-multiple-outline"
-                            title="Wpisy"
-                        ></internship-column-header>
-                        <v-expansion-panel-content class="transparent">
-                            <internship-dialog name="JOURNAL_ENTRY_DIALOG">
-                                <internship-create-journal-entry-form
-                                    :internship-end-date="internship.agreement.date_to"
-                                    dialog-name="JOURNAL_ENTRY_DIALOG"
-                                ></internship-create-journal-entry-form>
-                            </internship-dialog>
-                            <the-internship-student-journal-entries-list
-                                :internship-start-date="internship.agreement.date_from"
-                            ></the-internship-student-journal-entries-list>
-                        </v-expansion-panel-content>
-                    </v-expansion-panel>
-                </v-expansion-panels>
+                <the-internship-student-journal-entries
+                    :internship-start-date="internship.agreement.date_from"
+                ></the-internship-student-journal-entries>
             </v-col>
             <!-- Tasks -->
             <v-col cols="12" md="4" lg="6">
@@ -125,10 +88,12 @@ import TheInternshipStudentsDrawer from "../components/Internship/TheInternshipS
 import PageTitle from "../components/_Helpers/PageTitle";
 import TheInternshipStudents from "../components/Internship/TheInternshipStudents";
 import TheInternshipPercent from "../components/Internship/TheInternshipPercent";
+import TheInternshipStudentJournalEntries from "../components/Internship/TheInternshipStudentJournalEntries";
 
 export default {
     name: "Internship",
     components: {
+        TheInternshipStudentJournalEntries,
         TheInternshipPercent,
         TheInternshipStudents,
         PageTitle,
