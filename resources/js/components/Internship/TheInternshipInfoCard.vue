@@ -50,15 +50,6 @@
                             <v-list-item-content class="font-weight-bold">Ilość praktykantów:</v-list-item-content>
                             <v-list-item-content>{{ internshipStudents.length }}</v-list-item-content>
                         </v-list-item>
-                        <v-list-item>
-                            <v-list-item-content class="font-weight-bold">Status:</v-list-item-content>
-                            <v-list-item-content v-if="getPercentOfInternship(internshipStartDate, internshipEndDate) > 99">
-                                Zakończone
-                            </v-list-item-content>
-                            <v-list-item-content v-else>
-                                W Trakcie
-                            </v-list-item-content>
-                        </v-list-item>
                     </v-list>
                 </v-col>
             </v-row>

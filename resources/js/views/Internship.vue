@@ -15,31 +15,36 @@
                 ></the-internship-info-card>
             </v-col>
         </v-row>
+        <v-row class="my-10">
+            <v-col cols="12">
+                <the-internship-students></the-internship-students>
+            </v-col>
+        </v-row>
         <!-- Students -->
         <v-row class="mt-10">
-            <v-col
-                cols="12"
-                md="4"
-                lg="auto"
-                v-has="['admin','company_worker','university_worker']"
-            >
-                <v-expansion-panels v-model="studentListExpansionPanel" flat>
-                    <v-expansion-panel class="transparent">
-                        <internship-column-header
-                            icon="mdi-account-group-outline"
-                            title="Studenci"
-                        ></internship-column-header>
-                        <v-expansion-panel-content color="transparent">
-                            <the-internship-students-list
-                                :internship-id="$route.params.internshipId"
-                                :internship-end-date="internship.agreement.date_to"
-                            ></the-internship-students-list>
-                        </v-expansion-panel-content>
-                    </v-expansion-panel>
-                </v-expansion-panels>
-            </v-col>
+<!--            <v-col-->
+<!--                cols="12"-->
+<!--                md="4"-->
+<!--                lg="auto"-->
+<!--                v-has="['admin','company_worker','university_worker']"-->
+<!--            >-->
+<!--                <v-expansion-panels v-model="studentListExpansionPanel" flat>-->
+<!--                    <v-expansion-panel class="transparent">-->
+<!--                        <internship-column-header-->
+<!--                            icon="mdi-account-group-outline"-->
+<!--                            title="Studenci"-->
+<!--                        ></internship-column-header>-->
+<!--                        <v-expansion-panel-content color="transparent">-->
+<!--                            <the-internship-students-list-->
+<!--                                :internship-id="$route.params.internshipId"-->
+<!--                                :internship-end-date="internship.agreement.date_to"-->
+<!--                            ></the-internship-students-list>-->
+<!--                        </v-expansion-panel-content>-->
+<!--                    </v-expansion-panel>-->
+<!--                </v-expansion-panels>-->
+<!--            </v-col>-->
             <!-- Journal Entries -->
-            <v-col cols="12" md="4" lg="3">
+            <v-col cols="12" md="4" lg="6">
                 <v-expansion-panels v-model="journalEntriesExpansionPanel" flat>
                     <v-expansion-panel class="transparent">
                         <internship-column-header
@@ -61,7 +66,7 @@
                 </v-expansion-panels>
             </v-col>
             <!-- Tasks -->
-            <v-col cols="12" md="4" lg="3">
+            <v-col cols="12" md="4" lg="6">
                 <v-expansion-panels v-model="tasksExpansionPanel" flat>
                     <v-expansion-panel class="transparent">
                         <internship-column-header
@@ -81,19 +86,19 @@
                 </v-expansion-panels>
             </v-col>
             <!-- Preview -->
-            <v-col cols="12" lg="auto" class="hidden-md-and-down">
-                <v-expansion-panels v-model="previewExpansionPanel" flat>
-                    <v-expansion-panel class="transparent">
-                        <internship-column-header
-                            icon="mdi-eye-outline"
-                            title="Podgląd"
-                        ></internship-column-header>
-                        <v-expansion-panel-content class="transparent">
-                            <p>{{ preview }}</p>
-                        </v-expansion-panel-content>
-                    </v-expansion-panel>
-                </v-expansion-panels>
-            </v-col>
+<!--            <v-col cols="12" lg="auto" class="hidden-md-and-down">-->
+<!--                <v-expansion-panels v-model="previewExpansionPanel" flat>-->
+<!--                    <v-expansion-panel class="transparent">-->
+<!--                        <internship-column-header-->
+<!--                            icon="mdi-eye-outline"-->
+<!--                            title="Podgląd"-->
+<!--                        ></internship-column-header>-->
+<!--                        <v-expansion-panel-content class="transparent">-->
+<!--                            <p>{{ preview }}</p>-->
+<!--                        </v-expansion-panel-content>-->
+<!--                    </v-expansion-panel>-->
+<!--                </v-expansion-panels>-->
+<!--            </v-col>-->
         </v-row>
         <snackbar></snackbar>
     </v-container>
@@ -118,10 +123,14 @@ import InternshipCreateJournalEntryForm from "../components/Internship/Internshi
 import InternshipCreateTaskForm from "../components/Internship/InternshipCreateTaskForm";
 import TheInternshipStudentsDrawer from "../components/Internship/TheInternshipStudentsDrawer";
 import PageTitle from "../components/_Helpers/PageTitle";
+import TheInternshipStudents from "../components/Internship/TheInternshipStudents";
+import TheInternshipPercent from "../components/Internship/TheInternshipPercent";
 
 export default {
     name: "Internship",
     components: {
+        TheInternshipPercent,
+        TheInternshipStudents,
         PageTitle,
         TheInternshipStudentsDrawer,
         InternshipCreateTaskForm,
@@ -159,14 +168,19 @@ export default {
 
     methods: {
         ...mapActions({
-            fetchInternship: 'internship/fetchInternship'
+            fetchInternship: 'internship/fetchInternship',
+            fetchInternshipStudents: 'internship/fetchInternshipStudents',
         }),
     },
 
     created() {
         this.fetchInternship(this.$route.params.internshipId).then(() => {
+            this.fetchInternshipStudents(this.$route.params.internshipId).then(() => {
+            }).catch((e) => {
+                console.error(e);
+            });
             this.showInfoCard = true;
-           console.log(this.internship);
+
             if (this.internship.length < 1) {
                 this.$router.push({name: 'not-found'});
             }
