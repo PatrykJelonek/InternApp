@@ -89,10 +89,12 @@ import PageTitle from "../components/_Helpers/PageTitle";
 import TheInternshipStudents from "../components/Internship/TheInternshipStudents";
 import TheInternshipPercent from "../components/Internship/TheInternshipPercent";
 import TheInternshipStudentJournalEntries from "../components/Internship/TheInternshipStudentJournalEntries";
+import TheInternshipFab from "../components/Internship/TheInternshipFab";
 
 export default {
     name: "Internship",
     components: {
+        TheInternshipFab,
         TheInternshipStudentJournalEntries,
         TheInternshipPercent,
         TheInternshipStudents,
