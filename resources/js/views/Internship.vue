@@ -3,7 +3,7 @@
         <!--        <the-internship-students-drawer v-if="!$vuetify.breakpoint.mobile"></the-internship-students-drawer>-->
         <page-title>{{ internship.offer.name }}</page-title>
         <v-row>
-            <v-col cols="12" md="6" lg="12">
+            <v-col cols="12" md="12" lg="12">
                 <the-internship-info-card
                     :internship-name="internship.offer.name"
                     :internship-start-date="internship.agreement.date_from"
@@ -14,54 +14,21 @@
                     :company-name="internship.agreement.company.name"
                 ></the-internship-info-card>
             </v-col>
-        </v-row>
-        <v-row class="mt-10 mb-8">
-            <v-col cols="12">
+            <!-- Students -->
+            <v-col cols="12" class="my-2">
                 <the-internship-students></the-internship-students>
             </v-col>
-        </v-row>
-        <!-- Students -->
-        <v-row class="mb-10">
+
             <!-- Journal Entries -->
-            <v-col cols="12" md="4" lg="6">
+            <v-col cols="12" md="6" lg="6" class="my-2">
                 <the-internship-student-journal-entries
                     :internship-start-date="internship.agreement.date_from"
                 ></the-internship-student-journal-entries>
             </v-col>
             <!-- Tasks -->
-            <v-col cols="12" md="4" lg="6">
-                <v-expansion-panels v-model="tasksExpansionPanel" flat>
-                    <v-expansion-panel class="transparent">
-                        <internship-column-header
-                            icon="mdi-calendar-check"
-                            title="Zadania"
-                        ></internship-column-header>
-                        <v-expansion-panel-content class="transparent">
-                            <internship-dialog name="TASK_DIALOG">
-                                <internship-create-task-form
-                                    dialogName="TASK_DIALOG"
-                                ></internship-create-task-form>
-                            </internship-dialog>
-                            <!--                            <the-internship-create-student-task-dialog></the-internship-create-student-task-dialog>-->
-                            <the-internship-student-tasks-list></the-internship-student-tasks-list>
-                        </v-expansion-panel-content>
-                    </v-expansion-panel>
-                </v-expansion-panels>
+            <v-col cols="12" md="6" lg="6" class="my-2">
+                <the-internship-student-tasks></the-internship-student-tasks>
             </v-col>
-            <!-- Preview -->
-<!--            <v-col cols="12" lg="auto" class="hidden-md-and-down">-->
-<!--                <v-expansion-panels v-model="previewExpansionPanel" flat>-->
-<!--                    <v-expansion-panel class="transparent">-->
-<!--                        <internship-column-header-->
-<!--                            icon="mdi-eye-outline"-->
-<!--                            title="Podgląd"-->
-<!--                        ></internship-column-header>-->
-<!--                        <v-expansion-panel-content class="transparent">-->
-<!--                            <p>{{ preview }}</p>-->
-<!--                        </v-expansion-panel-content>-->
-<!--                    </v-expansion-panel>-->
-<!--                </v-expansion-panels>-->
-<!--            </v-col>-->
         </v-row>
         <snackbar></snackbar>
     </v-container>
@@ -90,10 +57,12 @@ import TheInternshipStudents from "../components/Internship/TheInternshipStudent
 import TheInternshipPercent from "../components/Internship/TheInternshipPercent";
 import TheInternshipStudentJournalEntries from "../components/Internship/TheInternshipStudentJournalEntries";
 import TheInternshipFab from "../components/Internship/TheInternshipFab";
+import TheInternshipStudentTasks from "../components/Internship/TheInternshipStudentTasks";
 
 export default {
     name: "Internship",
     components: {
+        TheInternshipStudentTasks,
         TheInternshipFab,
         TheInternshipStudentJournalEntries,
         TheInternshipPercent,

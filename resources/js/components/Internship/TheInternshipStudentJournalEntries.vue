@@ -9,10 +9,19 @@
                     <v-list-item-title class="text-h5 font-weight-medium">Wpisy</v-list-item-title>
                     <v-list-item-subtitle>Lista wpisów wybranego studenta.</v-list-item-subtitle>
                 </v-list-item-content>
-                <v-list-item-action v-if="this.$route.params.studentIndex && !loadingStudentJournalEntries && studentJournalEntries.length > 0">
-                    <v-btn icon @click="show = !show">
-                        <v-icon>{{ show ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
-                    </v-btn>
+                <v-list-item-action>
+                    <v-btn-toggle dense borderless>
+                        <v-btn icon>
+                            <v-icon>mdi-plus</v-icon>
+                        </v-btn>
+                        <v-btn
+                            icon
+                            @click="show = !show"
+                            v-if="this.$route.params.studentIndex && !loadingStudentJournalEntries && studentJournalEntries.length > 0"
+                        >
+                            <v-icon>{{ show ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
+                        </v-btn>
+                    </v-btn-toggle>
                 </v-list-item-action>
             </v-list-item>
         </v-list>

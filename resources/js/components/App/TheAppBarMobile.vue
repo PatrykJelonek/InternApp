@@ -3,7 +3,6 @@
         app
         flat
         hide-on-scroll
-        color="transparent"
     >
         <v-icon
             @click="$router.go(-1)"

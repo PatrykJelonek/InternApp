@@ -15,8 +15,8 @@
         </v-list>
         <v-divider></v-divider>
         <v-expand-transition>
-            <v-row v-show="show">
-                <v-col cols="6">
+            <v-row v-show="show" no-gutters>
+                <v-col cols="12" sm="12" md="6" lg="6">
                     <v-list nav dense color="card-background">
                         <v-list-item>
                             <v-list-item-content class="font-weight-bold">Nazwa:</v-list-item-content>
@@ -36,7 +36,7 @@
                         </v-list-item>
                     </v-list>
                 </v-col>
-                <v-col cols="6">
+                <v-col cols="12" sm="12" md="6" lg="6">
                     <v-list nav dense color="card-background">
                         <v-list-item>
                             <v-list-item-content class="font-weight-bold">Okres:</v-list-item-content>
