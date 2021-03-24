@@ -29,7 +29,7 @@
         <v-expand-transition v-if="this.$route.params.studentIndex && !loadingStudentJournalEntries && studentJournalEntries.length > 0">
             <v-row v-show="show">
                 <v-col cols="12">
-                    <v-list nav>
+                    <v-list nav color="card-background">
                         <internship-student-journal-entry
                             v-for="studentJournalEntry in studentJournalEntries"
                             :v-key="studentJournalEntry.id"

@@ -10,7 +10,7 @@
                     <v-list-item-subtitle>Lista zadań przypisanych do wybranego studenta.</v-list-item-subtitle>
                 </v-list-item-content>
                 <v-list-item-action>
-                    <v-btn-toggle dense borderless>
+                    <v-btn-toggle dense borderless color="card-background">
                         <v-btn icon>
                             <v-icon>mdi-plus</v-icon>
                         </v-btn>
@@ -29,7 +29,7 @@
         <v-expand-transition v-if="this.$route.params.studentIndex && !loadingStudentTasks && studentTasks.length > 0">
             <v-row v-show="show">
                 <v-col cols="12">
-                    <v-list nav>
+                    <v-list nav color="card-background">
                         <internship-student-task
                             v-for="task in studentTasks"
                             :key="task.id"
