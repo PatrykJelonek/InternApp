@@ -11,7 +11,7 @@
                 </v-list-item-content>
                 <v-list-item-action>
                     <v-btn-toggle dense borderless color="card-background">
-                        <v-btn icon>
+                        <v-btn icon v-if="this.$route.params.studentIndex">
                             <v-icon>mdi-plus</v-icon>
                         </v-btn>
                         <v-btn

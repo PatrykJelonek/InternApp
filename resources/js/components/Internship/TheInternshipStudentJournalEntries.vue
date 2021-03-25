@@ -11,9 +11,7 @@
                 </v-list-item-content>
                 <v-list-item-action>
                     <v-btn-toggle dense borderless>
-                        <v-btn icon>
-                            <v-icon>mdi-plus</v-icon>
-                        </v-btn>
+                        <the-internship-create-student-journal-entry-dialog></the-internship-create-student-journal-entry-dialog>
                         <v-btn
                             icon
                             @click="show = !show"
@@ -32,7 +30,7 @@
                     <v-list nav color="card-background">
                         <internship-student-journal-entry
                             v-for="studentJournalEntry in studentJournalEntries"
-                            :v-key="studentJournalEntry.id"
+                            :key="studentJournalEntry.id"
                             :content="studentJournalEntry.content"
                             :status="studentJournalEntry.accepted"
                             :internship-start-date="internshipStartDate"
@@ -58,10 +56,11 @@
 <script>
 import {mapActions, mapGetters} from "vuex";
 import InternshipStudentJournalEntry from "./InternshipStudentJournalEntry";
+import TheInternshipCreateStudentJournalEntryDialog from "./TheInternshipCreateStudentJournalEntryDialog";
 
 export default {
     name: "TheInternshipStudentJournalEntries",
-    components: {InternshipStudentJournalEntry},
+    components: {TheInternshipCreateStudentJournalEntryDialog, InternshipStudentJournalEntry},
     props: ['internshipStartDate'],
 
     data() {

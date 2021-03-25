@@ -109,7 +109,8 @@ export default {
     computed: {
         ...mapGetters({
             currentUser: 'auth/user',
-            internshipStudents: 'internship/internshipStudents'
+            internshipStudents: 'internship/internshipStudents',
+            internship: 'internship/internship',
         })
     },
 
@@ -160,7 +161,7 @@ export default {
     },
 
     created() {
-        let internshipEndDate = moment() < moment(this.internshipEndDate) ? moment() : moment(this.internshipEndDate);
+        let internshipEndDate = moment() < moment(this.internship.agreement.date_to) ? moment() : moment(this.internship.agreement.date_to);
         this.maxJournalEntryDate = internshipEndDate.format('YYYY-MM-DD');
         this.minJournalEntryDate = internshipEndDate.subtract(7, 'days').format('YYYY-MM-DD');
 
