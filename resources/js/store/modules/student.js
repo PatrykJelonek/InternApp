@@ -76,25 +76,33 @@ export default {
         },
 
         async fetchStudentJournalEntries({commit}, {internshipId, studentIndex}) {
-            commit('SET_LOADING_STUDENT_JOURNAL_ENTRIES', true);
-            try {
-                let response = await axios.get(`/api/internships/${internshipId}/students/${studentIndex}/journal-entries`);
-                commit('SET_STUDENT_JOURNAL_ENTRIES', response.data);
-                commit('SET_LOADING_STUDENT_JOURNAL_ENTRIES', false);
-            } catch (e) {
-                console.error(e);
+            if(internshipId && studentIndex) {
+                commit('SET_LOADING_STUDENT_JOURNAL_ENTRIES', true);
+                try {
+                    let response = await axios.get(`/api/internships/${internshipId}/students/${studentIndex}/journal-entries`);
+                    commit('SET_STUDENT_JOURNAL_ENTRIES', response.data);
+                    commit('SET_LOADING_STUDENT_JOURNAL_ENTRIES', false);
+                } catch (e) {
+                    console.error(e);
+                    commit('SET_LOADING_STUDENT_JOURNAL_ENTRIES', false);
+                }
+            } else {
                 commit('SET_LOADING_STUDENT_JOURNAL_ENTRIES', false);
             }
         },
 
         async fetchStudentTasks({commit}, {internshipId, studentIndex}) {
-            commit('SET_LOADING_STUDENT_TASKS', true);
-            try {
-                let response = await axios.get(`/api/internships/${internshipId}/students/${studentIndex}/tasks`);
-                commit('SET_STUDENT_TASKS', response.data);
-                commit('SET_LOADING_STUDENT_TASKS', false);
-            } catch (e) {
-                console.error(e);
+            if(internshipId && studentIndex) {
+                commit('SET_LOADING_STUDENT_TASKS', true);
+                try {
+                    let response = await axios.get(`/api/internships/${internshipId}/students/${studentIndex}/tasks`);
+                    commit('SET_STUDENT_TASKS', response.data);
+                    commit('SET_LOADING_STUDENT_TASKS', false);
+                } catch (e) {
+                    console.error(e);
+                    commit('SET_LOADING_STUDENT_TASKS', false);
+                }
+            } else {
                 commit('SET_LOADING_STUDENT_TASKS', false);
             }
         },

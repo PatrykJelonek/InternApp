@@ -24,12 +24,13 @@
             </v-list-item>
         </v-list>
         <v-divider></v-divider>
-        <v-expand-transition v-if="this.$route.params.studentIndex && !loadingStudentJournalEntries && studentJournalEntries.length > 0">
+        <v-expand-transition
+            v-if="this.$route.params.studentIndex && !loadingStudentJournalEntries && studentJournalEntries.length > 0">
             <v-row v-show="show">
                 <v-col cols="12">
                     <v-list nav color="card-background">
                         <internship-student-journal-entry
-                            v-for="studentJournalEntry in studentJournalEntries"
+                            v-for="studentJournalEntry in displayedJournalEntries"
                             :key="studentJournalEntry.id"
                             :content="studentJournalEntry.content"
                             :status="studentJournalEntry.accepted"
@@ -37,6 +38,13 @@
                             :journal-entry-date="studentJournalEntry.date"
                         ></internship-student-journal-entry>
                     </v-list>
+                </v-col>
+                <v-col cols="12">
+                    <v-pagination
+                        v-model="page"
+                        :length="Math.ceil(studentJournalEntries.length/perPage)"
+                        :total-visible="totalVisible"
+                    ></v-pagination>
                 </v-col>
             </v-row>
         </v-expand-transition>
@@ -66,6 +74,9 @@ export default {
     data() {
         return {
             show: true,
+            page: 1,
+            perPage: 5,
+            totalVisible: 5,
         }
     },
 
@@ -73,7 +84,11 @@ export default {
         ...mapGetters({
             studentJournalEntries: 'student/studentJournalEntries',
             loadingStudentJournalEntries: 'student/loadingStudentJournalEntries',
-        })
+        }),
+
+        displayedJournalEntries() {
+            return this.studentJournalEntries.slice((this.page - 1) * this.perPage, this.page * this.perPage);
+        },
     },
 
     methods: {

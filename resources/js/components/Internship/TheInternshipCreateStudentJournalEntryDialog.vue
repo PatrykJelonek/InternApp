@@ -5,7 +5,7 @@
                 icon
                 v-on="on"
                 v-bind="attrs"
-                v-show="$route.params.studentIndex"
+                v-if="$route.params.studentIndex"
             >
                 <v-icon>mdi-plus</v-icon>
             </v-btn>
@@ -100,7 +100,7 @@
                 <v-btn
                     color="primary"
                     text
-                    @click="dialog = false"
+                    @click="submit"
                 >
                     Dodaj wpis
                 </v-btn>
@@ -152,7 +152,6 @@ export default {
 
         getStudentIdByStudentIndex(studentIndex) {
             if (this.internshipStudents.length > 0) {
-                console.log(this.internshipStudents);
                 this.internshipStudents.forEach((student) => {
 
                     if (student.student_index === studentIndex) {
@@ -178,6 +177,7 @@ export default {
                 'studentIndex': this.$route.params.studentIndex,
                 'journalEntry': this.journalEntry
             }).then((journalEntry) => {
+                this.dialog = false;
                 this.clearJournalEntry();
                 this.setSnackbar({message: 'Wpis został dodany!', color: 'success'});
                 this.addStudentJournalEntry(journalEntry);

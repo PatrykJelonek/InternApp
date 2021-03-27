@@ -33,7 +33,7 @@ export default {
 
         internshipStudentsLoading(state) {
             return state.internshipStudentsLoading
-        }
+        },
     },
 
     mutations: {
@@ -79,6 +79,7 @@ export default {
                 commit('SET_INTERNSHIP', response.data);
                 commit('SET_INTERNSHIP_LOADING', false);
             } catch(e) {
+                commit('SET_INTERNSHIP_LOADING', false);
                 commit('SET_INTERNSHIP', []);
             }
         },
@@ -105,6 +106,10 @@ export default {
 
         setPreview({commit}, data) {
             commit('SET_PREVIEW', data);
-        }
+        },
+
+        createTask({commit}, {internshipId, studentIndex, task}) {
+            return axios.post(`/api/internships/${internshipId}/students/${studentIndex}/tasks`, task);
+        },
     },
 }

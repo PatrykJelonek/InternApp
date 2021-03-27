@@ -31,7 +31,6 @@ export default {
 
     methods: {
         getSparklineData() {
-            console.log(this.journalEntriesStats);
             if(this.journalEntriesStats.length < 1) {
                 return [0];
             }

@@ -10,4 +10,9 @@ class StudentTask extends Model
     use HasFactory;
 
     protected $table = "students_tasks";
+
+    public function student(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo('App\Models\Student', 'student_id', 'id');
+    }
 }

@@ -1,5 +1,5 @@
 <template>
-    <v-card elevation="0" color="card-background" :loading="loadingStudentTasks">
+    <v-card elevation="0" color="card-background" :loading="loadingStudentTasks" :height="studentTasks.length > perPage ? '520px' : ''">
         <template slot="progress">
             <v-progress-linear color="primary" indeterminate></v-progress-linear>
         </template>
@@ -11,9 +11,7 @@
                 </v-list-item-content>
                 <v-list-item-action>
                     <v-btn-toggle dense borderless color="card-background">
-                        <v-btn icon v-if="this.$route.params.studentIndex">
-                            <v-icon>mdi-plus</v-icon>
-                        </v-btn>
+                        <the-internship-create-student-task-dialog></the-internship-create-student-task-dialog>
                         <v-btn
                             icon
                             @click="show = !show"
@@ -31,13 +29,20 @@
                 <v-col cols="12">
                     <v-list nav color="card-background">
                         <internship-student-task
-                            v-for="task in studentTasks"
+                            v-for="task in displayedTasks"
                             :key="task.id"
                             :name="task.name"
                             :description="task.description"
                             :done="task.done"
                         ></internship-student-task>
                     </v-list>
+                </v-col>
+                <v-col cols="12" v-if="studentTasks.length > perPage">
+                    <v-pagination
+                        v-model="page"
+                        :length="Math.ceil(studentTasks.length/perPage)"
+                        :total-visible="totalVisible"
+                    ></v-pagination>
                 </v-col>
             </v-row>
         </v-expand-transition>
@@ -57,13 +62,17 @@
 <script>
 import {mapActions, mapGetters} from "vuex";
 import InternshipStudentTask from "./InternshipStudentTask";
+import TheInternshipCreateStudentTaskDialog from "./TheInternshipCreateStudentTaskDialog";
 
 export default {
     name: "TheInternshipStudentTasks",
-    components: {InternshipStudentTask},
+    components: {TheInternshipCreateStudentTaskDialog, InternshipStudentTask},
     data() {
         return {
             show: true,
+            page: 1,
+            perPage: 5,
+            totalVisible: 5,
         }
     },
 
@@ -71,7 +80,11 @@ export default {
         ...mapGetters({
             studentTasks: 'student/studentTasks',
             loadingStudentTasks: 'student/loadingStudentTasks',
-        })
+        }),
+
+        displayedTasks() {
+            return this.studentTasks.slice((this.page - 1) * this.perPage, this.page * this.perPage);
+        },
     },
 
     methods: {

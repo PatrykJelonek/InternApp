@@ -6,6 +6,7 @@ use Illuminate\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
 use Laratrust\Traits\LaratrustUserTrait;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
@@ -14,6 +15,7 @@ class User extends Model implements AuthenticatableContract, JWTSubject
     use LaratrustUserTrait;
     use Authenticatable;
     use HasFactory;
+    use Notifiable;
 
     protected $table = 'users';
 

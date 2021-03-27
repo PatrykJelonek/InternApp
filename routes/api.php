@@ -82,7 +82,6 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::get('/internships/{internship}/students/{student}/journal-entries/{journalEntry}','Api\JournalController@show');
 //    Route::get('/users/{user_id}/internships/{internship_id}/journal_entries', '');
 
-
     # New endpoints
 
     # Internship Tasks
