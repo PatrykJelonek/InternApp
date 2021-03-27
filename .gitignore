@@ -59,5 +59,8 @@ _ide_helper.php
 /vendor
 .env
 /public/.htaccess
+storage/clockwork
+storage/framework/cache/*
+storage/framework/sessions/*
+storage/framework/views/*
 storage/*.key
-composer.lock
