@@ -1,5 +1,5 @@
 <template>
-    <v-card elevation="0" color="card-background" :loading="loadingStudentTasks" :height="studentTasks.length > perPage ? '520px' : ''">
+    <v-card elevation="0" color="card-background" :loading="loadingStudentTasks">
         <template slot="progress">
             <v-progress-linear color="primary" indeterminate></v-progress-linear>
         </template>

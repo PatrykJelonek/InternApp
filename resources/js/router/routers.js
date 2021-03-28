@@ -118,36 +118,8 @@ const router = new VueRouter({
                     name: 'universities',
                     components: {
                         default: Universities,
-                        tabs: UniversitiesTabs
                     },
                     meta: {title: 'Uczelnia'},
-                    children: [
-                        {
-                            path: '/universities/overview',
-                            name: 'university-overview',
-                            component: Companies
-                        },
-                        {
-                            path: '/universities/internships-list',
-                            name: 'university-internships-list',
-                            component: Companies
-                        },
-                        {
-                            path: '/universities/workers-list',
-                            name: 'university-workers-list',
-                            component: Companies
-                        },
-                        {
-                            path: '/universities/students-list',
-                            name: 'university-students-list',
-                            component: Companies
-                        },
-                        {
-                            path: '/universities/settings',
-                            name: 'university-settings',
-                            component: Companies
-                        },
-                    ],
                 },
                 {
                     path: '/create-university',
@@ -166,7 +138,7 @@ const router = new VueRouter({
                     component: Company,
                 },
                 {
-                    path: '/universities/:id',
+                    path: '/universities/:slug',
                     name: 'university',
                     component: University,
                 },

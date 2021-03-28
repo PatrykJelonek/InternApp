@@ -3,11 +3,27 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Repositories\UserRepository;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 class UserUniversityController extends Controller
 {
+    /**
+     * @var UserRepository
+     */
+    private $userRepository;
+
+    /**
+     * UserUniversityController constructor.
+     *
+     * @param UserRepository $userRepository
+     */
+    public function __construct(UserRepository $userRepository)
+    {
+        $this->userRepository = $userRepository;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -15,13 +31,13 @@ class UserUniversityController extends Controller
      */
     public function index()
     {
-        $user = auth()->user();
+        $universities = $this->userRepository->getUniversities();
 
-        return response([
-            'status' => 'success',
-            'data' => $user->universities,
-            'message' => null
-        ], Response::HTTP_OK);
+        if($universities !== null) {
+            return response($universities, Response::HTTP_OK);
+        }
+
+        return response(null, Response::HTTP_NOT_FOUND);
     }
 
     /**

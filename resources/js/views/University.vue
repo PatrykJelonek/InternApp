@@ -1,10 +1,33 @@
 <template>
-    <h1>University</h1>
+    <h1>{{ university.name }}</h1>
 </template>
 
 <script>
+import {mapActions, mapGetters} from "vuex";
+
 export default {
-name: "University"
+    name: "University",
+
+    computed: {
+        ...mapGetters({
+            university: 'university/university',
+            universityLoading: 'university/universityLoading',
+        }),
+    },
+
+    methods: {
+        ...mapActions({
+            fetchUniversity: 'university/fetchUniversity',
+        }),
+    },
+
+    created() {
+        this.fetchUniversity(this.$route.params.slug).then(() => {
+
+        }).catch((e) => {
+
+        })
+    }
 }
 </script>
 

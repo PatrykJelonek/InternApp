@@ -17,9 +17,20 @@ use Illuminate\Support\Str;
 class UniversityRepository implements UniversityRepositoryInterface
 {
 
-    public function one(int $id)
+    /**
+     * @param string $slug
+     *
+     * @return mixed
+     */
+    public function one(string $slug)
     {
-        return University::find($id);
+        $university = University::where('slug', $slug)->first();
+
+        if(!empty($university)) {
+            return $university;
+        }
+
+        return null;
     }
 
     public function all()

@@ -14,11 +14,16 @@ export default {
         internships: [],
         interns: [],
         newInternships: [],
+        userUniversitiesLoading: true,
     },
 
     getters: {
         userUniversities(state) {
             return state.userUniversities;
+        },
+
+        userUniversitiesLoading(state) {
+            return state.userUniversitiesLoading;
         },
 
         userCompanies(state) {
@@ -59,6 +64,10 @@ export default {
 
         SET_USER_UNIVERSITIES(state, data) {
             state.userUniversities = data;
+        },
+
+        SET_USER_UNIVERSITIES_LOADING(state, data) {
+            state.userUniversitiesLoading = data;
         },
 
         SET_USER_COMPANIES(state, data) {
@@ -113,11 +122,14 @@ export default {
         },
 
         async fetchUserUniversities({ commit }) {
+            commit('SET_USER_UNIVERSITIES_LOADING', true);
             try {
-                let response = await axios.get('/api/user-universities');
-                commit('SET_USER_UNIVERSITIES', response.data.data);
+                let response = await axios.get('/api/me/universities');
+                commit('SET_USER_UNIVERSITIES', response.data);
+                commit('SET_USER_UNIVERSITIES_LOADING', false);
             } catch (e) {
                 commit('SET_USER_UNIVERSITIES', []);
+                commit('SET_USER_UNIVERSITIES_LOADING', false);
             }
         },
 

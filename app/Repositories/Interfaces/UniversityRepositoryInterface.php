@@ -8,7 +8,7 @@
 
 namespace App\Repositories\Interfaces;
 
-interface UniversityRepositoryInterface extends DefaultRepositoryInterface
+interface UniversityRepositoryInterface
 {
-
+    public function one(string $slug);
 }

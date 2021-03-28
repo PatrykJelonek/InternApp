@@ -10,11 +10,21 @@ export default {
         universityAgreements: [],
         internships: [],
         students: [],
+        university: null,
+        universityLoading: true,
     },
 
     getters: {
         universities: state => {
             return state.universities;
+        },
+
+        university: state => {
+            return state.university;
+        },
+
+        universityLoading: state => {
+            return state.universityLoading;
         },
 
         universityTypes: (state) => {
@@ -81,6 +91,14 @@ export default {
 
         SET_STUDENTS(state, data) {
             state.students = data;
+        },
+
+        SET_UNIVERSITY(state, data) {
+            state.university = data;
+        },
+
+        SET_UNIVERSITY_LOADING(state, data) {
+            state.universityLoading = data;
         },
     },
 
@@ -167,5 +185,17 @@ export default {
                 commit('SET_STUDENTS', []);
             }
         },
+
+        async fetchUniversity({commit}, slug) {
+            commit('SET_UNIVERSITY_LOADING', true);
+            try {
+                let response = await axios.get(`/api/universities/${slug}`);
+                commit('SET_UNIVERSITY', response.data);
+                commit('SET_UNIVERSITY_LOADING', false);
+            } catch (e) {
+                commit('SET_UNIVERSITY', []);
+                commit('SET_UNIVERSITY_LOADING', false);
+            }
+        }
     }
 };

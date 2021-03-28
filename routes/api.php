@@ -90,8 +90,12 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::post('/internships/{internship}/students/{student?}/tasks', 'Api\TaskController@store');
     Route::get('/internships/{internship}/students/{student}/tasks/{task}', 'Api\TaskController@show');
 
+    # Universities
+    Route::get('/universities/{slug}', 'Api\UniversityController@show');
+
     # User
     Route::get('/me/internships', 'Api\UserController@getUserInternships');
+    Route::get('/me/universities', 'Api\UserUniversityController@index');
 
 
     Route::get('/me', [

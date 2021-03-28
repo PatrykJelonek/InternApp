@@ -35,4 +35,15 @@ class UserRepository implements UserRepositoryInterface
 
         return $internships;
     }
+
+    public function getUniversities()
+    {
+        $universities = auth()->user()->universities;
+
+        if(!empty($universities)) {
+            return $universities;
+        }
+
+        return null;
+    }
 }
