@@ -12,16 +12,16 @@
         <v-spacer></v-spacer>
 
         <v-btn-toggle group>
-            <v-btn text plain small :ripple="false" to="/dashboard">
+            <v-btn text plain small :ripple="false" :to="{name: 'dashboard'}">
                 Dashboard
             </v-btn>
-            <v-btn text plain small :ripple="false" to="/universities">
+            <v-btn text plain small :ripple="false" :to="{name: 'universities'}">
                 Uniwersytet
             </v-btn>
-            <v-btn text plain small :ripple="false" to="/companies">
+            <v-btn text plain small :ripple="false" to="/dashboard/companies">
                 Firma
             </v-btn>
-            <v-btn text plain small :ripple="false" to="/internships/1">
+            <v-btn text plain small :ripple="false" to="/dashboard/internships/1">
                 Dziennik Praktyk
             </v-btn>
         </v-btn-toggle>
@@ -47,25 +47,25 @@
             </template>
 
             <v-list dense>
-                <v-list-item to="/profile">
+                <v-list-item to="/dashboard/profile">
                     <v-list-item-icon>
                         <v-icon>mdi-account-outline</v-icon>
                     </v-list-item-icon>
                     <v-list-item-title>Profil</v-list-item-title>
                 </v-list-item>
-                <v-list-item to="/notifications">
+                <v-list-item to="/dashboard/notifications">
                     <v-list-item-icon>
                         <v-icon>mdi-bell-outline</v-icon>
                     </v-list-item-icon>
                     <v-list-item-title>Powiadomienia</v-list-item-title>
                 </v-list-item>
-                <v-list-item to="/messages">
+                <v-list-item to="/dashboard/messages">
                     <v-list-item-icon>
                         <v-icon>mdi-android-messages</v-icon>
                     </v-list-item-icon>
                     <v-list-item-title>Wiadomości</v-list-item-title>
                 </v-list-item>
-                <v-list-item to="/settings">
+                <v-list-item to="/dashboard/settings">
                     <v-list-item-icon>
                         <v-icon dense>mdi-cog-outline</v-icon>
                     </v-list-item-icon>

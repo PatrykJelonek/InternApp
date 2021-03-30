@@ -24,7 +24,7 @@ class UniversityRepository implements UniversityRepositoryInterface
      */
     public function one(string $slug)
     {
-        $university = University::where('slug', $slug)->first();
+        $university = University::where('slug', $slug)->with(['type','city'])->first();
 
         if(!empty($university)) {
             return $university;

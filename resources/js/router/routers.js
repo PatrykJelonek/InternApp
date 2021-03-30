@@ -34,12 +34,25 @@ import Settings from "../views/Settings";
 import Notifications from "../views/Notifications";
 import Messages from "../views/Messages";
 import University from "../views/University"
+import Test from "../views/Test";
+import TheUniversityOverview from "../components/University/Overview/TheUniversityOverview";
+import TheUniversityStudents from "../components/University/Students/TheUniversityStudents";
+import TheUniversityWorkers from "../components/University/Workers/TheUniversityWorkers";
+import TheUniversityAgreements from "../components/University/Agreements/TheUniversityAgreements";
+import TheUniversityInternships from "../components/University/Internships/TheUniversityInternships";
+import TheUniversitySettings from "../components/University/Settings/TheUniversitySettings";
 
 Vue.use(VueRouter);
 
 const router = new VueRouter({
     mode: 'history',
     routes: [
+        {
+            path: '/test',
+            name: 'test',
+            component: Test,
+            meta: {title: 'Wiadomości'},
+        },
         {
             path: '/no-permissions',
             name: 'no-permissions',
@@ -114,7 +127,7 @@ const router = new VueRouter({
                     component: UserStatusesAdd,
                 },
                 {
-                    path: '/universities/',
+                    path: '/dashboard/universities/',
                     name: 'universities',
                     components: {
                         default: Universities,
@@ -127,7 +140,7 @@ const router = new VueRouter({
                     component: UniversityCreate,
                 },
                 {
-                    path: '/companies',
+                    path: '/dashboard/companies',
                     name: 'companies',
                     component: Companies,
                     meta: { have: ['admin','company_worker'], title: 'Firma'}
@@ -138,9 +151,41 @@ const router = new VueRouter({
                     component: Company,
                 },
                 {
-                    path: '/universities/:slug',
+                    path: '/dashboard/universities/:slug',
                     name: 'university',
                     component: University,
+                    children: [
+                        {
+                            path: '',
+                            name: 'university-overview',
+                            component: TheUniversityOverview,
+                        },
+                        {
+                            path: 'students',
+                            name: 'university-students',
+                            component: TheUniversityStudents
+                        },
+                        {
+                            path: 'workers',
+                            name: 'university-workers',
+                            component: TheUniversityWorkers
+                        },
+                        {
+                            path: 'agreements',
+                            name: 'university-agreements',
+                            component: TheUniversityAgreements
+                        },
+                        {
+                            path: 'internships',
+                            name: 'university-internships',
+                            component: TheUniversityInternships
+                        },
+                        {
+                            path: 'settings',
+                            name: 'university-settings',
+                            component: TheUniversitySettings
+                        }
+                    ]
                 },
                 {
                     path: '/create-company',
@@ -196,42 +241,42 @@ const router = new VueRouter({
                     component: InternshipJournal,
                 },
                 {
-                    path: '/account',
+                    path: '/dashboard/account',
                     name: 'account',
                     component: Account,
                 },
                 {
-                    path: '/profile',
+                    path: '/dashboard/profile',
                     name: 'profile',
                     component: Profile,
                     meta: {title: 'Profil'},
                 },
                 {
-                    path: '/settings',
+                    path: '/dashboard/settings',
                     name: 'setting',
                     component: Settings,
                     meta: {title: 'Ustawienia'},
                 },
                 {
-                    path: '/notifications',
+                    path: '/dashboard/notifications',
                     name: 'notifications',
                     component: Notifications,
                     meta: {title: 'Powiadomienia'},
                 },
                 {
-                    path: '/messages',
+                    path: '/dashboard/messages',
                     name: 'messages',
                     component: Messages,
                     meta: {title: 'Wiadomości'},
                 },
                 {
-                    path: '/internships',
+                    path: '/dashboard/internships',
                     name: 'internships',
                     component: Internships,
                     meta: {have: ['admin','student','company_worker','university_worker'], title: 'Staże i praktyki'},
                 },
                 {
-                    path: '/internships/:internshipId',
+                    path: '/dashboard/internships/:internshipId',
                     name: 'internship',
                     component: Internship,
                     meta: {have: ['admin','student','company_worker','university_worker']},

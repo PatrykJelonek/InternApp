@@ -1,5 +1,5 @@
 <template>
-    <v-list-item @click="$router.push({name: 'university', params: {slug: slug}})">
+    <v-list-item @click="$router.push({name: 'university-overview', params: {slug: slug}})">
         <v-list-item-icon class="ml-1 mr-3">
             <v-icon>{{ liked ? 'mdi-star' : 'mdi-star-outline' }}</v-icon>
         </v-list-item-icon>
