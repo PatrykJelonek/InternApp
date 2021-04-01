@@ -8,9 +8,14 @@
 
 namespace App\Repositories;
 
+use App\Constants\RoleConstants;
+use App\Models\Agreement;
+use App\Models\Internship;
 use App\Models\University;
+use App\Models\User;
 use App\Repositories\Interfaces\UniversityRepositoryInterface;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
@@ -24,9 +29,9 @@ class UniversityRepository implements UniversityRepositoryInterface
      */
     public function one(string $slug)
     {
-        $university = University::where('slug', $slug)->with(['type','city'])->first();
+        $university = University::where('slug', $slug)->with(['type', 'city'])->first();
 
-        if(!empty($university)) {
+        if (!empty($university)) {
             return $university;
         }
 
@@ -99,5 +104,66 @@ class UniversityRepository implements UniversityRepositoryInterface
         }
 
         return false;
+    }
+
+    public function getWorkers(string $slug)
+    {
+        return User::with('roles')->whereHas(
+            'universities',
+            function (Builder $query) use ($slug) {
+                $query->where('slug', $slug);
+            }
+        )->whereHas(
+            'roles',
+            function (Builder $query) {
+                $query->whereIn(
+                    'name',
+                    [
+                        RoleConstants::ROLE_UNIVERSITY_SUPERVISOR,
+                        RoleConstants::ROLE_UNIVERSITY_WORKER,
+                        RoleConstants::ROLE_UNIVERSITY_OWNER,
+                        RoleConstants::ROLE_DEANERY_WORKER,
+                    ]
+                );
+            }
+        )->get();
+    }
+
+    public function getStudents(string $slug)
+    {
+        return User::with(['roles', 'student'])->whereHas(
+            'universities',
+            function (Builder $query) use ($slug) {
+                $query->where('slug', $slug);
+            }
+        )->whereHas('student')
+            ->whereHas(
+                'roles',
+                function (Builder $query) {
+                    $query->whereIn(
+                        'name',
+                        [
+                            RoleConstants::ROLE_STUDENT,
+                        ]
+                    );
+                }
+            )->get();
+    }
+
+    public function getAgreements(string $slug)
+    {
+        return Agreement::whereHas(
+            'university',
+            function (Builder $query) use ($slug) {
+                $query->where('slug', $slug);
+            }
+        )->get();
+    }
+
+    public function getInternships(string $slug)
+    {
+        return Internship::with(['offer','agreement'])->whereHas('agreement.university', function (Builder $query) use ($slug) {
+            $query->where('slug', $slug);
+        })->get();
     }
 }

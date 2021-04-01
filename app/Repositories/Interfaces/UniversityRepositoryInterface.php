@@ -11,4 +11,12 @@ namespace App\Repositories\Interfaces;
 interface UniversityRepositoryInterface
 {
     public function one(string $slug);
+
+    public function getStudents(string $slug);
+
+    public function getWorkers(string $slug);
+
+    public function getAgreements(string $slug);
+
+    public function getInternships(string $slug);
 }

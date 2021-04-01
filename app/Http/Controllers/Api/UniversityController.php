@@ -3,6 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UniversityAgreementsRequest;
+use App\Http\Requests\UniversityInternshipsRequest;
+use App\Http\Requests\UniversityStudentsRequest;
+use App\Http\Requests\UniversityWorkersRequest;
 use App\Models\Agreement;
 use App\Models\Internship;
 use App\Models\Role;
@@ -200,7 +204,7 @@ class UniversityController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param Request $request
+     * @param Request    $request
      * @param University $university
      *
      * @return Response
@@ -413,6 +417,63 @@ class UniversityController extends Controller
             );
         }
     }
+
+    /**
+     * @param UniversityWorkersRequest $request
+     * @param string                   $slug
+     *
+     * @return Response
+     */
+    public function getWorkers(UniversityWorkersRequest $request, string $slug): Response
+    {
+        $workers = $this->universityRepository->getWorkers($slug);
+
+        if (!is_null($workers)) {
+            return \response($workers, Response::HTTP_OK);
+        }
+
+        return \response(null, Response::HTTP_NOT_FOUND);
+    }
+
+    /**
+     * @param UniversityStudentsRequest $request
+     * @param string                    $slug
+     *
+     * @return Response
+     */
+    public function getStudents(UniversityStudentsRequest $request, string $slug): Response
+    {
+        $students = $this->universityRepository->getStudents($slug);
+
+        if (!is_null($students)) {
+            return \response($students, Response::HTTP_OK);
+        }
+
+        return \response(null, Response::HTTP_NOT_FOUND);
+    }
+
+    public function getAgreements(UniversityAgreementsRequest $request, string $slug): Response
+    {
+        $agreements = $this->universityRepository->getAgreements($slug);
+
+        if (!is_null($agreements)) {
+            return \response($agreements, Response::HTTP_OK);
+        }
+
+        return \response(null, Response::HTTP_NOT_FOUND);
+    }
+
+    public function getInternships2(UniversityInternshipsRequest $request, string $slug): Response
+    {
+        $internships = $this->universityRepository->getInternships($slug);
+
+        if (!is_null($internships)) {
+            return \response($internships, Response::HTTP_OK);
+        }
+
+        return \response(null, Response::HTTP_NOT_FOUND);
+    }
+
 
     /**
      * Generate unique random access code.

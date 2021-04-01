@@ -124,6 +124,10 @@ export default {
         }).catch(() => {
 
         });
+
+        this.$router.afterEach((to, from) => {
+            clearTimeout(this.timeout);
+        });
     }
 }
 </script>

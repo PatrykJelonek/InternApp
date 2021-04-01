@@ -60,9 +60,9 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::post('/journals/confirmMany', 'Api\JournalController@confirmMany');
     Route::get('/company/{id}/users', 'Api\CompanyController@getUsers');
     Route::get('/universities/{id}/users', 'Api\UniversityController@getUsers');
-    Route::get('/universities/{id}/agreements', 'Api\UniversityController@getUniversityAgreements');
-    Route::get('/universities/{id}/internships', 'Api\UniversityController@getInternships');
-    Route::get('/universities/{university_id}/students', 'Api\UniversityStudentController@index');
+    //Route::get('/universities/{id}/agreements', 'Api\UniversityController@getUniversityAgreements');
+    //Route::get('/universities/{id}/internships', 'Api\UniversityController@getInternships');
+    //Route::get('/universities/{university_id}/students', 'Api\UniversityStudentController@index');
     Route::get('/companies/{id}/offers', 'Api\CompanyController@getCompanyOffers');
     Route::get('/companies/{id}/agreements', 'Api\CompanyController@getCompanyAgreements');
     Route::get('/companies/{id}/interns', 'Api\CompanyController@getInterns');
@@ -92,6 +92,10 @@ Route::group(['middleware' => ['jwt.verify']], function() {
 
     # Universities
     Route::get('/universities/{slug}', 'Api\UniversityController@show');
+    Route::get('/universities/{slug}/workers','Api\UniversityController@getWorkers');
+    Route::get('/universities/{slug}/students','Api\UniversityController@getStudents');
+    Route::get('/universities/{slug}/agreements','Api\UniversityController@getAgreements');
+    Route::get('/universities/{slug}/internships','Api\UniversityController@getInternships2');
 
     # User
     Route::get('/me/internships', 'Api\UserController@getUserInternships');
