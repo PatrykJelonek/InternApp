@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Internship extends Model
 {
+    use HasFactory;
+
     protected $table = "internships";
 
     public function offer()
@@ -18,9 +21,9 @@ class Internship extends Model
         return $this->hasOne('App\Models\Agreement','id', 'agreement_id');
     }
 
-    public function student()
+    public function students()
     {
-        return $this->hasOne('App\Models\Student', 'id', 'student_id');
+        return $this->belongsToMany('App\Models\Student','internships_students','internship_id','student_id');
     }
 
     public function status()
@@ -28,18 +31,23 @@ class Internship extends Model
         return $this->hasOne('App\Models\InternshipStatus');
     }
 
-    public function university_supervisor()
+    public function universitySupervisor()
     {
         return $this->hasOne('App\Models\User', 'id', 'university_supervisor_id');
     }
 
-    public function company_supervisor()
+    public function companySupervisor()
     {
         return $this->hasOne('App\Models\User', 'id', 'company_supervisor_id');
     }
 
-    public function journals()
+    public function journalEntries()
     {
-        return $this->hasMany('App\Models\Journal', 'internship_id', 'id');
+        return $this->hasMany('App\Models\JournalEntry', 'internship_id', 'id');
+    }
+
+    public function tasks()
+    {
+        return $this->hasMany('App\Models\Task','internship_id','id');
     }
 }

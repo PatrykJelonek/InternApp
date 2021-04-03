@@ -28,12 +28,31 @@ import NoPermissions from "../views/NoPermissions";
 import Welcome from "../views/Welcome";
 import WelcomeTabs from "../components/Tabs/WelcomeTabs";
 import UniversitiesTabs from "../components/Tabs/UniversitiesTabs";
+import Internship from "../views/Internship";
+import Profile from "../views/Profile";
+import Settings from "../views/Settings";
+import Notifications from "../views/Notifications";
+import Messages from "../views/Messages";
+import University from "../views/University"
+import Test from "../views/Test";
+import TheUniversityOverview from "../components/University/Overview/TheUniversityOverview";
+import TheUniversityStudents from "../components/University/Students/TheUniversityStudents";
+import TheUniversityWorkers from "../components/University/Workers/TheUniversityWorkers";
+import TheUniversityAgreements from "../components/University/Agreements/TheUniversityAgreements";
+import TheUniversityInternships from "../components/University/Internships/TheUniversityInternships";
+import TheUniversitySettings from "../components/University/Settings/TheUniversitySettings";
 
 Vue.use(VueRouter);
 
 const router = new VueRouter({
     mode: 'history',
     routes: [
+        {
+            path: '/test',
+            name: 'test',
+            component: Test,
+            meta: {title: 'Wiadomości'},
+        },
         {
             path: '/no-permissions',
             name: 'no-permissions',
@@ -92,11 +111,14 @@ const router = new VueRouter({
             children: [
                 {
                     title: 'Dashboard',
-                    path: '/',
+                    path: '/dashboard',
                     name: 'dashboard',
                     components: {
                         default: Welcome,
                         tabs: WelcomeTabs,
+                    },
+                    meta: {
+                        title: 'Dashboard'
                     }
                 },
                 {
@@ -105,156 +127,172 @@ const router = new VueRouter({
                     component: UserStatusesAdd,
                 },
                 {
-                    path: '/universities/',
+                    path: '/dashboard/universities/',
                     name: 'universities',
                     components: {
                         default: Universities,
-                        tabs: UniversitiesTabs
                     },
-                    meta: { have: ['admin']}
+                    meta: {title: 'Uczelnia'},
                 },
                 {
                     path: '/create-university',
                     name: 'create-university',
                     component: UniversityCreate,
-                    beforeEnter: (to, from, next) => {
-                        if(!haveRole(['student']))
-                            return next();
-                        else
-                            return next({name: 'no-permissions'});
-                    }
                 },
                 {
-                    path: '/companies',
+                    path: '/dashboard/companies',
                     name: 'companies',
                     component: Companies,
-                    meta: { have: ['admin'] }
+                    meta: { have: ['admin','company_worker'], title: 'Firma'}
                 },
                 {
                     path: '/company/:id',
                     name: 'company',
                     component: Company,
-                    beforeEnter: (to, from, next) => {
-                        if(!haveRole(['student']))
-                            return next();
-                        else
-                            return next({name: 'no-permissions'});
-                    }
+                },
+                {
+                    path: '/dashboard/universities/:slug',
+                    name: 'university',
+                    component: University,
+                    children: [
+                        {
+                            path: '',
+                            name: 'university-overview',
+                            component: TheUniversityOverview,
+                        },
+                        {
+                            path: 'students',
+                            name: 'university-students',
+                            component: TheUniversityStudents
+                        },
+                        {
+                            path: 'workers',
+                            name: 'university-workers',
+                            component: TheUniversityWorkers
+                        },
+                        {
+                            path: 'agreements',
+                            name: 'university-agreements',
+                            component: TheUniversityAgreements
+                        },
+                        {
+                            path: 'internships',
+                            name: 'university-internships',
+                            component: TheUniversityInternships
+                        },
+                        {
+                            path: 'settings',
+                            name: 'university-settings',
+                            component: TheUniversitySettings
+                        }
+                    ]
                 },
                 {
                     path: '/create-company',
                     name: 'create-company',
                     component: CompanyCreate,
-                    beforeEnter: (to, from, next) => {
-                        if(!haveRole(['student']))
-                            return next();
-                        else
-                            return next({name: 'no-permissions'});
-                    }
                 },
                 {
                     path: '/offers',
                     name: 'offers',
                     component: Offers,
-                    beforeEnter: (to, from, next) => {
-                        if(!haveRole(['student']))
-                            return next();
-                        else
-                            return next({name: 'no-permissions'});
-                    }
+                    meta: {title: 'Oferty Praktyk'}
                 },
                 {
                     path: '/offer/:id',
                     name: 'offer',
                     component: Offer,
-                    beforeEnter: (to, from, next) => {
-                        if(!haveRole(['student']))
-                            return next();
-                        else
-                            return next({name: 'no-permissions'});
-                    }
                 },
                 {
                     path: '/create-offer',
                     name: 'create-offer',
                     component: OfferCreate,
-                    beforeEnter: (to, from, next) => {
-                        if(haveRole(['company-worker']))
-                            return next();
-                        else
-                            return next({name: 'no-permissions'});
-                    }
                 },
                 {
                     path: '/create-agreement/:offerId',
                     name: 'create-agreement',
                     component: AgreementCreate,
-                    beforeEnter: (to, from, next) => {
-                        if(haveRole(['university-worker']))
-                            return next();
-                        else
-                            return next({name: 'no-permissions'});
-                    }
                 },
                 {
                     path: '/agreement/:id',
                     name: 'agreement',
                     component: Agreement,
-                    beforeEnter: (to, from, next) => {
-                        if(!haveRole(['student']))
-                            return next();
-                        else
-                            return next({name: 'no-permissions'});
-                    }
                 },
-                {
-                    path: '/internships',
-                    name: 'internships',
-                    component: Internships,
-                    beforeEnter: (to, from, next) => {
-                        if(haveRole(['user']))
-                            return next();
-                        else
-                            return next({name: 'no-permissions'});
-                    }
-                },
+                // {
+                //     path: '/internships',
+                //     name: 'internships',
+                //     component: Internships,
+                //     beforeEnter: (to, from, next) => {
+                //         if(haveRole(['user']))
+                //             return next();
+                //         else
+                //             return next({name: 'no-permissions'});
+                //     }
+                // },
                 {
                     path: '/journal',
                     name: 'journal',
                     component: Journal,
-                    beforeEnter: (to, from, next) => {
-                        if(haveRole(['student']))
-                            return next();
-                        else
-                            return next({name: 'no-permissions'});
-                    }
+                    meta: {title: 'Dziennik Praktyk'}
                 },
                 {
                     path: '/internship/:id/journal',
                     name: 'internship-journal',
                     component: InternshipJournal,
-                    beforeEnter: (to, from, next) => {
-                        if(!haveRole(['student']))
-                            return next();
-                        else
-                            return next({name: 'no-permissions'});
-                    }
                 },
                 {
-                    path: '/account',
+                    path: '/dashboard/account',
                     name: 'account',
                     component: Account,
-                    beforeEnter: (to, from, next) => {
-                        if(haveRole(['user']))
-                            return next();
-                        else
-                            return next({name: 'no-permissions'});
-                    }
+                },
+                {
+                    path: '/dashboard/profile',
+                    name: 'profile',
+                    component: Profile,
+                    meta: {title: 'Profil'},
+                },
+                {
+                    path: '/dashboard/settings',
+                    name: 'setting',
+                    component: Settings,
+                    meta: {title: 'Ustawienia'},
+                },
+                {
+                    path: '/dashboard/notifications',
+                    name: 'notifications',
+                    component: Notifications,
+                    meta: {title: 'Powiadomienia'},
+                },
+                {
+                    path: '/dashboard/messages',
+                    name: 'messages',
+                    component: Messages,
+                    meta: {title: 'Wiadomości'},
+                },
+                {
+                    path: '/dashboard/internships',
+                    name: 'internships',
+                    component: Internships,
+                    meta: {have: ['admin','student','company_worker','university_worker'], title: 'Staże i praktyki'},
+                },
+                {
+                    path: '/dashboard/internships/:internshipId',
+                    name: 'internship',
+                    component: Internship,
+                    meta: {have: ['admin','student','company_worker','university_worker']},
+                    children: [
+                        {
+                            path: '/internships/:internshipId/students/:studentIndex',
+                            name: 'internship-student',
+                            meta: {have: ['admin','student','company_worker','university_worker']},
+                        }
+                    ]
                 }
             ],
         },
         {
             path: '*',
+            name: 'not-found',
             component: NotFound
         },
     ],

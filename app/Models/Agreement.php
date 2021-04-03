@@ -2,10 +2,13 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Agreement extends Model
 {
+    use HasFactory;
+
     protected $table ='agreements';
 
     public function company()
@@ -31,5 +34,10 @@ class Agreement extends Model
     public function universitySupervisor()
     {
         return $this->belongsTo('App\Models\User','university_supervisor_id', 'id');
+    }
+
+    public function internships()
+    {
+        return $this->hasMany('App\Models\Internship', 'agreement_id','id');
     }
 }

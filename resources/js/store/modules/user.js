@@ -13,11 +13,17 @@ export default {
         journalEntries: [],
         internships: [],
         interns: [],
+        newInternships: [],
+        userUniversitiesLoading: true,
     },
 
     getters: {
         userUniversities(state) {
             return state.userUniversities;
+        },
+
+        userUniversitiesLoading(state) {
+            return state.userUniversitiesLoading;
         },
 
         userCompanies(state) {
@@ -34,6 +40,10 @@ export default {
 
         internships(state) {
             return state.internships;
+        },
+
+        newInternships(state) {
+            return state.newInternships;
         },
 
         interns(state) {
@@ -56,6 +66,10 @@ export default {
             state.userUniversities = data;
         },
 
+        SET_USER_UNIVERSITIES_LOADING(state, data) {
+            state.userUniversitiesLoading = data;
+        },
+
         SET_USER_COMPANIES(state, data) {
             state.userCompanies = data;
         },
@@ -70,6 +84,10 @@ export default {
 
         SET_INTERNSHIPS(state, data) {
             state.internships = data;
+        },
+
+        SET_NEW_INTERNSHIPS(state, data) {
+            state.newInternships = data;
         },
 
         SET_INTERNS(state, data) {
@@ -104,11 +122,14 @@ export default {
         },
 
         async fetchUserUniversities({ commit }) {
+            commit('SET_USER_UNIVERSITIES_LOADING', true);
             try {
-                let response = await axios.get('/api/user-universities');
-                commit('SET_USER_UNIVERSITIES', response.data.data);
+                let response = await axios.get('/api/me/universities');
+                commit('SET_USER_UNIVERSITIES', response.data);
+                commit('SET_USER_UNIVERSITIES_LOADING', false);
             } catch (e) {
                 commit('SET_USER_UNIVERSITIES', []);
+                commit('SET_USER_UNIVERSITIES_LOADING', false);
             }
         },
 
@@ -156,5 +177,14 @@ export default {
                 commit('SET_INTERNS', []);
             }
         },
+
+        async fetchNewInternships({ commit }) {
+            try {
+                let response = await axios.get('/api/me/internships');
+                commit('SET_NEW_INTERNSHIPS', response.data);
+            } catch (e) {
+                commit('SET_NEW_INTERNSHIPS', []);
+            }
+        }
     }
 };

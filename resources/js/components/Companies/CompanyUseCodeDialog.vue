@@ -70,7 +70,6 @@
                     this.$store.dispatch('user/fetchUserCompanies');
                     this.dialog = false;
                 }).catch((e) => {
-                    console.log(e.response);
                     this.$refs.observer.setErrors({
                         accessCode: [e.response.data.message],
                     });

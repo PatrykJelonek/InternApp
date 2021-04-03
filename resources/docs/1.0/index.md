@@ -1,0 +1,10 @@
+- ## Dokumentacja
+    - [Backend](/{{route}}/{{version}}/Backend/index)
+    	- [App](/{{route}}/{{version}}/Backend/App/index)
+    		- [Http](/{{route}}/{{version}}/Backend/App/Http/index)
+    		- [Resources](/{{route}}/{{version}}/Backend/App/Http/Resources/index)
+    			- [Collections](/{{route}}/{{version}}/Backend/App/Http/Resources/Collections/index)
+        - [Repositories](/{{route}}/{{version}}/Backend/Repositories/index)
+           - [Interfaces](/{{route}}/{{version}}/Backend/Repositories/Interfaces/index)
+    - [Frontend](/{{route}}/{{version}}/Frontend/index)
+    - [Api](/{{route}}/{{version}}/Api/index)

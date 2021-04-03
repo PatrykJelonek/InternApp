@@ -4,21 +4,12 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Collections\StudentCollection;
-use App\Http\Resources\Student as StudentResource;
+use App\Http\Resources\StudentResource as StudentResource;
 use App\Models\Student;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-
-/**
- * @authenticated
- * @group University
- * APIs return university students
- *
- * Class UniversityStudentController
- * @package App\Http\Controllers\Api
- */
 
 class UniversityStudentController extends Controller
 {

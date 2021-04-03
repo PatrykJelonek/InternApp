@@ -15,7 +15,7 @@ class CreateCompanyCategoriesTable extends Migration
     {
         Schema::create('company_categories', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 16)->unique();
+            $table->string('name', 32)->unique();
             $table->string('description', 128)->nullable();
             $table->dateTime('created_at', 0);
             $table->dateTime('updated_at', 0);
@@ -29,6 +29,7 @@ class CreateCompanyCategoriesTable extends Migration
      */
     public function down()
     {
+        Schema::dropIfExists('companies');
         Schema::dropIfExists('company_categories');
     }
 }

@@ -19,6 +19,7 @@ class CreateUsersUniversitiesTable extends Migration
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreignId('university_id');
             $table->foreign('university_id')->references('id')->on('universities');
+            $table->boolean('liked')->default(false);
             $table->dateTime('created_at', 0);
         });
     }

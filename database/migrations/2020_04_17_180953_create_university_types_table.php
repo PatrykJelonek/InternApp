@@ -29,6 +29,7 @@ class CreateUniversityTypesTable extends Migration
      */
     public function down()
     {
+        Schema::dropIfExists('universities');
         Schema::dropIfExists('university_types');
     }
 }

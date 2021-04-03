@@ -11,10 +11,32 @@ export default new Vuetify({
         },
         themes: {
             light: {
-                primary: '#2757FF',
-                background: '#f7f7fa',
+                //primary: '#2757FF',
+                primary: '#3cdc96',
+                secondary: '#9DA0A5',
+                //background: '#f7f7fa',
                 navigationDrawerExpanded: '#efeff5',
+                'base-background': '#E5E6E8',
+                background: '#E5E6E8',
+                'component-background': '#FFF',
+                'card-background': '#fff'
             },
+            dark: {
+                //primary: '#1976D2',
+                primary: '#0EB251',
+                secondary: '#9DA0A5',
+                accent: '#82B1FF',
+                error: '#FF5252',
+                info: '#2196F3',
+                success: '#4CAF50',
+                warning: '#FFC107',
+                background: '#0F1115',
+                navBackground: '#181A20',
+                cardBackground: '#181A20',
+                'base-background': '#0F1115',
+                'component-background': '#181A20',
+                'card-background': '#181A20',
+            }
         },
     },
 });

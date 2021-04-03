@@ -1,28 +1,64 @@
 <?php
 
-/** @var \Illuminate\Database\Eloquent\Factory $factory */
+namespace Database\Factories;
 
 use App\Models\User;
-use Faker\Generator as Faker;
+use App\Models\UserStatus;
+use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
-/*
-|--------------------------------------------------------------------------
-| Model Factories
-|--------------------------------------------------------------------------
-|
-| This directory should contain each of the model factory definitions for
-| your application. Factories provide a convenient way to generate new
-| model instances for testing / seeding your application's database.
-|
-*/
+class UserFactory extends Factory
+{
+    /**
+     * The name of the factory's corresponding model.
+     *
+     * @var string
+     */
+    protected $model = User::class;
 
-$factory->define(User::class, function (Faker $faker) {
-    return [
-        'name' => $faker->name,
-        'email' => $faker->unique()->safeEmail,
-        'email_verified_at' => now(),
-        'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
-        'remember_token' => Str::random(10),
-    ];
-});
+    /**
+     * Define the model's default state.
+     *
+     * @return array
+     */
+    public function definition()
+    {
+        return [
+            'email' => $this->faker->unique()->safeEmail,
+            'password_hash' => Hash::make("password"),
+            'password_reset_token' => Str::random(64),
+            'first_name' => $this->faker->firstName,
+            'last_name' => $this->faker->lastName,
+            'phone_number' => substr($this->faker->phoneNumber,0,15),
+            'remember_token' => 'remember_token',
+            'user_status_id' => $this->faker->numberBetween(1, 2),
+            'created_at' => now(),
+            'updated_at' => now(),
+        ];
+    }
+
+    /**
+     * @return UserFactory
+     */
+    public function active(): UserFactory
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'user_status_id' => UserStatus::where('name', UserStatus::STATUS_ACTIVE)->first(),
+            ];
+        });
+    }
+
+    /**
+     * @return UserFactory
+     */
+    public function inactive(): UserFactory
+    {
+        return $this->state(function (array $attributes) {
+            return [
+                'user_status_id' => UserStatus::where('name', UserStatus::STATUS_INACTIVE)->first(),
+            ];
+        });
+    }
+}

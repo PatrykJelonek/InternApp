@@ -4,8 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Internship;
-use App\Models\InternshipStatus;
-use App\Models\Journal;
+use App\Models\JournalEntry;
 use App\Models\Student;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -22,7 +21,7 @@ class JournalController extends Controller
     {
         $student_id = Student::select(['id'])->where(['user_id' => auth()->id()])->first();
         $user_internships = Internship::select(['id'])->where(['student_id' => $student_id->id])->get();
-        $journal_entries = Journal::with(['internship.offer', 'author'])->whereIn('internship_id', Arr::pluck($user_internships->toArray(), ['id']))
+        $journal_entries = JournalEntry::with(['internship.offer','internship.agreement', 'author'])->whereIn('internship_id', Arr::pluck($user_internships->toArray(), ['id']))
             ->orderBy('created_at','DESC')
             ->get();
 
@@ -53,7 +52,7 @@ class JournalController extends Controller
     {
         //TODO: Zrobić walidacje
 
-        $journal_entries = new Journal;
+        $journal_entries = new JournalEntry;
         $journal_entries->internship_id = $request->input('internshipId');
         $journal_entries->content = $request->input('content');
         $journal_entries->user_id = auth()->id();
@@ -127,7 +126,7 @@ class JournalController extends Controller
      */
     public function confirmMany(Request $request)
     {
-        $journalEntries = Journal::whereIn('id', $request->input('array'))->get();
+        $journalEntries = JournalEntry::whereIn('id', $request->input('array'))->get();
         $savedJournalEntries = array();
 
         foreach ($journalEntries as $journalEntry) {

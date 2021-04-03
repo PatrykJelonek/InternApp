@@ -4,7 +4,9 @@ namespace App\Models;
 
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
 use Laratrust\Traits\LaratrustUserTrait;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
@@ -12,6 +14,8 @@ class User extends Model implements AuthenticatableContract, JWTSubject
 {
     use LaratrustUserTrait;
     use Authenticatable;
+    use HasFactory;
+    use Notifiable;
 
     protected $table = 'users';
 
@@ -43,7 +47,7 @@ class User extends Model implements AuthenticatableContract, JWTSubject
 
     public function journals()
     {
-        return $this->hasMany('App\Models\Journal', 'user_id', 'id');
+        return $this->hasMany('App\Models\JournalEntry', 'user_id', 'id');
     }
 
     public function companySupervisorInternships()
@@ -58,7 +62,7 @@ class User extends Model implements AuthenticatableContract, JWTSubject
 
     public function universities()
     {
-          return $this->belongsToMany('App\Models\University', 'users_universities', 'user_id', 'university_id')->with(['city','type']);
+          return $this->belongsToMany('App\Models\University', 'users_universities', 'user_id', 'university_id')->with(['city','type'])->withPivot('liked')->orderBy('liked','desc');
     }
 
     public function companies()

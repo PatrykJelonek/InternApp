@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\OfferCategory;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -14,25 +15,13 @@ class OfferCategoriesSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('offer_categories')->insert([
-            'name' => 'Programowanie',
-            'description' => 'oferta dla programistów',
-            'created_at' => date('Y-m-d H:i:s'),
-            'updated_at' => date('Y-m-d H:i:s')
-        ]);
-
-        DB::table('offer_categories')->insert([
-            'name' => 'Grafika',
-            'description' => 'oferta dla grafików',
-            'created_at' => date('Y-m-d H:i:s'),
-            'updated_at' => date('Y-m-d H:i:s')
-        ]);
-
-        DB::table('offer_categories')->insert([
-            'name' => 'Sieci',
-            'description' => 'oferta dla sieciowców',
-            'created_at' => date('Y-m-d H:i:s'),
-            'updated_at' => date('Y-m-d H:i:s')
-        ]);
+        foreach (OfferCategory::BASIC_CATEGORIES as $CATEGORY) {
+            DB::table('offer_categories')->insert([
+                'name' => $CATEGORY,
+                'description' => OfferCategory::BASIC_CATEGORY_DESCRIPTIONS[$CATEGORY],
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s')
+            ]);
+        }
     }
 }

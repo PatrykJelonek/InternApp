@@ -1,82 +1,70 @@
 <template>
-    <v-container fluid >
-        <h2>Welcome to the dashboard</h2>
-
-        <vuex-tabs-items>
-            <v-tab-item>
-                <v-card flat>
-                    <v-card-text>1</v-card-text>
-                </v-card>
-            </v-tab-item>
-            <v-tab-item>
-                <v-card flat>
-                    <v-card-text>2</v-card-text>
-                </v-card>
-            </v-tab-item>
-            <v-tab-item>
-                <v-card flat>
-                    <v-card-text>3</v-card-text>
-                </v-card>
-            </v-tab-item>
-        </vuex-tabs-items>
+    <v-container fluid>
+        <v-row class="mt-10">
+            <v-col>
+                <h2 class="text--welcome text-h3 font-weight-black">Cześć, <br> {{user.first_name + " " + user.last_name}}</h2>
+            </v-col>
+        </v-row>
+        <v-row class="mt-10">
+            <v-col cols="12" md="6" lg="6">
+                <the-dashboard-internships></the-dashboard-internships>
+            </v-col>
+            <v-col cols="12" md="6" lg="6">
+                <the-dashboard-messages></the-dashboard-messages>
+            </v-col>
+        </v-row>
+        <v-row>
+            <v-col cols="12" md="12" lg="8">
+                <the-dashboard-activity></the-dashboard-activity>
+            </v-col>
+            <v-col cols-="12" md="6" lg="4">
+                <the-dashboard-others></the-dashboard-others>
+            </v-col>
+        </v-row>
     </v-container>
 </template>
 
 <script>
     import VuexTabsItems from "../components/_Helpers/VuexTabsItems";
     import Sidebar from "../components/_Helpers/Sidebar";
-    import {mapActions} from "vuex";
+    import {mapActions, mapGetters} from "vuex";
+    import TheDashboardInternships from "../components/Dashboard/TheDashboardInternships";
+    import TheDashboardMessages from "../components/Dashboard/TheDashboardMessages";
+    import TheDashboardActivity from "../components/Dashboard/TheDashboardActivity";
+    import TheDashboardOthers from "../components/Dashboard/TheDashboardOthers";
 
     export default {
         name: "Welcome",
-        components: {VuexTabsItems, Sidebar},
+        components: {
+            TheDashboardOthers,
+            TheDashboardActivity, TheDashboardMessages, TheDashboardInternships, VuexTabsItems, Sidebar},
 
         data() {
             return {
-                sidebarItems: [
-                    {
-                        header: 'Inne',
-                        items: [
-                            {
-                                text: 'Umowy',
-                                link: 'agreements',
-                            },
-                            {
-                                text: 'Studenci',
-                                link: 'students',
-                            }
 
-                        ]
-                    },
-                    {
-                        header: 'Inne',
-                        items: [
-                            {
-                                text: 'Inne',
-                                link: 'other'
-                            },
-                            {
-                                text: 'Ustawienia',
-                                link: 'settings'
-                            }
-                        ]
-                    }
-                ],
             }
+        },
+
+        computed: {
+            ...mapGetters({
+                user: 'auth/user',
+            }),
         },
 
         methods: {
             ...mapActions({
-                setSidebarItems: 'sidebar/setItems'
+
             }),
         },
 
         created() {
-            this.setSidebarItems(this.sidebarItems);
+
         },
     }
 </script>
 
 <style scoped>
-
+    .text--welcome {
+        font-size: 35px;
+    }
 </style>

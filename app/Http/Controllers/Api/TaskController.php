@@ -3,31 +3,46 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreTaskRequest;
+use App\Http\Resources\TaskResource;
 use App\Models\Task;
+use App\Repositories\TaskRepository;
+use App\Services\TaskService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 
 class TaskController extends Controller
 {
     /**
+     * @var TaskRepository
+     */
+    private $taskRepository;
+
+    /**
+     * TaskController constructor.
+     * @param TaskRepository $taskRepository
+     */
+    public function __construct(TaskRepository $taskRepository)
+    {
+        $this->taskRepository = $taskRepository;
+    }
+
+    /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @param int $internshipId
+     * @return Response
      */
-    public function index()
+    public function index(int $internshipId)
     {
-        $tasks = Task::all();
-
-        if (isset($tasks))
-            return response($tasks, Response::HTTP_OK);
-        else
-            return response("Tasks not found!", Response::HTTP_NOT_FOUND);
+        return response($this->taskRepository->getByInternship($internshipId), Response::HTTP_OK);
     }
 
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function create()
     {
@@ -37,37 +52,50 @@ class TaskController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param int $internshipId
+     * @param int $studentId
+     * @param StoreTaskRequest $request
+     * @return Response
      */
-    public function store(Request $request)
+    public function store(int $internshipId, int $studentId = null, StoreTaskRequest $request): Response
     {
-        //Todo
+        $validated = $request->validated();
+
+        if($validated) {
+            $result = $this->taskRepository->create($request->all(), $internshipId, $studentId);
+
+            if(!empty($result)) {
+                return response(new TaskResource($result), Response::HTTP_CREATED);
+            }
+        }
+
+        return response(null, Response::HTTP_BAD_REQUEST);
     }
 
     /**
      * Display the specified resource.
      *
      * @param  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
-    public function show($id)
+    public function show($taskId)
     {
-        $task = Task::find($id);
+        $task = $this->taskRepository->one($taskId);
 
-        if (isset($task))
-            return response($task, Response::HTTP_OK);
-        else
-            return response("Task not found!", Response::HTTP_NOT_FOUND);
+        if(!$this->taskService->isAuthor($task, Auth::user())) {
+            abort(403);
+        }
+
+        return response(new TaskResource($task), Response::HTTP_OK);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Task  $task
-     * @return \Illuminate\Http\Response
+     * @param int $id
+     * @return void
      */
-    public function edit(Task $task)
+    public function edit(int $id): void
     {
         //
     }
@@ -75,9 +103,9 @@ class TaskController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param Request $request
      * @param  \App\Task  $task
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(Request $request, Task $task)
     {
@@ -88,7 +116,7 @@ class TaskController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  \App\Task  $task
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy($id)
     {

@@ -60,9 +60,9 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::post('/journals/confirmMany', 'Api\JournalController@confirmMany');
     Route::get('/company/{id}/users', 'Api\CompanyController@getUsers');
     Route::get('/universities/{id}/users', 'Api\UniversityController@getUsers');
-    Route::get('/universities/{id}/agreements', 'Api\UniversityController@getUniversityAgreements');
-    Route::get('/universities/{id}/internships', 'Api\UniversityController@getInternships');
-    Route::get('/universities/{university_id}/students', 'Api\UniversityStudentController@index');
+    //Route::get('/universities/{id}/agreements', 'Api\UniversityController@getUniversityAgreements');
+    //Route::get('/universities/{id}/internships', 'Api\UniversityController@getInternships');
+    //Route::get('/universities/{university_id}/students', 'Api\UniversityStudentController@index');
     Route::get('/companies/{id}/offers', 'Api\CompanyController@getCompanyOffers');
     Route::get('/companies/{id}/agreements', 'Api\CompanyController@getCompanyAgreements');
     Route::get('/companies/{id}/interns', 'Api\CompanyController@getInterns');
@@ -71,6 +71,36 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::get('/user/internships', 'Api\UserController@getInternships');
     Route::get('/user/journals', 'Api\UserController@getJournals');
     Route::get('/user/interns', 'Api\UserController@getInterns');
+    Route::get('/internships/{internship}/tasks', 'Api\TaskController@index');
+
+    //NEW ENDPOINTS
+    //Route::get('/internships','Api\InternshipController@index');
+    Route::get('/internships/{internship}','Api\InternshipController@show');
+    Route::get('/internships/{internship}/students','Api\InternshipStudentController@index');
+    Route::get('/internships/{internship}/students/{student}/journal-entries', 'Api\StudentJournalEntryController@index');
+    Route::post('/internships/{internship}/students/{student}/journal-entries', 'Api\StudentJournalEntryController@store');
+    Route::get('/internships/{internship}/students/{student}/journal-entries/{journalEntry}','Api\JournalController@show');
+//    Route::get('/users/{user_id}/internships/{internship_id}/journal_entries', '');
+
+    # New endpoints
+
+    # Internship Tasks
+    Route::post('/internships/{internship}/tasks', 'Api\TaskController@store');
+    Route::get('/internships/{internship}/students/{student}/tasks', 'Api\StudentTaskController@index');
+    Route::post('/internships/{internship}/students/{student?}/tasks', 'Api\TaskController@store');
+    Route::get('/internships/{internship}/students/{student}/tasks/{task}', 'Api\TaskController@show');
+
+    # Universities
+    Route::get('/universities/{slug}', 'Api\UniversityController@show');
+    Route::get('/universities/{slug}/workers','Api\UniversityController@getWorkers');
+    Route::get('/universities/{slug}/students','Api\UniversityController@getStudents');
+    Route::get('/universities/{slug}/agreements','Api\UniversityController@getAgreements');
+    Route::get('/universities/{slug}/internships','Api\UniversityController@getInternships2');
+
+    # User
+    Route::get('/me/internships', 'Api\UserController@getUserInternships');
+    Route::get('/me/universities', 'Api\UserUniversityController@index');
+
 
     Route::get('/me', [
         'as' => 'login.me',
