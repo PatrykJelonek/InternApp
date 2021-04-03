@@ -246,8 +246,8 @@ const router = new VueRouter({
                     component: Account,
                 },
                 {
-                    path: '/dashboard/profile',
-                    name: 'profile',
+                    path: '/dashboard/users/:id',
+                    name: 'user',
                     component: Profile,
                     meta: {title: 'Profil'},
                 },

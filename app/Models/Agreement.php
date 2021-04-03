@@ -31,7 +31,7 @@ class Agreement extends Model
         return $this->belongsTo('App\Models\User', 'user_id', 'id');
     }
 
-    public function universitySupervisor()
+    public function supervisor()
     {
         return $this->belongsTo('App\Models\User','university_supervisor_id', 'id');
     }

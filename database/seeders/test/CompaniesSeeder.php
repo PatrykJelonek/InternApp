@@ -4,6 +4,7 @@ namespace Database\Seeders\Test;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class CompaniesSeeder extends Seeder
 {
@@ -26,6 +27,7 @@ class CompaniesSeeder extends Seeder
                     'website' => 'http://polcomsoftware.com',
                     'description' => 'Od dziesięciu lat dostarczamy naszym klientom najwyższej jakości oprogramowanie.',
                     'access_code' => '23AC2x2M',
+                    'slug' => Str::slug('Polcom Software'),
                     'company_category_id' => 1,
                     'created_at' => now(),
                     'updated_at' => now()
@@ -41,6 +43,7 @@ class CompaniesSeeder extends Seeder
                     'description' => 'Od dziesięciu lat dostarczamy naszym klientom najwyższej jakości oprogramowanie.',
                     'access_code' => '23AC2x3M',
                     'company_category_id' => 1,
+                    'slug' => Str::slug('Adma - IT Consulting'),
                     'created_at' => now(),
                     'updated_at' => now()
                 ]

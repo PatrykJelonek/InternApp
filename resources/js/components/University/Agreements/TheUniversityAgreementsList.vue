@@ -52,6 +52,18 @@
                         :loading="agreementsLoading"
                         class="elevation-1"
                     >
+                        <template v-slot:item.company="{ item }">
+                            <router-link :to="{name: 'company', params: {slug: item.company.slug}}">{{ item.company.name }}</router-link>
+                        </template>
+                        <template v-slot:item.universitySupervisor="{ item }">
+                            <router-link :to="{name: 'user', params: {id: item.supervisor.id}}">{{ item.supervisor.first_name + ' ' + item.supervisor.last_name}}</router-link>
+                        </template>
+                        <template v-slot:item.companySupervisor="{ item }">
+                            <router-link :to="{name: 'user', params: {id: item.offer.supervisor.id}}">{{ item.offer.supervisor.first_name + ' ' + item.offer.supervisor.last_name}}</router-link>
+                        </template>
+                        <template v-slot:item.dates="{ item }">
+                            {{ formatDate(item.date_from) + ' - ' + formatDate(item.date_to) }}
+                        </template>
                         <template v-slot:item.actions="{ item }">
                             <v-btn icon x-small>
                                 <v-icon>mdi-dots-vertical</v-icon>
@@ -65,6 +77,7 @@
 </template>
 
 <script>
+import moment from "moment";
 import {mapActions, mapGetters} from "vuex";
 
 export default {
@@ -75,6 +88,11 @@ export default {
             show: true,
             headers: [
                 {text: 'Nazwa', value: 'offer.name'},
+                {text: 'Firma', value: 'company'},
+                {text: 'Opiekun z uczelni', value: 'universitySupervisor'},
+                {text: 'Opiekun z firmy', value: 'companySupervisor'},
+                {text: 'Okres ważności', value: 'dates'},
+
             ],
         }
     },
@@ -91,6 +109,10 @@ export default {
         ...mapActions({
             fetchAgreements: 'university/fetchAgreements',
         }),
+
+        formatDate(date) {
+            return moment(date).format('DD.MM.YYYY');
+        }
     },
 
     created() {
