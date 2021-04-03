@@ -1,6 +1,5 @@
 /node_modules
 /public/hot
-/public/storage
 /storage/*.key
 /vendor
 .env
@@ -59,6 +58,4 @@ _ide_helper.php
 /vendor
 .env
 /public/.htaccess
-/storage
-storage/*.key
-composer.lock
+
