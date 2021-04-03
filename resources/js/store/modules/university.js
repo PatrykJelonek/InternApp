@@ -10,8 +10,13 @@ export default {
         universityAgreements: [],
         internships: [],
         students: [],
+        studentsLoading: false,
         university: null,
         universityLoading: true,
+        workers: [],
+        workersLoading: true,
+        agreements: [],
+        agreementsLoading: true,
     },
 
     getters: {
@@ -53,7 +58,27 @@ export default {
 
         students: (state) => {
             return state.students;
-        }
+        },
+
+        studentsLoading: (state) => {
+            return state.studentsLoading;
+        },
+
+        workers: (state) => {
+            return state.workers;
+        },
+
+        workersLoading: (state) => {
+            return state.workersLoading;
+        },
+
+        agreements: (state) => {
+            return state.agreements;
+        },
+
+        agreementsLoading: (state) => {
+            return state.agreementsLoading;
+        },
     },
 
     mutations: {
@@ -93,12 +118,32 @@ export default {
             state.students = data;
         },
 
+        SET_STUDENTS_LOADING(state, data) {
+            state.studentsLoading = data;
+        },
+
         SET_UNIVERSITY(state, data) {
             state.university = data;
         },
 
         SET_UNIVERSITY_LOADING(state, data) {
             state.universityLoading = data;
+        },
+
+        SET_WORKERS(state, data) {
+            state.workers = data;
+        },
+
+        SET_WORKERS_LOADING(state, data) {
+            state.workersLoading = data;
+        },
+
+        SET_AGREEMENTS(state, data) {
+            state.agreements = data;
+        },
+
+        SET_AGREEMENTS_LOADING(state, data) {
+            state.agreementsLoading = data;
         },
     },
 
@@ -177,12 +222,39 @@ export default {
             });
         },
 
-        async fetchStudents({commit}, id) {
+        async fetchStudents({commit}, slug) {
+            commit('SET_STUDENTS_LOADING', true);
             try {
-                let response = await axios.get(`/api/universities/${id}/students`);
+                let response = await axios.get(`/api/universities/${slug}/students`);
                 commit('SET_STUDENTS', response.data);
+                commit('SET_STUDENTS_LOADING', false);
             } catch (e) {
                 commit('SET_STUDENTS', []);
+                commit('SET_STUDENTS_LOADING', false);
+            }
+        },
+
+        async fetchWorkers({commit}, slug) {
+            commit('SET_WORKERS_LOADING', true);
+            try {
+                let response = await axios.get(`/api/universities/${slug}/workers`);
+                commit('SET_WORKERS', response.data);
+                commit('SET_WORKERS_LOADING', false);
+            } catch (e) {
+                commit('SET_WORKERS', []);
+                commit('SET_WORKERS_LOADING', false);
+            }
+        },
+
+        async fetchAgreements({commit}, slug) {
+            commit('SET_AGREEMENTS_LOADING', true);
+            try {
+                let response = await axios.get(`/api/universities/${slug}/agreements`);
+                commit('SET_AGREEMENTS', response.data);
+                commit('SET_AGREEMENTS_LOADING', false);
+            } catch (e) {
+                commit('SET_AGREEMENTS', []);
+                commit('SET_AGREEMENTS_LOADING', false);
             }
         },
 

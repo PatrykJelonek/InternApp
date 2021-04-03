@@ -1,10 +1,19 @@
 <template>
-    <h1>Agreements</h1>
+    <div>
+        <v-row>
+            <v-col cols="12">
+                <the-university-agreements-list></the-university-agreements-list>
+            </v-col>
+        </v-row>
+    </div>
 </template>
 
 <script>
+import TheUniversityAgreementsList from "./TheUniversityAgreementsList";
+
 export default {
-name: "TheUniversityAgreements"
+    name: "TheUniversityAgreements",
+    components: {TheUniversityAgreementsList}
 }
 </script>
 

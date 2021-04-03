@@ -131,7 +131,7 @@ class UniversityRepository implements UniversityRepositoryInterface
 
     public function getStudents(string $slug)
     {
-        return User::with(['roles', 'student'])->whereHas(
+        return User::with(['roles', 'student','student.specialization','student.internships'])->whereHas(
             'universities',
             function (Builder $query) use ($slug) {
                 $query->where('slug', $slug);
@@ -152,7 +152,7 @@ class UniversityRepository implements UniversityRepositoryInterface
 
     public function getAgreements(string $slug)
     {
-        return Agreement::whereHas(
+        return Agreement::with(['offer'])->whereHas(
             'university',
             function (Builder $query) use ($slug) {
                 $query->where('slug', $slug);
