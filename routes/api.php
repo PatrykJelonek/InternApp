@@ -96,6 +96,7 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::get('/universities/{slug}/students','Api\UniversityController@getStudents');
     Route::get('/universities/{slug}/agreements','Api\UniversityController@getAgreements');
     Route::get('/universities/{slug}/internships','Api\UniversityController@getInternships2');
+    Route::get('/universities/{slug}/faculties','Api\UniversityController@getFaculties');
 
     # User
     Route::get('/me/internships', 'Api\UserController@getUserInternships');

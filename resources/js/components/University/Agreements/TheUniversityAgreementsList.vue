@@ -53,13 +53,20 @@
                         class="elevation-1"
                     >
                         <template v-slot:item.company="{ item }">
-                            <router-link :to="{name: 'company', params: {slug: item.company.slug}}">{{ item.company.name }}</router-link>
+                            <router-link :to="{name: 'company', params: {slug: item.company.slug}}">{{
+                                    item.company.name
+                                }}
+                            </router-link>
                         </template>
                         <template v-slot:item.universitySupervisor="{ item }">
-                            <router-link :to="{name: 'user', params: {id: item.supervisor.id}}">{{ item.supervisor.first_name + ' ' + item.supervisor.last_name}}</router-link>
+                            <router-link :to="{name: 'user', params: {id: item.supervisor.id}}">
+                                {{ item.supervisor.first_name + ' ' + item.supervisor.last_name }}
+                            </router-link>
                         </template>
                         <template v-slot:item.companySupervisor="{ item }">
-                            <router-link :to="{name: 'user', params: {id: item.offer.supervisor.id}}">{{ item.offer.supervisor.first_name + ' ' + item.offer.supervisor.last_name}}</router-link>
+                            <router-link :to="{name: 'user', params: {id: item.offer.supervisor.id}}">
+                                {{ item.offer.supervisor.first_name + ' ' + item.offer.supervisor.last_name }}
+                            </router-link>
                         </template>
                         <template v-slot:item.dates="{ item }">
                             {{ formatDate(item.date_from) + ' - ' + formatDate(item.date_to) }}
@@ -92,7 +99,7 @@ export default {
                 {text: 'Opiekun z uczelni', value: 'universitySupervisor'},
                 {text: 'Opiekun z firmy', value: 'companySupervisor'},
                 {text: 'Okres ważności', value: 'dates'},
-
+                {text: 'Akcje', value: 'actions', sortable: false, align: 'center'},
             ],
         }
     },

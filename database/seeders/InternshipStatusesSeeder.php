@@ -18,6 +18,7 @@ class InternshipStatusesSeeder extends Seeder
         foreach (InternshipStatus::STATUSES as $STATUS) {
             DB::table('internship_statuses')->insert([
                 'name' => $STATUS,
+                'displayed_name' => InternshipStatus::STATUSES_DISPLAYED_NAME[$STATUS],
                 'created_at' => date('Y-m-d H:i:s')
             ]);
         }

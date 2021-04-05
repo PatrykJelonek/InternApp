@@ -58,6 +58,7 @@
                 <v-icon>mdi-dots-horizontal</v-icon>
             </v-btn>
         </v-bottom-navigation>
+        <snackbar></snackbar>
     </v-app>
 </template>
 
@@ -66,9 +67,10 @@
     import TheAppBarDesktop from "../components/App/TheAppBarDesktop";
     import TheAppBarMobile from "../components/App/TheAppBarMobile";
     import TheAppNavigationDrawer from "../components/App/TheAppNavigationDrawer";
+    import Snackbar from "../components/_Helpers/Snackbar";
 
     export default {
-        components: {TheAppNavigationDrawer, TheAppBarMobile, TheAppBarDesktop},
+        components: {Snackbar, TheAppNavigationDrawer, TheAppBarMobile, TheAppBarDesktop},
         data() {
             return {
                 menuDialog: false,

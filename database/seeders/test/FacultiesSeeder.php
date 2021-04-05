@@ -20,11 +20,11 @@ class FacultiesSeeder extends Seeder
             'updated_at' => date('Y-m-d H:i:s')
         ]);
 //
-//        DB::table('faculties')->insert([
-//            'name' => 'Instytut Ekonomiczny',
-//            'created_at' => date('Y-m-d H:i:s'),
-//            'updated_at' => date('Y-m-d H:i:s')
-//        ]);
+        DB::table('faculties')->insert([
+            'name' => 'Instytut Ekonomiczny',
+            'created_at' => date('Y-m-d H:i:s'),
+            'updated_at' => date('Y-m-d H:i:s')
+        ]);
 //
 //        DB::table('faculties')->insert([
 //            'name' => 'Wydział ETI',

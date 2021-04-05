@@ -16,6 +16,7 @@ class CreateInternshipStatusesTable extends Migration
         Schema::create('internship_statuses', function (Blueprint $table) {
             $table->id();
             $table->string('name', 32)->unique();
+            $table->string('displayed_name', 64)->nullable();
             $table->dateTime('created_at', 0);
         });
     }

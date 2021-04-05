@@ -9,6 +9,7 @@ export default {
         universityUsers: [],
         universityAgreements: [],
         internships: [],
+        internshipsLoading: true,
         students: [],
         studentsLoading: false,
         university: null,
@@ -17,6 +18,9 @@ export default {
         workersLoading: true,
         agreements: [],
         agreementsLoading: true,
+        faculties: [],
+        facultiesLoading: true,
+        codeLoading: false,
     },
 
     getters: {
@@ -52,6 +56,10 @@ export default {
             return state.internships;
         },
 
+        internshipsLoading: (state) => {
+            return state.internshipsLoading;
+        },
+
         selectedUniversityId: (state) => {
             return state.selectedUniversityId;
         },
@@ -79,6 +87,18 @@ export default {
         agreementsLoading: (state) => {
             return state.agreementsLoading;
         },
+
+        faculties: (state) => {
+            return state.faculties;
+        },
+
+        facultiesLoading: (state) => {
+            return state.facultiesLoading;
+        },
+
+        codeLoading: (state) => {
+            return state.codeLoading;
+        }
     },
 
     mutations: {
@@ -95,7 +115,11 @@ export default {
         },
 
         SET_CODE(state, accessCode) {
-            state.selectedUniversity.access_code = accessCode;
+            state.university.access_code = accessCode;
+        },
+
+        SET_CODE_LOADING(state, data) {
+            state.codeLoading = data;
         },
 
         SET_UNIVERSITY_USERS(state, data) {
@@ -108,6 +132,10 @@ export default {
 
         SET_INTERNSHIPS(state, data) {
             state.internships = data;
+        },
+
+        SET_INTERNSHIPS_LOADING(state, data) {
+            state.internshipsLoading = data;
         },
 
         SET_SELECTED_UNIVERSITY_ID(state, data) {
@@ -144,6 +172,14 @@ export default {
 
         SET_AGREEMENTS_LOADING(state, data) {
             state.agreementsLoading = data;
+        },
+
+        SET_FACULTIES(state, data) {
+            state.faculties = data;
+        },
+
+        SET_FACULTIES_LOADING(state, data) {
+            state.facultiesLoading = data;
         },
     },
 
@@ -184,12 +220,27 @@ export default {
             }
         },
 
-        async fetchInternships({commit}, id) {
+        async fetchInternships({commit}, slug) {
+            commit('SET_INTERNSHIPS_LOADING', true);
             try {
-                let response = await axios.get(`/api/universities/${id}/internships`);
-                commit('SET_INTERNSHIPS', response.data.data);
+                let response = await axios.get(`/api/universities/${slug}/internships`);
+                commit('SET_INTERNSHIPS', response.data);
+                commit('SET_INTERNSHIPS_LOADING', false);
             } catch (e) {
                 commit('SET_INTERNSHIPS', []);
+                commit('SET_INTERNSHIPS_LOADING', false);
+            }
+        },
+
+        async fetchFaculties({commit}, slug) {
+            commit('SET_FACULTIES_LOADING', true);
+            try {
+                let response = await axios.get(`/api/universities/${slug}/faculties`);
+                commit('SET_FACULTIES', response.data);
+                commit('SET_FACULTIES_LOADING', false);
+            } catch (e) {
+                commit('SET_FACULTIES', []);
+                commit('SET_FACULTIES_LOADING', false);
             }
         },
 
@@ -206,13 +257,16 @@ export default {
         },
 
         async generateCode({commit}, id) {
+            commit('SET_CODE_LOADING', true);
             try {
                 let response = await axios.post('/api/university/generate-code', {
                     id: id
                 });
                 commit('SET_CODE', response.data.data);
+                commit('SET_CODE_LOADING', false);
             } catch (e) {
                 commit('SET_CODE', e.response.data.message);
+                commit('SET_CODE_LOADING', false);
             }
         },
 

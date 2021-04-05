@@ -474,6 +474,17 @@ class UniversityController extends Controller
         return \response(null, Response::HTTP_NOT_FOUND);
     }
 
+    public function getFaculties(UniversityInternshipsRequest $request, string $slug): Response
+    {
+        $faculties = $this->universityRepository->getFaculties($slug);
+
+        if (!is_null($faculties)) {
+            return \response($faculties, Response::HTTP_OK);
+        }
+
+        return \response(null, Response::HTTP_NOT_FOUND);
+    }
+
 
     /**
      * Generate unique random access code.

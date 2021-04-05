@@ -14,10 +14,19 @@ class FieldsSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('fields')->insert([
-            'name' => 'Informatyka',
-            'created_at' => date('Y-m-d H:i:s'),
-            'updated_at' => date('Y-m-d H:i:s')
-        ]);
+        DB::table('fields')->insert(
+            [
+                [
+                    'name' => 'Informatyka',
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s'),
+                ],
+                [
+                    'name' => 'Ekonomia',
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s'),
+                ],
+            ]
+        );
     }
 }

@@ -28,7 +28,7 @@ class Internship extends Model
 
     public function status()
     {
-        return $this->hasOne('App\Models\InternshipStatus');
+        return $this->hasOne('App\Models\InternshipStatus', 'id', 'internship_status_id');
     }
 
     public function universitySupervisor()

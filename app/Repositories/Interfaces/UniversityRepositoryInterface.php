@@ -19,4 +19,8 @@ interface UniversityRepositoryInterface
     public function getAgreements(string $slug);
 
     public function getInternships(string $slug);
+
+    public function getSpecializations(string $slug);
+
+    public function getFaculties(string $slug);
 }
