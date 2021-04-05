@@ -338,18 +338,18 @@ export default {
                 commit('SET_UNIVERSITY', []);
                 commit('SET_UNIVERSITY_LOADING', false);
             }
-        }
-    },
+        },
 
-    async fetchAvailableOffers({commit}, slug) {
-        commit('SET_AVAILABLE_OFFERS_LOADING', true);
-        try {
-            let response = await axios.get(`/api/universities/${slug}/offers`);
-            commit('SET_AVAILABLE_OFFERS', response.data);
-            commit('SET_AVAILABLE_OFFERS_LOADING', false);
-        } catch (e) {
-            commit('SET_AVAILABLE_OFFERS', []);
-            commit('SET_AVAILABLE_OFFERS_LOADING', false);
-        }
+        async fetchAvailableOffers({commit}, slug) {
+            commit('SET_AVAILABLE_OFFERS_LOADING', true);
+            try {
+                let response = await axios.get(`/api/universities/${slug}/offers`);
+                commit('SET_AVAILABLE_OFFERS', response.data);
+                commit('SET_AVAILABLE_OFFERS_LOADING', false);
+            } catch (e) {
+                commit('SET_AVAILABLE_OFFERS', []);
+                commit('SET_AVAILABLE_OFFERS_LOADING', false);
+            }
+        },
     },
 };

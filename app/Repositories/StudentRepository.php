@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Notifications\JournalEntryCreated;
 use App\Repositories\Interfaces\StudentRepositoryInterface;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;

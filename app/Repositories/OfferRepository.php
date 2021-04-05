@@ -5,9 +5,9 @@
  * Date: 05/04/2021
  * Time: 18:37
  */
+
 namespace App\Repositories;
 
-use App\Constants\OfferStatusConstants;
 use App\Models\Offer;
 use App\Repositories\Interfaces\OfferRepositoryInterface;
 use Illuminate\Database\Eloquent\Builder;
@@ -23,9 +23,12 @@ class OfferRepository implements OfferRepositoryInterface
 
     public function all(array $categories)
     {
-        return Offer::with(['status'])->whereHas('status', function (Builder $query) use ($categories) {
-            $query->where('name','IN', $categories);
-        })->get();
+        return Offer::with(['status'])->whereHas(
+            'status',
+            function (Builder $query) use ($categories) {
+                $query->where('name', 'IN', $categories);
+            }
+        )->get();
     }
 
     public function create()

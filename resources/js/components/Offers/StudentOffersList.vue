@@ -29,7 +29,18 @@
         <v-expand-transition>
             <v-row v-show="show" no-gutters>
                 <v-col cols="12">
-
+                    <v-data-table
+                        :headers="headers"
+                        :items="allOffers"
+                        :items-per-page="5"
+                        class="elevation-1"
+                    >
+                        <template v-slot:item.actions="{ item }">
+                            <v-btn icon x-small>
+                                <v-icon>mdi-dots-vertical</v-icon>
+                            </v-btn>
+                        </template>
+                    </v-data-table>
                 </v-col>
             </v-row>
         </v-expand-transition>
@@ -45,20 +56,37 @@ export default {
     data() {
         return {
             show: true,
+            allOffers: [],
+            headers: [
+                {text: 'Nazwa', value: 'offer.name'},
+            ],
         }
     },
 
     computed: {
         ...mapGetters({
-            offers: 'offer/offers',
+            offers: 'university/availableOffers',
+            offersLoading: 'university/availableOffersLoading',
+            userUniversities: 'user/userUniversities'
         }),
     },
 
     methods: {
         ...mapActions({
-            fetchOffers: 'offer/fetchOffers'
+            fetchOffers: 'university/fetchAvailableOffers',
+            fetchUserUniversities: 'user/fetchUserUniversities'
         }),
     },
+
+    created() {
+        this.fetchUserUniversities().then(() => {
+            this.userUniversities.forEach((university) => {
+                this.fetchOffers(university.slug).then(() => {
+                    this.allOffers = this.allOffers.concat(this.offers);
+                });
+            });
+        });
+    }
 }
 </script>
 

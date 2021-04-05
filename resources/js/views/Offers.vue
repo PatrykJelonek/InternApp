@@ -1,13 +1,13 @@
 <template>
     <v-container>
         <page-title>Oferty Praktyk</page-title>
-        <v-row>
+        <v-row v-has="['admin','university_owner','deanery_worker']">
             <v-col cols="12">
-                <offers-list v-has="['admin','university_owner','deanery_worker']"></offers-list>
+                <offers-list></offers-list>
             </v-col>
         </v-row>
-        <v-row>
-            <v-col cols="12" v-has="['student']">
+        <v-row v-has="['student']">
+            <v-col cols="12">
                 <student-offers-list></student-offers-list>
             </v-col>
         </v-row>
