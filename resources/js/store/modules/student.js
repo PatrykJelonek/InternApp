@@ -8,6 +8,8 @@ export default {
         loadingStudentJournalEntries: true,
         studentTasks: [],
         loadingStudentTasks: true,
+        availableStudentOffers: [],
+        availableStudentOffersLoading: true,
     },
 
     getters: {
@@ -33,7 +35,7 @@ export default {
 
         loadingStudentTasks(state) {
             return state.loadingStudentTasks;
-        }
+        },
     },
 
     mutations: {
@@ -64,8 +66,8 @@ export default {
         PUSH_STUDENT_JOURNAL_ENTRY(state, data) {
             state.studentJournalEntries.push(data);
             state.studentJournalEntries.sort((a, b) => {
-                if(a.date > b.date) return -1;
-                if(a.date <= b.date) return 1;
+                if (a.date > b.date) return -1;
+                if (a.date <= b.date) return 1;
             })
         },
     },
@@ -76,7 +78,7 @@ export default {
         },
 
         async fetchStudentJournalEntries({commit}, {internshipId, studentIndex}) {
-            if(internshipId && studentIndex) {
+            if (internshipId && studentIndex) {
                 commit('SET_LOADING_STUDENT_JOURNAL_ENTRIES', true);
                 try {
                     let response = await axios.get(`/api/internships/${internshipId}/students/${studentIndex}/journal-entries`);
@@ -92,7 +94,7 @@ export default {
         },
 
         async fetchStudentTasks({commit}, {internshipId, studentIndex}) {
-            if(internshipId && studentIndex) {
+            if (internshipId && studentIndex) {
                 commit('SET_LOADING_STUDENT_TASKS', true);
                 try {
                     let response = await axios.get(`/api/internships/${internshipId}/students/${studentIndex}/tasks`);

@@ -193,13 +193,13 @@ const router = new VueRouter({
                     component: CompanyCreate,
                 },
                 {
-                    path: '/offers',
+                    path: '/dashboard/offers',
                     name: 'offers',
                     component: Offers,
                     meta: {title: 'Oferty Praktyk'}
                 },
                 {
-                    path: '/offer/:id',
+                    path: '/dashboard/offers/:id',
                     name: 'offer',
                     component: Offer,
                 },

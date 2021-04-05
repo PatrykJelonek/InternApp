@@ -161,9 +161,23 @@ class UniversityRepository implements UniversityRepositoryInterface
         )->get();
     }
 
+    public function getOffers(string $slug)
+    {
+        return Agreement::with(['offer', 'company', 'supervisor', 'offer.supervisor'])
+            ->where('is_active', '=', true)
+            ->whereHas(
+                'university',
+                function (Builder $query) use ($slug) {
+                    $query->where('slug', $slug);
+                }
+            )->get();
+    }
+
     public function getInternships(string $slug)
     {
-        return Internship::with(['offer', 'agreement', 'universitySupervisor', 'companySupervisor', 'status'])->whereHas(
+        return Internship::with(
+            ['offer', 'agreement', 'universitySupervisor', 'companySupervisor', 'status']
+        )->whereHas(
             'agreement.university',
             function (Builder $query) use ($slug) {
                 $query->where('slug', $slug);

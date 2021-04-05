@@ -474,6 +474,17 @@ class UniversityController extends Controller
         return \response(null, Response::HTTP_NOT_FOUND);
     }
 
+    public function getOffers(UniversityInternshipsRequest $request, string $slug): Response
+    {
+        $offers = $this->universityRepository->getOffers($slug);
+
+        if (!is_null($offers)) {
+            return \response($offers, Response::HTTP_OK);
+        }
+
+        return \response(null, Response::HTTP_NOT_FOUND);
+    }
+
     public function getFaculties(UniversityInternshipsRequest $request, string $slug): Response
     {
         $faculties = $this->universityRepository->getFaculties($slug);

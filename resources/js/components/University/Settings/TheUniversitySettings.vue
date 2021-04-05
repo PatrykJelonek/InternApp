@@ -1,17 +1,18 @@
 <template>
     <div>
         <v-row>
-            <v-col cols="12">
+            <v-col cols="12" md="8" lg="8">
                 <the-university-settings-form></the-university-settings-form>
+            </v-col>
+            <v-col cols="12" md="4" lg="4">
+                <the-university-access-code></the-university-access-code>
             </v-col>
         </v-row>
         <v-row>
-            <v-col cols="8">
+            <v-col cols="12">
                 <the-university-faculties></the-university-faculties>
             </v-col>
-            <v-col cols="4">
-                <the-university-access-code></the-university-access-code>
-            </v-col>
+
         </v-row>
     </div>
 </template>

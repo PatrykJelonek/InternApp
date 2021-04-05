@@ -42,7 +42,7 @@
                             append-outer-icon="mdi-cached"
                             append-icon="mdi-content-copy"
                             :loading="codeLoading"
-                            @click:append-outer="generateNewAccessCode(university.id)"
+                            @click:append-outer="generateAccessCode"
                             @click:append="copyAccessCode"
                         ></v-text-field>
                     </v-form>
@@ -82,6 +82,14 @@ export default {
             navigator.clipboard.writeText(this.university.access_code).then(() => {
                 this.setSnackbar({message: 'Skopiowano kod: ' + this.university.access_code, color: 'success'});
             });
+        },
+
+        generateAccessCode() {
+          this.generateNewAccessCode(this.university.id).then(() => {
+              this.setSnackbar({message: 'Wygenerowano nowy kod!', color: 'success'});
+          }).catch((e) => {
+              this.setSnackbar({message: 'Coś poszło nie tak!', color: 'error'});
+          });
         },
 
         formatDate(date) {
