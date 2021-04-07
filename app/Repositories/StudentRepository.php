@@ -2,9 +2,11 @@
 
 namespace App\Repositories;
 
+use App\Models\Agreement;
 use App\Models\JournalEntry;
 use App\Models\Student;
 use App\Models\StudentJournalEntry;
+use App\Models\University;
 use App\Models\User;
 use App\Notifications\JournalEntryCreated;
 use App\Repositories\Interfaces\StudentRepositoryInterface;
@@ -119,5 +121,19 @@ class StudentRepository implements StudentRepositoryInterface
     public function delete(int $id)
     {
         // TODO: Implement delete() method.
+    }
+
+    public function getAvailableInternshipOffers(int $userId)
+    {
+        $userUniversities = User::with(['universities.agreements'])->find($userId)->universities;
+        $agreements = [];
+        foreach ($userUniversities as $university) {
+            $agreements[] = $university->agreements()->where(function (Builder $query) {
+                $query->where('is_active', true);
+            })->get();
+        }
+
+
+        return $agreements;
     }
 }

@@ -104,6 +104,8 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::get('/me/universities', 'Api\UserUniversityController@index');
     Route::get('/me/notifications', 'Api\NotificationController@index');
 
+    Route::get('/test', 'Api\TestController@test');
+
 
     Route::get('/me', [
         'as' => 'login.me',

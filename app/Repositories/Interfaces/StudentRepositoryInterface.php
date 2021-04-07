@@ -9,4 +9,6 @@ interface StudentRepositoryInterface extends DefaultRepositoryInterface
     public function getStudentJournalEntries($studentId);
 
     public function storeStudentJournalEntry(int $internshipId, string $content, array $studentsIds, bool $accepted, string $date): ?JournalEntry;
+
+    public function getAvailableInternshipOffers(int $userId);
 }
