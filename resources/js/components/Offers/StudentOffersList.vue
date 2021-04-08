@@ -31,10 +31,18 @@
                 <v-col cols="12">
                     <v-data-table
                         :headers="headers"
-                        :items="allOffers"
+                        :items="availableOffers"
                         :items-per-page="5"
+                        :loading="availableOffersLoading"
                         class="elevation-1"
+                        @click:row="openDialog"
                     >
+                        <template v-slot:item.date_from="{ item }">
+                            {{ formatDate(item.date_from) }}
+                        </template>
+                        <template v-slot:item.date_to="{ item }">
+                            {{ formatDate(item.date_to) }}
+                        </template>
                         <template v-slot:item.actions="{ item }">
                             <v-btn icon x-small>
                                 <v-icon>mdi-dots-vertical</v-icon>
@@ -44,10 +52,97 @@
                 </v-col>
             </v-row>
         </v-expand-transition>
+        <v-dialog
+            v-model="dialog"
+            persistent
+            max-width="800px"
+        >
+            <v-card v-if="selectedRow">
+                <v-list color="card-background">
+                    <v-list-item>
+                        <v-list-item-content>
+                            <v-list-item-title class="text-h5 font-weight-medium">{{ selectedRow.offer.name  }}</v-list-item-title>
+                            <v-list-item-subtitle>{{ selectedRow.offer.company.name }}.</v-list-item-subtitle>
+                        </v-list-item-content>
+                        <v-list-item-action>
+                            <v-btn-toggle borderless dense>
+                                <v-tooltip top>
+                                    <template v-slot:activator="{ on, attrs }">
+                                        <v-btn
+                                            small
+                                            icon
+                                            v-bind="attrs"
+                                            v-on="on"
+                                            @click="dialog = false"
+                                        >
+                                            <v-icon>mdi-close</v-icon>
+                                        </v-btn>
+                                    </template>
+                                    <span>Zamknij</span>
+                                </v-tooltip>
+                            </v-btn-toggle>
+                        </v-list-item-action>
+                    </v-list-item>
+                    <v-divider></v-divider>
+                    <v-list-item class="mb-2">
+                        <v-simple-table style="width: 100%;">
+                            <template v-slot:default>
+                                <tbody style="border: none !important;">
+                                    <tr>
+                                        <td class="font-weight-bold" colspan="1">Nazwa:</td>
+                                        <td colspan="3">{{ selectedRow.offer.name }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-weight-bold" colspan="1">Firma:</td>
+                                        <td colspan="3">
+                                            <router-link :to="{name: 'company', params: {slug: selectedRow.offer.company.slug}}">
+                                                {{ selectedRow.offer.company.name }}
+                                            </router-link>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-weight-bold" colspan="1">Okres praktyki:</td>
+                                        <td colspan="3">{{ formatDate(selectedRow.date_from) }} - {{ formatDate(selectedRow.date_to) }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-weight-bold" colspan="1">Adres:</td>
+                                        <td colspan="3">
+                                            {{ selectedRow.offer.company.street + ' ' + selectedRow.offer.company.street_number + ', ' + selectedRow.offer.company.city.post_code + ' ' + selectedRow.offer.company.city.name }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-weight-bold" colspan="1">Rozmowa rekrutacyjna:</td>
+                                        <td colspan="1">{{ selectedRow.offer.interview ? 'Tak' : 'Nie' }}</td>
+                                        <td class="font-weight-bold" colspan="1">Ilość miejsc:</td>
+                                        <td colspan="1" class="text-left">{{ selectedRow.offer.places_number }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-weight-bold" colspan="1">Opis:</td>
+                                        <td colspan="3">
+                                            {{ selectedRow.content }}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td class="font-weight-bold" colspan="1">Harmonogram:</td>
+                                        <td colspan="3">
+                                            {{ selectedRow.schedule }}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </template>
+                        </v-simple-table>
+                    </v-list-item>
+                </v-list>
+                <v-card-actions class="d-flex justify-end align-content-end">
+                    <v-btn color="primary" outlined>Aplikuj</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
     </v-card>
 </template>
 
 <script>
+import moment from 'moment';
 import {mapActions, mapGetters} from "vuex";
 
 export default {
@@ -56,40 +151,53 @@ export default {
     data() {
         return {
             show: true,
-            allOffers: [],
+            dialog: false,
+            selectedRow: null,
             headers: [
                 {text: 'Nazwa', value: 'offer.name'},
+                {text: 'Od', value: 'date_from'},
+                {text: 'Do', value: 'date_to'},
+                {text: 'Kategoria', value: 'offer.category.name'},
+                {text: 'Miasto', value: 'offer.company.city.name'},
             ],
         }
     },
 
     computed: {
         ...mapGetters({
-            offers: 'university/availableOffers',
-            offersLoading: 'university/availableOffersLoading',
-            userUniversities: 'user/userUniversities'
+            availableOffers: 'university/availableOffers',
+            availableOffersLoading: 'university/availableOffersLoading',
         }),
     },
 
     methods: {
         ...mapActions({
-            fetchOffers: 'university/fetchAvailableOffers',
+            fetchAvailableOffers: 'university/fetchAvailableOffers',
             fetchUserUniversities: 'user/fetchUserUniversities'
         }),
+
+        formatDate(date) {
+            return moment(date).format('DD.MM.YYYY');
+        },
+
+        openDialog(item) {
+            this.selectedRow = item;
+            this.dialog = true;
+        }
     },
 
     created() {
-        this.fetchUserUniversities().then(() => {
-            this.userUniversities.forEach((university) => {
-                this.fetchOffers(university.slug).then(() => {
-                    this.allOffers = this.allOffers.concat(this.offers);
-                });
-            });
+        this.fetchAvailableOffers().then(() => {
+
+        }).catch((e) => {
+
         });
     }
 }
 </script>
 
-<style scoped>
-
+<style scoped lang="scss">
+    tr:hover {
+    background: transparent !important;
+    }
 </style>

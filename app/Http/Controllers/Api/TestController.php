@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\api;
 
+use App\Models\Offer;
 use App\Repositories\StudentRepository;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -20,6 +21,6 @@ class TestController extends Controller
     }
 
     public function test() {
-        return \response($this->studentRepository->getAvailableInternshipOffers(Auth::id()),Response::HTTP_OK);
+        return \response(Offer::with(['category'])->find(1),Response::HTTP_OK);
     }
 }

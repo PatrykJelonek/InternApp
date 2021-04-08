@@ -21,6 +21,8 @@ export default {
         faculties: [],
         facultiesLoading: true,
         codeLoading: false,
+        availableStudentOffers: [],
+        availableStudentOffersLoading: true,
     },
 
     getters: {
@@ -340,10 +342,10 @@ export default {
             }
         },
 
-        async fetchAvailableOffers({commit}, slug) {
+        async fetchAvailableOffers({commit}) {
             commit('SET_AVAILABLE_OFFERS_LOADING', true);
             try {
-                let response = await axios.get(`/api/universities/${slug}/offers`);
+                let response = await axios.get(`/api/me/offers`);
                 commit('SET_AVAILABLE_OFFERS', response.data);
                 commit('SET_AVAILABLE_OFFERS_LOADING', false);
             } catch (e) {

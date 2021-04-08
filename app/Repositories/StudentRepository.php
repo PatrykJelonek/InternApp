@@ -123,17 +123,29 @@ class StudentRepository implements StudentRepositoryInterface
         // TODO: Implement delete() method.
     }
 
-    public function getAvailableInternshipOffers(int $userId)
+    /**
+     * @param int $userId
+     *
+     * @return array|null
+     */
+    public function getAvailableInternshipOffers(int $userId): ?array
     {
         $userUniversities = User::with(['universities.agreements'])->find($userId)->universities;
-        $agreements = [];
-        foreach ($userUniversities as $university) {
-            $agreements[] = $university->agreements()->where(function (Builder $query) {
-                $query->where('is_active', true);
-            })->get();
+
+        if(!empty($userUniversities)) {
+            $agreements = [];
+
+            foreach ($userUniversities as $university) {
+                $agreements[] =  $university->agreements()->with(['offer','offer.category','offer.company.city'])->where(function (Builder $query) {
+                    $query->where('is_active', true)->where('date_from','>', Carbon::today()->subDays(config('global.acceptableDifferenceDays'))->toDateString());
+                })->get()->toArray();
+            }
+
+            if (!empty($agreements)) {
+                return array_merge(...$agreements);
+            }
         }
 
-
-        return $agreements;
+        return null;
     }
 }
