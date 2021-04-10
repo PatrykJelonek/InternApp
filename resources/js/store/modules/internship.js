@@ -100,6 +100,10 @@ export default {
             return axios.post(`/api/internships`, data);
         },
 
+        create({commit}, data) {
+            return axios.post(`/api/internships`, data);
+        },
+
         confirm({commit}, id) {
             return axios.get(`/api/internships/${id}/confirm`);
         },

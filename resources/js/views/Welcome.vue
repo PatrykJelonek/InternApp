@@ -12,8 +12,6 @@
             <v-col cols="12" md="6" lg="6">
                 <the-dashboard-messages></the-dashboard-messages>
             </v-col>
-        </v-row>
-        <v-row>
             <v-col cols="12" md="12" lg="8">
                 <the-dashboard-activity></the-dashboard-activity>
             </v-col>

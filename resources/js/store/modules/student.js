@@ -10,6 +10,8 @@ export default {
         loadingStudentTasks: true,
         availableStudentOffers: [],
         availableStudentOffersLoading: true,
+        internshipApplications: [],
+        internshipApplicationsLoading: true,
     },
 
     getters: {
@@ -36,6 +38,14 @@ export default {
         loadingStudentTasks(state) {
             return state.loadingStudentTasks;
         },
+
+        internshipApplications(state) {
+            return state.internshipApplications;
+        },
+
+        internshipApplicationsLoading(state) {
+            return state.internshipApplicationsLoading;
+        }
     },
 
     mutations: {
@@ -70,6 +80,14 @@ export default {
                 if (a.date <= b.date) return 1;
             })
         },
+
+        SET_INTERNSHIP_APPLICATIONS(state, data) {
+            state.internshipApplications = data;
+        },
+
+        SET_INTERNSHIP_APPLICATIONS_LOADING(state, data) {
+            state.internshipApplicationsLoading = data;
+        }
     },
 
     actions: {
@@ -106,6 +124,16 @@ export default {
                 }
             } else {
                 commit('SET_LOADING_STUDENT_TASKS', false);
+            }
+        },
+
+        async fetchStudentInternshipApplications({commit}, {studentId}) {
+            try {
+                let response = await axios.get(`/api/students/${studentId}/internship-applications`);
+                commit('SET_INTERNSHIP_APPLICATIONS_LOADING', false);
+                commit('SET_INTERNSHIP_APPLICATIONS', response.data);
+            } catch (e) {
+                commit('SET_INTERNSHIP_APPLICATIONS_LOADING', false);
             }
         },
 
