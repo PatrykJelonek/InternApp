@@ -4,7 +4,13 @@ namespace App\Repositories\Interfaces;
 
 interface UserRepositoryInterface
 {
-    public function getInternships();
+    /**
+     * @param int   $userId
+     * @param array $status Array of Internship Statuses
+     *
+     * @return mixed
+     */
+    public function getInternships(int $userId, array $status = null);
 
     public function getUniversities();
 }

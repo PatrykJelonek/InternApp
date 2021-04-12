@@ -32,7 +32,7 @@
                     <v-data-table
                         :headers="headers"
                         :items="availableOffers"
-                        :items-per-page="5"
+                        :items-per-page="10"
                         :loading="availableOffersLoading"
                         class="elevation-1"
                         @click:row="openDialog"

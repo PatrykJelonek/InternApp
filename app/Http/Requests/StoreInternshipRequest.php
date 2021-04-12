@@ -2,7 +2,11 @@
 
 namespace App\Http\Requests;
 
+use App\Constants\InternshipStatusConstants;
+use App\Constants\RoleConstants;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 
 class StoreInternshipRequest extends FormRequest
 {
@@ -13,7 +17,17 @@ class StoreInternshipRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        if (Auth::user()->hasRole(RoleConstants::ROLE_ADMIN)) {
+            return true;
+        }
+
+        if (Auth::user()->hasRole(RoleConstants::ROLE_STUDENT)) {
+            return (bool) Auth::user()->internships()->whereHas('status', function (Builder $query) {
+                $query->where(['name' => [InternshipStatusConstants::STATUS_NEW, InternshipStatusConstants::STATUS_ACCEPTED]]);
+            })->count() > 1;
+        }
+
+        return false;
     }
 
     /**

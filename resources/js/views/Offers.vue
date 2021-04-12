@@ -7,8 +7,11 @@
             </v-col>
         </v-row>
         <v-row v-has="['student']">
-            <v-col cols="12">
+            <v-col cols="12" lg="7">
                 <student-offers-list></student-offers-list>
+            </v-col>
+            <v-col cols="12" lg="5">
+                <the-student-offer-applications-list></the-student-offer-applications-list>
             </v-col>
         </v-row>
     </v-container>
@@ -19,11 +22,12 @@
     import PageDetailsHeader from "../components/Page/PageDetailsHeader";
     import PageTitle from "../components/_Helpers/PageTitle";
     import StudentOffersList from "../components/Offers/StudentOffersList";
+    import TheStudentOfferApplicationsList from "../components/Offers/TheStudentOfferApplicationsList";
 
     export default {
         name: "Offers",
 
-        components: {StudentOffersList, PageTitle, PageDetailsHeader, OffersList},
+        components: {TheStudentOfferApplicationsList, StudentOffersList, PageTitle, PageDetailsHeader, OffersList},
 
         data() {
             return {

@@ -1,11 +1,11 @@
 <template>
-    <v-card elevation="0" :loading="loading" color="card-background">
+    <v-card elevation="0" :loading="internshipsLoading" color="card-background">
         <v-card-title>Praktyki</v-card-title>
         <v-card-subtitle>Ponieżej znajduje się lista praktyk którymi się opiekujesz.</v-card-subtitle>
         <v-divider></v-divider>
         <v-row>
             <v-col cols="12">
-                <v-list nav v-if="!loading && internships.length > 0" color="card-background">
+                <v-list nav v-if="!internshipsLoading && internships.length > 0" color="card-background">
                     <dashboard-internships-item
                         v-for="internship in displayedInternships"
                         :key="internship.id"
@@ -21,7 +21,7 @@
                     </v-list-item>
                 </v-list>
             </v-col>
-            <v-col cols="12" v-if="!loading && internships.length > perPage">
+            <v-col cols="12" v-if="!internshipsLoading && internships.length > perPage">
                 <v-pagination
                     v-model="page"
                     :length="Math.ceil(internships.length/perPage)"
@@ -43,7 +43,6 @@ export default {
 
     data() {
         return {
-            loading: true,
             page: 1,
             perPage: 5,
             totalVisible: 5,
@@ -53,7 +52,8 @@ export default {
 
     computed: {
         ...mapGetters({
-            internships: 'user/newInternships',
+            internships: 'user/acceptedInternships',
+            internshipsLoading: 'user/acceptedInternshipsLoading',
         }),
 
         displayedInternships() {
@@ -63,13 +63,12 @@ export default {
 
     methods: {
         ...mapActions({
-            fetchInternships: 'user/fetchNewInternships'
+            fetchInternships: 'user/fetchAcceptedInternships'
         }),
     },
 
     created() {
         this.fetchInternships().then(() => {
-            this.loading = false;
             this.emptyInternshipsListMessage = 'Aktualnie nie posiadasz żadnych praktyk.'
         }).catch((e) => {
             this.emptyInternshipsListMessage = 'Wystąpił błąd podczas pobierania listy praktyk.'

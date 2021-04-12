@@ -12,8 +12,12 @@ export default {
         roles: [],
         journalEntries: [],
         internships: [],
+        internshipsLoading: [],
         interns: [],
         newInternships: [],
+        newInternshipsLoading: true,
+        acceptedInternships: [],
+        acceptedInternshipsLoading: true,
         userUniversitiesLoading: true,
     },
 
@@ -42,8 +46,24 @@ export default {
             return state.internships;
         },
 
+        internshipsLoading(state) {
+            return state.internshipsLoading;
+        },
+
         newInternships(state) {
             return state.newInternships;
+        },
+
+        newInternshipsLoading(state) {
+            return state.newInternshipsLoading;
+        },
+
+        acceptedInternships(state) {
+            return state.acceptedInternships;
+        },
+
+        acceptedInternshipsLoading(state) {
+            return state.acceptedInternshipsLoading;
         },
 
         interns(state) {
@@ -86,8 +106,24 @@ export default {
             state.internships = data;
         },
 
+        SET_INTERNSHIPS_LOADING(state, data) {
+            state.internshipsLoading = data;
+        },
+
         SET_NEW_INTERNSHIPS(state, data) {
             state.newInternships = data;
+        },
+
+        SET_NEW_INTERNSHIPS_LOADING(state, data) {
+            state.newInternshipsLoading = data;
+        },
+
+        SET_ACCEPTED_INTERNSHIPS(state, data) {
+            state.acceptedInternships = data;
+        },
+
+        SET_ACCEPTED_INTERNSHIPS_LOADING(state, data) {
+            state.acceptedInternshipsLoading = data;
         },
 
         SET_INTERNS(state, data) {
@@ -178,13 +214,28 @@ export default {
             }
         },
 
-        async fetchNewInternships({ commit }) {
+        async fetchAcceptedInternships({ commit }) {
+            commit('SET_ACCEPTED_INTERNSHIPS_LOADING', true);
             try {
-                let response = await axios.get('/api/me/internships');
+                let response = await axios.get('/api/me/internships/accepted');
+                commit('SET_ACCEPTED_INTERNSHIPS', response.data);
+                commit('SET_ACCEPTED_INTERNSHIPS_LOADING', false);
+            } catch (e) {
+                commit('SET_ACCEPTED_INTERNSHIPS', []);
+                commit('SET_ACCEPTED_INTERNSHIPS_LOADING', false);
+            }
+        },
+
+        async fetchNewInternships({ commit }) {
+            commit('SET_NEW_INTERNSHIPS_LOADING', true);
+            try {
+                let response = await axios.get('/api/me/internships/new');
                 commit('SET_NEW_INTERNSHIPS', response.data);
+                commit('SET_NEW_INTERNSHIPS_LOADING', false);
             } catch (e) {
                 commit('SET_NEW_INTERNSHIPS', []);
+                commit('SET_NEW_INTERNSHIPS_LOADING', false);
             }
-        }
+        },
     }
 };

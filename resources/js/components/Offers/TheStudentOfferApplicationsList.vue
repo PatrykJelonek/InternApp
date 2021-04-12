@@ -28,33 +28,84 @@
         <v-divider></v-divider>
         <v-expand-transition>
             <v-row v-show="show" no-gutters>
-                <v-data-table
-                    :headers="headers"
-                    :items="availableOffers"
-                    :items-per-page="5"
-                    :loading="availableOffersLoading"
-                    class="elevation-1"
-                    @click:row="openDialog"
-                >
-
-                </v-data-table>
+                <v-col cols="12">
+                    <v-data-table
+                        :headers="headers"
+                        :items="internships"
+                        :items-per-page="5"
+                        :loading="internshipsLoading"
+                        class="elevation-1"
+                    >
+                        <template v-slot:item.status="{ item }">
+                            <v-chip label outlined small color="primary">{{  getStatusDisplayName(item.status.name) }}</v-chip>
+                        </template>
+                        <template v-slot:item.created="{ item }">
+                            {{ formatDate(item.created_at) }}
+                        </template>
+                    </v-data-table>
+                </v-col>
             </v-row>
         </v-expand-transition>
     </v-card>
 </template>
 
 <script>
+import moment from "moment";
+import {mapActions, mapGetters} from "vuex";
+
 export default {
 name: "TheStudentOfferApplicationsList",
 
     data() {
         return {
             show: true,
+            emptyInternshipsListMessage: 'Ładowanie listy praktyk...',
             headers: [
-
+                {text: 'Nazwa', value: 'offer.name'},
+                {text: 'Status', value: 'status'},
+                {text: 'Data Aplikacji', value: 'created'},
             ]
         }
     },
+
+    computed: {
+        ...mapGetters({
+            internships: 'user/newInternships',
+            internshipsLoading: 'user/newInternshipsLoading',
+        }),
+    },
+
+    methods: {
+        ...mapActions({
+            fetchInternships: 'user/fetchNewInternships',
+        }),
+
+        formatDate(date) {
+            return moment(date).format('DD.MM.YYYY');
+        },
+
+        getStatusDisplayName(status) {
+            switch (status) {
+                case 'new':
+                    return 'Nowy';
+                    break;
+                case 'accepted':
+                    return 'Zaakceptowany';
+                    break;
+                default:
+                    return status;
+                    break;
+            }
+        },
+    },
+
+    created() {
+        this.fetchInternships().then(() => {
+            this.emptyInternshipsListMessage = 'Aktualnie nie posiadasz żadnych praktyk.'
+        }).catch((e) => {
+            this.emptyInternshipsListMessage = 'Wystąpił błąd podczas pobierania listy aplikacji na praktyki.'
+        });
+    }
 }
 </script>
 

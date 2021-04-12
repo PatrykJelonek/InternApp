@@ -1,7 +1,7 @@
 <template>
     <v-app :style="{background: $vuetify.theme.themes[theme].background}">
         <the-app-bar-desktop v-if="!$vuetify.breakpoint.mobile"></the-app-bar-desktop>
-        <the-app-bar-mobile v-else></the-app-bar-mobile>
+<!--        <the-app-bar-mobile v-else></the-app-bar-mobile>-->
 
         <v-dialog
             v-model="menuDialog"
