@@ -1,17 +1,19 @@
 <template>
     <v-container>
-        <page-title>Oferty Praktyk</page-title>
-        <v-row v-has="['admin','university_owner','deanery_worker']">
+        <page-title>{{ $route.meta.title ? $route.meta.title : 'Oferty Praktyk' }}</page-title>
+        <v-row>
             <v-col cols="12">
-                <offers-list></offers-list>
+                <v-card elevation="0" color="card-background">
+                    <v-tabs background-color="card-background">
+                        <v-tab v-has="['student']" :to="{name: 'offers'}">Dostępne oferty</v-tab>
+                        <v-tab v-has="['student']" :to="{name: 'internship-applications'}">Aplikacje na praktyki</v-tab>
+                    </v-tabs>
+                </v-card>
             </v-col>
         </v-row>
-        <v-row v-has="['student']">
-            <v-col cols="12" lg="7">
-                <student-offers-list></student-offers-list>
-            </v-col>
-            <v-col cols="12" lg="5">
-                <the-student-offer-applications-list></the-student-offer-applications-list>
+        <v-row>
+            <v-col cols="12">
+                <router-view></router-view>
             </v-col>
         </v-row>
     </v-container>

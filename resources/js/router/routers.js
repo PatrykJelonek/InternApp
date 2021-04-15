@@ -41,6 +41,9 @@ import TheUniversityWorkers from "../components/University/Workers/TheUniversity
 import TheUniversityAgreements from "../components/University/Agreements/TheUniversityAgreements";
 import TheUniversityInternships from "../components/University/Internships/TheUniversityInternships";
 import TheUniversitySettings from "../components/University/Settings/TheUniversitySettings";
+import StudentOffersList from "../components/Offers/StudentOffersList";
+import TheStudentOfferApplicationsList from "../components/Offers/TheStudentOfferApplicationsList";
+import TheStudentOffers from "../components/Offers/TheStudentOffers";
 
 Vue.use(VueRouter);
 
@@ -152,12 +155,11 @@ const router = new VueRouter({
                 },
                 {
                     path: '/dashboard/universities/:slug',
-                    name: 'university',
                     component: University,
                     children: [
                         {
                             path: '',
-                            name: 'university-overview',
+                            name: 'university',
                             component: TheUniversityOverview,
                         },
                         {
@@ -194,9 +196,22 @@ const router = new VueRouter({
                 },
                 {
                     path: '/dashboard/offers',
-                    name: 'offers',
                     component: Offers,
-                    meta: {title: 'Oferty Praktyk'}
+                    meta: {title: 'Oferty Praktyk'},
+                    children: [
+                        {
+                            path: '',
+                            name: 'offers',
+                            meta: {title: 'Oferty Praktyk'},
+                            component: TheStudentOffers
+                        },
+                        {
+                            path: 'applications',
+                            name: 'internship-applications',
+                            meta: {title: 'Aplikacje na Praktyki'},
+                            component: TheStudentOfferApplicationsList
+                        }
+                    ]
                 },
                 {
                     path: '/dashboard/offers/:id',

@@ -34,7 +34,7 @@
                         :items="availableOffers"
                         :items-per-page="10"
                         :loading="availableOffersLoading"
-                        class="elevation-1"
+                        class="elevation-1 card-background"
                         @click:row="openDialog"
                     >
                         <template v-slot:item.date_from="{ item }">
@@ -57,7 +57,7 @@
             persistent
             max-width="800px"
         >
-            <v-card v-if="selectedRow">
+            <v-card v-if="selectedRow" color="card-background">
                 <div v-if="!applyLoading">
                     <v-list color="card-background">
                         <v-list-item>
@@ -88,10 +88,10 @@
                             </v-list-item-action>
                         </v-list-item>
                         <v-divider></v-divider>
-                        <v-list-item class="mb-2">
+                        <v-list-item class="mb-2" color="card-background">
                             <v-simple-table style="width: 100%;">
                                 <template v-slot:default>
-                                    <tbody style="border: none !important;">
+                                    <tbody style="border: none !important; " class="card-background">
                                     <tr>
                                         <td class="font-weight-bold" colspan="1">Nazwa:</td>
                                         <td colspan="3">{{ selectedRow.offer.name }}</td>
