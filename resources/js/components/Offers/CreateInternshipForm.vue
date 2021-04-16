@@ -40,7 +40,6 @@
                                         <v-btn
                                             @click="searchCompanyInput = !searchCompanyInput; data.company.id = null; canGoNext = false"
                                             outlined small color="primary"
-                                            :class="searchCompanyInput ?? 'mb-2'"
                                         >
                                             {{
                                                 searchCompanyInput ? 'Nie ma mojej firmy na liście' : 'Wyszukaj firmę w serwisie'
