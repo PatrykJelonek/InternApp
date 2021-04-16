@@ -6,15 +6,22 @@ export default {
         selectedCompany: null,
         selectedCompanyId: null,
         companyCategories: [],
+        companyCategoriesLoading: true,
         companyUsers: [],
         companyOffers: [],
         companyAgreements: [],
+        companies: [],
+        companiesLoading: [],
         interns: [],
     },
 
     getters: {
         companyCategories(state) {
             return state.companyCategories;
+        },
+
+        companyCategoriesLoading(state) {
+            return state.companyCategoriesLoading;
         },
 
         selectedCompany(state) {
@@ -43,12 +50,24 @@ export default {
 
         interns(state) {
             return state.interns;
+        },
+
+        companies(state) {
+            return state.companies;
+        },
+
+        companiesLoading(state) {
+            return state.companiesLoading;
         }
     },
 
     mutations: {
         SET_COMPANY_CATEGORIES(state, data) {
             state.companyCategories = data;
+        },
+
+        SET_COMPANY_CATEGORIES_LOADING(state, data) {
+            state.companyCategoriesLoading = data;
         },
 
         SET_COMPANY_USERS(state, data) {
@@ -81,16 +100,27 @@ export default {
 
         SET_INTERNS(state, data) {
             state.interns = data;
+        },
+
+        SET_COMPANIES(state, data) {
+            state.companies = data;
+        },
+
+        SET_COMPANIES_LOADING(state, data) {
+            state.companiesLoading = data;
         }
     },
 
     actions: {
         async fetchCompanyCategories({commit}) {
+            commit('SET_COMPANY_CATEGORIES_LOADING', true);
             try {
-                let response = await axios.get('/api/company-categories')
-                commit('SET_COMPANY_CATEGORIES', response.data.data);
+                let response = await axios.get('/api/companies/categories')
+                commit('SET_COMPANY_CATEGORIES', response.data);
+                commit('SET_COMPANY_CATEGORIES_LOADING', false);
             } catch (e) {
                 commit('SET_COMPANY_CATEGORIES', []);
+                commit('SET_COMPANY_CATEGORIES_LOADING', false);
             }
         },
 
@@ -136,6 +166,18 @@ export default {
                 commit('SET_INTERNS', response.data.data);
             } catch(e) {
                 commit('SET_INTERNS', []);
+            }
+        },
+
+        async fetchCompanies({commit}) {
+            commit('SET_COMPANIES_LOADING', true);
+            try {
+                let response = await axios.get(`/api/companies`);
+                commit('SET_COMPANIES', response.data);
+                commit('SET_COMPANIES_LOADING', false);
+            } catch(e) {
+                commit('SET_COMPANIES', []);
+                commit('SET_COMPANIES_LOADING', false);
             }
         },
 
