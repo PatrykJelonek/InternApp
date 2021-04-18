@@ -143,6 +143,10 @@ export default {
 
         addStudentJournalEntry({commit}, data) {
             commit('PUSH_STUDENT_JOURNAL_ENTRY', data);
-        }
+        },
+
+        createStudentOwnInternship({commit}, data) {
+            return axios.post(`/api/students/internships`, data);
+        },
     },
 }

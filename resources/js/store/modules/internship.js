@@ -67,7 +67,7 @@ export default {
             try {
                 let response = await axios.get('/api/internships');
                 commit('SET_INTERNSHIPS', response.data.data);
-            } catch(e) {
+            } catch (e) {
                 commit('SET_INTERNSHIPS', []);
             }
         },
@@ -78,7 +78,7 @@ export default {
                 let response = await axios.get(`/api/internships/${id}`);
                 commit('SET_INTERNSHIP', response.data);
                 commit('SET_INTERNSHIP_LOADING', false);
-            } catch(e) {
+            } catch (e) {
                 commit('SET_INTERNSHIP_LOADING', false);
                 commit('SET_INTERNSHIP', []);
             }
@@ -90,7 +90,7 @@ export default {
                 let response = await axios.get(`/api/internships/${id}/students`);
                 commit('SET_INTERNSHIP_STUDENTS', response.data);
                 commit('SET_INTERNSHIP_STUDENTS_LOADING', false);
-            } catch(e) {
+            } catch (e) {
                 commit('SET_INTERNSHIP_STUDENTS', []);
                 commit('SET_INTERNSHIP_STUDENTS_LOADING', false);
             }
