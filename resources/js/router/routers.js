@@ -44,6 +44,7 @@ import TheUniversitySettings from "../components/University/Settings/TheUniversi
 import StudentOffersList from "../components/Offers/StudentOffersList";
 import TheStudentOfferApplicationsList from "../components/Offers/TheStudentOfferApplicationsList";
 import TheStudentOffers from "../components/Offers/TheStudentOffers";
+import LandingPage from "../views/LandingPage";
 
 Vue.use(VueRouter);
 
@@ -103,7 +104,13 @@ const router = new VueRouter({
         },
         {
             path: '',
-            component: App,
+            name: 'landing-page',
+            component: LandingPage,
+        },
+        {
+            title: 'Dashboard',
+            path: '/dashboard',
+            name: 'dashboard',
             beforeEnter: (to, from, next) => {
                 if (!store.getters['auth/authenticated']) {
                     return next({name: 'login'})
@@ -111,19 +118,13 @@ const router = new VueRouter({
 
                 next();
             },
+            components: {
+                default: App,
+            },
+            meta: {
+                title: 'Dashboard'
+            },
             children: [
-                {
-                    title: 'Dashboard',
-                    path: '/dashboard',
-                    name: 'dashboard',
-                    components: {
-                        default: Welcome,
-                        tabs: WelcomeTabs,
-                    },
-                    meta: {
-                        title: 'Dashboard'
-                    }
-                },
                 {
                     path: 'users/new-status',
                     name: 'user-statuses',

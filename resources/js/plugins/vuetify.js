@@ -9,6 +9,10 @@ export default new Vuetify({
         dark: true,
         options: {
             customProperties: true,
+            themeCache: {
+                get: key => localStorage.getItem(key),
+                set: (key, value) => localStorage.setItem(key, value),
+            },
         },
         themes: {
             light: {
