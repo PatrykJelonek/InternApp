@@ -12,5 +12,5 @@ interface StudentRepositoryInterface extends DefaultRepositoryInterface
 
     public function getAvailableInternshipOffers(int $userId);
 
-    public function createStudentOwnInternship();
+    public function createStudentOwnInternship($data);
 }

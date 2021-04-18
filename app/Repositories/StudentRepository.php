@@ -2,11 +2,9 @@
 
 namespace App\Repositories;
 
-use App\Models\Agreement;
 use App\Models\JournalEntry;
 use App\Models\Student;
 use App\Models\StudentJournalEntry;
-use App\Models\University;
 use App\Models\User;
 use App\Notifications\JournalEntryCreated;
 use App\Repositories\Interfaces\StudentRepositoryInterface;
@@ -149,9 +147,9 @@ class StudentRepository implements StudentRepositoryInterface
         return null;
     }
 
-    public function createStudentOwnInternship()
+    public function createStudentOwnInternship($data)
     {
         DB::beginTransaction();
-
+        dd($data);
     }
 }

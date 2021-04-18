@@ -213,7 +213,7 @@ class StudentController extends Controller
 
     public function createStudentOwnInternship(CreateStudentOwnInternshipRequest $request)
     {
-        $result = $this->studentRepository->createStudentOwnInternship();
+        $result = $this->studentRepository->createStudentOwnInternship($request->all());
 
         if ($result) {
             return \response($result, Response::HTTP_OK);

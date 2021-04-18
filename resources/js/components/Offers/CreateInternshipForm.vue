@@ -194,7 +194,7 @@
                                             <validation-provider
                                                 v-slot="{ errors }"
                                                 vid="company.phone"
-                                                :rules="{ regex: /([0-9]{3}-[0-9]{2,3}-[0-9]{2,9})/ }"
+                                                :rules="{ regexp: /([0-9]{3}-[0-9]{2,3}-[0-9]{2,9})/ }"
                                             >
                                                 <v-text-field
                                                     label="Telefon Firmowy"
