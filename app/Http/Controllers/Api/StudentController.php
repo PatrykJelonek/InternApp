@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CreateStudentOwnInternshipRequest;
 use App\Http\Requests\StudentGetAvailableInternshipOffersRequest;
 use App\Models\Student;
 use App\Models\User;
@@ -203,8 +204,19 @@ class StudentController extends Controller
     {
         $availableInternshipOffers = $this->studentRepository->getAvailableInternshipOffers(Auth::id());
 
-        if(!empty($availableInternshipOffers)) {
+        if (!empty($availableInternshipOffers)) {
             return \response($availableInternshipOffers, Response::HTTP_OK);
+        }
+
+        return \response(null, Response::HTTP_NOT_FOUND);
+    }
+
+    public function createStudentOwnInternship(CreateStudentOwnInternshipRequest $request)
+    {
+        $result = $this->studentRepository->createStudentOwnInternship();
+
+        if ($result) {
+            return \response($result, Response::HTTP_OK);
         }
 
         return \response(null, Response::HTTP_NOT_FOUND);

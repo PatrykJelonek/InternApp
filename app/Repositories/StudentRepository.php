@@ -148,4 +148,10 @@ class StudentRepository implements StudentRepositoryInterface
 
         return null;
     }
+
+    public function createStudentOwnInternship()
+    {
+        DB::beginTransaction();
+
+    }
 }
