@@ -9,13 +9,15 @@ namespace App\Repositories\Interfaces;
 
 interface OfferRepositoryInterface
 {
-    public function one(string $slug);
+    public function getOfferById(int $id);
 
-    public function all(array $categories);
+    public function getOfferBySlug(string $slug);
 
-    public function create();
+    public function getAllOffers(array $categories);
 
-    public function edit(string $slug);
+    public function createOffer(array $data);
 
-    public function delete(string $slug);
+    public function updateOfferBySlug(string $slug);
+
+    public function deleteOfferBySlug(string $slug);
 }

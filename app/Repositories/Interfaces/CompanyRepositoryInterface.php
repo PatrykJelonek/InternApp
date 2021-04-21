@@ -7,7 +7,19 @@
  */
 namespace App\Repositories\Interfaces;
 
-interface CompanyRepositoryInterface extends DefaultRepositoryInterface
+interface CompanyRepositoryInterface
 {
+    public function getOneById(int $id);
 
+    public function getOneBySlug(string $slug);
+
+    public function getAll();
+
+    public function createCompany(array $data);
+
+    public function updateCompany(array $data);
+
+    public function deleteCompanyById(int $id);
+
+    public function deleteCompanyBySlug(string $slug);
 }

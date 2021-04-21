@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Models\Company;
 use App\Models\JournalEntry;
 use App\Models\Student;
 use App\Models\StudentJournalEntry;
@@ -149,7 +150,53 @@ class StudentRepository implements StudentRepositoryInterface
 
     public function createStudentOwnInternship($data)
     {
+//        company: {
+//        id: null,
+//                    name: null,
+//                    street: null,
+//                    streetNumber: null,
+//                    cityPostCode: null,
+//                    cityName: null,
+//                    cityId: null,
+//                    email: null,
+//                    phone: null,
+//                    website: null,
+//                    categoryId: null,
+//                },
+//        offer: {
+//        companyId: null,
+//                    universityId: null,
+//                    name: null,
+//                    program: null,
+//                    schedule: null,
+//                    categoryId: null,
+//                    attachments: null
+//                },
+//        agreement: {
+//        dateFrom: null,
+//                    dateTo: null,
+//                }
         DB::beginTransaction();
+
+        if(!empty($data['company']['id'])) {
+            $company = Company::find($data['company']['id']);
+        } else {
+            $company = new Company();
+            $company->name = $data['company'];
+            $company->street = $data['company'];
+            $company->street_number = $data['company'];
+            $company->email = $data['company'];
+            $company->phone = $data['company'];
+            $company->website = $data['company'];
+            $company->description = $data['company'];
+            $company->slug = $data['company'];
+            $company->access_code = $data['company'];
+            $company->company_category_id = $data['company'];
+            $company->created_at = Carbon::today();
+            $company->updated_at = Carbon::today();
+
+        }
+
         dd($data);
     }
 }

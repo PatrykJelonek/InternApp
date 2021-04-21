@@ -7,10 +7,13 @@ use App\Http\Requests\CreateStudentOwnInternshipRequest;
 use App\Http\Requests\StudentGetAvailableInternshipOffersRequest;
 use App\Models\Student;
 use App\Models\User;
+use App\Repositories\CityRepository;
+use App\Repositories\CompanyRepository;
 use App\Repositories\StudentRepository;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
@@ -22,13 +25,30 @@ class StudentController extends Controller
     private $studentRepository;
 
     /**
+     * @var CompanyRepository
+     */
+    private $companyRepository;
+
+    /**
+     * @var CityRepository
+     */
+    private $cityRepository;
+
+    /**
      * StudentController constructor.
      *
      * @param StudentRepository $studentRepository
+     * @param CompanyRepository $companyRepository
+     * @param CityRepository    $cityRepository
      */
-    public function __construct(StudentRepository $studentRepository)
-    {
+    public function __construct(
+        StudentRepository $studentRepository,
+        CompanyRepository $companyRepository,
+        CityRepository $cityRepository
+    ) {
         $this->studentRepository = $studentRepository;
+        $this->companyRepository = $companyRepository;
+        $this->cityRepository = $cityRepository;
     }
 
     /**
@@ -213,7 +233,24 @@ class StudentController extends Controller
 
     public function createStudentOwnInternship(CreateStudentOwnInternshipRequest $request)
     {
-        $result = $this->studentRepository->createStudentOwnInternship($request->all());
+        $company = $request->input('company');
+        $city = $request->input('company.city');
+        $offer = $request->input('offer');
+        $agreement = $request->input('agreement');
+
+        DB::beginTransaction();
+
+        if (empty($city['id'])) {
+            $createdCity = $this->cityRepository->createCity($city);
+
+            if ($createdCity) {
+                $company = array_merge(['cityId' => $createdCity->id], $company);
+            }
+        }
+
+
+
+        DB::commit();
 
         if ($result) {
             return \response($result, Response::HTTP_OK);

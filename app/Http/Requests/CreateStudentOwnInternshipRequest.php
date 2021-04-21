@@ -40,6 +40,7 @@ class CreateStudentOwnInternshipRequest extends FormRequest
                     }
                 ),
                 'max:64',
+                'unique:App\Models\Company,name',
             ],
             'company.street' => [
                 Rule::requiredIf(
@@ -57,21 +58,30 @@ class CreateStudentOwnInternshipRequest extends FormRequest
                 ),
                 'max:8',
             ],
-            'company.cityPostCode' => [
+            'company.city.postcode' => [
                 Rule::requiredIf(
                     function () {
                         return empty($this->company['id']);
                     }
                 ),
                 'max:6',
+                'unique:App\Models\City,post_code',
             ],
-            'company.cityName' => [
+            'company.city.name' => [
                 Rule::requiredIf(
                     function () {
                         return empty($this->company['id']);
                     }
                 ),
                 'max:64',
+            ],
+            'company.city.id' => [
+                Rule::requiredIf(
+                    function () {
+                        return empty($this->company['id']);
+                    }
+                ),
+                'exists:App\Models\City,id',
             ],
             'company.email' => [
                 Rule::requiredIf(
@@ -108,19 +118,22 @@ class CreateStudentOwnInternshipRequest extends FormRequest
         ];
     }
 
-    public function messages()
+    public function messages(): array
     {
         return [
-            'company.id.requiredIf' => 'Pole jest wymagan.',
+            'company.id.requiredIf' => 'Pole jest wymagań.',
             'company.id.exists' => 'Dana firma nie podana firma nie istniej.',
-            'company.name.requiredId' => 'Pole jest wymagan.',
-            'company.street.requiredId' => 'Pole jest wymagan.',
-            'company.streetNumber.requiredId' => 'Pole jest wymagan.',
-            'company.cityPostCode.requiredId' => 'Pole jest wymagan.',
-            'company.cityName.requiredId' => 'Pole jest wymagan.',
-            'company.email.requiredId' => 'Pole jest wymagan.',
-            'offer.name.required' => 'Pole jest wymagan.',
-            'offer.program.required' => 'Pole jest wymagan.',
+            'company.name.requiredId' => 'Pole jest wymagań.',
+            'company.name.unique' => 'Firma o takiej nazwie istnieje już w systemie',
+            'company.street.requiredId' => 'Pole jest wymagań.',
+            'company.streetNumber.requiredId' => 'Pole jest wymagań.',
+            'company.city.postcode.requiredId' => 'Pole jest wymagań.',
+            'company.city.postcode.unique' => 'Podany kod pocztowy jest już używany w systemie.',
+            'company.city.name.requiredId' => 'Pole jest wymagań.',
+            'company.city.id.exists' => 'Podane miasto nie istnieje w systemie.',
+            'company.email.requiredId' => 'Pole jest wymagań.',
+            'offer.name.required' => 'Pole jest wymagań.',
+            'offer.program.required' => 'Pole jest wymagań.',
             'company.name.max' => 'Pole nie może przekraczać :max znaków.',
             'company.street.max' => 'Pole nie może przekraczać :max znaków.',
             'company.streetNumber.max' => 'Pole nie może przekraczać :max znaków.',

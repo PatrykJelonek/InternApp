@@ -8,33 +8,57 @@
 
 namespace App\Repositories;
 
+use App\Models\Company;
 use App\Repositories\Interfaces\CompanyRepositoryInterface;
+use Carbon\Carbon;
 
 class CompanyRepository implements CompanyRepositoryInterface
 {
-
-    public function one(int $id)
+    public function getOneById(int $id)
     {
-        // TODO: Implement one() method.
+        return Company::find($id);
     }
 
-    public function all()
+    public function getOneBySlug(string $slug)
     {
-        // TODO: Implement all() method.
+        return Company::where(['slug' => $slug])->first();
     }
 
-    public function create(array $data)
+    public function getAll()
     {
-        // TODO: Implement create() method.
+        return Company::all();
     }
 
-    public function update(array $data)
+    public function createCompany(array $data)
     {
-        // TODO: Implement update() method.
+        $company = new Company();
+        $company->name = $data['company'];
+        $company->street = $data['company'];
+        $company->street_number = $data['company'];
+        $company->email = $data['company'];
+        $company->phone = $data['company'];
+        $company->website = $data['company'];
+        $company->description = $data['company'];
+        $company->slug = $data['company'];
+        $company->access_code = $data['company'];
+        $company->company_category_id = $data['company'];
+        $company->created_at = Carbon::today();
+        $company->updated_at = Carbon::today();
     }
 
-    public function delete(int $id)
+
+    public function updateCompany(array $data)
     {
-        // TODO: Implement delete() method.
+        // TODO: Implement updateCompany() method.
+    }
+
+    public function deleteCompanyById(int $id)
+    {
+        // TODO: Implement deleteCompanyById() method.
+    }
+
+    public function deleteCompanyBySlug(string $slug)
+    {
+        // TODO: Implement deleteCompanyBySlug() method.
     }
 }

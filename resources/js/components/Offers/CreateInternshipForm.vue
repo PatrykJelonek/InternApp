@@ -144,13 +144,13 @@
                                         <v-col cols="4">
                                             <validation-provider
                                                 v-slot="{ errors }"
-                                                vid="company.cityPostCode"
+                                                vid="company.city.postcode"
                                                 :rules="data.company.id ? '' : 'required'"
                                             >
                                                 <v-text-field
                                                     label="Kod Pocztowy"
-                                                    v-model="data.company.cityPostCode"
-                                                    @focusout="getCity(data.company.cityPostCode)"
+                                                    v-model="data.company.city.postcode"
+                                                    @focusout="getCity(data.company.city.postcode)"
                                                     v-on:input="postcodePattern"
                                                     maxlength="6"
                                                     outlined
@@ -162,12 +162,12 @@
                                         <v-col cols="8">
                                             <validation-provider
                                                 v-slot="{ errors }"
-                                                vid="company.cityName"
+                                                vid="company.city.name"
                                                 :rules="data.company.id ? '' : 'required'"
                                             >
                                                 <v-text-field
                                                     label="Miasto"
-                                                    v-model="data.company.cityName"
+                                                    v-model="data.company.city.name"
                                                     :loading="cityLoading"
                                                     outlined
                                                     hide-details="auto"
@@ -480,9 +480,11 @@ export default {
                     name: null,
                     street: null,
                     streetNumber: null,
-                    cityPostCode: null,
-                    cityName: null,
-                    cityId: null,
+                    city: {
+                        id: null,
+                        name: null,
+                        postcode: null,
+                    },
                     email: null,
                     phone: null,
                     website: null,
@@ -556,8 +558,8 @@ export default {
 
         getCity(postcode) {
             this.fetchCity(postcode).then(() => {
-                this.data.company.cityName = this.city.name ?? '';
-                this.data.company.cityId = this.city.id ?? '';
+                this.data.company.city.name = this.city.name ?? '';
+                this.data.company.city.id = this.city.id ?? '';
             })
         },
 
@@ -593,9 +595,9 @@ export default {
         },
 
         postcodePattern() {
-            switch (this.data.company.cityPostCode.length) {
+            switch (this.data.company.city.postcode.length) {
                 case 2:
-                    this.data.company.cityPostCode += '-';
+                    this.data.company.city.postcode += '-';
             }
         },
     },
