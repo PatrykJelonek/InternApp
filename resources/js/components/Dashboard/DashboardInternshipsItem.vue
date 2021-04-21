@@ -1,5 +1,5 @@
 <template>
-    <v-list-item two-line ripple :to='{path: `/internships/${id}`}'>
+    <v-list-item two-line ripple :to="{name: 'internship', params: {internshipId: id}}">
         <v-list-item-content>
             <v-list-item-title>{{ name }}</v-list-item-title>
             <v-list-item-subtitle>{{ company }}</v-list-item-subtitle>

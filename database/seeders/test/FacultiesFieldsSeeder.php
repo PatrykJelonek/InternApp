@@ -14,12 +14,20 @@ class FacultiesFieldsSeeder extends Seeder
      */
     public function run()
     {
-
-        DB::table('faculties_fields')->insert([
-            'faculty_id' => 1,
-            'field_id' => 1,
-            'created_at' => date('Y-m-d H:i:s')
-        ]);
+        DB::table('faculties_fields')->insert(
+            [
+                [
+                    'faculty_id' => 1,
+                    'field_id' => 1,
+                    'created_at' => date('Y-m-d H:i:s'),
+                ],
+                [
+                    'faculty_id' => 2,
+                    'field_id' => 2,
+                    'created_at' => date('Y-m-d H:i:s'),
+                ],
+            ]
+        );
 //
 //        DB::table('faculties_fields')->insert([
 //            'faculty_id' => 1,

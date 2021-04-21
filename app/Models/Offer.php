@@ -21,12 +21,12 @@ class Offer extends Model
         return $this->belongsTo('App\Models\User');
     }
 
-    public function offerCategory()
+    public function category()
     {
-        return $this->belongsTo('App\Models\OfferCategory');
+        return $this->belongsTo('App\Models\OfferCategory','offer_category_id','id');
     }
 
-    public function offerStatus()
+    public function status()
     {
         return $this->belongsTo('App\Models\OfferStatus');
     }

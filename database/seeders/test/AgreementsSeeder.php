@@ -5,6 +5,7 @@ namespace Database\Seeders\Test;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class AgreementsSeeder extends Seeder
 {
@@ -30,6 +31,7 @@ class AgreementsSeeder extends Seeder
                     'offer_id' => 1,
                     'user_id' => 5,
                     'is_active' => true,
+                    'slug' => Str::slug('Programista Aplikacji Internetowych w PHP'),
                     'created_at' => Carbon::today(),
                     'updated_at' => Carbon::today(),
                 ],
@@ -46,6 +48,7 @@ class AgreementsSeeder extends Seeder
                     'offer_id' => 2,
                     'user_id' => 5,
                     'is_active' => true,
+                    'slug' => Str::slug('Staż - Junior PHP Developer'),
                     'created_at' => Carbon::today(),
                     'updated_at' => Carbon::today(),
                 ],

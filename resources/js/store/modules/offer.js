@@ -4,7 +4,8 @@ export default {
     state: {
         offer: '',
         offers: [],
-        offerCategories: []
+        offerCategories: [],
+        offerCategoriesLoading: true,
     },
 
     getters: {
@@ -18,12 +19,20 @@ export default {
 
         offerCategories: state => {
             return state.offerCategories;
-        }
+        },
+
+        offerCategoriesLoading: state => {
+            return state.offerCategoriesLoading;
+        },
     },
 
     mutations: {
         SET_OFFER_CATEGORIES(state, data) {
             state.offerCategories = data;
+        },
+
+        SET_OFFER_CATEGORIES_LOADING(state, data) {
+            state.offerCategoriesLoading = data;
         },
 
         SET_OFFERS(state, data) {
@@ -55,11 +64,14 @@ export default {
         },
 
         async fetchOfferCategories({commit}) {
+            commit('SET_OFFER_CATEGORIES_LOADING', true);
             try{
                 let response = await axios.get('/api/offers/categories');
                 commit('SET_OFFER_CATEGORIES', response.data.data);
+                commit('SET_OFFER_CATEGORIES_LOADING', false);
             } catch (e) {
                 commit('SET_OFFER_CATEGORIES', []);
+                commit('SET_OFFER_CATEGORIES_LOADING', false);
             }
         },
 

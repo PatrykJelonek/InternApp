@@ -2,11 +2,21 @@
 
 namespace App\Providers;
 
+use App\Repositories\AgreementRepository;
+use App\Repositories\CityRepository;
+use App\Repositories\Interfaces\AgreementRepositoryInterface;
+use App\Repositories\Interfaces\CityRepositoryInterface;
 use App\Repositories\Interfaces\InternshipRepositoryInterface;
+use App\Repositories\Interfaces\OfferCategoryRepositoryInterface;
+use App\Repositories\Interfaces\OfferRepositoryInterface;
+use App\Repositories\Interfaces\OfferStatusRepositoryInterface;
 use App\Repositories\Interfaces\StudentRepositoryInterface;
 use App\Repositories\Interfaces\TasksRepositoryInterface;
 use App\Repositories\Interfaces\UserRepositoryInterface;
 use App\Repositories\InternshipRepository;
+use App\Repositories\OfferCategoryRepository;
+use App\Repositories\OfferRepository;
+use App\Repositories\OfferStatusRepository;
 use App\Repositories\StudentRepository;
 use App\Repositories\TaskRepository;
 use App\Repositories\UserRepository;
@@ -25,6 +35,11 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(InternshipRepositoryInterface::class,InternshipRepository::class);
         $this->app->bind(StudentRepositoryInterface::class, StudentRepository::class);
         $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
+        $this->app->bind(OfferRepositoryInterface::class, OfferRepository::class);
+        $this->app->bind(AgreementRepositoryInterface::class, AgreementRepository::class);
+        $this->app->bind(CityRepositoryInterface::class, CityRepository::class);
+        $this->app->bind(OfferStatusRepositoryInterface::class, OfferStatusRepository::class);
+        $this->app->bind(OfferCategoryRepositoryInterface::class, OfferCategoryRepository::class);
     }
 
     /**

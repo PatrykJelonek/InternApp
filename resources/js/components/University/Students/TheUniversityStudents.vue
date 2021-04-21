@@ -1,10 +1,14 @@
 <template>
-    <h1>Students</h1>
+    <div>
+        <the-university-students-list></the-university-students-list>
+    </div>
 </template>
 
 <script>
+import TheUniversityStudentsList from "./TheUniversityStudentsList";
 export default {
-    name: "TheUniversityStudents"
+    name: "TheUniversityStudents",
+    components: {TheUniversityStudentsList}
 }
 </script>
 

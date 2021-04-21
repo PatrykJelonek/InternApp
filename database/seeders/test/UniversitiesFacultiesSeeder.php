@@ -15,11 +15,20 @@ class UniversitiesFacultiesSeeder extends Seeder
     public function run()
     {
         # PWSZ - Informatyka
-        DB::table('universities_faculties')->insert([
-            'university_id' => 1,
-            'faculty_id' => 1,
-            'created_at' => date('Y-m-d H:i:s')
-        ]);
+        DB::table('universities_faculties')->insert(
+            [
+                [
+                    'university_id' => 1,
+                    'faculty_id' => 1,
+                    'created_at' => date('Y-m-d H:i:s')
+                ],
+                [
+                    'university_id' => 1,
+                    'faculty_id' => 2,
+                    'created_at' => date('Y-m-d H:i:s')
+                ]
+            ]
+        );
 //
 //		//PWSZ-WYDZIAL EKONOMICZNY
 //        DB::table('universities_faculties')->insert([

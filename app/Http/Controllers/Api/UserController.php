@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Constants\InternshipStatusConstants;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Collections\InternshipCollection;
 use App\Models\User;
@@ -9,6 +10,7 @@ use App\Repositories\UserRepository;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
@@ -182,14 +184,16 @@ class UserController extends Controller
     }
 
     /**
+     * @param string|null $status
+     *
      * @return Response
      */
-    public function getUserInternships(): Response
+    public function getUserInternships(string $status = null): Response
     {
-        $internships = $this->userRepository->getInternships();
+        $internships = $this->userRepository->getInternships(Auth::user()->id, [$status]);
 
         if(!is_null($internships)) {
-            return response(new InternshipCollection($internships), Response::HTTP_OK);
+            return response($internships, Response::HTTP_OK);
         }
 
         return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);

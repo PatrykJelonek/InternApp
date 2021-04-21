@@ -32,6 +32,7 @@ class CreateAgreementsTable extends Migration
             $table->foreignId('user_id');
             $table->foreign('user_id')->references('id')->on('users');
             $table->boolean('is_active')->default(false);
+            $table->string('slug', 80)->unique();
             $table->dateTime('created_at', 0);
             $table->dateTime('updated_at', 0);
         });

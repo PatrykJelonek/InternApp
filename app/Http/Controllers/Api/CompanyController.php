@@ -23,7 +23,7 @@ class CompanyController extends Controller
      */
     public function index()
     {
-        $companies = Company::with(['offers'])->get();
+        $companies = Company::select(['id', 'name', 'city_id', 'street', 'street_number', 'email','phone','website','company_category_id'])->get();
 
         if (isset($companies))
             return response($companies, Response::HTTP_OK);

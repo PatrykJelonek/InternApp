@@ -14,5 +14,10 @@ class InternshipStatus extends Model
         self::STATUS_ACCEPTED
     ];
 
+    const STATUSES_DISPLAYED_NAME = [
+        self::STATUS_NEW => 'Nowy',
+        self::STATUS_ACCEPTED => 'Zaakceptowany'
+    ];
+
     protected $table = 'internship_statuses';
 }

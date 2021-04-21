@@ -41,6 +41,10 @@ import TheUniversityWorkers from "../components/University/Workers/TheUniversity
 import TheUniversityAgreements from "../components/University/Agreements/TheUniversityAgreements";
 import TheUniversityInternships from "../components/University/Internships/TheUniversityInternships";
 import TheUniversitySettings from "../components/University/Settings/TheUniversitySettings";
+import StudentOffersList from "../components/Offers/StudentOffersList";
+import TheStudentOfferApplicationsList from "../components/Offers/TheStudentOfferApplicationsList";
+import TheStudentOffers from "../components/Offers/TheStudentOffers";
+import LandingPage from "../views/LandingPage";
 
 Vue.use(VueRouter);
 
@@ -100,7 +104,13 @@ const router = new VueRouter({
         },
         {
             path: '',
-            component: App,
+            name: 'landing-page',
+            component: LandingPage,
+        },
+        {
+            title: 'Dashboard',
+            path: '/dashboard',
+            name: 'dashboard',
             beforeEnter: (to, from, next) => {
                 if (!store.getters['auth/authenticated']) {
                     return next({name: 'login'})
@@ -108,19 +118,13 @@ const router = new VueRouter({
 
                 next();
             },
+            components: {
+                default: App,
+            },
+            meta: {
+                title: 'Dashboard'
+            },
             children: [
-                {
-                    title: 'Dashboard',
-                    path: '/dashboard',
-                    name: 'dashboard',
-                    components: {
-                        default: Welcome,
-                        tabs: WelcomeTabs,
-                    },
-                    meta: {
-                        title: 'Dashboard'
-                    }
-                },
                 {
                     path: 'users/new-status',
                     name: 'user-statuses',
@@ -152,12 +156,11 @@ const router = new VueRouter({
                 },
                 {
                     path: '/dashboard/universities/:slug',
-                    name: 'university',
                     component: University,
                     children: [
                         {
                             path: '',
-                            name: 'university-overview',
+                            name: 'university',
                             component: TheUniversityOverview,
                         },
                         {
@@ -193,13 +196,26 @@ const router = new VueRouter({
                     component: CompanyCreate,
                 },
                 {
-                    path: '/offers',
-                    name: 'offers',
+                    path: '/dashboard/offers',
                     component: Offers,
-                    meta: {title: 'Oferty Praktyk'}
+                    meta: {title: 'Oferty Praktyk'},
+                    children: [
+                        {
+                            path: '',
+                            name: 'offers',
+                            meta: {title: 'Oferty Praktyk'},
+                            component: TheStudentOffers
+                        },
+                        {
+                            path: 'applications',
+                            name: 'internship-applications',
+                            meta: {title: 'Aplikacje na Praktyki'},
+                            component: TheStudentOfferApplicationsList
+                        }
+                    ]
                 },
                 {
-                    path: '/offer/:id',
+                    path: '/dashboard/offers/:id',
                     name: 'offer',
                     component: Offer,
                 },
@@ -246,8 +262,8 @@ const router = new VueRouter({
                     component: Account,
                 },
                 {
-                    path: '/dashboard/profile',
-                    name: 'profile',
+                    path: '/dashboard/users/:id',
+                    name: 'user',
                     component: Profile,
                     meta: {title: 'Profil'},
                 },

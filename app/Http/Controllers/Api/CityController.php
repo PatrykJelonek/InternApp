@@ -76,6 +76,22 @@ class CityController extends Controller
     }
 
     /**
+     * @param string $postcode
+     *
+     * @return Response
+     */
+    public function showByPostcode(string $postcode): Response
+    {
+        $city = City::where(['post_code' => $postcode])->first();
+
+        if (!empty($city)) {
+            return response($city, Response::HTTP_OK);
+        }
+
+        return response(null, Response::HTTP_NO_CONTENT);
+    }
+
+    /**
      * Show the form for editing the specified resource.
      *
      * @param City $city

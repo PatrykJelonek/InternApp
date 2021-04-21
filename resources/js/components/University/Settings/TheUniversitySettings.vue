@@ -1,10 +1,29 @@
 <template>
-    <h1>Settings</h1>
+    <div>
+        <v-row>
+            <v-col cols="12" md="8" lg="8">
+                <the-university-settings-form></the-university-settings-form>
+            </v-col>
+            <v-col cols="12" md="4" lg="4">
+                <the-university-access-code></the-university-access-code>
+            </v-col>
+        </v-row>
+        <v-row>
+            <v-col cols="12">
+                <the-university-faculties></the-university-faculties>
+            </v-col>
+
+        </v-row>
+    </div>
 </template>
 
 <script>
+import TheUniversityFaculties from "./TheUniversityFaculties";
+import TheUniversitySettingsForm from "./TheUniversitySettingsForm";
+import TheUniversityAccessCode from "./TheUniversityAccessCode";
 export default {
-    name: "TheUniversitySettings"
+    name: "TheUniversitySettings",
+    components: {TheUniversityAccessCode, TheUniversitySettingsForm, TheUniversityFaculties}
 }
 </script>
 

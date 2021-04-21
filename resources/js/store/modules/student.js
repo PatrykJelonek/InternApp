@@ -8,6 +8,10 @@ export default {
         loadingStudentJournalEntries: true,
         studentTasks: [],
         loadingStudentTasks: true,
+        availableStudentOffers: [],
+        availableStudentOffersLoading: true,
+        internshipApplications: [],
+        internshipApplicationsLoading: true,
     },
 
     getters: {
@@ -33,6 +37,14 @@ export default {
 
         loadingStudentTasks(state) {
             return state.loadingStudentTasks;
+        },
+
+        internshipApplications(state) {
+            return state.internshipApplications;
+        },
+
+        internshipApplicationsLoading(state) {
+            return state.internshipApplicationsLoading;
         }
     },
 
@@ -64,10 +76,18 @@ export default {
         PUSH_STUDENT_JOURNAL_ENTRY(state, data) {
             state.studentJournalEntries.push(data);
             state.studentJournalEntries.sort((a, b) => {
-                if(a.date > b.date) return -1;
-                if(a.date <= b.date) return 1;
+                if (a.date > b.date) return -1;
+                if (a.date <= b.date) return 1;
             })
         },
+
+        SET_INTERNSHIP_APPLICATIONS(state, data) {
+            state.internshipApplications = data;
+        },
+
+        SET_INTERNSHIP_APPLICATIONS_LOADING(state, data) {
+            state.internshipApplicationsLoading = data;
+        }
     },
 
     actions: {
@@ -76,7 +96,7 @@ export default {
         },
 
         async fetchStudentJournalEntries({commit}, {internshipId, studentIndex}) {
-            if(internshipId && studentIndex) {
+            if (internshipId && studentIndex) {
                 commit('SET_LOADING_STUDENT_JOURNAL_ENTRIES', true);
                 try {
                     let response = await axios.get(`/api/internships/${internshipId}/students/${studentIndex}/journal-entries`);
@@ -92,7 +112,7 @@ export default {
         },
 
         async fetchStudentTasks({commit}, {internshipId, studentIndex}) {
-            if(internshipId && studentIndex) {
+            if (internshipId && studentIndex) {
                 commit('SET_LOADING_STUDENT_TASKS', true);
                 try {
                     let response = await axios.get(`/api/internships/${internshipId}/students/${studentIndex}/tasks`);
@@ -107,12 +127,26 @@ export default {
             }
         },
 
+        async fetchStudentInternshipApplications({commit}, {studentId}) {
+            try {
+                let response = await axios.get(`/api/students/${studentId}/internship-applications`);
+                commit('SET_INTERNSHIP_APPLICATIONS_LOADING', false);
+                commit('SET_INTERNSHIP_APPLICATIONS', response.data);
+            } catch (e) {
+                commit('SET_INTERNSHIP_APPLICATIONS_LOADING', false);
+            }
+        },
+
         createStudentJournalEntry({commit}, {internshipId, studentIndex, journalEntry}) {
             return axios.post(`/api/internships/${internshipId}/students/${studentIndex}/journal-entries`, journalEntry);
         },
 
         addStudentJournalEntry({commit}, data) {
             commit('PUSH_STUDENT_JOURNAL_ENTRY', data);
-        }
+        },
+
+        createStudentOwnInternship({commit}, data) {
+            return axios.post(`/api/students/internships`, data);
+        },
     },
 }

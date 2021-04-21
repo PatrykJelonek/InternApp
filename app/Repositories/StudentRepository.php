@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Models\Company;
 use App\Models\JournalEntry;
 use App\Models\Student;
 use App\Models\StudentJournalEntry;
@@ -9,6 +10,7 @@ use App\Models\User;
 use App\Notifications\JournalEntryCreated;
 use App\Repositories\Interfaces\StudentRepositoryInterface;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
@@ -118,5 +120,83 @@ class StudentRepository implements StudentRepositoryInterface
     public function delete(int $id)
     {
         // TODO: Implement delete() method.
+    }
+
+    /**
+     * @param int $userId
+     *
+     * @return array|null
+     */
+    public function getAvailableInternshipOffers(int $userId): ?array
+    {
+        $userUniversities = User::with(['universities.agreements'])->find($userId)->universities;
+
+        if(!empty($userUniversities)) {
+            $agreements = [];
+
+            foreach ($userUniversities as $university) {
+                $agreements[] =  $university->agreements()->with(['offer','offer.category','offer.company.city'])->where(function (Builder $query) {
+                    $query->where('is_active', true)->where('date_from','>', Carbon::today()->subDays(config('global.acceptableDifferenceDays'))->toDateString());
+                })->get()->toArray();
+            }
+
+            if (!empty($agreements)) {
+                return array_merge(...$agreements);
+            }
+        }
+
+        return null;
+    }
+
+    public function createStudentOwnInternship($data)
+    {
+//        company: {
+//        id: null,
+//                    name: null,
+//                    street: null,
+//                    streetNumber: null,
+//                    cityPostCode: null,
+//                    cityName: null,
+//                    cityId: null,
+//                    email: null,
+//                    phone: null,
+//                    website: null,
+//                    categoryId: null,
+//                },
+//        offer: {
+//        companyId: null,
+//                    universityId: null,
+//                    name: null,
+//                    program: null,
+//                    schedule: null,
+//                    categoryId: null,
+//                    attachments: null
+//                },
+//        agreement: {
+//        dateFrom: null,
+//                    dateTo: null,
+//                }
+        DB::beginTransaction();
+
+        if(!empty($data['company']['id'])) {
+            $company = Company::find($data['company']['id']);
+        } else {
+            $company = new Company();
+            $company->name = $data['company'];
+            $company->street = $data['company'];
+            $company->street_number = $data['company'];
+            $company->email = $data['company'];
+            $company->phone = $data['company'];
+            $company->website = $data['company'];
+            $company->description = $data['company'];
+            $company->slug = $data['company'];
+            $company->access_code = $data['company'];
+            $company->company_category_id = $data['company'];
+            $company->created_at = Carbon::today();
+            $company->updated_at = Carbon::today();
+
+        }
+
+        dd($data);
     }
 }

@@ -4,6 +4,7 @@ namespace Database\Seeders\Test;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class OffersSeeder extends Seeder
 {
@@ -27,6 +28,7 @@ class OffersSeeder extends Seeder
                     'offer_status_id' => 2,
                     'company_supervisor_id' => 6,
                     'interview' => true,
+                    'slug' => Str::slug('Programista Aplikacji Internetowych w PHP'),
                     'created_at' => date('Y-m-d H:i:s'),
                     'updated_at' => date('Y-m-d H:i:s'),
                 ],
@@ -41,6 +43,7 @@ class OffersSeeder extends Seeder
                     'offer_status_id' => 2,
                     'company_supervisor_id' => 6,
                     'interview' => true,
+                    'slug' => Str::slug('Staż - Junior PHP Developer'),
                     'created_at' => date('Y-m-d H:i:s'),
                     'updated_at' => date('Y-m-d H:i:s'),
                 ],

@@ -39,11 +39,10 @@ Route::resource('/users', 'Api\UserController');
 Route::group(['middleware' => ['jwt.verify']], function() {
     Route::resource('/user_statuses', 'Api\UserStatusController');
     //Route::resource('/users', 'Api\UserController');
-    Route::resource('/cities', 'Api\CityController');
+//    Route::resource('/cities', 'Api\CityController');
     Route::resource('/university-types', 'Api\UniversityTypeController');
     Route::resource('/universities', 'Api\UniversityController');
-    Route::resource('/companies', 'Api\CompanyController');
-    Route::resource('/company-categories', 'Api\CompanyCategoryController');
+    //Route::resource('/companies', 'Api\CompanyController');
     Route::resource('/specializations', 'Api\SpecializationController');
     Route::resource('/students', 'Api\StudentController');
     Route::resource('/user-universities', 'Api\UserUniversityController');
@@ -83,8 +82,22 @@ Route::group(['middleware' => ['jwt.verify']], function() {
 //    Route::get('/users/{user_id}/internships/{internship_id}/journal_entries', '');
 
     # New endpoints
+    Route::get('/cities','Api\CityController@index');
+    Route::get('/cities/{postcode?}','Api\CityController@showByPostcode');
+    Route::post('/cities', 'Api\CityController@create');
+    Route::put('/cities', 'Api\CityController@edit');
+    Route::delete('/cities/{id}', 'Api\CityController@delete');
+
+
+    # Companies
+    Route::get('/companies', 'Api\CompanyController@index');
+
+    # Company Categories
+    Route::get('/companies/categories', 'Api\CompanyCategoryController@index');
+
 
     # Internship Tasks
+    Route::post('/internships', 'Api\InternshipController@store');
     Route::post('/internships/{internship}/tasks', 'Api\TaskController@store');
     Route::get('/internships/{internship}/students/{student}/tasks', 'Api\StudentTaskController@index');
     Route::post('/internships/{internship}/students/{student?}/tasks', 'Api\TaskController@store');
@@ -96,10 +109,20 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::get('/universities/{slug}/students','Api\UniversityController@getStudents');
     Route::get('/universities/{slug}/agreements','Api\UniversityController@getAgreements');
     Route::get('/universities/{slug}/internships','Api\UniversityController@getInternships2');
+    Route::get('/universities/{slug}/faculties','Api\UniversityController@getFaculties');
+    Route::get('/universities/{slug}/offers','Api\UniversityController@getOffers');
+
+    # Student
+    Route::post('/students/internships', 'Api\StudentController@createStudentOwnInternship');
 
     # User
+    Route::get('/me/internships/{status?}', 'Api\UserController@getUserInternships')->where('status', \App\Constants\InternshipStatusConstants::STATUS_ACCEPTED.'|'.\App\Constants\InternshipStatusConstants::STATUS_NEW);
     Route::get('/me/internships', 'Api\UserController@getUserInternships');
     Route::get('/me/universities', 'Api\UserUniversityController@index');
+    Route::get('/me/notifications', 'Api\NotificationController@index');
+    Route::get('/me/offers','Api\StudentController@getAvailableInternshipOffers');
+
+    Route::get('/test', 'Api\TestController@test');
 
 
     Route::get('/me', [

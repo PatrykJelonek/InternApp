@@ -1,17 +1,39 @@
 <template>
-        <v-card outlined>
-            <v-data-table
-                :headers="headers"
-                :items="offers"
-                :items-per-page="10"
-                :loading="isLoading"
-                @click:row="(item) => {this.$router.push({name: 'offer', params: {id: item.id}})}"
-            >
-                <template v-slot:item.action="{ item }" v-if="haveRole(['university-worker'])">
-                    <v-btn small color="primary" :to="'/create-agreement/'+item.id">Złóż Ofertę</v-btn>
-                </template>
-            </v-data-table>
-        </v-card>
+    <v-card elevation="0" color="card-background">
+        <v-list color="card-background">
+            <v-list-item>
+                <v-list-item-content>
+                    <v-list-item-title class="text-h5 font-weight-medium">Oferty</v-list-item-title>
+                    <v-list-item-subtitle>Lista ofert udostępnionych przez firmy.</v-list-item-subtitle>
+                </v-list-item-content>
+                <v-list-item-action>
+                    <v-btn-toggle borderless dense>
+                        <v-tooltip top>
+                            <template v-slot:activator="{ on, attrs }">
+                                <v-btn
+                                    small
+                                    icon
+                                    v-bind="attrs"
+                                    v-on="on"
+                                    @click="show = !show">
+                                    <v-icon>{{ show ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
+                                </v-btn>
+                            </template>
+                            <span>{{ show ? 'Zwiń Listę' : 'Rozwiń Listę' }}</span>
+                        </v-tooltip>
+                    </v-btn-toggle>
+                </v-list-item-action>
+            </v-list-item>
+        </v-list>
+        <v-divider></v-divider>
+        <v-expand-transition>
+            <v-row v-show="show" no-gutters>
+                <v-col cols="12">
+
+                </v-col>
+            </v-row>
+        </v-expand-transition>
+    </v-card>
 </template>
 
 <script>
@@ -22,22 +44,13 @@
 
         data() {
             return {
-                isLoading: true,
-                headers: [
-                    { text: 'Nazwa', value: 'name' },
-                    { text: 'Ilość miejsc', value: 'places_number' },
-                    { text: 'Kategoria', value: 'offer_category.name' },
-                    { text: 'Firma', value: 'company.name' },
-                    { text: 'Miasto', value: 'company.city.name' },
-                    { text: 'Akcje', value: 'action' },
-                ],
+                show: true,
             }
         },
 
         computed: {
             ...mapGetters({
                 offers: 'offer/offers',
-                roles: 'auth/roles'
             }),
         },
 
@@ -45,19 +58,6 @@
             ...mapActions({
                 fetchOffers: 'offer/fetchOffers'
             }),
-
-            haveRole: function (rolesToCheck) {
-                let haveRole = false;
-                this.roles.forEach((role) => {
-                    rolesToCheck.forEach((roleToCheck) => {
-                        console.log(`${roleToCheck} vs. ${role} == ${roleToCheck === role}`);
-                        if(roleToCheck === role)
-                            haveRole = true;
-                    });
-                });
-
-                return haveRole;
-            }
         },
 
         created() {

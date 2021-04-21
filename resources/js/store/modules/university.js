@@ -9,9 +9,20 @@ export default {
         universityUsers: [],
         universityAgreements: [],
         internships: [],
+        internshipsLoading: true,
         students: [],
+        studentsLoading: false,
         university: null,
         universityLoading: true,
+        workers: [],
+        workersLoading: true,
+        agreements: [],
+        agreementsLoading: true,
+        faculties: [],
+        facultiesLoading: true,
+        codeLoading: false,
+        availableStudentOffers: [],
+        availableStudentOffersLoading: true,
     },
 
     getters: {
@@ -47,12 +58,56 @@ export default {
             return state.internships;
         },
 
+        internshipsLoading: (state) => {
+            return state.internshipsLoading;
+        },
+
         selectedUniversityId: (state) => {
             return state.selectedUniversityId;
         },
 
         students: (state) => {
             return state.students;
+        },
+
+        studentsLoading: (state) => {
+            return state.studentsLoading;
+        },
+
+        workers: (state) => {
+            return state.workers;
+        },
+
+        workersLoading: (state) => {
+            return state.workersLoading;
+        },
+
+        agreements: (state) => {
+            return state.agreements;
+        },
+
+        agreementsLoading: (state) => {
+            return state.agreementsLoading;
+        },
+
+        faculties: (state) => {
+            return state.faculties;
+        },
+
+        facultiesLoading: (state) => {
+            return state.facultiesLoading;
+        },
+
+        codeLoading: (state) => {
+            return state.codeLoading;
+        },
+
+        availableOffers(state) {
+            return state.availableStudentOffers;
+        },
+
+        availableOffersLoading(state) {
+            return state.availableStudentOffersLoading;
         }
     },
 
@@ -70,7 +125,11 @@ export default {
         },
 
         SET_CODE(state, accessCode) {
-            state.selectedUniversity.access_code = accessCode;
+            state.university.access_code = accessCode;
+        },
+
+        SET_CODE_LOADING(state, data) {
+            state.codeLoading = data;
         },
 
         SET_UNIVERSITY_USERS(state, data) {
@@ -85,6 +144,10 @@ export default {
             state.internships = data;
         },
 
+        SET_INTERNSHIPS_LOADING(state, data) {
+            state.internshipsLoading = data;
+        },
+
         SET_SELECTED_UNIVERSITY_ID(state, data) {
             state.selectedUniversityId = data;
         },
@@ -93,12 +156,48 @@ export default {
             state.students = data;
         },
 
+        SET_STUDENTS_LOADING(state, data) {
+            state.studentsLoading = data;
+        },
+
         SET_UNIVERSITY(state, data) {
             state.university = data;
         },
 
         SET_UNIVERSITY_LOADING(state, data) {
             state.universityLoading = data;
+        },
+
+        SET_WORKERS(state, data) {
+            state.workers = data;
+        },
+
+        SET_WORKERS_LOADING(state, data) {
+            state.workersLoading = data;
+        },
+
+        SET_AGREEMENTS(state, data) {
+            state.agreements = data;
+        },
+
+        SET_AGREEMENTS_LOADING(state, data) {
+            state.agreementsLoading = data;
+        },
+
+        SET_FACULTIES(state, data) {
+            state.faculties = data;
+        },
+
+        SET_FACULTIES_LOADING(state, data) {
+            state.facultiesLoading = data;
+        },
+
+        SET_AVAILABLE_OFFERS(state, data) {
+            state.availableStudentOffers = data;
+        },
+
+        SET_AVAILABLE_OFFERS_LOADING(state, data) {
+            state.availableStudentOffersLoading = data;
         },
     },
 
@@ -139,12 +238,27 @@ export default {
             }
         },
 
-        async fetchInternships({commit}, id) {
+        async fetchInternships({commit}, slug) {
+            commit('SET_INTERNSHIPS_LOADING', true);
             try {
-                let response = await axios.get(`/api/universities/${id}/internships`);
-                commit('SET_INTERNSHIPS', response.data.data);
+                let response = await axios.get(`/api/universities/${slug}/internships`);
+                commit('SET_INTERNSHIPS', response.data);
+                commit('SET_INTERNSHIPS_LOADING', false);
             } catch (e) {
                 commit('SET_INTERNSHIPS', []);
+                commit('SET_INTERNSHIPS_LOADING', false);
+            }
+        },
+
+        async fetchFaculties({commit}, slug) {
+            commit('SET_FACULTIES_LOADING', true);
+            try {
+                let response = await axios.get(`/api/universities/${slug}/faculties`);
+                commit('SET_FACULTIES', response.data);
+                commit('SET_FACULTIES_LOADING', false);
+            } catch (e) {
+                commit('SET_FACULTIES', []);
+                commit('SET_FACULTIES_LOADING', false);
             }
         },
 
@@ -161,13 +275,16 @@ export default {
         },
 
         async generateCode({commit}, id) {
+            commit('SET_CODE_LOADING', true);
             try {
                 let response = await axios.post('/api/university/generate-code', {
                     id: id
                 });
                 commit('SET_CODE', response.data.data);
+                commit('SET_CODE_LOADING', false);
             } catch (e) {
                 commit('SET_CODE', e.response.data.message);
+                commit('SET_CODE_LOADING', false);
             }
         },
 
@@ -177,12 +294,39 @@ export default {
             });
         },
 
-        async fetchStudents({commit}, id) {
+        async fetchStudents({commit}, slug) {
+            commit('SET_STUDENTS_LOADING', true);
             try {
-                let response = await axios.get(`/api/universities/${id}/students`);
+                let response = await axios.get(`/api/universities/${slug}/students`);
                 commit('SET_STUDENTS', response.data);
+                commit('SET_STUDENTS_LOADING', false);
             } catch (e) {
                 commit('SET_STUDENTS', []);
+                commit('SET_STUDENTS_LOADING', false);
+            }
+        },
+
+        async fetchWorkers({commit}, slug) {
+            commit('SET_WORKERS_LOADING', true);
+            try {
+                let response = await axios.get(`/api/universities/${slug}/workers`);
+                commit('SET_WORKERS', response.data);
+                commit('SET_WORKERS_LOADING', false);
+            } catch (e) {
+                commit('SET_WORKERS', []);
+                commit('SET_WORKERS_LOADING', false);
+            }
+        },
+
+        async fetchAgreements({commit}, slug) {
+            commit('SET_AGREEMENTS_LOADING', true);
+            try {
+                let response = await axios.get(`/api/universities/${slug}/agreements`);
+                commit('SET_AGREEMENTS', response.data);
+                commit('SET_AGREEMENTS_LOADING', false);
+            } catch (e) {
+                commit('SET_AGREEMENTS', []);
+                commit('SET_AGREEMENTS_LOADING', false);
             }
         },
 
@@ -196,6 +340,18 @@ export default {
                 commit('SET_UNIVERSITY', []);
                 commit('SET_UNIVERSITY_LOADING', false);
             }
-        }
-    }
+        },
+
+        async fetchAvailableOffers({commit}) {
+            commit('SET_AVAILABLE_OFFERS_LOADING', true);
+            try {
+                let response = await axios.get(`/api/me/offers`);
+                commit('SET_AVAILABLE_OFFERS', response.data);
+                commit('SET_AVAILABLE_OFFERS_LOADING', false);
+            } catch (e) {
+                commit('SET_AVAILABLE_OFFERS', []);
+                commit('SET_AVAILABLE_OFFERS_LOADING', false);
+            }
+        },
+    },
 };

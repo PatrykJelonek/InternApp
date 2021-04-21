@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreInternshipRequest;
 use App\Http\Resources\InternshipResource;
 use App\Models\Agreement;
 use App\Models\Internship;
@@ -15,6 +16,7 @@ use App\Repositories\UserRepository;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Auth;
 
 class InternshipController extends Controller
 {
@@ -22,6 +24,7 @@ class InternshipController extends Controller
      * @var InternshipRepository
      */
     private $internshipRepository;
+
     /**
      * @var UserRepository
      */
@@ -29,8 +32,9 @@ class InternshipController extends Controller
 
     /**
      * InternshipController constructor.
+     *
      * @param InternshipRepository $internshipRepository
-     * @param UserRepository $userRepository
+     * @param UserRepository       $userRepository
      */
     public function __construct(InternshipRepository $internshipRepository, UserRepository $userRepository)
     {
@@ -50,11 +54,14 @@ class InternshipController extends Controller
             ->where(['is_active' => 1])
             ->whereIn('university_id', Arr::pluck($user->toArray()['universities'], 'id'))->get();
 
-        return Response([
-            'status' => 'success',
-            'data' => $internships,
-            'message' => null,
-        ], Response::HTTP_OK);
+        return Response(
+            [
+                'status' => 'success',
+                'data' => $internships,
+                'message' => null,
+            ],
+            Response::HTTP_OK
+        );
     }
 
     /**
@@ -70,63 +77,50 @@ class InternshipController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param Request $request
+     * @param StoreInternshipRequest $request
+     *
      * @return Response
      */
-    public function store(Request $request)
+    public function store(StoreInternshipRequest $request)
     {
-        $internship = new Internship;
-        $student = Student::where(['user_id' => auth()->id()])->first();
-        $internshipStatus = InternshipStatus::where(['name' => 'new'])->first();
+        $result = $this->internshipRepository->create(
+            Auth::user()->id,
+            $request->input('offerId'),
+            $request->input('agreementId'),
+            $request->input('companySupervisorId'),
+            $request->input('universitySupervisorId')
+        );
 
-        $internship->offer_id = $request->input('offer.id');
-        $internship->agreement_id = $request->input('id');
-        $internship->student_id = $student->id;
-        $internship->company_supervisor_id = $request->input('offer.company_supervisor_id');
-        $internship->university_supervisor_id = $request->input('university_supervisor_id');
-        $internship->internship_status_id = $internshipStatus->id;
-        $internship->updated_at = date('Y-m-d H:i:s');
-        $internship->created_at = date('Y-m-d H:i:s');
-
-        $offer = Offer::find($request->input('offer.id'));
-        $offer->places_number--;
-
-        if ($offer->save() and $internship->save()) {
-            return response([
-                'status' => 'success',
-                'data' => $internship,
-                'message' => 'Test'
-            ], Response::HTTP_OK);
-        } else {
-            return response([
-                'status' => 'error',
-                'data' => null,
-                'message' => 'Przepraszamy, ale cos poszło nie tak!'
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        if (!empty($result)) {
+            return \response($result, Response::HTTP_OK);
         }
+
+        return \response(null, Response::HTTP_NOT_FOUND);
     }
 
     /**
      * Display the specified resource.
      *
      * @param  $id
+     *
      * @return Response
      */
     public function show($id)
     {
         $internship = $this->internshipRepository->one($id);
 
-        if(!empty($internship)) {
+        if (!empty($internship)) {
             return response(new InternshipResource($internship), Response::HTTP_OK);
         }
 
-        return response(null,Response::HTTP_NO_CONTENT);
+        return response(null, Response::HTTP_NO_CONTENT);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
      * @param Internship $intership
+     *
      * @return Response
      */
     public function edit(Internship $intership)
@@ -137,8 +131,9 @@ class InternshipController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param Request $request
+     * @param Request    $request
      * @param Internship $intership
+     *
      * @return Response
      */
     public function update(Request $request, Internship $intership)
@@ -153,33 +148,42 @@ class InternshipController extends Controller
 
         $internship->internship_status_id = $internshipStatus->id;
 
-        if($internship->save())
-            return response([
-                'status' => 'success',
-                'data' => $internship,
-                'message' => null
-            ], Response::HTTP_OK);
-        else
-            return response([
-                'status' => 'error',
-                'data' => null,
-                'message' => 'Przepraszamy, ale cos poszło nie tak!'
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        if ($internship->save()) {
+            return response(
+                [
+                    'status' => 'success',
+                    'data' => $internship,
+                    'message' => null,
+                ],
+                Response::HTTP_OK
+            );
+        } else {
+            return response(
+                [
+                    'status' => 'error',
+                    'data' => null,
+                    'message' => 'Przepraszamy, ale cos poszło nie tak!',
+                ],
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            );
+        }
     }
 
     /**
      * Remove the specified resource from storage.
      *
      * @param Internship $intership
+     *
      * @return Response
      */
     public function destroy($id)
     {
         $intership = Internship::find($id);
 
-        if ($intership->delete())
+        if ($intership->delete()) {
             return response("Internship has been deleted!", Response::HTTP_OK);
-        else
+        } else {
             return response("Internship has not been deleted!", Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 }

@@ -15,14 +15,42 @@
             <v-btn text plain small :ripple="false" :to="{name: 'dashboard'}">
                 Dashboard
             </v-btn>
-            <v-btn text plain small :ripple="false" :to="{name: 'universities'}">
+            <v-btn
+                text
+                plain
+                small
+                :ripple="false"
+                :to="{name: 'universities'}"
+                v-has="['admin','university_worker','university_owner','university_supervisor','deanery_worker']"
+            >
                 Uniwersytet
             </v-btn>
-            <v-btn text plain small :ripple="false" to="/dashboard/companies">
+            <v-btn
+                text
+                plain
+                small
+                :ripple="false"
+                to="/dashboard/companies"
+                v-has="['admin','company_worker','company_owner','company_supervisor']"
+            >
                 Firma
             </v-btn>
-            <v-btn text plain small :ripple="false" to="/dashboard/internships/1">
+            <v-btn
+                text
+                plain
+                small
+                :ripple="false"
+                to="/dashboard/internships/1">
                 Dziennik Praktyk
+            </v-btn>
+            <v-btn
+                text
+                plain
+                small
+                :ripple="false"
+                :to="{name: 'offers'}"
+            >
+                Oferty Praktyk
             </v-btn>
         </v-btn-toggle>
 

@@ -1,7 +1,7 @@
 <template>
     <v-app :style="{background: $vuetify.theme.themes[theme].background}">
         <the-app-bar-desktop v-if="!$vuetify.breakpoint.mobile"></the-app-bar-desktop>
-        <the-app-bar-mobile v-else></the-app-bar-mobile>
+<!--        <the-app-bar-mobile v-else></the-app-bar-mobile>-->
 
         <v-dialog
             v-model="menuDialog"
@@ -58,6 +58,7 @@
                 <v-icon>mdi-dots-horizontal</v-icon>
             </v-btn>
         </v-bottom-navigation>
+        <snackbar></snackbar>
     </v-app>
 </template>
 
@@ -66,9 +67,10 @@
     import TheAppBarDesktop from "../components/App/TheAppBarDesktop";
     import TheAppBarMobile from "../components/App/TheAppBarMobile";
     import TheAppNavigationDrawer from "../components/App/TheAppNavigationDrawer";
+    import Snackbar from "../components/_Helpers/Snackbar";
 
     export default {
-        components: {TheAppNavigationDrawer, TheAppBarMobile, TheAppBarDesktop},
+        components: {Snackbar, TheAppNavigationDrawer, TheAppBarMobile, TheAppBarDesktop},
         data() {
             return {
                 menuDialog: false,

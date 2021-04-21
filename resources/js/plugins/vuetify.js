@@ -6,8 +6,13 @@ Vue.use(Vuetify);
 
 export default new Vuetify({
     theme: {
+        dark: true,
         options: {
             customProperties: true,
+            themeCache: {
+                get: key => localStorage.getItem(key),
+                set: (key, value) => localStorage.setItem(key, value),
+            },
         },
         themes: {
             light: {

@@ -10,6 +10,7 @@ namespace App\Repositories;
 
 use App\Constants\RoleConstants;
 use App\Models\Agreement;
+use App\Models\Faculty;
 use App\Models\Internship;
 use App\Models\University;
 use App\Models\User;
@@ -131,7 +132,7 @@ class UniversityRepository implements UniversityRepositoryInterface
 
     public function getStudents(string $slug)
     {
-        return User::with(['roles', 'student'])->whereHas(
+        return User::with(['roles', 'student', 'student.specialization', 'student.internships'])->whereHas(
             'universities',
             function (Builder $query) use ($slug) {
                 $query->where('slug', $slug);
@@ -152,7 +153,7 @@ class UniversityRepository implements UniversityRepositoryInterface
 
     public function getAgreements(string $slug)
     {
-        return Agreement::whereHas(
+        return Agreement::with(['offer', 'company', 'supervisor', 'offer.supervisor'])->whereHas(
             'university',
             function (Builder $query) use ($slug) {
                 $query->where('slug', $slug);
@@ -160,10 +161,42 @@ class UniversityRepository implements UniversityRepositoryInterface
         )->get();
     }
 
+    public function getOffers(string $slug)
+    {
+        return Agreement::with(['offer', 'company', 'supervisor', 'offer.supervisor'])
+            ->where('is_active', '=', true)
+            ->whereHas(
+                'university',
+                function (Builder $query) use ($slug) {
+                    $query->where('slug', $slug);
+                }
+            )->get();
+    }
+
     public function getInternships(string $slug)
     {
-        return Internship::with(['offer','agreement'])->whereHas('agreement.university', function (Builder $query) use ($slug) {
-            $query->where('slug', $slug);
-        })->get();
+        return Internship::with(
+            ['offer', 'agreement', 'universitySupervisor', 'companySupervisor', 'status']
+        )->whereHas(
+            'agreement.university',
+            function (Builder $query) use ($slug) {
+                $query->where('slug', $slug);
+            }
+        )->get();
+    }
+
+    public function getSpecializations(string $slug)
+    {
+        //TODO: Make some code
+    }
+
+    public function getFaculties(string $slug)
+    {
+        return Faculty::with(['fields', 'fields.specializations'])->whereHas(
+            'universities',
+            function (Builder $query) use ($slug) {
+                $query->where('slug', $slug);
+            }
+        )->get();
     }
 }
