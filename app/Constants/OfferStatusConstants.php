@@ -16,6 +16,9 @@ class OfferStatusConstants
     const STATUS_DRAFT_NEW = 'draft_new';
     const STATUS_DRAFT_ACCEPTED = 'draft_accepted';
     const STATUS_DRAFT_REJECTED = 'draft_rejected';
+    const STATUS_STUDENT_NEW = 'student_new';
+    const STATUS_STUDENT_ACCEPTED = 'student_accepted';
+    const STATUS_STUDENT_REJECTED = 'student_rejected';
 
     const STATUSES = [
         self::STATUS_NEW,
@@ -24,6 +27,9 @@ class OfferStatusConstants
         self::STATUS_DRAFT_NEW,
         self::STATUS_DRAFT_ACCEPTED,
         self::STATUS_DRAFT_REJECTED,
+        self::STATUS_STUDENT_NEW,
+        self::STATUS_STUDENT_ACCEPTED,
+        self::STATUS_STUDENT_REJECTED,
     ];
 
     const STATUS_DESCRIPTIONS = [
@@ -33,5 +39,8 @@ class OfferStatusConstants
         self::STATUS_DRAFT_NEW => 'Nowa',
         self::STATUS_DRAFT_ACCEPTED => 'Zaakceptowana',
         self::STATUS_DRAFT_REJECTED => 'Odrzucona',
+        self::STATUS_STUDENT_NEW => 'Nowa',
+        self::STATUS_STUDENT_ACCEPTED => 'Zaakceptowana',
+        self::STATUS_STUDENT_REJECTED => 'Odrzucona',
     ];
 }

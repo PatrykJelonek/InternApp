@@ -8,24 +8,36 @@
 
 namespace App\Repositories;
 
+use App\Models\OfferStatus;
 use App\Repositories\Interfaces\OfferStatusRepositoryInterface;
+use Carbon\Carbon;
 
 class OfferStatusRepository implements OfferStatusRepositoryInterface
 {
 
     public function getOfferStatusById(int $id)
     {
-        // TODO: Implement getOfferStatusById() method.
+        return OfferStatus::find($id);
     }
 
     public function getOfferStatusByName(string $name)
     {
-        // TODO: Implement getOfferStatusByName() method.
+        return OfferStatus::where(['name' => $name])->first();
     }
 
     public function createOfferStatus(array $data)
     {
-        // TODO: Implement createOfferStatus() method.
+        $offerStatus = new OfferStatus();
+        $offerStatus->name = $data['name'];
+        $offerStatus->description = $data['description'];
+        $offerStatus->created_at = Carbon::today();
+        $offerStatus->updated_at = Carbon::today();
+
+        if ($offerStatus->save()) {
+            return $offerStatus;
+        }
+
+        return null;
     }
 
     public function updateOfferStatusById(int $id)

@@ -8,24 +8,36 @@
 
 namespace App\Repositories;
 
+use App\Models\OfferCategory;
 use App\Repositories\Interfaces\OfferCategoryRepositoryInterface;
+use Carbon\Carbon;
 
 class OfferCategoryRepository implements OfferCategoryRepositoryInterface
 {
 
     public function getOfferCategoryById(int $id)
     {
-        // TODO: Implement getOfferCategoryById() method.
+        return OfferCategory::find($id);
     }
 
     public function getOfferCategoryByName(string $name)
     {
-        // TODO: Implement getOfferCategoryByName() method.
+        return OfferCategory::where(['name' => $name])->first();
     }
 
     public function createOfferCategory(array $data)
     {
-        // TODO: Implement createOfferCategory() method.
+        $offerCategory = new OfferCategory();
+        $offerCategory->name = $data['name'];
+        $offerCategory->description = $data['description'];
+        $offerCategory->created_at = Carbon::today();
+        $offerCategory->updated_at = Carbon::today();
+
+        if ($offerCategory->save()) {
+            return $offerCategory;
+        }
+
+        return null;
     }
 
     public function updateOfferCategoryById(int $id)

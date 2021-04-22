@@ -95,12 +95,12 @@
                                         <v-col cols="5">
                                             <validation-provider
                                                 v-slot="{ errors }"
-                                                vid="company.categoryId"
+                                                vid="company.companyCategoryId"
                                                 :rules="data.company.id ? '' : 'required'"
                                             >
                                                 <v-select
                                                     label="Kategoria Firmy"
-                                                    v-model="data.company.categoryId"
+                                                    v-model="data.company.companyCategoryId"
                                                     :items="companyCategories"
                                                     item-text="name"
                                                     item-value="id"
@@ -254,12 +254,12 @@
                                     <v-col cols="12">
                                         <validation-provider
                                             v-slot="{ errors }"
-                                            vid="offer.categoryId"
+                                            vid="offer.offerCategoryId"
                                             rules="required"
                                         >
                                             <v-select
                                                 label="Kategoria Praktyk"
-                                                v-model="data.offer.categoryId"
+                                                v-model="data.offer.offerCategoryId"
                                                 :items="offerCategories"
                                                 item-text="name"
                                                 item-value="id"
@@ -297,11 +297,11 @@
                                             <template v-slot:activator="{ on, attrs }">
                                                 <validation-provider
                                                     v-slot="{ errors }"
-                                                    vid="agreement.dateFrom"
+                                                    vid="offer.dateFrom"
                                                     rules="required"
                                                 >
                                                     <v-text-field
-                                                        v-model="data.agreement.dateFrom"
+                                                        v-model="data.offer.dateFrom"
                                                         label="Data Rozpoczęcia"
                                                         hide-details="auto"
                                                         :error-messages="errors"
@@ -316,7 +316,7 @@
                                                 :first-day-of-week="0"
                                                 locale="pl-pl"
                                                 no-title
-                                                v-model="data.agreement.dateFrom"
+                                                v-model="data.offer.dateFrom"
                                                 @input="dateFromPicker = false"
                                             ></v-date-picker>
                                         </v-menu>
@@ -333,11 +333,11 @@
                                             <template v-slot:activator="{ on, attrs }">
                                                 <validation-provider
                                                     v-slot="{ errors }"
-                                                    vid="agreement.dateTo"
+                                                    vid="offer.dateTo"
                                                     rules="required"
                                                 >
                                                     <v-text-field
-                                                        v-model="data.agreement.dateTo"
+                                                        v-model="data.offer.dateTo"
                                                         label="Data Zakończenia"
                                                         hide-details="auto"
                                                         :error-messages="errors"
@@ -352,7 +352,7 @@
                                                 :first-day-of-week="0"
                                                 locale="pl-pl"
                                                 no-title
-                                                v-model="data.agreement.dateTo"
+                                                v-model="data.offer.dateTo"
                                                 @input="dateToPicker = false"
                                             ></v-date-picker>
                                         </v-menu>
@@ -393,15 +393,14 @@
                                         <validation-provider
                                             v-slot="{ errors }"
                                             vid="offer.attachments"
-                                            rules="mimes:pdf"
                                         >
                                             <v-file-input
                                                 label="Załącznik"
-                                                v-model="data.offer.attachments"
+                                                v-model="fileInput"
                                                 outlined
-                                                multiple
                                                 show-size
                                                 prepend-icon=""
+                                                @change="handleFile"
                                                 :error-messages="errors"
                                             ></v-file-input>
                                         </validation-provider>
@@ -474,6 +473,7 @@ export default {
             stepThree: true,
             dateFromPicker: false,
             dateToPicker: false,
+            fileInput: null,
             data: {
                 company: {
                     id: null,
@@ -488,7 +488,7 @@ export default {
                     email: null,
                     phone: null,
                     website: null,
-                    categoryId: null,
+                    companyCategoryId: null,
                 },
                 offer: {
                     companyId: null,
@@ -496,13 +496,11 @@ export default {
                     name: null,
                     program: null,
                     schedule: null,
-                    categoryId: null,
-                    attachments: null
-                },
-                agreement: {
+                    offerCategoryId: null,
                     dateFrom: null,
                     dateTo: null,
-                }
+                    attachments: null,
+                },
             }
         }
     },
@@ -600,6 +598,21 @@ export default {
                     this.data.company.city.postcode += '-';
             }
         },
+
+        handleFile(e) {
+            console.log(e);
+            this.createBase64(e);
+        },
+
+        createBase64(file) {
+            const reader = new FileReader();
+
+            reader.onload = (e) => {
+                this.data.offer.attachments = e.target.result;
+            };
+
+            reader.readAsDataURL(file);
+        }
     },
 
     created() {

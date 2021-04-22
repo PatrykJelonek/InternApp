@@ -17,7 +17,8 @@ class CreateAttachmentsTable extends Migration
             $table->id();
             $table->string('name',128)->unique();
             $table->string('description', 255)->nullable();
-            $table->string('type', 8);
+            $table->string('extension', 8);
+            $table->string('path', 255);
             $table->foreignId('user_id');
             $table->foreign('user_id')->references('id')->on('users');
             $table->dateTime('created_at', 0);

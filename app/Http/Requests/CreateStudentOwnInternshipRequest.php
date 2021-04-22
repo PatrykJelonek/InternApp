@@ -75,46 +75,32 @@ class CreateStudentOwnInternshipRequest extends FormRequest
                 ),
                 'max:64',
             ],
-            'company.city.id' => [
-                Rule::requiredIf(
-                    function () {
-                        return empty($this->company['id']);
-                    }
-                ),
-                'exists:App\Models\City,id',
-            ],
-            'company.email' => [
-                Rule::requiredIf(
-                    function () {
-                        return empty($this->company['id']);
-                    }
-                ),
-                'email',
-                'max:64',
-            ],
+//            'company.city.id' => [
+//                'sometimes',
+//                'required_without:company.id',
+//                'exists:App\Models\City,id',
+//            ],
+            //'company.email' => 'required_without:company.id,null|email|max:64',
             'company.phone' => [
                 'max:16',
             ],
             'company.website' => [
                 'max:64',
             ],
-            'company.categoryId' => [
-                Rule::requiredIf(
-                    function () {
-                        return empty($this->company['id']);
-                    }
-                ),
-                'exists:App\Models\CompanyCategory,id',
-            ],
+//            'company.companyCategoryId' => [
+//                'bail',
+//                'required_if:company.id,null',
+//                'exists:App\Models\CompanyCategory,id',
+//            ],
             'offer.name' => ['required', 'max:80'],
             'offer.program' => ['required'],
-            'offer.categoryId' => [
+            'offer.offerCategoryId' => [
                 'required',
                 'exists:App\Models\OfferCategory,id',
             ],
-            'offer.attachments' => ['mime:pdf'],
-            'agreement.dateFrom' => ['required', 'date'],
-            'agreement.dateTo' => ['required', 'date'],
+//            'offer.attachments' => ['mimes:pdf'],
+            'offer.dateFrom' => ['required', 'date'],
+            'offer.dateTo' => ['required', 'date'],
         ];
     }
 
@@ -143,12 +129,12 @@ class CreateStudentOwnInternshipRequest extends FormRequest
             'company.email.email' => 'Pole musi zawierać prawidłowy email.',
             'company.phone.max' => 'Pole nie może przekraczać :max znaków.',
             'company.website.max' => 'Pole nie może przekraczać :max znaków.',
-            'company.categoryId.exists' => 'Dana kategoria firmy nie istniej.',
+            'company.companyCategoryId.exists' => 'Dana kategoria firmy nie istniej.',
             'offer.name.max' => 'Pole nie może przekraczać :max znaków.',
-            'offer.categoryId.exists' => 'Dana kategoria nie istniej.',
-            'offer.attachments.mime' => 'Plik musi być formatu PDF.',
-            'agreement.dateFrom.date' => 'Pole musi zawierać prawidłową datę',
-            'agreement.dateTo.date' => 'Pole musi zawierać prawidłową datę',
+            'offer.offerCategoryId.exists' => 'Dana kategoria nie istniej.',
+            'offer.attachments.mimes' => 'Plik musi być formatu PDF.',
+            'offer.dateFrom.date' => 'Pole musi zawierać prawidłową datę',
+            'offer.dateTo.date' => 'Pole musi zawierać prawidłową datę',
         ];
     }
 }
