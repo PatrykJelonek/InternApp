@@ -22,9 +22,10 @@ class AttachmentRepository implements AttachmentRepositoryInterface
         $attachment = new Attachment();
         $attachment->name = $data['name'];
         $attachment->description = $data['description'] ?? null;
-        $attachment->extension = $data['extension'];
+        $attachment->mime = $data['mime'];
+        $attachment->path = $data['path'];
         $attachment->user_id = $data['userId'] ?? Auth::id();
-        $attachment->created_at = Carbon::today();
+        $attachment->freshTimestamp();
 
         if ($attachment->save()) {
             return $attachment;
@@ -37,7 +38,8 @@ class AttachmentRepository implements AttachmentRepositoryInterface
     {
         $offerAttachment = new OfferAttachment();
         $offerAttachment->offer_id = $data['offerId'];
-        $offerAttachment->attachment_id = $data['attachment_id'];
+        $offerAttachment->attachment_id = $data['attachmentId'];
+        $offerAttachment->freshTimestamp();
 
         if ($offerAttachment->save()) {
             return $offerAttachment;

@@ -12,6 +12,7 @@
         "@sentry/tracing": "^6.1.0",
         "@sentry/vue": "^6.2.0",
         "clockwork-browser": "^1.0.0",
+        "js-base64": "^3.6.0",
         "moment": "^2.29.1",
         "qs": "^6.7.0",
         "vee-validate": "^3.4.5",

@@ -92,13 +92,13 @@ class CreateStudentOwnInternshipRequest extends FormRequest
 //                'required_if:company.id,null',
 //                'exists:App\Models\CompanyCategory,id',
 //            ],
-            'offer.name' => ['required', 'max:80'],
+            'offer.name' => ['required', 'max:80','unique:App\Models\Offer,name'],
             'offer.program' => ['required'],
             'offer.offerCategoryId' => [
                 'required',
                 'exists:App\Models\OfferCategory,id',
             ],
-//            'offer.attachments' => ['mimes:pdf'],
+//            'offer.attachments' => ['sometimes|mimes:pdf'],
             'offer.dateFrom' => ['required', 'date'],
             'offer.dateTo' => ['required', 'date'],
         ];
@@ -119,6 +119,7 @@ class CreateStudentOwnInternshipRequest extends FormRequest
             'company.city.id.exists' => 'Podane miasto nie istnieje w systemie.',
             'company.email.requiredId' => 'Pole jest wymagań.',
             'offer.name.required' => 'Pole jest wymagań.',
+            'offer.name.unique' => 'Podaj inną nazwę.',
             'offer.program.required' => 'Pole jest wymagań.',
             'company.name.max' => 'Pole nie może przekraczać :max znaków.',
             'company.street.max' => 'Pole nie może przekraczać :max znaków.',

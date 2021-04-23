@@ -392,7 +392,7 @@
                                     <v-col cols="12">
                                         <validation-provider
                                             v-slot="{ errors }"
-                                            vid="offer.attachments"
+                                            vid="offer.attachment"
                                         >
                                             <v-file-input
                                                 label="Załącznik"
@@ -400,7 +400,7 @@
                                                 outlined
                                                 show-size
                                                 prepend-icon=""
-                                                @change="handleFile"
+                                                @change="createBase64"
                                                 :error-messages="errors"
                                             ></v-file-input>
                                         </validation-provider>
@@ -448,6 +448,7 @@
 <script>
 import {mapActions, mapGetters} from "vuex";
 import {setInteractionMode, ValidationProvider, ValidationObserver} from "vee-validate";
+import {Base64} from 'js-base64';
 
 setInteractionMode('eager');
 
@@ -499,7 +500,11 @@ export default {
                     offerCategoryId: null,
                     dateFrom: null,
                     dateTo: null,
-                    attachments: null,
+                    attachment: {
+                        content: null,
+                        name: null,
+                        mime: null,
+                    },
                 },
             }
         }
@@ -521,7 +526,7 @@ export default {
     methods: {
         ...mapActions({
             toggleDialog: 'helpers/toggleCreateInternshipDialog',
-            snackbar: 'snackbar/setSnackbar',
+            setSnackbar: 'snackbar/setSnackbar',
             fetchCompanyCategories: 'company/fetchCompanyCategories',
             fetchCompanies: 'company/fetchCompanies',
             fetchCity: 'city/fetchCity',
@@ -529,15 +534,15 @@ export default {
             createStudentOwnInternship: 'student/createStudentOwnInternship'
         }),
 
-        submit() {
+        async submit() {
             this.showForm = false;
 
-            this.createStudentOwnInternship(this.data).then(() => {
-                this.toggleDialog();
-                this.setSnackbar('Udało się!', 'success');
+            await this.createStudentOwnInternship(this.data).then(() => {
+                this.toggleDialog(false);
+                this.setSnackbar({message: 'Udało się!', color: 'success'});
             }).catch((e) => {
-                if (e.response.status === 422) {
-                    console.log(e.response.data.errors);
+                if (e.response !== undefined && e.response.status === 422) {
+                    this.stepper = 1;
                     this.$refs.observerStepOne.setErrors(e.response.data.errors);
                     this.$refs.observerStepTwo.setErrors(e.response.data.errors);
                     this.$refs.observerStepThree.setErrors(e.response.data.errors);
@@ -599,19 +604,17 @@ export default {
             }
         },
 
-        handleFile(e) {
-            console.log(e);
-            this.createBase64(e);
-        },
-
         createBase64(file) {
+            console.log(file);
             const reader = new FileReader();
 
             reader.onload = (e) => {
-                this.data.offer.attachments = e.target.result;
+                this.data.offer.attachment.name = file.name;
+                this.data.offer.attachment.mime = file.type;
+                this.data.offer.attachment.content = Base64.encode(e.target.result);
             };
 
-            reader.readAsDataURL(file);
+            reader.readAsBinaryString(file);
         }
     },
 

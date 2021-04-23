@@ -99,6 +99,13 @@
                     </v-list-item-icon>
                     <v-list-item-title>Ustawienia</v-list-item-title>
                 </v-list-item>
+                <v-divider v-has="['admin']"></v-divider>
+                <v-list-item v-has="['admin']" :to="{name: 'admin'}">
+                    <v-list-item-icon>
+                        <v-icon>mdi-account-outline</v-icon>
+                    </v-list-item-icon>
+                    <v-list-item-title>Panel Administratora</v-list-item-title>
+                </v-list-item>
                 <v-divider></v-divider>
                 <v-list-item>
                     <v-list-item-icon>

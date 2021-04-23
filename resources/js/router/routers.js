@@ -45,6 +45,10 @@ import StudentOffersList from "../components/Offers/StudentOffersList";
 import TheStudentOfferApplicationsList from "../components/Offers/TheStudentOfferApplicationsList";
 import TheStudentOffers from "../components/Offers/TheStudentOffers";
 import LandingPage from "../views/LandingPage";
+import Admin from "../views/Admin";
+import TheAdminOffers from "../components/Admin/TheAdminOffers";
+import TheAdminStatistics from "../components/Admin/TheAdminStatistics";
+import TheAdminUsers from "../components/Admin/TheAdminUsers";
 
 Vue.use(VueRouter);
 
@@ -301,6 +305,31 @@ const router = new VueRouter({
                             path: '/internships/:internshipId/students/:studentIndex',
                             name: 'internship-student',
                             meta: {have: ['admin','student','company_worker','university_worker']},
+                        }
+                    ]
+                },
+                {
+                    path: '/dashboard/admin',
+                    component: Admin,
+                    meta: {have: ['admin']},
+                    children: [
+                        {
+                            path: '/dashboard/admin/statistics',
+                            name: 'admin',
+                            component: TheAdminStatistics,
+                            meta: {have: ['admin']},
+                        },
+                        {
+                            path: '/dashboard/admin/offers',
+                            name: 'admin-offers',
+                            component: TheAdminOffers,
+                            meta: {have: ['admin']},
+                        },
+                        {
+                            path: '/dashboard/admin/users',
+                            name: 'admin-users',
+                            component: TheAdminUsers,
+                            meta: {have: ['admin']},
                         }
                     ]
                 }

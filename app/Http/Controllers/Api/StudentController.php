@@ -2,24 +2,16 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Constants\AttachmentConstants;
-use App\Constants\OfferStatusConstants;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateStudentOwnInternshipRequest;
 use App\Http\Requests\StudentGetAvailableInternshipOffersRequest;
 use App\Models\Student;
 use App\Models\User;
-use App\Repositories\AttachmentRepository;
-use App\Repositories\CityRepository;
-use App\Repositories\CompanyRepository;
-use App\Repositories\OfferRepository;
-use App\Repositories\OfferStatusRepository;
 use App\Repositories\StudentRepository;
-use Clockwork\Clockwork;
+use App\Services\StudentService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
@@ -31,54 +23,22 @@ class StudentController extends Controller
     private $studentRepository;
 
     /**
-     * @var CompanyRepository
+     * @var StudentService
      */
-    private $companyRepository;
-
-    /**
-     * @var CityRepository
-     */
-    private $cityRepository;
-
-    /**
-     * @var OfferRepository
-     */
-    private $offerRepository;
-
-    /**
-     * @var AttachmentRepository
-     */
-    private $attachmentRepository;
-
-    /**
-     * @var OfferStatusRepository
-     */
-    private $offerStatusRepository;
+    private $studentServices;
 
     /**
      * StudentController constructor.
      *
-     * @param StudentRepository     $studentRepository
-     * @param CompanyRepository     $companyRepository
-     * @param CityRepository        $cityRepository
-     * @param OfferRepository       $offerRepository
-     * @param AttachmentRepository  $attachmentRepository
-     * @param OfferStatusRepository $offerStatusRepository
+     * @param StudentRepository $studentRepository
+     * @param StudentService    $studentServices
      */
     public function __construct(
         StudentRepository $studentRepository,
-        CompanyRepository $companyRepository,
-        CityRepository $cityRepository,
-        OfferRepository $offerRepository,
-        AttachmentRepository $attachmentRepository,
-        OfferStatusRepository $offerStatusRepository
+        StudentService $studentServices
     ) {
         $this->studentRepository = $studentRepository;
-        $this->companyRepository = $companyRepository;
-        $this->cityRepository = $cityRepository;
-        $this->offerRepository = $offerRepository;
-        $this->attachmentRepository = $attachmentRepository;
-        $this->offerStatusRepository = $offerStatusRepository;
+        $this->studentServices = $studentServices;
     }
 
     /**
@@ -263,79 +223,8 @@ class StudentController extends Controller
 
     public function createStudentOwnInternship(CreateStudentOwnInternshipRequest $request)
     {
-        $companyRequestData = $request->input('company');
-        $cityRequestData = $request->input('company.city');
-        $offerRequestData = $request->input('offer');
-
-        DB::beginTransaction();
-        try {
-            if (empty($companyRequestData['id'])) {
-                if (empty($cityRequestData['id'])) {
-                    $city = $this->cityRepository->createCity($cityRequestData);
-
-                    if ($city) {
-                        $companyRequestData = array_merge(['cityId' => $city->id], $companyRequestData);
-                    }
-                }
-
-                $company = $this->companyRepository->createCompany($companyRequestData);
-
-                if ($company) {
-                    $offerRequestData = array_merge(['companyId' => $company->id], $offerRequestData);
-                }
-            } else {
-                $offerRequestData = array_merge(['companyId' => $companyRequestData['id']], $offerRequestData);
-            }
-
-            $offerRequestData = array_merge(['userId' => Auth::user()->id], $offerRequestData);
-            $offerRequestData = array_merge(
-                [
-                    'offerStatusId' => $this->offerStatusRepository->getOfferStatusByName(
-                        OfferStatusConstants::STATUS_STUDENT_NEW
-                    )->toArray()['id'],
-                ],
-                $offerRequestData
-            );
-
-            $offer = $this->offerRepository->createOffer($offerRequestData);
-            if ($offer) {
-                if (!empty($request->input('offer.attachments'))) {
-                    clock()->info("DUMP", ['dump' => (array)$request->input('offer.attachments')]);
-                    $attachment = $this->attachmentRepository->storeAttachments(
-                        [
-                            'path' => $request->file('offer.attachments')->store(
-                                AttachmentConstants::ATTACHMENT_DIR_OFFER
-                            ),
-                            'name' => $request->file('offer.attachments')->getClientOriginalName(),
-                            'extension' => $request->file('offer.attachments')->extension(),
-                            'userId' => Auth::id(),
-                        ]
-                    );
-
-                    if ($attachment) {
-                        $this->attachmentRepository->linkOfferAttachments(
-                            [
-                                'offerId' => $offer->id,
-                                'attachmentId' => $attachment->id,
-                            ]
-                        );
-                    }
-                }
-            } else {
-                DB::rollBack();
-            }
-        } catch (\Exception $exception) {
-            DB::rollBack();
-            clock()->info(
-                'Wystąpił błąd',
-                [
-                    'method' => 'StudentController::createStudentOwnInternship',
-                    'dump' => $exception,
-                ]
-            );
-        }
-
-        if (isset($offer) && $offer) {
+        $offer = $this->studentServices->createStudentOwnInternship($request->all());
+        if ($offer) {
             return \response($offer, Response::HTTP_OK);
         }
 
