@@ -7,28 +7,17 @@
             class="px-5"
             :absolute="isTrue"
         >
-            <v-toolbar-title class="font-weight-bold">Internships</v-toolbar-title>
+            <v-toolbar-title class="font-weight-bold">InternApp</v-toolbar-title>
         </v-app-bar>
         <v-content class="fill-height">
             <v-container fluid class="pa-0 fill-height">
-                <v-row class="fill-height">
+                <v-row class="fill-height justify-center align-center">
                     <v-col
-                        cols="5"
-                        class="blue accent-4 pt-10 d-flex justify-center align-center fill-height white--text flex-column"
-                    >
-                        <h3 class="font-weight-medium title font-weight-bold">Nie posiadasz jeszcze konta?</h3>
-                        <p class="subtitle-2 mt-2 px-10 text-center">Załóż darmowe konto w naszym serwisie by zarządzać praktykami na uczelni lub pozyskać praktykantów do firmy!</p>
-                        <div>
-                            <v-btn large outlined color="white" to="/register">Zarejestruj się</v-btn>
-                            <v-btn large outlined color="white" to="/register/student" class="ml-10">Dołącz jako student</v-btn>
-                        </div>
-                    </v-col>
-                    <v-col
-                        cols="7"
+                        cols="12" sm="9" md="6" lg="5" xl="3"
                         class="pt-10 d-flex flex-column justify-center align-center fill-height"
                     >
                         <h2 class="font-weight-medium title font-weight-bold pa-0 ma-2">Logowanie</h2>
-                        <p class="subtitle-2 pa-0 ma-2">Zaloguj się na swoje konto by skorzystać ze wszystkich funkcji naszego serwisu!</p>
+                        <p class="subtitle-2 pa-0 ma-2 text-center">Zaloguj się na swoje konto by skorzystać ze wszystkich funkcji naszego serwisu!</p>
                         <login-form></login-form>
                     </v-col>
                 </v-row>
