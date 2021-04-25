@@ -19,7 +19,6 @@ class CreateUsersRolesTable extends Migration
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreignId('role_id');
             $table->foreign('role_id')->references('id')->on('roles');
-            $table->string('user_type');
             $table->dateTime('created_at', 0)->useCurrent();
         });
     }

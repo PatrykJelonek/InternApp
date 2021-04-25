@@ -6,7 +6,7 @@
         color="component-background"
     >
         <v-toolbar-title>
-            <b>InternApp</b>
+            <b>Intern<span class="green--text text--accent-4">App</span></b>
         </v-toolbar-title>
 
         <v-spacer></v-spacer>

@@ -1,14 +1,10 @@
 <template>
-    <v-app>
+    <v-app class="grey lighten-5">
         <the-landing-page-app-bar></the-landing-page-app-bar>
         <v-main>
-            <v-container class="mt-15">
-                <v-row>
-                    <v-col cols="12" class="text-center">
-                        <h1>System planowania i rozliczania studenckich praktyk zawodowych.</h1>
-                    </v-col>
-                </v-row>
-            </v-container>
+            <the-landing-page-hero></the-landing-page-hero>
+            <the-landing-page-profits></the-landing-page-profits>
+            <the-landing-page-offers></the-landing-page-offers>
         </v-main>
         <the-landing-page-footer></the-landing-page-footer>
     </v-app>
@@ -17,10 +13,31 @@
 <script>
 import TheLandingPageAppBar from "../components/LandingPage/TheLandingPageAppBar";
 import TheLandingPageFooter from "../components/LandingPage/TheLandingPageFooter";
+import TheLandingPageHero from "../components/LandingPage/TheLandingPageHero";
+import TheLandingPageProfits from "../components/LandingPage/TheLandingPageProfits";
+import TheLandingPageOffers from "../components/LandingPage/TheLandingPageOffers";
 
 export default {
     name: "LandingPage",
-    components: {TheLandingPageFooter, TheLandingPageAppBar},
+    components: {
+        TheLandingPageOffers,
+        TheLandingPageProfits,
+        TheLandingPageHero,
+        TheLandingPageFooter,
+        TheLandingPageAppBar
+    },
+
+    data() {
+        return {
+        }
+    },
+
+    computed: {
+        theme() {
+            return 'light';
+        }
+    },
+
 }
 </script>
 

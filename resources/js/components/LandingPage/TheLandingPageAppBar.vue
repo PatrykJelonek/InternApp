@@ -3,10 +3,10 @@
         app
         flat
         clipped-left
-        color="component-background"
+        color="grey lighten-5"
     >
         <v-toolbar-title>
-            <b>InternApp</b>
+            <b>Intern<span class="green--text text--accent-4">App</span></b>
         </v-toolbar-title>
         <v-spacer></v-spacer>
         <v-btn
@@ -30,7 +30,7 @@
             >
                 Logowanie
             </v-btn>
-            <v-divider  vertical></v-divider>
+            <v-divider vertical></v-divider>
             <v-btn
                 text
                 color="primary"

@@ -18,7 +18,6 @@ class UsersRolesSeeder extends Seeder
         DB::table('users_roles')->insert([
             'user_id' => 1,
             'role_id' => 1,
-            'user_type' => Role::BASIC_ROLE_USER_TYPES[Role::ROLE_ADMIN],
             'created_at' => date('Y-m-d H:i:s')
         ]);
     }
