@@ -1,7 +1,7 @@
 <template>
     <v-container class="py-15">
         <v-row class="pt-15">
-            <v-col cols="12" md="12" lg="8" xl="6">
+            <v-col cols="12" md="12" lg="8" xl="5">
                 <v-row>
                     <v-col cols="12">
                         <h2 class="text-h4 text-md-h2 font-weight-bold mb-3" v-bind:class="this.$vuetify.breakpoint.smAndDown ? 'text-center' : ''">
@@ -22,8 +22,8 @@
                     </v-col>
                 </v-row>
             </v-col>
-            <v-col cols="6">
-                <p></p>
+            <v-col cols="0" lg="7" style="margin-top: 200px">
+                <v-img src="../img/heroimage3.png" alt="Obrazek" class="rounded hidden-lg-and-down"></v-img>
             </v-col>
         </v-row>
     </v-container>
