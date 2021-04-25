@@ -2,7 +2,8 @@ export default {
     namespaced: true,
 
     state: {
-        company: '',
+        company: null,
+        companyLoading: true,
         selectedCompany: null,
         selectedCompanyId: null,
         companyCategories: [],
@@ -34,6 +35,10 @@ export default {
 
         company(state) {
             return state.company;
+        },
+
+        companyLoading(state) {
+            return state.companyLoading;
         },
 
         companyOffers(state) {
@@ -76,6 +81,10 @@ export default {
 
         SET_COMPANY(state, data) {
             state.company = data;
+        },
+
+        SET_COMPANY_LOADING(state, data) {
+            state.companyLoading = data;
         },
 
         SELECT_COMPANY(state, company) {
@@ -133,12 +142,15 @@ export default {
             }
         },
 
-        async fetchCompany({commit}, id) {
+        async fetchCompany({commit}, slug) {
+            commit('SET_COMPANY_LOADING', true);
             try {
-                let response = await axios.get(`/api/companies/${id}`);
-                commit('SET_COMPANY', response.data.data);
+                let response = await axios.get(`/api/companies/${slug}`);
+                commit('SET_COMPANY', response.data);
+                commit('SET_COMPANY_LOADING', false);
             } catch(e) {
                 commit('SET_COMPANY', '');
+                commit('SET_COMPANY_LOADING', false);
             }
         },
 

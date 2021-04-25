@@ -68,4 +68,15 @@ class UserRepository implements UserRepositoryInterface
 
         return null;
     }
+
+    public function getCompanies()
+    {
+        $companies = auth()->user()->companies;
+
+        if (!empty($companies)) {
+            return $companies;
+        }
+
+        return null;
+    }
 }

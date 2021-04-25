@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Requests\CompanyShowRequest;
 use App\Models\Agreement;
 use App\Models\Company;
 use App\Http\Controllers\Controller;
@@ -9,6 +10,7 @@ use App\Models\Internship;
 use App\Models\Offer;
 use App\Models\Student;
 use App\Models\University;
+use App\Repositories\CompanyRepository;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Arr;
@@ -17,18 +19,36 @@ use Illuminate\Support\Str;
 class CompanyController extends Controller
 {
     /**
+     * @var CompanyRepository
+     */
+    private $companyRepository;
+
+    /**
+     * CompanyController constructor.
+     *
+     * @param CompanyRepository $companyRepository
+     */
+    public function __construct(CompanyRepository $companyRepository)
+    {
+        $this->companyRepository = $companyRepository;
+    }
+
+    /**
      * Display a listing of the resource.
      *
      * @return Response
      */
     public function index()
     {
-        $companies = Company::select(['id', 'name', 'city_id', 'street', 'street_number', 'email','phone','website','company_category_id'])->get();
+        $companies = Company::select(
+            ['id', 'name', 'city_id', 'street', 'street_number', 'email', 'phone', 'website', 'company_category_id']
+        )->get();
 
-        if (isset($companies))
+        if (isset($companies)) {
             return response($companies, Response::HTTP_OK);
-        else
+        } else {
             return response("Companies not found!", Response::HTTP_NOT_FOUND);
+        }
     }
 
     /**
@@ -45,21 +65,25 @@ class CompanyController extends Controller
      * Store a newly created resource in storage.
      *
      * @param Request $request
+     *
      * @return Response
      */
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
-            'name' => 'required|unique:companies|max:255',
-            'companyCategoryId' => 'required',
-            'cityId' => 'required',
-            'street' => 'required|max:64',
-            'streetNumber' => 'required|max:8',
-            'email' => 'required|max:64',
-            'phone' => 'required|max:16',
-            'website' => 'required|max:64',
-            'description' => 'required|max:255',
-        ], Company::messages());
+        $validatedData = $request->validate(
+            [
+                'name' => 'required|unique:companies|max:255',
+                'companyCategoryId' => 'required',
+                'cityId' => 'required',
+                'street' => 'required|max:64',
+                'streetNumber' => 'required|max:8',
+                'email' => 'required|max:64',
+                'phone' => 'required|max:16',
+                'website' => 'required|max:64',
+                'description' => 'required|max:255',
+            ],
+            Company::messages()
+        );
 
         $company = new Company;
 
@@ -75,53 +99,54 @@ class CompanyController extends Controller
         $company->created_at = date('Y-m-d H:i:s');
         $company->updated_at = date('Y-m-d H:i:s');
 
-        if($company->save())
-        {
-            if($company->users()->save(auth()->user(), ['created_at' => date('Y-m-d H:i:s')]))
-            {
+        if ($company->save()) {
+            if ($company->users()->save(auth()->user(), ['created_at' => date('Y-m-d H:i:s')])) {
                 auth()->user()->attachRole('company-worker');
-                return response([
-                    'status' => 'success',
-                    'data' => null,
-                    'message' => 'Firma została dodana!'
-                ], Response::HTTP_OK);
+                return response(
+                    [
+                        'status' => 'success',
+                        'data' => null,
+                        'message' => 'Firma została dodana!',
+                    ],
+                    Response::HTTP_OK
+                );
             }
-        } else
-            return response([
-                'status' => 'error',
-                'data' => null,
-                'message' => 'Niestety nie udało się dodać twojej firmy!'
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        } else {
+            return response(
+                [
+                    'status' => 'error',
+                    'data' => null,
+                    'message' => 'Niestety nie udało się dodać twojej firmy!',
+                ],
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            );
+        }
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  $id
+     * @param CompanyShowRequest $request
+     * @param                    $slug
+     *
      * @return Response
      */
-    public function show($id)
+    public function show(CompanyShowRequest $request, $slug)
     {
-        $company = Company::with(['city','category','offers', 'offers.offerCategory'])->where(['id' => $id])->get();
+        $company = $this->companyRepository->getOneBySlug($slug);
 
-        if (isset($company))
-            return response([
-                'status' => 'success',
-                'data' => $company[0],
-                'message' => null,
-            ], Response::HTTP_OK);
-        else
-            return response([
-                'status' => 'error',
-                'data' => null,
-                'message' => 'Nie znaleziono podanej firmy!',
-            ], Response::HTTP_NOT_FOUND);
+        if ($company !== null) {
+            return response($company, Response::HTTP_OK);
+        }
+
+        return response(null, Response::HTTP_NOT_FOUND);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
      * @param Company $company
+     *
      * @return Response
      */
     public function edit(Company $company)
@@ -133,6 +158,7 @@ class CompanyController extends Controller
      * Update the specified resource in storage.
      *
      * @param Request $request
+     *
      * @return Response
      */
     public function update(Request $request)
@@ -144,16 +170,18 @@ class CompanyController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  $id
+     *
      * @return Response
      */
     public function destroy($id)
     {
         $company = Company::find($id);
 
-        if ($company->delete())
+        if ($company->delete()) {
             return response("Company has been deleted!", Response::HTTP_OK);
-        else
+        } else {
             return response("Company has not been deleted!", Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 
     public function setNewAccessCode(Request $request)
@@ -161,29 +189,36 @@ class CompanyController extends Controller
         //TODO: Będzie trzeba to zabezpieczyć
         $company = Company::find($request->input("id"));
 
-        if(isset($company))
-        {
+        if (isset($company)) {
             $company->access_code = $this->generateUniqueRandomAccessCode();
 
-            if($company->save())
-                return response([
-                    'status' => 'success',
-                    'data' => $company->access_code,
-                    'message' => null,
-                ], Response::HTTP_OK);
+            if ($company->save()) {
+                return response(
+                    [
+                        'status' => 'success',
+                        'data' => $company->access_code,
+                        'message' => null,
+                    ],
+                    Response::HTTP_OK
+                );
+            }
         }
 
-        return response([
-            'status' => 'error',
-            'data' => null,
-            'message' => 'New access code has been not generate!',
-        ], Response::HTTP_NOT_MODIFIED);
+        return response(
+            [
+                'status' => 'error',
+                'data' => null,
+                'message' => 'New access code has been not generate!',
+            ],
+            Response::HTTP_NOT_MODIFIED
+        );
     }
 
     /**
      * Use access code to join to university
      *
      * @param Request $request
+     *
      * @return Response
      */
     public function useCode(Request $request)
@@ -191,76 +226,102 @@ class CompanyController extends Controller
         $company = Company::where('access_code', $request->input('accessCode'))->first();
         $errorMessage = "Coś poszło nie tak!";
 
-        if($company  === null)
-            $errorMessage  = "Nie udało się dopasować podanego kodu do żadnej firmy!";
-        else
-            if((count($company ->users()->where('user_id', auth()->id())->get()) < 1))
-            {
-                if($company ->users()->save(auth()->user(), ['created_at' => date('Y-m-d H:i:s')]))
-                {
+        if ($company === null) {
+            $errorMessage = "Nie udało się dopasować podanego kodu do żadnej firmy!";
+        } else {
+            if ((count($company->users()->where('user_id', auth()->id())->get()) < 1)) {
+                if ($company->users()->save(auth()->user(), ['created_at' => date('Y-m-d H:i:s')])) {
                     auth()->user()->attachRole('company-worker');
-                    return response([
-                        'status' => 'success',
-                        'data' => $company,
-                        'message' => null
-                    ], Response::HTTP_OK);
-                } else
+                    return response(
+                        [
+                            'status' => 'success',
+                            'data' => $company,
+                            'message' => null,
+                        ],
+                        Response::HTTP_OK
+                    );
+                } else {
                     $errorMessage = "Nie udało się dodać Cię do tej firmy!";
-            } else
-                $errorMessage  = 'Należysz już do firmy do której przypisano podany kod!';
+                }
+            } else {
+                $errorMessage = 'Należysz już do firmy do której przypisano podany kod!';
+            }
+        }
 
-        return response([
-            'status' => 'error',
-            'data' => null,
-            'message' => $errorMessage
-        ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        return response(
+            [
+                'status' => 'error',
+                'data' => null,
+                'message' => $errorMessage,
+            ],
+            Response::HTTP_INTERNAL_SERVER_ERROR
+        );
     }
 
     /**
      * Get company offers
      *
      * @param $id
+     *
      * @return Response
      */
-    public function getCompanyOffers($id) {
-        $offers = Offer::with(['company','offerCategory','offerStatus','company.city', 'supervisor'])->where(['company_id' => $id])->get();
+    public function getCompanyOffers($id)
+    {
+        $offers = Offer::with(['company', 'offerCategory', 'offerStatus', 'company.city', 'supervisor'])->where(
+            ['company_id' => $id]
+        )->get();
 
-        if (isset($offers))
-            return response([
-                'status' => 'success',
-                'data' => $offers,
-                'message' => null
-            ], Response::HTTP_OK);
-        else
-            return response([
-                'status' => 'error',
-                'data' => null,
-                'message' => "Nie znaleziono oferty!"
-            ], Response::HTTP_NOT_FOUND);
+        if (isset($offers)) {
+            return response(
+                [
+                    'status' => 'success',
+                    'data' => $offers,
+                    'message' => null,
+                ],
+                Response::HTTP_OK
+            );
+        } else {
+            return response(
+                [
+                    'status' => 'error',
+                    'data' => null,
+                    'message' => "Nie znaleziono oferty!",
+                ],
+                Response::HTTP_NOT_FOUND
+            );
+        }
     }
 
     /**
      * Get company agreements
      *
      * @param $id
+     *
      * @return Response
      */
-    public function getCompanyAgreements($id) {
+    public function getCompanyAgreements($id)
+    {
         $agreements = Agreement::with(['offer', 'university'])->where(['company_id' => $id])->get();
 
-        if (isset($agreements))
-            return response([
-                'status' => 'success',
-                'data' => $agreements,
-                'message' => null
-            ], Response::HTTP_OK);
-        else
-            return response([
-                'status' => 'error',
-                'data' => null,
-                'message' => "Nie znaleziono oferty!"
-            ], Response::HTTP_NOT_FOUND);
-
+        if (isset($agreements)) {
+            return response(
+                [
+                    'status' => 'success',
+                    'data' => $agreements,
+                    'message' => null,
+                ],
+                Response::HTTP_OK
+            );
+        } else {
+            return response(
+                [
+                    'status' => 'error',
+                    'data' => null,
+                    'message' => "Nie znaleziono oferty!",
+                ],
+                Response::HTTP_NOT_FOUND
+            );
+        }
     }
 
     /**
@@ -271,14 +332,17 @@ class CompanyController extends Controller
     private function generateUniqueRandomAccessCode()
     {
         do {
-            $randomAccessCode = Str::upper( Str::random(8));
-        } while(count(Company::where('access_code', $randomAccessCode)->get()) > 0);
+            $randomAccessCode = Str::upper(Str::random(8));
+        } while (count(Company::where('access_code', $randomAccessCode)->get()) > 0);
 
         return $randomAccessCode;
     }
+
     /**
      * Get users from company
+     *
      * @param $id
+     *
      * @return Response
      */
 
@@ -286,36 +350,50 @@ class CompanyController extends Controller
     {
         $company = Company::find($id);
 
-         if (isset($company))
-             return response([
-                 'status' => 'success',
-                 'data' => $company->users,
-                 'message' => null
-             ], Response::HTTP_OK);
-        else
-            return response([
-                'status' => 'error',
-                'data' => null,
-                'message' => "Company users not found!"
-            ], Response::HTTP_NOT_FOUND);
+        if (isset($company)) {
+            return response(
+                [
+                    'status' => 'success',
+                    'data' => $company->users,
+                    'message' => null,
+                ],
+                Response::HTTP_OK
+            );
+        } else {
+            return response(
+                [
+                    'status' => 'error',
+                    'data' => null,
+                    'message' => "Company users not found!",
+                ],
+                Response::HTTP_NOT_FOUND
+            );
+        }
     }
 
     /**
      * Get company interns
      *
      * @param $id
+     *
      * @return Response
      */
     public function getInterns($id)
     {
         $company = Company::with('offers')->find($id);
         $internships = Internship::whereIn('offer_id', Arr::pluck($company->offers, 'id'))->get();
-        $students = Student::with(['user', 'internships.offer'])->whereIn('id', Arr::pluck($internships, 'student_id'))->get();
+        $students = Student::with(['user', 'internships.offer'])->whereIn(
+            'id',
+            Arr::pluck($internships, 'student_id')
+        )->get();
 
-        return Response([
-            'status' => 'success',
-            'data' => $students,
-            'message' => null,
-        ], Response::HTTP_OK);
+        return Response(
+            [
+                'status' => 'success',
+                'data' => $students,
+                'message' => null,
+            ],
+            Response::HTTP_OK
+        );
     }
 }

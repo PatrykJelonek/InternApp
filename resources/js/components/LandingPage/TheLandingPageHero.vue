@@ -23,8 +23,12 @@
                 </v-row>
             </v-col>
             <v-col cols="0" md="5" lg="4" xl="7" >
-                <v-img style="margin-top: 100px" src="../img/hero_image_desktop.png" alt="Aplikacja InternApp na komputery osobiste" class="rounded hidden-lg-and-down"></v-img>
-                <v-img src="../img/hero_image_mobile.png" width="400px" alt="Aplikacja InternApp na telefony komórkowe" class="rounded hidden-xl-and-up hidden-xl-only hidden-md-and-down" ></v-img>
+                <v-fade-transition>
+                    <v-img style="margin-top: 100px" src="../img/hero_image_desktop.png" alt="Aplikacja InternApp na komputery osobiste" class="rounded hidden-lg-and-down"></v-img>
+                </v-fade-transition>
+                <v-fade-transition>
+                    <v-img src="../img/hero_image_mobile.png" width="400px" alt="Aplikacja InternApp na telefony komórkowe" class="rounded hidden-xl-and-up hidden-xl-only hidden-md-and-down" ></v-img>
+                </v-fade-transition>
             </v-col>
         </v-row>
     </v-container>

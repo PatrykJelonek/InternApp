@@ -93,6 +93,7 @@ Route::group(['middleware' => ['jwt.verify']], function() {
 
     # Companies
     Route::get('/companies', 'Api\CompanyController@index');
+    Route::get('/companies/{slug}', 'Api\CompanyController@show');
 
     # Company Categories
     Route::get('/companies/categories', 'Api\CompanyCategoryController@index');
@@ -121,6 +122,7 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::get('/me/internships/{status?}', 'Api\UserController@getUserInternships')->where('status', \App\Constants\InternshipStatusConstants::STATUS_ACCEPTED.'|'.\App\Constants\InternshipStatusConstants::STATUS_NEW);
     Route::get('/me/internships', 'Api\UserController@getUserInternships');
     Route::get('/me/universities', 'Api\UserUniversityController@index');
+    Route::get('/me/companies', 'Api\UserCompanyController@index');
     Route::get('/me/notifications', 'Api\NotificationController@index');
     Route::get('/me/offers','Api\StudentController@getAvailableInternshipOffers');
 

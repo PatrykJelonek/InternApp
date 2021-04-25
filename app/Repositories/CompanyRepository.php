@@ -22,7 +22,7 @@ class CompanyRepository implements CompanyRepositoryInterface
 
     public function getOneBySlug(string $slug)
     {
-        return Company::where(['slug' => $slug])->first();
+        return Company::with(['city','category'])->where(['slug' => $slug])->first();
     }
 
     public function getAll()

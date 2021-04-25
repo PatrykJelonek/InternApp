@@ -49,6 +49,11 @@ import Admin from "../views/Admin";
 import TheAdminOffers from "../components/Admin/TheAdminOffers";
 import TheAdminStatistics from "../components/Admin/TheAdminStatistics";
 import TheAdminUsers from "../components/Admin/TheAdminUsers";
+import TheCompanyOverview from "../components/Company/Overview/TheCompanyOverview";
+import TheCompanyOffers from "../components/Company/Offers/TheCompanyOffers";
+import TheCompanyAgreements from "../components/Company/Agreements/TheCompanyAgreements";
+import TheCompanyWorkers from "../components/Company/Workers/TheCompanyWorkers";
+import TheCompanySettings from "../components/Company/Settings/TheCompanySettings";
 
 Vue.use(VueRouter);
 
@@ -155,19 +160,46 @@ const router = new VueRouter({
                     path: '/dashboard/companies',
                     name: 'companies',
                     component: Companies,
-                    meta: { have: ['admin','company_worker'], title: 'Firma'}
+                    meta: { have: ['admin','company_worker','company_owner'], title: 'Firma'}
                 },
                 {
-                    path: '/company/:id',
-                    name: 'company',
+                    path: '/dashboard/companies/:slug',
                     component: Company,
+                    children: [
+                        {
+                            path: '/dashboard/companies/:slug/',
+                            name: 'company',
+                            component: TheCompanyOverview,
+                        },
+                        {
+                            path: '/dashboard/companies/:slug/offers',
+                            name: 'company-offers',
+                            component: TheCompanyOffers
+                        },
+                        {
+                            path: '/dashboard/companies/:slug/agreements',
+                            name: 'company-agreements',
+                            component: TheCompanyAgreements
+                        },
+                        {
+                            path: '/dashboard/companies/:slug/workers',
+                            name: 'company-workers',
+                            component: TheCompanyWorkers
+                        },
+                        {
+                            path: '/dashboard/companies/:slug/settings',
+                            name: 'company-settings',
+                            component: TheCompanySettings
+                        },
+                    ]
                 },
+
                 {
                     path: '/dashboard/universities/:slug',
                     component: University,
                     children: [
                         {
-                            path: '',
+                            path: '/dashboard/universities/:slug/',
                             name: 'university',
                             component: TheUniversityOverview,
                         },

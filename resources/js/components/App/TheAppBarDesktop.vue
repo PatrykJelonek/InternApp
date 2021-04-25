@@ -30,7 +30,7 @@
                 plain
                 small
                 :ripple="false"
-                to="/dashboard/companies"
+                :to="{name: 'companies'}"
                 v-has="['admin','company_worker','company_owner','company_supervisor']"
             >
                 Firma

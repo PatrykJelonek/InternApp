@@ -104,26 +104,34 @@ export default {
                 clearTimeout(this.timeout);
                 this.stop = !this.stop;
             } else {
-                this.$router.push({name: 'university-overview', params: {slug: this.userUniversities[0].slug}});
+                this.$router.push({name: 'university', params: {slug: this.userUniversities[0].slug}});
             }
+        },
+
+        redirect() {
+            this.interval = setInterval(() => {
+                this.secondsCounter--;
+            }, 1000);
+
+            this.timeout = setTimeout(() => {
+                clearInterval(this.interval);
+                this.$router.push({name: 'university-overview', params: {slug: this.userUniversities[0].slug}});
+            }, 5500)
         }
     },
 
     created() {
-        this.fetchUserUniversities().then(() => {
-            if (this.userUniversities.length === 1) {
-                this.interval = setInterval(() => {
-                    this.secondsCounter--;
-                }, 1000);
+        if (this.userUniversities.length === 0) {
+            this.fetchUserUniversities().then(() => {
+                this.redirect();
+            }).catch(() => {
 
-                this.timeout = setTimeout(() => {
-                    clearInterval(this.interval);
-                    this.$router.push({name: 'university-overview', params: {slug: this.userUniversities[0].slug}});
-                }, 5500)
-            }
-        }).catch(() => {
+            });
+        }
 
-        });
+        if (this.userUniversities.length === 1) {
+            this.redirect();
+        }
 
         this.$router.afterEach((to, from) => {
             clearTimeout(this.timeout);
