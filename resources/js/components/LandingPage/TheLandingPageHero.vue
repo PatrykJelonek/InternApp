@@ -17,13 +17,14 @@
                 <v-row>
                     <v-col cols="12" v-bind:class="this.$vuetify.breakpoint.smAndDown ? 'text-center' : ''">
                         <v-btn dark color="green accent-4" :to="{name: 'register'}">
-                            Załóż darmowe konto
+                            Załóż bezpłatne konto
                         </v-btn>
                     </v-col>
                 </v-row>
             </v-col>
-            <v-col cols="0" lg="7" style="margin-top: 200px">
-                <v-img src="../img/heroimage3.png" alt="Obrazek" class="rounded hidden-lg-and-down"></v-img>
+            <v-col cols="0" md="5" lg="4" xl="7" >
+                <v-img style="margin-top: 100px" src="../img/hero_image_desktop.png" alt="Aplikacja InternApp na komputery osobiste" class="rounded hidden-lg-and-down"></v-img>
+                <v-img src="../img/hero_image_mobile.png" width="400px" alt="Aplikacja InternApp na telefony komórkowe" class="rounded hidden-xl-and-up hidden-xl-only hidden-md-and-down" ></v-img>
             </v-col>
         </v-row>
     </v-container>

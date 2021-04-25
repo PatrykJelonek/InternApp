@@ -33,6 +33,8 @@ Route::get('/refresh', [
     'uses' => 'Api\Auth\AuthController@refresh'
 ]);
 
+Route::get('/helpers/offers', 'Api\LandingPageController@offers');
+
 Route::resource('/users', 'Api\UserController');
 
 //For Logged Users

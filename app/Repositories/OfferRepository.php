@@ -53,14 +53,42 @@ class OfferRepository implements OfferRepositoryInterface
         return Offer::with($this->with)->where('slug', $slug)->get();
     }
 
-    public function getAllOffers(array $categories)
+    /**
+     * @param array|null $categories
+     * @param array|null $statuses
+     * @param int|null   $limit
+     *
+     * @return Builder[]|\Illuminate\Database\Eloquent\Collection
+     */
+    public function getAllOffers(?array $categories, ?array $statuses, ?int $limit)
     {
-        return Offer::with(['status'])->whereHas(
-            'status',
-            function (Builder $query) use ($categories) {
-                $query->where('name', 'IN', $categories);
-            }
-        )->get();
+        $offers = Offer::with(['status','category','company']);
+
+        if ($statuses !== null) {
+            $offers->whereHas(
+                'status',
+                function (Builder $query) use ($statuses) {
+                    $query->where('name', $statuses);
+                }
+            );
+        }
+
+        if ($categories !== null) {
+            $offers->whereHas(
+                'category',
+                function (Builder $query) use ($categories) {
+                    $query->where('name',  $categories);
+                }
+            );
+        }
+
+        if ($limit !== null) {
+            $offers->limit($limit);
+        }
+
+        $offers->orderByDesc('created_at');
+
+        return $offers->get();
     }
 
     /**

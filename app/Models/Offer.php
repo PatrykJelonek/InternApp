@@ -28,7 +28,7 @@ class Offer extends Model
 
     public function status()
     {
-        return $this->belongsTo('App\Models\OfferStatus');
+        return $this->hasOne('App\Models\OfferStatus', 'id', 'offer_status_id');
     }
 
     public function supervisor()

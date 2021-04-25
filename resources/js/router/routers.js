@@ -114,7 +114,6 @@ const router = new VueRouter({
         {
             title: 'Dashboard',
             path: '/dashboard',
-            name: 'dashboard',
             beforeEnter: (to, from, next) => {
                 if (!store.getters['auth/authenticated']) {
                     return next({name: 'login'})
@@ -129,6 +128,11 @@ const router = new VueRouter({
                 title: 'Dashboard'
             },
             children: [
+                {
+                    path: '/dashboard/',
+                    name: 'dashboard',
+                    component: Welcome
+                },
                 {
                     path: 'users/new-status',
                     name: 'user-statuses',

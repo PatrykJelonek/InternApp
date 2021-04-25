@@ -2,7 +2,7 @@
     <v-container :fluid="this.$vuetify.breakpoint.lgAndDown" style="margin-top: 100px">
         <v-row class="my-15">
             <v-col cols="12" class="text-center">
-                <h3 class="text-h3 font-weight-bold text-uppercase">Funkcjonalności</h3>
+                <h3 class="text-h5 text-sm-h4 text-md-h3 font-weight-bold text-uppercase">Funkcjonalności</h3>
             </v-col>
         </v-row>
         <v-row>

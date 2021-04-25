@@ -12,10 +12,13 @@
         <v-btn
             outlined
             v-if="user"
-            color="primary"
+            small
+            dark
+            elevation="0"
+            color="green accent-4"
             :to="{name: 'dashboard'}"
         >
-            Panel
+            Panel Użytkownika
         </v-btn>
         <v-btn-toggle
             dense
