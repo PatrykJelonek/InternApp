@@ -77,6 +77,6 @@ export default {
 
         createOffer({commit}, offer) {
             return axios.post('/api/offers', offer);
-        }
+        },
     },
 }

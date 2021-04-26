@@ -64,7 +64,7 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     //Route::get('/universities/{id}/agreements', 'Api\UniversityController@getUniversityAgreements');
     //Route::get('/universities/{id}/internships', 'Api\UniversityController@getInternships');
     //Route::get('/universities/{university_id}/students', 'Api\UniversityStudentController@index');
-    Route::get('/companies/{id}/offers', 'Api\CompanyController@getCompanyOffers');
+    //Route::get('/companies/{id}/offers', 'Api\CompanyController@getCompanyOffers');
     Route::get('/companies/{id}/agreements', 'Api\CompanyController@getCompanyAgreements');
     Route::get('/companies/{id}/interns', 'Api\CompanyController@getInterns');
     Route::post('/agreements/{id}/active', 'Api\AgreementController@active');
@@ -94,6 +94,7 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     # Companies
     Route::get('/companies', 'Api\CompanyController@index');
     Route::get('/companies/{slug}', 'Api\CompanyController@show');
+    Route::get('/companies/{slug}/offers','Api\CompanyController@getCompanyOffers');
 
     # Company Categories
     Route::get('/companies/categories', 'Api\CompanyCategoryController@index');

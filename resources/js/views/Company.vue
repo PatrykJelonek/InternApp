@@ -9,7 +9,7 @@
        </v-row>
         <v-row v-else class="text-center">
             <v-col cols="12">
-                <page-loading></page-loading>
+                <page-loader v-if="companyLoading"></page-loader>
             </v-col>
         </v-row>
     </v-container>
@@ -19,13 +19,13 @@
     import {mapActions, mapGetters} from "vuex";
     import PageDetailsHeader from "../components/Page/PageDetailsHeader";
     import PageTitle from "../components/_Helpers/PageTitle";
-    import PageLoading from "../components/_Helpers/page-loading";
     import PageTabHeader from "../components/_General/PageTabs";
     import PageTabs from "../components/_General/PageTabs";
+    import PageLoader from "../components/_General/PageLoader";
 
     export default {
         name: "Company",
-        components: {PageTabs, PageTabHeader, PageLoading, PageTitle, PageDetailsHeader},
+        components: {PageLoader, PageTabs, PageTabHeader, PageTitle, PageDetailsHeader},
 
         data() {
             return {

@@ -19,6 +19,8 @@ class OfferStatusesSeeder extends Seeder
             DB::table('offer_statuses')->insert([
                 'name' => $STATUS,
                 'description' => OfferStatusConstants::STATUS_DESCRIPTIONS[$STATUS],
+                'display_name' => OfferStatusConstants::STATUS_DISPLAY_NAMES[$STATUS],
+                'hex_color' => OfferStatusConstants::STATUS_HEX_COLORS[$STATUS],
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
             ]);

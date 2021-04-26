@@ -1,13 +1,13 @@
 <template>
     <v-container>
-        <v-row v-id="userCompaniesLoading && userCompanies > 1">
+        <v-row v-if="userCompaniesLoading && userCompanies > 1">
             <v-col cols="12">
                 <page-title>Lista firm</page-title>
             </v-col>
         </v-row>
-        <v-row v-else>
+        <v-row v-else class="text-center">
             <v-col cols="12">
-                <page-loading></page-loading>
+                <page-loader v-if="userCompaniesLoading"></page-loader>
             </v-col>
         </v-row>
     </v-container>
@@ -15,17 +15,12 @@
 
 <script>
 import {mapActions, mapGetters} from "vuex";
-import CompaniesNotFound from "../components/Companies/CompaniesNotFound";
-import CompanyCodeCard from "../components/Companies/CompanyCodeCard";
-import CompanyUseCodeDialog from "../components/Companies/CompanyUseCodeDialog";
-import CompanyInterns from "../components/Companies/CompanyInterns";
 import PageTitle from "../components/_Helpers/PageTitle";
-import PageLoading from "../components/_Helpers/page-loading";
-import PageTabHeader from "../components/_General/PageTabs";
+import PageLoader from "../components/_General/PageLoader";
 
 export default {
     name: "Companies",
-    components: {PageLoading, PageTitle},
+    components: {PageLoader, PageTitle},
 
     data() {
         return {

@@ -3,8 +3,28 @@
 </template>
 
 <script>
+import {mapActions, mapGetters} from "vuex";
+
 export default {
-    name: "PageLoader"
+    name: "PageLoader",
+
+    computed: {
+        ...mapGetters({}),
+    },
+
+    methods: {
+        ...mapActions({
+            setFillHeight: 'helpers/setFillHeight'
+        }),
+    },
+
+    created() {
+        this.setFillHeight(true);
+    },
+
+    destroyed() {
+        this.setFillHeight(false);
+    }
 }
 </script>
 

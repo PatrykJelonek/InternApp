@@ -1,6 +1,6 @@
 <template>
     <v-container>
-        <v-row v-id="userUniversitiesLoading && userUniversities > 1">
+        <v-row v-if="userUniversitiesLoading && userUniversities > 1">
             <v-col cols="12">
                 <page-title>Lista uniwersytetów</page-title>
                 <universities-list></universities-list>

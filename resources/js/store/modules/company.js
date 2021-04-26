@@ -10,6 +10,7 @@ export default {
         companyCategoriesLoading: true,
         companyUsers: [],
         companyOffers: [],
+        companyOffersLoading: true,
         companyAgreements: [],
         companies: [],
         companiesLoading: [],
@@ -43,6 +44,10 @@ export default {
 
         companyOffers(state) {
             return state.companyOffers;
+        },
+
+        companyOffersLoading(state) {
+            return state.companyOffersLoading;
         },
 
         companyAgreements(state) {
@@ -99,6 +104,10 @@ export default {
             state.companyOffers = data;
         },
 
+        SET_COMPANY_OFFERS_LOADING(state, data) {
+            state.companyOffersLoading = data;
+        },
+
         SET_COMPANY_AGREEMENTS(state, data) {
             state.companyAgreements = data;
         },
@@ -148,18 +157,21 @@ export default {
                 let response = await axios.get(`/api/companies/${slug}`);
                 commit('SET_COMPANY', response.data);
                 commit('SET_COMPANY_LOADING', false);
-            } catch(e) {
+            } catch (e) {
                 commit('SET_COMPANY', '');
                 commit('SET_COMPANY_LOADING', false);
             }
         },
 
-        async fetchCompanyOffers({commit}, id) {
+        async fetchCompanyOffers({commit}, slug) {
+            commit('SET_COMPANY_OFFERS_LOADING', true);
             try {
-                let response = await axios.get(`/api/companies/${id}/offers`);
-                commit('SET_COMPANY_OFFERS', response.data.data);
-            } catch(e) {
+                let response = await axios.get(`/api/companies/${slug}/offers`);
+                commit('SET_COMPANY_OFFERS', response.data);
+                commit('SET_COMPANY_OFFERS_LOADING', false);
+            } catch (e) {
                 commit('SET_COMPANY_OFFERS', []);
+                commit('SET_COMPANY_OFFERS_LOADING', false);
             }
         },
 
@@ -167,7 +179,7 @@ export default {
             try {
                 let response = await axios.get(`/api/companies/${id}/agreements`);
                 commit('SET_COMPANY_AGREEMENTS', response.data.data);
-            } catch(e) {
+            } catch (e) {
                 commit('SET_COMPANY_AGREEMENTS', []);
             }
         },
@@ -176,7 +188,7 @@ export default {
             try {
                 let response = await axios.get(`/api/companies/${id}/interns`);
                 commit('SET_INTERNS', response.data.data);
-            } catch(e) {
+            } catch (e) {
                 commit('SET_INTERNS', []);
             }
         },
@@ -187,7 +199,7 @@ export default {
                 let response = await axios.get(`/api/companies`);
                 commit('SET_COMPANIES', response.data);
                 commit('SET_COMPANIES_LOADING', false);
-            } catch(e) {
+            } catch (e) {
                 commit('SET_COMPANIES', []);
                 commit('SET_COMPANIES_LOADING', false);
             }
@@ -220,6 +232,6 @@ export default {
             return axios.post('/api/company/use-code', {
                 accessCode: code
             });
-        }
+        },
     },
 }

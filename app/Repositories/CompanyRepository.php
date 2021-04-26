@@ -9,8 +9,10 @@
 namespace App\Repositories;
 
 use App\Models\Company;
+use App\Models\Offer;
 use App\Repositories\Interfaces\CompanyRepositoryInterface;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
 
 class CompanyRepository implements CompanyRepositoryInterface
@@ -22,7 +24,7 @@ class CompanyRepository implements CompanyRepositoryInterface
 
     public function getOneBySlug(string $slug)
     {
-        return Company::with(['city','category'])->where(['slug' => $slug])->first();
+        return Company::with(['city', 'category'])->where(['slug' => $slug])->first();
     }
 
     public function getAll()
@@ -47,7 +49,7 @@ class CompanyRepository implements CompanyRepositoryInterface
         $company->created_at = Carbon::today();
         $company->updated_at = Carbon::today();
 
-        if($company->save()) {
+        if ($company->save()) {
             return $company;
         }
 
@@ -73,9 +75,46 @@ class CompanyRepository implements CompanyRepositoryInterface
     public function generateAccessCode()
     {
         do {
-            $randomAccessCode = Str::upper( Str::random(8));
-        } while(count(Company::where('access_code', $randomAccessCode)->get()) > 0);
+            $randomAccessCode = Str::upper(Str::random(8));
+        } while (count(Company::where('access_code', $randomAccessCode)->get()) > 0);
 
         return $randomAccessCode;
+    }
+
+    public function getCompanyOffers(string $slug, ?array $categories = null, ?array $statuses = null, ?int $limit = null)
+    {
+        $company = $this->getOneBySlug($slug);
+
+        if ($company === null) {
+            return null;
+        }
+
+        $companyOffers = Offer::with(['category', 'status', 'supervisor'])->where(
+            ['company_id' => $company->id]
+        );
+
+        if ($statuses !== null) {
+            $companyOffers->whereHas(
+                'status',
+                function (Builder $query) use ($statuses) {
+                    $query->where('name', $statuses);
+                }
+            );
+        }
+
+        if ($categories !== null) {
+            $companyOffers->whereHas(
+                'category',
+                function (Builder $query) use ($categories) {
+                    $query->where('name',  $categories);
+                }
+            );
+        }
+
+        if ($limit !== null) {
+            $companyOffers->limit($limit);
+        }
+
+        return $companyOffers->get();
     }
 }

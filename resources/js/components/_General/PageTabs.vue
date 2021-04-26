@@ -1,6 +1,6 @@
 <template>
     <v-card elevation="0" color="card-background">
-        <v-tabs grow>
+        <v-tabs>
             <v-tab
                 v-for="tab in tabs"
                 :key="tab.name"

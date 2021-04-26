@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Requests\CompanyOffersRequest;
 use App\Http\Requests\CompanyShowRequest;
 use App\Models\Agreement;
 use App\Models\Company;
@@ -261,35 +262,19 @@ class CompanyController extends Controller
     /**
      * Get company offers
      *
-     * @param $id
+     * @param $slug
      *
      * @return Response
      */
-    public function getCompanyOffers($id)
+    public function getCompanyOffers(CompanyOffersRequest $request, $slug)
     {
-        $offers = Offer::with(['company', 'offerCategory', 'offerStatus', 'company.city', 'supervisor'])->where(
-            ['company_id' => $id]
-        )->get();
+       $offers = $this->companyRepository->getCompanyOffers($slug);
 
-        if (isset($offers)) {
-            return response(
-                [
-                    'status' => 'success',
-                    'data' => $offers,
-                    'message' => null,
-                ],
-                Response::HTTP_OK
-            );
-        } else {
-            return response(
-                [
-                    'status' => 'error',
-                    'data' => null,
-                    'message' => "Nie znaleziono oferty!",
-                ],
-                Response::HTTP_NOT_FOUND
-            );
-        }
+       if (isset($offers) && count($offers) > 0) {
+           return response($offers, Response::HTTP_OK);
+       }
+
+       return response(null, Response::HTTP_NO_CONTENT);
     }
 
     /**

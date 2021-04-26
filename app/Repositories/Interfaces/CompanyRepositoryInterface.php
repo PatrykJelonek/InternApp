@@ -24,4 +24,6 @@ interface CompanyRepositoryInterface
     public function deleteCompanyBySlug(string $slug);
 
     public function generateAccessCode();
+
+    public function getCompanyOffers(string $slug, ?array $categories = null, ?array $statuses = null, ?int $limit = null);
 }
