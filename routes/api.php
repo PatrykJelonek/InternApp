@@ -50,7 +50,7 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::resource('/user-universities', 'Api\UserUniversityController');
     Route::resource('/user-companies', 'Api\UserCompanyController');
     Route::resource('/offers/categories', 'Api\OfferCategoryController');
-    Route::resource('/offers', 'Api\OfferController');
+//    Route::resource('/offers', 'Api\OfferController');
     Route::resource('/agreements', 'Api\AgreementController');
     Route::resource('/internships', 'Api\InternshipController');
     Route::resource('/journals', 'Api\JournalController');
@@ -95,10 +95,11 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::get('/companies', 'Api\CompanyController@index');
     Route::get('/companies/{slug}', 'Api\CompanyController@show');
     Route::get('/companies/{slug}/offers','Api\CompanyController@getCompanyOffers');
-
-    # Company Categories
     Route::get('/companies/categories', 'Api\CompanyCategoryController@index');
 
+    # Offers
+    Route::get('/offers/statuses', 'Api\OfferStatusController@index');
+    Route::get('/offers/categories', 'Api\OfferCategoryController@index');
 
     # Internship Tasks
     Route::post('/internships', 'Api\InternshipController@store');

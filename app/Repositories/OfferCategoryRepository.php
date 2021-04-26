@@ -30,6 +30,7 @@ class OfferCategoryRepository implements OfferCategoryRepositoryInterface
         $offerCategory = new OfferCategory();
         $offerCategory->name = $data['name'];
         $offerCategory->description = $data['description'];
+        $offerCategory->display_name = $data['display_name'];
         $offerCategory->created_at = Carbon::today();
         $offerCategory->updated_at = Carbon::today();
 

@@ -30,6 +30,8 @@ class OfferStatusRepository implements OfferStatusRepositoryInterface
         $offerStatus = new OfferStatus();
         $offerStatus->name = $data['name'];
         $offerStatus->description = $data['description'];
+        $offerStatus->display_name = $data['displayName'];
+        $offerStatus->hex_color = $data['hexColor'];
         $offerStatus->created_at = Carbon::today();
         $offerStatus->updated_at = Carbon::today();
 
