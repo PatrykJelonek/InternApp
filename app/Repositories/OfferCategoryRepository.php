@@ -50,4 +50,9 @@ class OfferCategoryRepository implements OfferCategoryRepositoryInterface
     {
         // TODO: Implement deleteOfferCategoryById() method.
     }
+
+    public function getAllOfferCategories()
+    {
+        return OfferCategory::all();
+    }
 }

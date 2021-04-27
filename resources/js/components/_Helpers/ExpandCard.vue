@@ -8,6 +8,7 @@
                 </v-list-item-content>
                 <v-list-item-action>
                     <v-btn-toggle borderless dense background-color="card-background">
+                        <slot name="buttons"></slot>
                         <v-tooltip v-if="expand" top>
                             <template v-slot:activator="{ on, attrs }">
                                 <v-btn

@@ -14,6 +14,8 @@ interface OfferCategoryRepositoryInterface
 
     public function getOfferCategoryByName (string $name);
 
+    public function getAllOfferCategories();
+
     public function createOfferCategory (array $data);
 
     public function updateOfferCategoryById(int $id);

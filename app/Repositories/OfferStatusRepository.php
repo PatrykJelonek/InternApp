@@ -51,4 +51,9 @@ class OfferStatusRepository implements OfferStatusRepositoryInterface
     {
         // TODO: Implement deleteOfferStatusById() method.
     }
+
+    public function getAllOfferStatuses()
+    {
+        return OfferStatus::all();
+    }
 }

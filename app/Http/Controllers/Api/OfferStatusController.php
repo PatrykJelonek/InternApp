@@ -4,11 +4,27 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\OfferStatus;
+use App\Repositories\OfferStatusRepository;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 class OfferStatusController extends Controller
 {
+    /**
+     * @var OfferStatusRepository
+     */
+    private $offerStatusRepository;
+
+    /**
+     * OfferStatusController constructor.
+     *
+     * @param OfferStatusRepository $offerStatusRepository
+     */
+    public function __construct(OfferStatusRepository $offerStatusRepository)
+    {
+        $this->offerStatusRepository = $offerStatusRepository;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -16,12 +32,13 @@ class OfferStatusController extends Controller
      */
     public function index()
     {
-        $offerStatuses = OfferStatus::all();
+        $offerStatuses = $this->offerStatusRepository->getAllOfferStatuses();
 
-        if (isset($offerStatuses))
+        if (isset($offerStatuses)) {
             return response($offerStatuses, Response::HTTP_OK);
-        else
-            return response("Offer statuses not found!", Response::HTTP_NOT_FOUND);
+        }
+
+        return response(null, Response::HTTP_NO_CONTENT);
     }
 
     /**
@@ -37,7 +54,8 @@ class OfferStatusController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -50,8 +68,9 @@ class OfferStatusController extends Controller
             $offerStatus->created_at = date('Y-m-d H:i:s');
             $offerStatus->updated_at = date('Y-m-d H:i:s');
 
-            if ($offerStatus->save())
+            if ($offerStatus->save()) {
                 return response($offerStatus, Response::HTTP_OK);
+            }
         }
 
         return response("Offer status has not been created!", Response::HTTP_INTERNAL_SERVER_ERROR);
@@ -61,22 +80,25 @@ class OfferStatusController extends Controller
      * Display the specified resource.
      *
      * @param  $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
         $offerStatus = OfferStatus::find($id);
 
-        if (isset($offerStatus))
+        if (isset($offerStatus)) {
             return response($offerStatus, Response::HTTP_OK);
-        else
+        } else {
             return response("Offer status not found!", Response::HTTP_NOT_FOUND);
+        }
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\OfferStatus  $offerStatus
+     * @param \App\OfferStatus $offerStatus
+     *
      * @return \Illuminate\Http\Response
      */
     public function edit(OfferStatus $offerStatus)
@@ -87,8 +109,9 @@ class OfferStatusController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\OfferStatus  $offerStatus
+     * @param \Illuminate\Http\Request $request
+     * @param \App\OfferStatus         $offerStatus
+     *
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request)
@@ -100,8 +123,9 @@ class OfferStatusController extends Controller
             $offerStatus->description = $request->input("description");
             $offerStatus->updated_at = date('Y-m-d H:i:s');
 
-            if ($offerStatus->save())
+            if ($offerStatus->save()) {
                 return response($offerStatus, Response::HTTP_OK);
+            }
         }
 
         return response("Offer status not found!", Response::HTTP_NOT_FOUND);
@@ -111,15 +135,17 @@ class OfferStatusController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
     {
         $offerStatus = OfferStatus::find($id);
 
-        if ($offerStatus->delete())
+        if ($offerStatus->delete()) {
             return response("Offer status has been deleted!", Response::HTTP_OK);
-        else
+        } else {
             return response("Offer status has not been deleted!", Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 }

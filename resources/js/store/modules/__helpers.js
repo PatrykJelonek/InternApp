@@ -3,12 +3,17 @@ export default {
 
     state: {
         createInternshipDialog: false,
+        createOfferDialog: false,
         fillHeight: false,
     },
 
     getters: {
         createInternshipDialog(state) {
             return state.createInternshipDialog;
+        },
+
+        createOfferDialog(state) {
+            return state.createOfferDialog;
         },
 
         fillHeight(state) {
@@ -25,6 +30,10 @@ export default {
             }
         },
 
+        TOGGLE_CREATE_OFFER_DIALOG(state, value) {
+            state.createInternshipDialog = value;
+        },
+
         SET_FILL_HEIGHT(state, value) {
             state.fillHeight = value;
         }
@@ -33,6 +42,10 @@ export default {
     actions: {
         toggleCreateInternshipDialog({commit}, value) {
             commit('TOGGLE_CREATE_INTERNSHIP_DIALOG', value);
+        },
+
+        toggleCreateDialog({commit}, value) {
+            commit('TOGGLE_CREATE_OFFER_DIALOG', value);
         },
 
         setFillHeight({commit}, value) {

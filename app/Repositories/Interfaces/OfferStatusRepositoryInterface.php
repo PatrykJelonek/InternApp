@@ -14,6 +14,8 @@ interface OfferStatusRepositoryInterface
 
     public function getOfferStatusByName (string $name);
 
+    public function getAllOfferStatuses();
+
     public function createOfferStatus (array $data);
 
     public function updateOfferStatusById(int $id);

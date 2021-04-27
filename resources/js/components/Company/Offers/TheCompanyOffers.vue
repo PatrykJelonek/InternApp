@@ -1,40 +1,87 @@
 <template>
-    <v-row>
+    <v-row no-gutters class="mt-7">
+        <form-dialog
+            :dialog="createOfferDialog"
+            :toggle-function="toggleCreateOfferDialog"
+            :expand="false"
+            title="Dodaj Ofertę"
+            description="Wypełnij poniższy formularz by dodać nową ofertę do serwisu."
+        ></form-dialog>
         <v-col cols="12">
             <expand-card title="Lista Ofert" :description="`Lista ofert przypisanych do ${company.name}`" class="mt-10">
+                <template slot="buttons">
+                    <v-tooltip top>
+                        <template v-slot:activator="{ on, attrs }">
+                            <v-btn
+                                small
+                                icon
+                                v-bind="attrs"
+                                v-on="on"
+                                @click="toggleCreateOfferDialog(true)"
+                            >
+                                <v-icon>mdi-plus</v-icon>
+                            </v-btn>
+                        </template>
+                        <span>Dodaj Ofertę</span>
+                    </v-tooltip>
+                </template>
                 <v-row no-gutters class="px-5 pt-5 pb-2">
-                    <v-col cols="2" class="mr-5">
+                    <v-col
+                        cols="12"
+                        md="12"
+                        lg="5"
+                        xl="3"
+                        class="mr-5"
+                        v-bind:class="$vuetify.breakpoint.mdAndDown ? 'mb-5' : ''"
+                    >
                         <v-text-field
                             v-model="search.name"
                             label="Nazwa"
                             outlined
                             dense
                             hide-details
-                            @change="searchByName"
+                            clearable
+                            @input="searchByName"
                         ></v-text-field>
                     </v-col>
-                    <v-col cols="2" class="mr-5">
+                    <v-col
+                        cols="12"
+                        md="12"
+                        lg="3"
+                        xl="3"
+                        class="mr-5"
+                        v-bind:class="$vuetify.breakpoint.mdAndDown ? 'mb-5' : ''"
+                    >
                         <v-combobox
+                            v-if="comboboxElements.categories.length > 1"
                             v-model="search.categories"
                             label="Kategorie"
-                            :items="categories"
+                            :items="comboboxElements.categories"
                             :item-value="(category) => category.name"
                             :item-text="(category) => category.display_name"
                             outlined
                             dense
                             hide-details
                             small-chips
+                            clearable
                             multiple
                             @input="searchByCategories"
                         ></v-combobox>
                     </v-col>
-                    <v-col cols="2" class="mr-5">
+                    <v-col cols="12" md="12" lg="3" xl="3">
                         <v-combobox
+                            v-if="comboboxElements.statuses.length > 1"
                             v-model="search.statuses"
                             label="Statusy"
+                            :items="comboboxElements.statuses"
+                            :item-value="(status) => status.name"
+                            :item-text="(status) => status.display_name"
                             outlined
+                            clearable
                             dense
                             hide-details
+                            small-chips
+                            multiple
                             @input="searchByStatuses"
                         ></v-combobox>
                     </v-col>
@@ -81,10 +128,11 @@
 import ExpandCard from "../../_Helpers/ExpandCard";
 import {mapActions, mapGetters} from "vuex";
 import moment from "moment";
+import FormDialog from "../../_General/FormDialog";
 
 export default {
     name: "TheCompanyOffers",
-    components: {ExpandCard},
+    components: {FormDialog, ExpandCard},
 
     data() {
         return {
@@ -93,6 +141,10 @@ export default {
                 name: null,
                 categories: null,
                 statuses: null,
+            },
+            comboboxElements: {
+                categories: [],
+                statuses: [],
             },
             headers: [
                 {text: 'Nazwa', value: 'name'},
@@ -114,6 +166,7 @@ export default {
     methods: {
         ...mapActions({
             fetchCompanyOffers: 'company/fetchCompanyOffers',
+            toggleCreateOfferDialog: 'helpers/toggleCreateDialog',
         }),
 
         formatDate(date) {
@@ -123,10 +176,6 @@ export default {
 
             return '---';
         },
-
-        searchByName() {
-
-        },
     },
 
     computed: {
@@ -135,7 +184,18 @@ export default {
             companyLoading: 'company/companyLoading',
             companyOffers: 'company/companyOffers',
             companyOffersLoading: 'company/companyOffersLoading',
+            createOfferDialog: 'helpers/createOfferDialog',
         }),
+
+        searchByName() {
+            if (this.search.name !== null && this.search.name.length > 0) {
+                this.searchedItems = this.companyOffers.filter((offer) => {
+                    return offer.name.toUpperCase().trim().indexOf(this.search.name.toUpperCase().trim()) > -1;
+                });
+            } else {
+                this.searchedItems = this.companyOffers;
+            }
+        },
 
         searchByCategories() {
             if (this.search.categories !== null && this.search.categories.length > 0) {
@@ -151,6 +211,8 @@ export default {
 
         searchByStatuses() {
             if (this.search.statuses !== null && this.search.statuses.length > 0) {
+                let statuses = this.search.statuses.map(x => x['name']);
+
                 this.searchedItems = this.companyOffers.filter((offer) => {
                     return this.search.statuses.includes(offer.status.name);
                 });
@@ -163,6 +225,12 @@ export default {
     created() {
         this.fetchCompanyOffers(this.company.slug).then(() => {
             this.searchedItems = this.companyOffers;
+
+            this.companyOffers.forEach((offer) => {
+                this.comboboxElements.categories.push(offer.category);
+                this.comboboxElements.statuses.push(offer.status);
+            });
+
         }).catch((e) => {
 
         });
