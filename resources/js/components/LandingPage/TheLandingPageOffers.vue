@@ -1,5 +1,5 @@
 <template>
-    <v-container style="margin-top: 100px">
+    <v-container>
         <v-row class="my-15">
             <v-col cols="12" class="text-center">
                 <h3 class="text-h4 text-md-h3 font-weight-bold text-uppercase">Najnowsze Oferty Praktyk</h3>
@@ -23,7 +23,7 @@
                     v-slot="{ active, toggle }"
                 >
                     <v-fade-transition>
-                        <v-card elevation="0" width="300px" class="mx-5 my-10">
+                        <v-card elevation="0" width="300px" class="mx-5 my-10 grey lighten-3">
                             <v-card-subtitle class="my-0 py-0">
                                 <a class="green--text text--accent-4 font-weight-bold" :href="offer.company.website">
                                     {{offer.company.name}}

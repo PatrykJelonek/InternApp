@@ -4,7 +4,11 @@
         <v-main>
             <the-landing-page-hero></the-landing-page-hero>
             <the-landing-page-profits></the-landing-page-profits>
-            <the-landing-page-offers></the-landing-page-offers>
+            <v-row class="grey lighten-3" style="margin-top: 100px">
+                <v-col>
+                    <the-landing-page-offers></the-landing-page-offers>
+                </v-col>
+            </v-row>
         </v-main>
         <the-landing-page-footer></the-landing-page-footer>
     </v-app>

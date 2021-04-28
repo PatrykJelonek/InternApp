@@ -261,7 +261,7 @@
                                                 label="Kategoria Praktyk"
                                                 v-model="data.offer.offerCategoryId"
                                                 :items="offerCategories"
-                                                item-text="name"
+                                                item-text="display_name"
                                                 item-value="id"
                                                 :loading="offerCategoriesLoading"
                                                 outlined

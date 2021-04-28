@@ -1,12 +1,6 @@
 <template>
-    <v-row no-gutters class="mt-7">
-        <form-dialog
-            :dialog="createOfferDialog"
-            :toggle-function="toggleCreateOfferDialog"
-            :expand="false"
-            title="Dodaj Ofertę"
-            description="Wypełnij poniższy formularz by dodać nową ofertę do serwisu."
-        ></form-dialog>
+    <v-row no-gutters >
+        <create-offer-dialog></create-offer-dialog>
         <v-col cols="12">
             <expand-card title="Lista Ofert" :description="`Lista ofert przypisanych do ${company.name}`" class="mt-10">
                 <template slot="buttons">
@@ -129,10 +123,11 @@ import ExpandCard from "../../_Helpers/ExpandCard";
 import {mapActions, mapGetters} from "vuex";
 import moment from "moment";
 import FormDialog from "../../_General/FormDialog";
+import CreateOfferDialog from "./CreateOfferDialog";
 
 export default {
     name: "TheCompanyOffers",
-    components: {FormDialog, ExpandCard},
+    components: {CreateOfferDialog, FormDialog, ExpandCard},
 
     data() {
         return {
@@ -166,7 +161,7 @@ export default {
     methods: {
         ...mapActions({
             fetchCompanyOffers: 'company/fetchCompanyOffers',
-            toggleCreateOfferDialog: 'helpers/toggleCreateDialog',
+            toggleCreateOfferDialog: 'helpers/toggleCreateOfferDialog',
         }),
 
         formatDate(date) {

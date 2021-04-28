@@ -31,7 +31,7 @@ export default {
         },
 
         TOGGLE_CREATE_OFFER_DIALOG(state, value) {
-            state.createInternshipDialog = value;
+            state.createOfferDialog = value;
         },
 
         SET_FILL_HEIGHT(state, value) {
@@ -44,7 +44,7 @@ export default {
             commit('TOGGLE_CREATE_INTERNSHIP_DIALOG', value);
         },
 
-        toggleCreateDialog({commit}, value) {
+        toggleCreateOfferDialog({commit}, value) {
             commit('TOGGLE_CREATE_OFFER_DIALOG', value);
         },
 
