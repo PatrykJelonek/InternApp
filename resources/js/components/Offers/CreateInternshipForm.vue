@@ -95,12 +95,12 @@
                                         <v-col cols="5">
                                             <validation-provider
                                                 v-slot="{ errors }"
-                                                vid="company.categoryId"
+                                                vid="company.companyCategoryId"
                                                 :rules="data.company.id ? '' : 'required'"
                                             >
                                                 <v-select
                                                     label="Kategoria Firmy"
-                                                    v-model="data.company.categoryId"
+                                                    v-model="data.company.companyCategoryId"
                                                     :items="companyCategories"
                                                     item-text="name"
                                                     item-value="id"
@@ -254,14 +254,14 @@
                                     <v-col cols="12">
                                         <validation-provider
                                             v-slot="{ errors }"
-                                            vid="offer.categoryId"
+                                            vid="offer.offerCategoryId"
                                             rules="required"
                                         >
                                             <v-select
                                                 label="Kategoria Praktyk"
-                                                v-model="data.offer.categoryId"
+                                                v-model="data.offer.offerCategoryId"
                                                 :items="offerCategories"
-                                                item-text="name"
+                                                item-text="display_name"
                                                 item-value="id"
                                                 :loading="offerCategoriesLoading"
                                                 outlined
@@ -297,11 +297,11 @@
                                             <template v-slot:activator="{ on, attrs }">
                                                 <validation-provider
                                                     v-slot="{ errors }"
-                                                    vid="agreement.dateFrom"
+                                                    vid="offer.dateFrom"
                                                     rules="required"
                                                 >
                                                     <v-text-field
-                                                        v-model="data.agreement.dateFrom"
+                                                        v-model="data.offer.dateFrom"
                                                         label="Data Rozpoczęcia"
                                                         hide-details="auto"
                                                         :error-messages="errors"
@@ -316,7 +316,7 @@
                                                 :first-day-of-week="0"
                                                 locale="pl-pl"
                                                 no-title
-                                                v-model="data.agreement.dateFrom"
+                                                v-model="data.offer.dateFrom"
                                                 @input="dateFromPicker = false"
                                             ></v-date-picker>
                                         </v-menu>
@@ -333,11 +333,11 @@
                                             <template v-slot:activator="{ on, attrs }">
                                                 <validation-provider
                                                     v-slot="{ errors }"
-                                                    vid="agreement.dateTo"
+                                                    vid="offer.dateTo"
                                                     rules="required"
                                                 >
                                                     <v-text-field
-                                                        v-model="data.agreement.dateTo"
+                                                        v-model="data.offer.dateTo"
                                                         label="Data Zakończenia"
                                                         hide-details="auto"
                                                         :error-messages="errors"
@@ -352,7 +352,7 @@
                                                 :first-day-of-week="0"
                                                 locale="pl-pl"
                                                 no-title
-                                                v-model="data.agreement.dateTo"
+                                                v-model="data.offer.dateTo"
                                                 @input="dateToPicker = false"
                                             ></v-date-picker>
                                         </v-menu>
@@ -392,16 +392,15 @@
                                     <v-col cols="12">
                                         <validation-provider
                                             v-slot="{ errors }"
-                                            vid="offer.attachments"
-                                            rules="mimes:pdf"
+                                            vid="offer.attachment"
                                         >
                                             <v-file-input
                                                 label="Załącznik"
-                                                v-model="data.offer.attachments"
+                                                v-model="fileInput"
                                                 outlined
-                                                multiple
                                                 show-size
                                                 prepend-icon=""
+                                                @change="createBase64"
                                                 :error-messages="errors"
                                             ></v-file-input>
                                         </validation-provider>
@@ -449,6 +448,7 @@
 <script>
 import {mapActions, mapGetters} from "vuex";
 import {setInteractionMode, ValidationProvider, ValidationObserver} from "vee-validate";
+import {Base64} from 'js-base64';
 
 setInteractionMode('eager');
 
@@ -474,6 +474,7 @@ export default {
             stepThree: true,
             dateFromPicker: false,
             dateToPicker: false,
+            fileInput: null,
             data: {
                 company: {
                     id: null,
@@ -488,7 +489,7 @@ export default {
                     email: null,
                     phone: null,
                     website: null,
-                    categoryId: null,
+                    companyCategoryId: null,
                 },
                 offer: {
                     companyId: null,
@@ -496,13 +497,15 @@ export default {
                     name: null,
                     program: null,
                     schedule: null,
-                    categoryId: null,
-                    attachments: null
-                },
-                agreement: {
+                    offerCategoryId: null,
                     dateFrom: null,
                     dateTo: null,
-                }
+                    attachment: {
+                        content: null,
+                        name: null,
+                        mime: null,
+                    },
+                },
             }
         }
     },
@@ -523,7 +526,7 @@ export default {
     methods: {
         ...mapActions({
             toggleDialog: 'helpers/toggleCreateInternshipDialog',
-            snackbar: 'snackbar/setSnackbar',
+            setSnackbar: 'snackbar/setSnackbar',
             fetchCompanyCategories: 'company/fetchCompanyCategories',
             fetchCompanies: 'company/fetchCompanies',
             fetchCity: 'city/fetchCity',
@@ -531,15 +534,15 @@ export default {
             createStudentOwnInternship: 'student/createStudentOwnInternship'
         }),
 
-        submit() {
+        async submit() {
             this.showForm = false;
 
-            this.createStudentOwnInternship(this.data).then(() => {
-                this.toggleDialog();
-                this.setSnackbar('Udało się!', 'success');
+            await this.createStudentOwnInternship(this.data).then(() => {
+                this.toggleDialog(false);
+                this.setSnackbar({message: 'Udało się!', color: 'success'});
             }).catch((e) => {
-                if (e.response.status === 422) {
-                    console.log(e.response.data.errors);
+                if (e.response !== undefined && e.response.status === 422) {
+                    this.stepper = 1;
                     this.$refs.observerStepOne.setErrors(e.response.data.errors);
                     this.$refs.observerStepTwo.setErrors(e.response.data.errors);
                     this.$refs.observerStepThree.setErrors(e.response.data.errors);
@@ -600,6 +603,19 @@ export default {
                     this.data.company.city.postcode += '-';
             }
         },
+
+        createBase64(file) {
+            console.log(file);
+            const reader = new FileReader();
+
+            reader.onload = (e) => {
+                this.data.offer.attachment.name = file.name;
+                this.data.offer.attachment.mime = file.type;
+                this.data.offer.attachment.content = Base64.encode(e.target.result);
+            };
+
+            reader.readAsBinaryString(file);
+        }
     },
 
     created() {

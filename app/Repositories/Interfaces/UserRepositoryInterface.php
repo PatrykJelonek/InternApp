@@ -13,4 +13,6 @@ interface UserRepositoryInterface
     public function getInternships(int $userId, array $status = null);
 
     public function getUniversities();
+
+    public function getCompanies();
 }

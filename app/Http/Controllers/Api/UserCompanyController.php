@@ -3,11 +3,27 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Repositories\UserRepository;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 class UserCompanyController extends Controller
 {
+    /**
+     * @var UserRepository
+     */
+    private $userRepository;
+
+    /**
+     * UserCompanyController constructor.
+     *
+     * @param UserRepository $userRepository
+     */
+    public function __construct(UserRepository $userRepository)
+    {
+        $this->userRepository = $userRepository;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -15,13 +31,13 @@ class UserCompanyController extends Controller
      */
     public function index()
     {
-        $user = auth()->user();
+        $userCompanies = $this->userRepository->getCompanies();
 
-        return response([
-            'status' => 'success',
-            'data' => $user->companies,
-            'message' => null
-        ], Response::HTTP_OK);
+        if($userCompanies !== null) {
+            return \response($userCompanies, Response::HTTP_OK);
+        }
+
+        return \response(null, Response::HTTP_NO_CONTENT);
     }
 
     /**

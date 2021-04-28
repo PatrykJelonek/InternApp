@@ -6,7 +6,7 @@
         color="component-background"
     >
         <v-toolbar-title>
-            <b>InternApp</b>
+            <b>Intern<span class="green--text text--accent-4">App</span></b>
         </v-toolbar-title>
 
         <v-spacer></v-spacer>
@@ -30,7 +30,7 @@
                 plain
                 small
                 :ripple="false"
-                to="/dashboard/companies"
+                :to="{name: 'companies'}"
                 v-has="['admin','company_worker','company_owner','company_supervisor']"
             >
                 Firma
@@ -98,6 +98,13 @@
                         <v-icon dense>mdi-cog-outline</v-icon>
                     </v-list-item-icon>
                     <v-list-item-title>Ustawienia</v-list-item-title>
+                </v-list-item>
+                <v-divider v-has="['admin']"></v-divider>
+                <v-list-item v-has="['admin']" :to="{name: 'admin'}">
+                    <v-list-item-icon>
+                        <v-icon>mdi-account-outline</v-icon>
+                    </v-list-item-icon>
+                    <v-list-item-title>Panel Administratora</v-list-item-title>
                 </v-list-item>
                 <v-divider></v-divider>
                 <v-list-item>

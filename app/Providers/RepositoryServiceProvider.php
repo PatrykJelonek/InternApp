@@ -3,8 +3,10 @@
 namespace App\Providers;
 
 use App\Repositories\AgreementRepository;
+use App\Repositories\AttachmentRepository;
 use App\Repositories\CityRepository;
 use App\Repositories\Interfaces\AgreementRepositoryInterface;
+use App\Repositories\Interfaces\AttachmentRepositoryInterface;
 use App\Repositories\Interfaces\CityRepositoryInterface;
 use App\Repositories\Interfaces\InternshipRepositoryInterface;
 use App\Repositories\Interfaces\OfferCategoryRepositoryInterface;
@@ -40,6 +42,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(CityRepositoryInterface::class, CityRepository::class);
         $this->app->bind(OfferStatusRepositoryInterface::class, OfferStatusRepository::class);
         $this->app->bind(OfferCategoryRepositoryInterface::class, OfferCategoryRepository::class);
+        $this->app->bind(AttachmentRepositoryInterface::class, AttachmentRepository::class);
     }
 
     /**

@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\OfferStatus;
+use App\Constants\OfferStatusConstants;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -15,10 +15,12 @@ class OfferStatusesSeeder extends Seeder
      */
     public function run()
     {
-        foreach (OfferStatus::STATUSES as $STATUS) {
+        foreach (OfferStatusConstants::STATUSES as $STATUS) {
             DB::table('offer_statuses')->insert([
                 'name' => $STATUS,
-                'description' => OfferStatus::STATUS_DESCRIPTIONS[$STATUS],
+                'description' => OfferStatusConstants::STATUS_DESCRIPTIONS[$STATUS],
+                'display_name' => OfferStatusConstants::STATUS_DISPLAY_NAMES[$STATUS],
+                'hex_color' => OfferStatusConstants::STATUS_HEX_COLORS[$STATUS],
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
             ]);

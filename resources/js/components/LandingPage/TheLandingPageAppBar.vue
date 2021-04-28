@@ -3,19 +3,22 @@
         app
         flat
         clipped-left
-        color="component-background"
+        color="grey lighten-5"
     >
         <v-toolbar-title>
-            <b>InternApp</b>
+            <b>Intern<span class="green--text text--accent-4">App</span></b>
         </v-toolbar-title>
         <v-spacer></v-spacer>
         <v-btn
             outlined
             v-if="user"
-            color="primary"
+            small
+            dark
+            elevation="0"
+            color="green accent-4"
             :to="{name: 'dashboard'}"
         >
-            Panel
+            Panel Użytkownika
         </v-btn>
         <v-btn-toggle
             dense
@@ -30,7 +33,7 @@
             >
                 Logowanie
             </v-btn>
-            <v-divider  vertical></v-divider>
+            <v-divider vertical></v-divider>
             <v-btn
                 text
                 color="primary"

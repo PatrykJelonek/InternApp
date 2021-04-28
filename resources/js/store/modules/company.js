@@ -2,13 +2,15 @@ export default {
     namespaced: true,
 
     state: {
-        company: '',
+        company: null,
+        companyLoading: true,
         selectedCompany: null,
         selectedCompanyId: null,
         companyCategories: [],
         companyCategoriesLoading: true,
         companyUsers: [],
         companyOffers: [],
+        companyOffersLoading: true,
         companyAgreements: [],
         companies: [],
         companiesLoading: [],
@@ -36,8 +38,16 @@ export default {
             return state.company;
         },
 
+        companyLoading(state) {
+            return state.companyLoading;
+        },
+
         companyOffers(state) {
             return state.companyOffers;
+        },
+
+        companyOffersLoading(state) {
+            return state.companyOffersLoading;
         },
 
         companyAgreements(state) {
@@ -78,6 +88,10 @@ export default {
             state.company = data;
         },
 
+        SET_COMPANY_LOADING(state, data) {
+            state.companyLoading = data;
+        },
+
         SELECT_COMPANY(state, company) {
             state.selectedCompany = company;
         },
@@ -88,6 +102,10 @@ export default {
 
         SET_COMPANY_OFFERS(state, data) {
             state.companyOffers = data;
+        },
+
+        SET_COMPANY_OFFERS_LOADING(state, data) {
+            state.companyOffersLoading = data;
         },
 
         SET_COMPANY_AGREEMENTS(state, data) {
@@ -133,21 +151,27 @@ export default {
             }
         },
 
-        async fetchCompany({commit}, id) {
+        async fetchCompany({commit}, slug) {
+            commit('SET_COMPANY_LOADING', true);
             try {
-                let response = await axios.get(`/api/companies/${id}`);
-                commit('SET_COMPANY', response.data.data);
-            } catch(e) {
+                let response = await axios.get(`/api/companies/${slug}`);
+                commit('SET_COMPANY', response.data);
+                commit('SET_COMPANY_LOADING', false);
+            } catch (e) {
                 commit('SET_COMPANY', '');
+                commit('SET_COMPANY_LOADING', false);
             }
         },
 
-        async fetchCompanyOffers({commit}, id) {
+        async fetchCompanyOffers({commit}, slug) {
+            commit('SET_COMPANY_OFFERS_LOADING', true);
             try {
-                let response = await axios.get(`/api/companies/${id}/offers`);
-                commit('SET_COMPANY_OFFERS', response.data.data);
-            } catch(e) {
+                let response = await axios.get(`/api/companies/${slug}/offers`);
+                commit('SET_COMPANY_OFFERS', response.data);
+                commit('SET_COMPANY_OFFERS_LOADING', false);
+            } catch (e) {
                 commit('SET_COMPANY_OFFERS', []);
+                commit('SET_COMPANY_OFFERS_LOADING', false);
             }
         },
 
@@ -155,7 +179,7 @@ export default {
             try {
                 let response = await axios.get(`/api/companies/${id}/agreements`);
                 commit('SET_COMPANY_AGREEMENTS', response.data.data);
-            } catch(e) {
+            } catch (e) {
                 commit('SET_COMPANY_AGREEMENTS', []);
             }
         },
@@ -164,7 +188,7 @@ export default {
             try {
                 let response = await axios.get(`/api/companies/${id}/interns`);
                 commit('SET_INTERNS', response.data.data);
-            } catch(e) {
+            } catch (e) {
                 commit('SET_INTERNS', []);
             }
         },
@@ -175,7 +199,7 @@ export default {
                 let response = await axios.get(`/api/companies`);
                 commit('SET_COMPANIES', response.data);
                 commit('SET_COMPANIES_LOADING', false);
-            } catch(e) {
+            } catch (e) {
                 commit('SET_COMPANIES', []);
                 commit('SET_COMPANIES_LOADING', false);
             }
@@ -208,6 +232,6 @@ export default {
             return axios.post('/api/company/use-code', {
                 accessCode: code
             });
-        }
+        },
     },
 }

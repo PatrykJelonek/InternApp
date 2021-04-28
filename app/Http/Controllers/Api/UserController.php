@@ -76,7 +76,7 @@ class UserController extends Controller
         //Personal Data
         $user->first_name = $request->input("firstName");
         $user->last_name = $request->input("lastName");
-        $user->phone_number = $request->input("phone");
+        $user->phone = $request->input("phone");
 
         //Login Data
         $user->email = $request->input("email");

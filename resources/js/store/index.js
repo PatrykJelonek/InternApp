@@ -20,6 +20,8 @@ import tabs from "./modules/tabs";
 import sidebar from "./modules/sidebar";
 import task from "./modules/task";
 import helpers from "./modules/__helpers";
+import statistic from "./modules/statistic";
+import landingPage from "./modules/ladingPage";
 
 Vue.use(Vuex);
 
@@ -46,6 +48,8 @@ export default new Vuex.Store({
         sidebar,
         task,
         helpers,
+        statistic,
+        landingPage
     },
     strict: debug
 });

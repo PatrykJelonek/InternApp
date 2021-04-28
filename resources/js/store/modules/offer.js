@@ -6,6 +6,8 @@ export default {
         offers: [],
         offerCategories: [],
         offerCategoriesLoading: true,
+        offerStatuses: [],
+        offerStatusesLoading: true,
     },
 
     getters: {
@@ -24,6 +26,14 @@ export default {
         offerCategoriesLoading: state => {
             return state.offerCategoriesLoading;
         },
+
+        offerStatuses: state => {
+            return state.offerStatuses;
+        },
+
+        offerStatusesLoading: state => {
+            return state.offerStatusesLoading;
+        },
     },
 
     mutations: {
@@ -33,6 +43,14 @@ export default {
 
         SET_OFFER_CATEGORIES_LOADING(state, data) {
             state.offerCategoriesLoading = data;
+        },
+
+        SET_OFFER_STATUSES(state, data) {
+            state.offerStatuses = data;
+        },
+
+        SET_OFFER_STATUSES_LOADING(state, data) {
+            state.offerStatusesLoading = data;
         },
 
         SET_OFFERS(state, data) {
@@ -67,7 +85,7 @@ export default {
             commit('SET_OFFER_CATEGORIES_LOADING', true);
             try{
                 let response = await axios.get('/api/offers/categories');
-                commit('SET_OFFER_CATEGORIES', response.data.data);
+                commit('SET_OFFER_CATEGORIES', response.data);
                 commit('SET_OFFER_CATEGORIES_LOADING', false);
             } catch (e) {
                 commit('SET_OFFER_CATEGORIES', []);
@@ -75,8 +93,20 @@ export default {
             }
         },
 
+        async fetchOfferStatuses({commit}) {
+            commit('SET_OFFER_STATUSES_LOADING', true);
+            try{
+                let response = await axios.get('/api/offers/statuses');
+                commit('SET_OFFER_STATUSES', response.data);
+                commit('SET_OFFER_STATUSES_LOADING', false);
+            } catch (e) {
+                commit('SET_OFFER_STATUSES', []);
+                commit('SET_OFFER_STATUSES_LOADING', false);
+            }
+        },
+
         createOffer({commit}, offer) {
             return axios.post('/api/offers', offer);
-        }
+        },
     },
 }

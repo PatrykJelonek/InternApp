@@ -45,6 +45,15 @@ import StudentOffersList from "../components/Offers/StudentOffersList";
 import TheStudentOfferApplicationsList from "../components/Offers/TheStudentOfferApplicationsList";
 import TheStudentOffers from "../components/Offers/TheStudentOffers";
 import LandingPage from "../views/LandingPage";
+import Admin from "../views/Admin";
+import TheAdminOffers from "../components/Admin/TheAdminOffers";
+import TheAdminStatistics from "../components/Admin/TheAdminStatistics";
+import TheAdminUsers from "../components/Admin/TheAdminUsers";
+import TheCompanyOverview from "../components/Company/Overview/TheCompanyOverview";
+import TheCompanyOffers from "../components/Company/Offers/TheCompanyOffers";
+import TheCompanyAgreements from "../components/Company/Agreements/TheCompanyAgreements";
+import TheCompanyWorkers from "../components/Company/Workers/TheCompanyWorkers";
+import TheCompanySettings from "../components/Company/Settings/TheCompanySettings";
 
 Vue.use(VueRouter);
 
@@ -110,7 +119,6 @@ const router = new VueRouter({
         {
             title: 'Dashboard',
             path: '/dashboard',
-            name: 'dashboard',
             beforeEnter: (to, from, next) => {
                 if (!store.getters['auth/authenticated']) {
                     return next({name: 'login'})
@@ -125,6 +133,11 @@ const router = new VueRouter({
                 title: 'Dashboard'
             },
             children: [
+                {
+                    path: '/dashboard/',
+                    name: 'dashboard',
+                    component: Welcome
+                },
                 {
                     path: 'users/new-status',
                     name: 'user-statuses',
@@ -147,19 +160,46 @@ const router = new VueRouter({
                     path: '/dashboard/companies',
                     name: 'companies',
                     component: Companies,
-                    meta: { have: ['admin','company_worker'], title: 'Firma'}
+                    meta: { have: ['admin','company_worker','company_owner'], title: 'Firma'}
                 },
                 {
-                    path: '/company/:id',
-                    name: 'company',
+                    path: '/dashboard/companies/:slug',
                     component: Company,
+                    children: [
+                        {
+                            path: '/dashboard/companies/:slug/',
+                            name: 'company',
+                            component: TheCompanyOverview,
+                        },
+                        {
+                            path: '/dashboard/companies/:slug/offers',
+                            name: 'company-offers',
+                            component: TheCompanyOffers
+                        },
+                        {
+                            path: '/dashboard/companies/:slug/agreements',
+                            name: 'company-agreements',
+                            component: TheCompanyAgreements
+                        },
+                        {
+                            path: '/dashboard/companies/:slug/workers',
+                            name: 'company-workers',
+                            component: TheCompanyWorkers
+                        },
+                        {
+                            path: '/dashboard/companies/:slug/settings',
+                            name: 'company-settings',
+                            component: TheCompanySettings
+                        },
+                    ]
                 },
+
                 {
                     path: '/dashboard/universities/:slug',
                     component: University,
                     children: [
                         {
-                            path: '',
+                            path: '/dashboard/universities/:slug/',
                             name: 'university',
                             component: TheUniversityOverview,
                         },
@@ -301,6 +341,31 @@ const router = new VueRouter({
                             path: '/internships/:internshipId/students/:studentIndex',
                             name: 'internship-student',
                             meta: {have: ['admin','student','company_worker','university_worker']},
+                        }
+                    ]
+                },
+                {
+                    path: '/dashboard/admin',
+                    component: Admin,
+                    meta: {have: ['admin']},
+                    children: [
+                        {
+                            path: '/dashboard/admin/statistics',
+                            name: 'admin',
+                            component: TheAdminStatistics,
+                            meta: {have: ['admin']},
+                        },
+                        {
+                            path: '/dashboard/admin/offers',
+                            name: 'admin-offers',
+                            component: TheAdminOffers,
+                            meta: {have: ['admin']},
+                        },
+                        {
+                            path: '/dashboard/admin/users',
+                            name: 'admin-users',
+                            component: TheAdminUsers,
+                            meta: {have: ['admin']},
                         }
                     ]
                 }

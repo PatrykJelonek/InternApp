@@ -2,8 +2,8 @@
     <v-container>
         <validation-observer ref="observer" v-slot="{ validate }">
             <v-form>
-                <v-row class="d-flex justify-center">
-                    <v-col cols="4">
+                <v-row>
+                    <v-col cols="6">
                         <validation-provider v-slot="{ errors }"  vid="firstName" rules="required">
                             <v-text-field
                                 label="Imię"
@@ -16,7 +16,7 @@
                             ></v-text-field>
                         </validation-provider>
                     </v-col>
-                    <v-col cols="4">
+                    <v-col cols="6">
                         <validation-provider v-slot="{ errors }"  vid="lastName" rules="required">
                             <v-text-field
                                 label="Nazwisko"
@@ -29,9 +29,7 @@
                             ></v-text-field>
                         </validation-provider>
                     </v-col>
-                </v-row>
-                <v-row class="d-flex justify-center">
-                    <v-col cols="8">
+                    <v-col cols="12">
                         <validation-provider v-slot="{ errors }"  vid="email" rules="required|email">
                             <v-text-field
                                 label="Email"
@@ -45,9 +43,7 @@
                             ></v-text-field>
                         </validation-provider>
                     </v-col>
-                </v-row>
-                <v-row class="d-flex justify-center">
-                    <v-col cols="8">
+                    <v-col cols="12">
                         <validation-provider v-slot="{ errors }"  vid="phone" rules="required|max:11">
                             <v-text-field
                                 label="Numer Telefonu"
@@ -62,9 +58,7 @@
                             ></v-text-field>
                         </validation-provider>
                     </v-col>
-                </v-row>
-                <v-row class="d-flex justify-center">
-                    <v-col cols="8">
+                    <v-col cols="12">
                         <validation-provider v-slot="{ errors }"  vid="password" rules="required|min:6">
                             <v-text-field
                                 label="Hasło"
@@ -78,9 +72,7 @@
                             ></v-text-field>
                         </validation-provider>
                     </v-col>
-                </v-row>
-                <v-row class="d-flex justify-center">
-                    <v-col cols="8">
+                    <v-col cols="12">
                         <validation-provider v-slot="{ errors }"  vid="passwordRepeat" rules="required_if:password|confirmed:password">
                             <v-text-field
                                 label="Powtórz Hasło"
@@ -94,9 +86,7 @@
                             ></v-text-field>
                         </validation-provider>
                     </v-col>
-                </v-row>
-                <v-row class="d-flex justify-center">
-                    <v-col cols="8">
+                    <v-col cols="12">
                         <validation-provider v-slot="{ errors }"  vid="acceptedRules" rules="min_value:1">
                             <v-checkbox
                                 v-model="account.acceptedRules"
@@ -123,11 +113,15 @@
                         </validation-provider>
                     </v-col>
                 </v-row>
-                <v-row class="d-flex justify-center">
-                    <v-col cols="8" class="d-flex justify-end">
-                        <v-btn color="blue accent-4" dark large @click="submitForm">Rejestruj</v-btn>
+                <v-row>
+                    <v-col cols="6" class="d-flex justify-start">
+                        <v-btn color="secondary" text :to="{name: 'login'}">Logowanie</v-btn>
+                    </v-col>
+                    <v-col cols="6" class="d-flex justify-end">
+                        <v-btn color="primary" outlined @click="submitForm">Załóż Konto</v-btn>
                     </v-col>
                 </v-row>
+
             </v-form>
         </validation-observer>
     </v-container>

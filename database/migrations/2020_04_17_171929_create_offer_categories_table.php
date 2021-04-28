@@ -17,6 +17,7 @@ class CreateOfferCategoriesTable extends Migration
             $table->id();
             $table->string('name', 32)->unique();
             $table->string('description', 128)->nullable();
+            $table->string('display_name', 128)->nullable();
             $table->dateTime('created_at', 0);
             $table->dateTime('updated_at', 0);
         });

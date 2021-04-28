@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\OfferCategory;
+use App\Constants\OfferCategoryConstants;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -15,10 +15,11 @@ class OfferCategoriesSeeder extends Seeder
      */
     public function run()
     {
-        foreach (OfferCategory::BASIC_CATEGORIES as $CATEGORY) {
+        foreach (OfferCategoryConstants::BASIC_CATEGORIES as $CATEGORY) {
             DB::table('offer_categories')->insert([
                 'name' => $CATEGORY,
-                'description' => OfferCategory::BASIC_CATEGORY_DESCRIPTIONS[$CATEGORY],
+                'description' => OfferCategoryConstants::BASIC_CATEGORY_DESCRIPTIONS[$CATEGORY],
+                'display_name' => OfferCategoryConstants::BASIC_CATEGORY_DISPLAY_NAMES[$CATEGORY],
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s')
             ]);

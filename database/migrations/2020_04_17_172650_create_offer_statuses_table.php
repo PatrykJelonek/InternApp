@@ -17,6 +17,8 @@ class CreateOfferStatusesTable extends Migration
             $table->id();
             $table->string('name', 16)->unique();
             $table->string('description', 128)->nullable();
+            $table->string('display_name', 128)->nullable();
+            $table->string('hex_color', 7)->nullable();
             $table->dateTime('created_at', 0);
             $table->dateTime('updated_at', 0);
         });

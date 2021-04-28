@@ -8,6 +8,7 @@
 
 namespace App\Repositories;
 
+use App\Constants\OfferStatusConstants;
 use App\Models\Offer;
 use App\Repositories\Interfaces\OfferRepositoryInterface;
 use Carbon\Carbon;
@@ -18,9 +19,28 @@ class OfferRepository implements OfferRepositoryInterface
 {
     private $with = ['status', 'category'];
 
-    public function __construct()
-    {
+    /**
+     * @var OfferCategoryRepository
+     */
+    private $offerCategoryRepository;
 
+    /**
+     * @var OfferStatusRepository
+     */
+    private $offerStatusRepository;
+
+    /**
+     * OfferRepository constructor.
+     *
+     * @param OfferCategoryRepository $offerCategoryRepository
+     * @param OfferStatusRepository   $offerStatusRepository
+     */
+    public function __construct(
+        OfferCategoryRepository $offerCategoryRepository,
+        OfferStatusRepository $offerStatusRepository
+    ) {
+        $this->offerCategoryRepository = $offerCategoryRepository;
+        $this->offerStatusRepository = $offerStatusRepository;
     }
 
     public function getOfferById(int $id)
@@ -33,28 +53,63 @@ class OfferRepository implements OfferRepositoryInterface
         return Offer::with($this->with)->where('slug', $slug)->get();
     }
 
-    public function getAllOffers(array $categories)
+    /**
+     * @param array|null $categories
+     * @param array|null $statuses
+     * @param int|null   $limit
+     *
+     * @return Builder[]|\Illuminate\Database\Eloquent\Collection
+     */
+    public function getAllOffers(?array $categories, ?array $statuses, ?int $limit)
     {
-        return Offer::with(['status'])->whereHas(
-            'status',
-            function (Builder $query) use ($categories) {
-                $query->where('name', 'IN', $categories);
-            }
-        )->get();
+        $offers = Offer::with(['status','category','company']);
+
+        if ($statuses !== null) {
+            $offers->whereHas(
+                'status',
+                function (Builder $query) use ($statuses) {
+                    $query->where('name', $statuses);
+                }
+            );
+        }
+
+        if ($categories !== null) {
+            $offers->whereHas(
+                'category',
+                function (Builder $query) use ($categories) {
+                    $query->where('name',  $categories);
+                }
+            );
+        }
+
+        if ($limit !== null) {
+            $offers->limit($limit);
+        }
+
+        $offers->orderByDesc('created_at');
+
+        return $offers->get();
     }
 
-    public function createOffer(array $data)
+    /**
+     * @param array $data
+     *
+     * @return Offer|null
+     */
+    public function createOffer(array $data): ?Offer
     {
         $offer = new Offer();
-        $offer->company_id = $data['companyId'];
+        $offer->company_id = $data['companyId'] ?? 1;
         $offer->user_id = $data['userId'];
         $offer->name = $data['name'];
-        $offer->places_number = $data['placesNumber'];
-        $offer->program = $data['program'];
-        $offer->schedule = $data['schedule'];
+        $offer->places_number = $data['placesNumber'] ?? 1;
+        $offer->program = $data['program'] ?? '';
+        $offer->schedule = $data['schedule'] ?? '';
         $offer->offer_category_id = $data['offerCategoryId'];
-        $offer->offer_status_id = $data['offerStatusId'];
-        $offer->company_supervisor_id = $data['companySupervisorId'];
+        $offer->offer_status_id = $data['offerStatusId'] ?? $this->offerStatusRepository->getOfferStatusByName(
+                OfferStatusConstants::STATUS_NEW
+            )->toArray()['id'];
+        $offer->company_supervisor_id = $data['companySupervisorId'] ?? null;
         $offer->slug = Str::slug($data['name']);
         $offer->interview = $data['interview'] ?? false;
         $offer->created_at = Carbon::today();

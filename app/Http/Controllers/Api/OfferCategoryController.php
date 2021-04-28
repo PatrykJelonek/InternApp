@@ -4,11 +4,27 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\OfferCategory;
+use App\Repositories\OfferCategoryRepository;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 class OfferCategoryController extends Controller
 {
+    /**
+     * @var OfferCategoryRepository
+     */
+    private $offerCategoryRepository;
+
+    /**
+     * OfferCategoryController constructor.
+     *
+     * @param OfferCategoryRepository $offerCategoryRepository
+     */
+    public function __construct(OfferCategoryRepository $offerCategoryRepository)
+    {
+        $this->offerCategoryRepository = $offerCategoryRepository;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -16,20 +32,13 @@ class OfferCategoryController extends Controller
      */
     public function index()
     {
-        $offerCategories = OfferCategory::all();
+        $offerCategories = $this->offerCategoryRepository->getAllOfferCategories();
 
-        if (isset($offerCategories))
-            return response([
-                'status' => 'success',
-                'data' => $offerCategories,
-                'message' => null
-            ], Response::HTTP_OK);
-        else
-        return response([
-            'status' => 'error',
-            'data' => null,
-            'message' => 'nie znaleziono typów'
-        ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        if (isset($offerCategories)) {
+            return response($offerCategories, Response::HTTP_OK);
+        }
+
+        return response(null, Response::HTTP_NO_CONTENT);
     }
 
     /**

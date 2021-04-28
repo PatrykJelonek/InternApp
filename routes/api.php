@@ -33,6 +33,8 @@ Route::get('/refresh', [
     'uses' => 'Api\Auth\AuthController@refresh'
 ]);
 
+Route::get('/helpers/offers', 'Api\LandingPageController@offers');
+
 Route::resource('/users', 'Api\UserController');
 
 //For Logged Users
@@ -48,7 +50,7 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::resource('/user-universities', 'Api\UserUniversityController');
     Route::resource('/user-companies', 'Api\UserCompanyController');
     Route::resource('/offers/categories', 'Api\OfferCategoryController');
-    Route::resource('/offers', 'Api\OfferController');
+//    Route::resource('/offers', 'Api\OfferController');
     Route::resource('/agreements', 'Api\AgreementController');
     Route::resource('/internships', 'Api\InternshipController');
     Route::resource('/journals', 'Api\JournalController');
@@ -62,7 +64,7 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     //Route::get('/universities/{id}/agreements', 'Api\UniversityController@getUniversityAgreements');
     //Route::get('/universities/{id}/internships', 'Api\UniversityController@getInternships');
     //Route::get('/universities/{university_id}/students', 'Api\UniversityStudentController@index');
-    Route::get('/companies/{id}/offers', 'Api\CompanyController@getCompanyOffers');
+    //Route::get('/companies/{id}/offers', 'Api\CompanyController@getCompanyOffers');
     Route::get('/companies/{id}/agreements', 'Api\CompanyController@getCompanyAgreements');
     Route::get('/companies/{id}/interns', 'Api\CompanyController@getInterns');
     Route::post('/agreements/{id}/active', 'Api\AgreementController@active');
@@ -91,10 +93,14 @@ Route::group(['middleware' => ['jwt.verify']], function() {
 
     # Companies
     Route::get('/companies', 'Api\CompanyController@index');
-
-    # Company Categories
+    Route::get('/companies/{slug}', 'Api\CompanyController@show');
+    Route::get('/companies/{slug}/offers','Api\CompanyController@getCompanyOffers');
     Route::get('/companies/categories', 'Api\CompanyCategoryController@index');
 
+    # Offers
+    Route::get('/offers/statuses', 'Api\OfferStatusController@index');
+    Route::get('/offers/categories', 'Api\OfferCategoryController@index');
+    Route::post('/offers', 'Api\OfferController@store');
 
     # Internship Tasks
     Route::post('/internships', 'Api\InternshipController@store');
@@ -119,8 +125,18 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::get('/me/internships/{status?}', 'Api\UserController@getUserInternships')->where('status', \App\Constants\InternshipStatusConstants::STATUS_ACCEPTED.'|'.\App\Constants\InternshipStatusConstants::STATUS_NEW);
     Route::get('/me/internships', 'Api\UserController@getUserInternships');
     Route::get('/me/universities', 'Api\UserUniversityController@index');
+    Route::get('/me/companies', 'Api\UserCompanyController@index');
     Route::get('/me/notifications', 'Api\NotificationController@index');
     Route::get('/me/offers','Api\StudentController@getAvailableInternshipOffers');
+
+    # Statistics
+    Route::get('/statistics/offers/count','Api\StatisticController@getNumberOfOffers');
+    Route::get('/statistics/users/count','Api\StatisticController@getNumberOfUsers');
+    Route::get('/statistics/agreements/count','Api\StatisticController@getNumberOfAgreements');
+    Route::get('/statistics/universities/count','Api\StatisticController@getNumberOfUniversities');
+    Route::get('/statistics/companies/count','Api\StatisticController@getNumberOfCompanies');
+    Route::get('/statistics/attachments/count','Api\StatisticController@getNumberOfAttachments');
+    Route::get('/statistics/offers/attachments/count','Api\StatisticController@getNumberOfOffersAttachments');
 
     Route::get('/test', 'Api\TestController@test');
 

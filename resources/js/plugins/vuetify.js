@@ -6,18 +6,14 @@ Vue.use(Vuetify);
 
 export default new Vuetify({
     theme: {
-        dark: true,
+        dark: false,
         options: {
             customProperties: true,
-            themeCache: {
-                get: key => localStorage.getItem(key),
-                set: (key, value) => localStorage.setItem(key, value),
-            },
         },
         themes: {
             light: {
                 //primary: '#2757FF',
-                primary: '#3cdc96',
+                primary: '#00C853',
                 secondary: '#9DA0A5',
                 //background: '#f7f7fa',
                 navigationDrawerExpanded: '#efeff5',
@@ -28,7 +24,7 @@ export default new Vuetify({
             },
             dark: {
                 //primary: '#1976D2',
-                primary: '#0EB251',
+                primary: '#00C853',
                 secondary: '#9DA0A5',
                 accent: '#82B1FF',
                 error: '#FF5252',

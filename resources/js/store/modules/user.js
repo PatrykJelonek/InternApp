@@ -9,6 +9,7 @@ export default {
         validationErrors: '',
         userUniversities: [],
         userCompanies: [],
+        userCompaniesLoading: true,
         roles: [],
         journalEntries: [],
         internships: [],
@@ -32,6 +33,10 @@ export default {
 
         userCompanies(state) {
             return state.userCompanies;
+        },
+
+        userCompaniesLoading(state) {
+            return state.userCompaniesLoading;
         },
 
         roles(state) {
@@ -92,6 +97,10 @@ export default {
 
         SET_USER_COMPANIES(state, data) {
             state.userCompanies = data;
+        },
+
+        SET_USER_COMPANIES_LOADING(state, data) {
+            state.userCompaniesLoading = data;
         },
 
         SET_ROLES(state, data) {
@@ -170,11 +179,14 @@ export default {
         },
 
         async fetchUserCompanies({ commit }) {
+            commit('SET_USER_COMPANIES_LOADING', true);
             try {
-                let response = await axios.get('/api/user-companies');
-                commit('SET_USER_COMPANIES', response.data.data);
+                let response = await axios.get('/api/me/companies');
+                commit('SET_USER_COMPANIES', response.data);
+                commit('SET_USER_COMPANIES_LOADING', false);
             } catch (e) {
                 commit('SET_USER_COMPANIES', []);
+                commit('SET_USER_COMPANIES_LOADING', false);
             }
         },
 

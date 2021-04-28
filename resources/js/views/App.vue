@@ -35,7 +35,7 @@
            </v-card>
         </v-dialog>
         <v-main>
-            <v-container :fluid="$vuetify.breakpoint.mobile">
+            <v-container :fluid="$vuetify.breakpoint.mobile" v-bind:class="fillHeight ? 'fill-height' : ''">
                 <router-view></router-view>
             </v-container>
         </v-main>
@@ -107,6 +107,7 @@
         computed: {
             ...mapGetters({
                 user: 'auth/user',
+                fillHeight: 'helpers/fillHeight'
             }),
 
             theme(){

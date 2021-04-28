@@ -2,8 +2,8 @@
     <v-container>
         <validation-observer ref="observer" v-slot="{ validate }">
             <v-form>
-                <v-row class="d-flex justify-center">
-                    <v-col cols="8">
+                <v-row>
+                    <v-col cols="12">
                         <validation-provider v-slot="{ errors }"  vid="email" rules="requiredEmail|email">
                             <v-text-field
                                 label="Email"
@@ -17,9 +17,7 @@
                             ></v-text-field>
                         </validation-provider>
                     </v-col>
-                </v-row>
-                <v-row class="d-flex justify-center">
-                    <v-col cols="8">
+                    <v-col cols="12">
                         <validation-provider v-slot="{ errors }"  vid="password" rules="requiredPassword">
                             <v-text-field
                                 label="Hasło"
@@ -34,9 +32,12 @@
                         </validation-provider>
                     </v-col>
                 </v-row>
-                <v-row class="d-flex justify-center">
-                    <v-col cols="8" class="d-flex justify-end">
-                        <v-btn color="blue accent-4" type="submit" dark large @click="submit">Zaloguj Się</v-btn>
+                <v-row>
+                    <v-col cols="6" class="d-flex justify-start">
+                        <v-btn color="secondary" text type="submit" dark :to="{name: 'register'}">Rejestracja</v-btn>
+                    </v-col>
+                    <v-col cols="6" class="d-flex justify-end">
+                        <v-btn color="primary" outlined type="submit" dark @click="submit">Zaloguj Się</v-btn>
                     </v-col>
                 </v-row>
             </v-form>
