@@ -3,6 +3,7 @@
         v-model="createOfferDialog"
         persistent
         max-width="800px"
+        :fullscreen="this.$vuetify.breakpoint.smAndDown"
     >
         <expand-card
             title="Dodaj Ofertę"

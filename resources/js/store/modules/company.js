@@ -11,6 +11,8 @@ export default {
         companyUsers: [],
         companyOffers: [],
         companyOffersLoading: true,
+        companyWorkers: [],
+        companyWorkersLoading: true,
         companyAgreements: [],
         companies: [],
         companiesLoading: [],
@@ -48,6 +50,14 @@ export default {
 
         companyOffersLoading(state) {
             return state.companyOffersLoading;
+        },
+
+        companyWorkers(state) {
+            return state.companyWorkers;
+        },
+
+        companyWorkersLoading(state) {
+            return state.companyWorkersLoading;
         },
 
         companyAgreements(state) {
@@ -106,6 +116,14 @@ export default {
 
         SET_COMPANY_OFFERS_LOADING(state, data) {
             state.companyOffersLoading = data;
+        },
+
+        SET_COMPANY_WORKERS(state, data) {
+            state.companyWorkers = data;
+        },
+
+        SET_COMPANY_WORKERS_LOADING(state, data) {
+            state.companyWorkersLoading = data;
         },
 
         SET_COMPANY_AGREEMENTS(state, data) {
@@ -172,6 +190,18 @@ export default {
             } catch (e) {
                 commit('SET_COMPANY_OFFERS', []);
                 commit('SET_COMPANY_OFFERS_LOADING', false);
+            }
+        },
+
+        async fetchCompanyWorkers({commit}, slug) {
+            commit('SET_COMPANY_WORKERS_LOADING', true);
+            try {
+                let response = await axios.get(`/api/companies/${slug}/workers`);
+                commit('SET_COMPANY_WORKERS', response.data);
+                commit('SET_COMPANY_WORKERS_LOADING', false);
+            } catch (e) {
+                commit('SET_COMPANY_WORKERS', []);
+                commit('SET_COMPANY_WORKERS_LOADING', false);
             }
         },
 

@@ -40,7 +40,7 @@
                     <validation-provider
                         v-slot="{ errors }"
                         vid="offer.places_number"
-                        rules="required"
+                        rules="required|min_value:1"
                     >
                         <v-text-field
                             label="Ilość Miejsc"
@@ -49,6 +49,25 @@
                             hide-details="auto"
                             :error-messages="errors"
                         ></v-text-field>
+                    </validation-provider>
+                </v-col>
+                <v-col cols="12">
+                    <validation-provider
+                        v-slot="{ errors }"
+                        vid="offer.companySupervisorId"
+                        rules="required"
+                    >
+                        <v-autocomplete
+                            label="Opiekun Praktyk"
+                            v-model="offer.companySupervisorId"
+                            :items="companyWorkers"
+                            :item-text="(item) => item.first_name + ' ' + item.last_name"
+                            item-value="id"
+                            :loading="companyWorkersLoading"
+                            outlined
+                            hide-details="auto"
+                            :error-messages="errors"
+                        ></v-autocomplete>
                     </validation-provider>
                 </v-col>
                 <v-col cols="12">
@@ -124,6 +143,7 @@
                         :nudge-right="40"
                         transition="scale-transition"
                         offset-y
+                        nudge-left="50px"
                         min-width="auto"
                     >
                         <template v-slot:activator="{ on, attrs }">
@@ -148,6 +168,7 @@
                             :first-day-of-week="0"
                             locale="pl-pl"
                             no-title
+                            :min="getIncrementDateTo(offer.dateFrom, [1, 'd'])"
                             v-model="offer.dateTo"
                             @input="dateToPicker = false"
                         ></v-date-picker>
@@ -199,6 +220,7 @@
 <script>
 import {mapActions, mapGetters} from "vuex";
 import {setInteractionMode, ValidationProvider, ValidationObserver} from "vee-validate";
+import moment from 'moment';
 import {Base64} from 'js-base64';
 
 setInteractionMode('eager');
@@ -239,6 +261,8 @@ export default {
             companyCategoriesLoading: 'company/companyCategoriesLoading',
             offerCategories: 'offer/offerCategories',
             offerCategoriesLoading: 'offer/offerCategoriesLoading',
+            companyWorkers: 'company/companyWorkers',
+            companyWorkersLoading: 'company/companyWorkersLoading',
         }),
     },
 
@@ -246,6 +270,7 @@ export default {
         ...mapActions({
             setSnackbar: 'snackbar/setSnackbar',
             fetchOfferCategories: 'offer/fetchOfferCategories',
+            fetchCompanyWorkers: 'company/fetchCompanyWorkers',
             createOffer: 'offer/createOffer',
         }),
 
@@ -255,18 +280,31 @@ export default {
             }).catch((e) => {
                 if (e.response !== undefined && e.response.status === 422) {
                     this.$refs.observer.setErrors(e.response.data.errors);
-               }
+                }
             });
         },
 
         createBase64(file) {
 
+        },
+
+        getIncrementDateTo(date, incrementValue) {
+            if(date !== null) {
+                return moment(date).add(...incrementValue).format('YYYY-MM-DD');
+            }
+            return moment().format('YYYY-MM-DD');
         }
     },
 
     created() {
         this.offer.companySupervisorId = this.company.id;
         this.fetchOfferCategories().then(() => {
+
+        }).catch((e) => {
+
+        });
+
+        this.fetchCompanyWorkers(this.$route.params.slug).then(() => {
 
         }).catch((e) => {
 

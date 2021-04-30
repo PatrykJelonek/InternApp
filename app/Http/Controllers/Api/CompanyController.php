@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Requests\CompanyOffersRequest;
 use App\Http\Requests\CompanyShowRequest;
+use App\Http\Requests\GetCompanyWorkersRequest;
 use App\Models\Agreement;
 use App\Models\Company;
 use App\Http\Controllers\Controller;
@@ -380,5 +381,15 @@ class CompanyController extends Controller
             ],
             Response::HTTP_OK
         );
+    }
+
+    public function getCompanyWorkers(GetCompanyWorkersRequest $request, $slug) {
+        $companyWorkers = $this->companyRepository->getCompanyWorkers($slug);
+
+        if(!empty($companyWorkers)) {
+            return response($companyWorkers, Response::HTTP_OK);
+        }
+
+        return response(null, Response::HTTP_NO_CONTENT);
     }
 }

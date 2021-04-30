@@ -95,6 +95,7 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::get('/companies', 'Api\CompanyController@index');
     Route::get('/companies/{slug}', 'Api\CompanyController@show');
     Route::get('/companies/{slug}/offers','Api\CompanyController@getCompanyOffers');
+    Route::get('/companies/{slug}/workers','Api\CompanyController@getCompanyWorkers');
     Route::get('/companies/categories', 'Api\CompanyCategoryController@index');
 
     # Offers

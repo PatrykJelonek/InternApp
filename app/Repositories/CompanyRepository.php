@@ -10,6 +10,7 @@ namespace App\Repositories;
 
 use App\Models\Company;
 use App\Models\Offer;
+use App\Models\User;
 use App\Repositories\Interfaces\CompanyRepositoryInterface;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
@@ -116,5 +117,30 @@ class CompanyRepository implements CompanyRepositoryInterface
         }
 
         return $companyOffers->get();
+    }
+
+    public function getCompanyWorkers(string $slug, ?array $roles = null, ?array $statuses = null, ?int $limit = null)
+    {
+        $companyWorkers = User::with(['status'])->whereHas('companies', function (Builder $query) use ($slug) {
+            $query->where(['slug' => $slug]);
+        });
+
+        if (!empty($roles)) {
+            $companyWorkers->whereHas('roles', function (Builder $query) use ($roles) {
+               $query->where(['name' => $roles]);
+            });
+        }
+
+        if (!empty($statuses)) {
+            $companyWorkers->whereHas('status', function (Builder $query) use ($statuses) {
+               $query->where(['name' => $statuses]);
+            });
+        }
+
+        if($limit !== null) {
+            $companyWorkers->limit($limit);
+        }
+
+        return $companyWorkers->get();
     }
 }

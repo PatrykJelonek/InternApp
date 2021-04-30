@@ -27,7 +27,7 @@ class User extends Model implements AuthenticatableContract, JWTSubject
 
     public function status()
     {
-        return $this->hasOne('App\Models\UserStatuses');
+        return $this->hasOne('App\Models\UserStatus','id','user_status_id');
     }
 
     public function student()
