@@ -8,6 +8,7 @@
 
 namespace App\Repositories;
 
+use App\Constants\OfferStatusConstants;
 use App\Models\Agreement;
 use App\Models\Attachment;
 use App\Models\Company;
@@ -16,6 +17,7 @@ use App\Models\OfferAttachment;
 use App\Models\University;
 use App\Models\User;
 use App\Repositories\Interfaces\StatisticRepositoryInterface;
+use Illuminate\Database\Eloquent\Builder;
 
 class StatisticRepository implements StatisticRepositoryInterface
 {
@@ -53,5 +55,23 @@ class StatisticRepository implements StatisticRepositoryInterface
     public function getNumberOfAllOffersAttachments()
     {
         return OfferAttachment::count();
+    }
+
+    public function getNumberOfAllNewOffers()
+    {
+        return Offer::whereHas(
+            'status',
+            function (Builder $query) {
+                $query->where(
+                    [
+                        'name' => [
+                            OfferStatusConstants::STATUS_NEW,
+                            OfferStatusConstants::STATUS_DRAFT_NEW,
+                            OfferStatusConstants::STATUS_STUDENT_NEW,
+                        ],
+                    ]
+                );
+            }
+        )->count();
     }
 }

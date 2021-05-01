@@ -46,14 +46,15 @@ import TheStudentOfferApplicationsList from "../components/Offers/TheStudentOffe
 import TheStudentOffers from "../components/Offers/TheStudentOffers";
 import LandingPage from "../views/LandingPage";
 import Admin from "../views/Admin";
-import TheAdminOffers from "../components/Admin/TheAdminOffers";
-import TheAdminStatistics from "../components/Admin/TheAdminStatistics";
-import TheAdminUsers from "../components/Admin/TheAdminUsers";
+import TheAdminOffers from "../components/Admin/Offers/TheAdminOffers";
+import TheAdminStatistics from "../components/Admin/Statistics/TheAdminStatistics";
+import TheAdminUsers from "../components/Admin/Users/TheAdminUsers";
 import TheCompanyOverview from "../components/Company/Overview/TheCompanyOverview";
 import TheCompanyOffers from "../components/Company/Offers/TheCompanyOffers";
 import TheCompanyAgreements from "../components/Company/Agreements/TheCompanyAgreements";
 import TheCompanyWorkers from "../components/Company/Workers/TheCompanyWorkers";
 import TheCompanySettings from "../components/Company/Settings/TheCompanySettings";
+import TheAdminSettings from "../components/Admin/Settings/TheAdminSettings";
 
 Vue.use(VueRouter);
 
@@ -365,6 +366,12 @@ const router = new VueRouter({
                             path: '/dashboard/admin/users',
                             name: 'admin-users',
                             component: TheAdminUsers,
+                            meta: {have: ['admin']},
+                        },
+                        {
+                            path: '/dashboard/admin/settings',
+                            name: 'admin-settings',
+                            component: TheAdminSettings,
                             meta: {have: ['admin']},
                         }
                     ]

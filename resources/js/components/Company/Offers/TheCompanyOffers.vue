@@ -1,5 +1,5 @@
 <template>
-    <v-row no-gutters >
+    <v-row no-gutters>
         <create-offer-dialog></create-offer-dialog>
         <v-col cols="12">
             <expand-card title="Lista Ofert" :description="`Lista ofert przypisanych do ${company.name}`" class="mt-10">
@@ -120,7 +120,7 @@
 
 <script>
 import ExpandCard from "../../_Helpers/ExpandCard";
-import {mapActions, mapGetters} from "vuex";
+import {mapActions, mapGetters, mapState} from "vuex";
 import moment from "moment";
 import FormDialog from "../../_General/FormDialog";
 import CreateOfferDialog from "./CreateOfferDialog";
@@ -145,11 +145,11 @@ export default {
                 {text: 'Nazwa', value: 'name'},
                 {text: 'Dostępne Miejsca', value: 'places_number'},
                 {text: 'Kategoria', value: 'category.display_name'},
-                {text: 'Opiekun', value: 'supervisor'},
+                {text: 'Opiekun', value: 'supervisor', sortable: false},
                 {text: 'Od', value: 'date_from'},
                 {text: 'Do', value: 'date_to'},
                 {text: 'Interview', value: 'interview'},
-                {text: 'Status', value: 'status'},
+                {text: 'Status', value: 'status', sortable: false},
             ],
             categories: [
                 {id: 1, name: 'programing', display_name: 'Programowanie'},
@@ -166,7 +166,7 @@ export default {
 
         formatDate(date) {
             if (date) {
-                return this.moment(date).format('DD.MM.YYYY');
+                return moment(date).format('DD.MM.YYYY');
             }
 
             return '---';
@@ -209,28 +209,35 @@ export default {
                 let statuses = this.search.statuses.map(x => x['name']);
 
                 this.searchedItems = this.companyOffers.filter((offer) => {
-                    return this.search.statuses.includes(offer.status.name);
+                    return statuses.includes(offer.status.name);
                 });
             } else {
                 this.searchedItems = this.companyOffers;
             }
+        },
+
+        updateSearchedItems() {
+            this.companyOffers.forEach((offer) => {
+                this.searchedItems = this.companyOffers;
+                this.comboboxElements.categories.push(offer.category);
+                this.comboboxElements.statuses.push(offer.status);
+            });
         }
     },
 
     created() {
+        this.$store.subscribe(mutation => {
+            if(mutation.type === 'company/UNSHIFT_COMPANY_OFFER') {
+                this.updateSearchedItems();
+            }
+        });
+
         this.fetchCompanyOffers(this.company.slug).then(() => {
-            this.searchedItems = this.companyOffers;
-
-            this.companyOffers.forEach((offer) => {
-                this.comboboxElements.categories.push(offer.category);
-                this.comboboxElements.statuses.push(offer.status);
-            });
-
+            this.updateSearchedItems();
         }).catch((e) => {
 
         });
-    }
-
+    },
 }
 </script>
 

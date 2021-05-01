@@ -99,4 +99,15 @@ class StatisticController extends Controller
 
         return response(null, Response::HTTP_NO_CONTENT);
     }
+
+    public function getNumberOfNewOffers(AdminStatisticsRequest $request)
+    {
+        $statistics = $this->statisticRepository->getNumberOfAllNewOffers();
+
+        if($statistics) {
+            return response($statistics, Response::HTTP_OK);
+        }
+
+        return response(null, Response::HTTP_NO_CONTENT);
+    }
 }

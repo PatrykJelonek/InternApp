@@ -1,30 +1,32 @@
 <template>
-    <v-form>
-        <validation-observer ref="observer" v-slot="{ validate }">
+    <validation-observer ref="observer" v-slot="{ validate }">
+        <v-form>
             <v-row>
                 <v-col cols="12">
                     <validation-provider
                         v-slot="{ errors }"
-                        vid="offer.name"
-                        rules="required"
+                        vid="name"
+                        rules="required|max:80"
                     >
                         <v-text-field
-                            label="Nazwa Praktyki"
                             v-model="offer.name"
                             outlined
                             hide-details="auto"
                             :error-messages="errors"
-                        ></v-text-field>
+                        >
+                            <template v-slot:label>
+                                Nazwa Praktyki <sup class="red--text">*</sup>
+                            </template>
+                        </v-text-field>
                     </validation-provider>
                 </v-col>
                 <v-col cols="10">
                     <validation-provider
                         v-slot="{ errors }"
-                        vid="offer.offerCategoryId"
+                        vid="offerCategoryId"
                         rules="required"
                     >
                         <v-select
-                            label="Kategoria Praktyk"
                             v-model="offer.offerCategoryId"
                             :items="offerCategories"
                             item-text="display_name"
@@ -33,32 +35,38 @@
                             outlined
                             hide-details="auto"
                             :error-messages="errors"
-                        ></v-select>
+                        >
+                            <template v-slot:label>
+                                Kategoria Praktyk <sup class="red--text">*</sup>
+                            </template>
+                        </v-select>
                     </validation-provider>
                 </v-col>
                 <v-col cols="2">
                     <validation-provider
                         v-slot="{ errors }"
-                        vid="offer.places_number"
+                        vid="placesNumber"
                         rules="required|min_value:1"
                     >
                         <v-text-field
-                            label="Ilość Miejsc"
                             v-model="offer.placesNumber"
                             outlined
                             hide-details="auto"
                             :error-messages="errors"
-                        ></v-text-field>
+                        >
+                            <template v-slot:label>
+                                Ilość Miejsc <sup class="red--text">*</sup>
+                            </template>
+                        </v-text-field>
                     </validation-provider>
                 </v-col>
                 <v-col cols="12">
                     <validation-provider
                         v-slot="{ errors }"
-                        vid="offer.companySupervisorId"
+                        vid="companySupervisorId"
                         rules="required"
                     >
                         <v-autocomplete
-                            label="Opiekun Praktyk"
                             v-model="offer.companySupervisorId"
                             :items="companyWorkers"
                             :item-text="(item) => item.first_name + ' ' + item.last_name"
@@ -67,28 +75,35 @@
                             outlined
                             hide-details="auto"
                             :error-messages="errors"
-                        ></v-autocomplete>
+                        >
+                            <template v-slot:label>
+                                Opiekun Praktyk <sup class="red--text">*</sup>
+                            </template>
+                        </v-autocomplete>
                     </validation-provider>
                 </v-col>
                 <v-col cols="12">
                     <validation-provider
                         v-slot="{ errors }"
-                        vid="offer.program"
+                        vid="program"
                         rules="required"
                     >
                         <v-textarea
-                            label="Program Praktyk"
                             v-model="offer.program"
                             outlined
                             hide-details="auto"
                             :error-messages="errors"
-                        ></v-textarea>
+                        >
+                            <template v-slot:label>
+                                Program Praktyk <sup class="red--text">*</sup>
+                            </template>
+                        </v-textarea>
                     </validation-provider>
                 </v-col>
                 <v-col cols="12">
                     <validation-provider
                         v-slot="{ errors }"
-                        vid="offer.schedule"
+                        vid="schedule"
                         rules=""
                     >
                         <v-textarea
@@ -112,25 +127,29 @@
                         <template v-slot:activator="{ on, attrs }">
                             <validation-provider
                                 v-slot="{ errors }"
-                                vid="offer.dateFrom"
+                                vid="dateFrom"
                                 rules="required"
                             >
                                 <v-text-field
                                     v-model="offer.dateFrom"
-                                    label="Data Rozpoczęcia"
                                     hide-details="auto"
                                     :error-messages="errors"
                                     readonly
                                     outlined
                                     v-bind="attrs"
                                     v-on="on"
-                                ></v-text-field>
+                                >
+                                    <template v-slot:label>
+                                        Data Rozpoczęcia <sup class="red--text">*</sup>
+                                    </template>
+                                </v-text-field>
                             </validation-provider>
                         </template>
                         <v-date-picker
                             :first-day-of-week="0"
                             locale="pl-pl"
                             no-title
+                            :min="getTodayDate()"
                             v-model="offer.dateFrom"
                             @input="dateFromPicker = false"
                         ></v-date-picker>
@@ -149,19 +168,22 @@
                         <template v-slot:activator="{ on, attrs }">
                             <validation-provider
                                 v-slot="{ errors }"
-                                vid="offer.dateTo"
+                                vid="dateTo"
                                 rules="required"
                             >
                                 <v-text-field
                                     v-model="offer.dateTo"
-                                    label="Data Zakończenia"
                                     hide-details="auto"
                                     :error-messages="errors"
                                     readonly
                                     outlined
                                     v-bind="attrs"
                                     v-on="on"
-                                ></v-text-field>
+                                >
+                                    <template v-slot:label>
+                                        Data Zakończenia <sup class="red--text">*</sup>
+                                    </template>
+                                </v-text-field>
                             </validation-provider>
                         </template>
                         <v-date-picker
@@ -177,7 +199,7 @@
                 <v-col cols="12">
                     <validation-provider
                         v-slot="{ errors }"
-                        vid="offer.attachment"
+                        vid="attachments"
                     >
                         <v-file-input
                             label="Załącznik"
@@ -185,8 +207,8 @@
                             outlined
                             show-size
                             hide-details
+                            multiple
                             prepend-icon=""
-                            @change="createBase64"
                             :error-messages="errors"
                         ></v-file-input>
                     </validation-provider>
@@ -213,8 +235,8 @@
                     </v-btn>
                 </v-col>
             </v-row>
-        </validation-observer>
-    </v-form>
+        </v-form>
+    </validation-observer>
 </template>
 
 <script>
@@ -222,13 +244,17 @@ import {mapActions, mapGetters} from "vuex";
 import {setInteractionMode, ValidationProvider, ValidationObserver} from "vee-validate";
 import moment from 'moment';
 import {Base64} from 'js-base64';
+import PageLoader from "../../_General/PageLoader";
 
 setInteractionMode('eager');
 
 export default {
     name: "CreateOfferForm",
 
+    props: ['updateFunction'],
+
     components: {
+        PageLoader,
         ValidationProvider,
         ValidationObserver
     },
@@ -238,19 +264,20 @@ export default {
             dateFromPicker: null,
             dateToPicker: null,
             offer: {
+                companyId: null,
                 name: null,
                 placesNumber: 1,
                 program: null,
                 schedule: null,
                 offerCategoryId: null,
-                offerStatusId: null,
                 companySupervisorId: null,
                 dateFrom: null,
                 dateTo: null,
                 interview: false,
                 attachments: []
             },
-            attachmentsFiles: []
+            attachmentsFiles: [],
+            tempBase64File: null,
         }
     },
 
@@ -271,33 +298,67 @@ export default {
             setSnackbar: 'snackbar/setSnackbar',
             fetchOfferCategories: 'offer/fetchOfferCategories',
             fetchCompanyWorkers: 'company/fetchCompanyWorkers',
+            toggleCreateOfferDialog: 'helpers/toggleCreateOfferDialog',
             createOffer: 'offer/createOffer',
         }),
 
         async submit() {
-            await this.createOffer(this.offer).then(() => {
+            await this.$refs.observer.validate().then((value) => {
+                if (value) {
+                    this.submitLoading = true;
+                    this.offer.attachments = [];
 
-            }).catch((e) => {
-                if (e.response !== undefined && e.response.status === 422) {
-                    this.$refs.observer.setErrors(e.response.data.errors);
+                    this.attachmentsFiles.forEach((file) => {
+                        this.convertToBase64(file).then(() => {
+                            if (this.tempBase64File) {
+                                this.offer.attachments.push(this.tempBase64File);
+                            }
+
+                            this.tempBase64File = null;
+                        });
+                    });
+
+                    this.createOffer(this.offer).then((offer) => {
+                        this.setSnackbar({message: 'Oferta została dodana!', color: 'success'});
+                        this.toggleCreateOfferDialog(false);
+                        this.$store.commit('company/UNSHIFT_COMPANY_OFFER', offer.data);
+                    }).catch((e) => {
+                        if (e.response !== undefined && e.response.status === 422) {
+                            this.$refs.observer.setErrors(e.response.data.errors);
+                        }
+                    });
                 }
             });
         },
 
-        createBase64(file) {
+        async convertToBase64(file) {
+            const reader = new FileReader();
 
+            reader.onload = (e) => {
+                this.tempBase64File = {
+                    name: file.name,
+                    mime: file.type,
+                    content: Base64.encode(e.target.result),
+                };
+            };
+
+            await reader.readAsBinaryString(file);
         },
 
         getIncrementDateTo(date, incrementValue) {
-            if(date !== null) {
+            if (date !== null) {
                 return moment(date).add(...incrementValue).format('YYYY-MM-DD');
             }
+            return moment().format('YYYY-MM-DD');
+        },
+
+        getTodayDate() {
             return moment().format('YYYY-MM-DD');
         }
     },
 
     created() {
-        this.offer.companySupervisorId = this.company.id;
+        this.offer.companyId = this.company.id;
         this.fetchOfferCategories().then(() => {
 
         }).catch((e) => {

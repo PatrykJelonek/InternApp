@@ -1,5 +1,5 @@
 <template>
-    <v-card elevation="0" color="card-background">
+    <v-card elevation="0" color="card-background" class="overflow-hidden">
         <v-list color="card-background">
             <v-list-item>
                 <v-list-item-content>

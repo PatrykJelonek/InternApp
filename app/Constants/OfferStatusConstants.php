@@ -57,14 +57,14 @@ class OfferStatusConstants
     ];
 
     public const STATUS_HEX_COLORS = [
-        self::STATUS_NEW => '#039BE5',
-        self::STATUS_ACCEPTED => '#00E676',
-        self::STATUS_REJECTED => '#D84315',
-        self::STATUS_DRAFT_NEW => '#039BE5',
-        self::STATUS_DRAFT_ACCEPTED => '#00E676',
-        self::STATUS_DRAFT_REJECTED => '#D84315',
-        self::STATUS_STUDENT_NEW => '#039BE5',
-        self::STATUS_STUDENT_ACCEPTED => '#00E676',
-        self::STATUS_STUDENT_REJECTED => '#D84315',
+        self::STATUS_NEW => '#E3F2FD',
+        self::STATUS_ACCEPTED => '#C8E6C9',
+        self::STATUS_REJECTED => '#FFCDD2',
+        self::STATUS_DRAFT_NEW => '#E3F2FD',
+        self::STATUS_DRAFT_ACCEPTED => '#C8E6C9',
+        self::STATUS_DRAFT_REJECTED => '#FFCDD2',
+        self::STATUS_STUDENT_NEW => '#E3F2FD',
+        self::STATUS_STUDENT_ACCEPTED => '#C8E6C9',
+        self::STATUS_STUDENT_REJECTED => '#FFCDD2',
     ];
 }

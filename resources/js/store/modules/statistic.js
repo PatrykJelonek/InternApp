@@ -16,6 +16,8 @@ export default {
         numberOfAttachmentsLoading: true,
         numberOfOffersAttachments: 0,
         numberOfOffersAttachmentsLoading: true,
+        numberOfNewOffers: 0,
+        numberOfNewOffersLoading: true,
     },
 
     getters: {
@@ -25,6 +27,14 @@ export default {
 
         numberOfOffersLoading(state) {
             return state.numberOfOffersLoading;
+        },
+
+        numberOfNewOffers(state) {
+            return state.numberOfNewOffers;
+        },
+
+        numberOfNewOffersLoading(state) {
+            return state.numberOfNewOffersLoading;
         },
 
         numberOfAgreements(state) {
@@ -83,6 +93,14 @@ export default {
 
         SET_NUMBER_OF_OFFERS_LOADING(state, data) {
             state.numberOfOffersLoading = data;
+        },
+
+        SET_NUMBER_OF_NEW_OFFERS(state, data) {
+            state.numberOfNewOffers = data;
+        },
+
+        SET_NUMBER_OF_NEW_OFFERS_LOADING(state, data) {
+            state.numberOfNewOffersLoading = data;
         },
 
         SET_NUMBER_OF_AGREEMENTS(state, data) {
@@ -216,6 +234,18 @@ export default {
             } catch (e) {
                 commit('SET_NUMBER_OF_OFFERS_ATTACHMENTS', 0);
                 commit('SET_NUMBER_OF_OFFERS_ATTACHMENTS_LOADING', false);
+            }
+        },
+
+        async fetchNumberOfNewOffers({commit}) {
+            commit('SET_NUMBER_OF_NEW_OFFERS_LOADING', true);
+            try {
+                let response = await axios.get(`/api/statistics/offers/new/count`);
+                commit('SET_NUMBER_OF_NEW_OFFERS', response.data);
+                commit('SET_NUMBER_OF_NEW_OFFERS__LOADING', false);
+            } catch (e) {
+                commit('SET_NUMBER_OF_NEW_OFFERS', 0);
+                commit('SET_NUMBER_OF_NEW_OFFERS_LOADING', false);
             }
         },
     },

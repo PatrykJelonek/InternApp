@@ -118,6 +118,10 @@ export default {
             state.companyOffersLoading = data;
         },
 
+        UNSHIFT_COMPANY_OFFER(state, data) {
+            state.companyOffers.unshift(data);
+        },
+
         SET_COMPANY_WORKERS(state, data) {
             state.companyWorkers = data;
         },

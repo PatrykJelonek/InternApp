@@ -8,4 +8,6 @@
 return [
     # Akceptowalna różnica dni od rozpoczęcia oferty praktyk
     'acceptableDifferenceDays' => 100,
+    'defaultDifferenceBetweenStartAndEndOfferDate' => 100,
+    'acceptableAttachmentsMimeTypes' => ['application/pdf'],
 ];

@@ -4,10 +4,11 @@ export default {
     state: {
         offer: '',
         offers: [],
+        offersLoading: true,
         offerCategories: [],
-        offerCategoriesLoading: true,
+        offerCategoriesLoading: false,
         offerStatuses: [],
-        offerStatusesLoading: true,
+        offerStatusesLoading: false,
     },
 
     getters: {
@@ -17,6 +18,10 @@ export default {
 
         offers: state => {
             return state.offers;
+        },
+
+        offersLoading: state => {
+            return state.offersLoading;
         },
 
         offerCategories: state => {
@@ -57,18 +62,39 @@ export default {
             state.offers = data;
         },
 
+        SET_OFFERS_LOADING(state, data) {
+            state.offersLoading = data;
+        },
+
         SET_OFFER(state, data) {
             state.offer = data;
-        }
+        },
+
+        SET_OFFER_STATUS(state, data) {
+            state.offers.forEach((offer) => {
+                if(offer.id === data.id) {
+                    offer.status = data.status;
+                }
+            })
+        },
     },
 
     actions: {
-        async fetchOffers({commit}) {
+        async fetchOffers({commit}, data = null) {
+            commit('SET_OFFERS_LOADING', true);
             try{
-                let response = await axios.get('/api/offers');
-                commit('SET_OFFERS', response.data.data);
+                let response = await axios.get('/api/offers', {
+                    params: {
+                        categories: data.categories ?? null,
+                        statuses: data.statuses ?? null,
+                        limit: data.limit ?? null,
+                    }
+                });
+                commit('SET_OFFERS', response.data);
+                commit('SET_OFFERS_LOADING', false);
             } catch (e) {
                 commit('SET_OFFERS', []);
+                commit('SET_OFFERS_LOADING', false);
             }
         },
 
@@ -107,6 +133,24 @@ export default {
 
         createOffer({commit}, offer) {
             return axios.post('/api/offers', offer);
+        },
+
+        async acceptOffer({commit}, slug) {
+            try{
+                let response = await axios.get(`/api/offers/${slug}/accept`);
+                commit('SET_OFFER_STATUS', response.data);
+            } catch (e) {
+
+            }
+        },
+
+        async rejectOffer({commit}, slug) {
+            try{
+                let response = await axios.get(`/api/offers/${slug}/reject`);
+                commit('SET_OFFER_STATUS', response.data);
+            } catch (e) {
+
+            }
         },
     },
 }

@@ -116,7 +116,7 @@ class CompanyRepository implements CompanyRepositoryInterface
             $companyOffers->limit($limit);
         }
 
-        return $companyOffers->get();
+        return $companyOffers->orderByDesc('id')->get();
     }
 
     public function getCompanyWorkers(string $slug, ?array $roles = null, ?array $statuses = null, ?int $limit = null)

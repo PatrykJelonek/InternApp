@@ -23,4 +23,6 @@ interface StatisticRepositoryInterface
     public function getNumberOfAllAttachments();
 
     public function getNumberOfAllOffersAttachments();
+
+    public function getNumberOfAllNewOffers();
 }

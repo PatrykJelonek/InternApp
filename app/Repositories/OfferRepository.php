@@ -17,7 +17,7 @@ use Illuminate\Support\Str;
 
 class OfferRepository implements OfferRepositoryInterface
 {
-    private $with = ['status', 'category'];
+    private $with = ['category', 'status', 'supervisor'];
 
     /**
      * @var OfferCategoryRepository
@@ -45,7 +45,7 @@ class OfferRepository implements OfferRepositoryInterface
 
     public function getOfferById(int $id)
     {
-        return Offer::find($id);
+        return Offer::with($this->with)->find($id);
     }
 
     public function getOfferBySlug(string $slug)
@@ -60,9 +60,9 @@ class OfferRepository implements OfferRepositoryInterface
      *
      * @return Builder[]|\Illuminate\Database\Eloquent\Collection
      */
-    public function getAllOffers(?array $categories, ?array $statuses, ?int $limit)
+    public function getAllOffers(?array $categories = null, ?array $statuses = null, ?int $limit = null)
     {
-        $offers = Offer::with(['status','category','company']);
+        $offers = Offer::with($this->with);
 
         if ($statuses !== null) {
             $offers->whereHas(
@@ -99,7 +99,7 @@ class OfferRepository implements OfferRepositoryInterface
     public function createOffer(array $data): ?Offer
     {
         $offer = new Offer();
-        $offer->company_id = $data['companyId'] ?? 1;
+        $offer->company_id = $data['companyId'];
         $offer->user_id = $data['userId'];
         $offer->name = $data['name'];
         $offer->places_number = $data['placesNumber'] ?? 1;
@@ -112,6 +112,8 @@ class OfferRepository implements OfferRepositoryInterface
         $offer->company_supervisor_id = $data['companySupervisorId'] ?? null;
         $offer->slug = Str::slug($data['name']);
         $offer->interview = $data['interview'] ?? false;
+        $offer->date_from = $data['dateFrom'] ?? Carbon::today();
+        $offer->date_to = $data['dateTo'] ?? Carbon::today()->addMonths(config('global.defaultDifferenceBetweenStartAndEndOfferDate'));
         $offer->created_at = Carbon::today();
         $offer->updated_at = Carbon::today();
 
@@ -130,5 +132,57 @@ class OfferRepository implements OfferRepositoryInterface
     public function deleteOfferBySlug(string $slug)
     {
         // TODO: Implement delete() method.
+    }
+
+    public function acceptOfferBySlug(string $slug)
+    {
+        $offer = $this->getOfferBySlug($slug);
+
+        switch ($offer->first()->status->name) {
+            case OfferStatusConstants::STATUS_DRAFT_NEW:
+                $offerStatus = $this->offerStatusRepository->getOfferStatusByName(OfferStatusConstants::STATUS_DRAFT_ACCEPTED);
+                break;
+            case OfferStatusConstants::STATUS_STUDENT_NEW:
+                $offerStatus = $this->offerStatusRepository->getOfferStatusByName(OfferStatusConstants::STATUS_STUDENT_ACCEPTED);
+                break;
+            default:
+                $offerStatus = $this->offerStatusRepository->getOfferStatusByName(OfferStatusConstants::STATUS_ACCEPTED);
+                break;
+        }
+
+        $offer = Offer::with(['category', 'status', 'supervisor'])->find($offer->first()->id);
+        $offer->offer_status_id = $offerStatus->id;
+
+        if ($offer->update()) {
+            return $offer;
+        }
+
+        return null;
+    }
+
+    public function rejectOfferBySlug(string $slug)
+    {
+        $offer = $this->getOfferBySlug($slug);
+
+        switch ($offer->first()->status->name) {
+            case OfferStatusConstants::STATUS_DRAFT_NEW:
+                $offerStatus = $this->offerStatusRepository->getOfferStatusByName(OfferStatusConstants::STATUS_DRAFT_REJECTED);
+                break;
+            case OfferStatusConstants::STATUS_STUDENT_NEW:
+                $offerStatus = $this->offerStatusRepository->getOfferStatusByName(OfferStatusConstants::STATUS_STUDENT_REJECTED);
+                break;
+            default:
+                $offerStatus = $this->offerStatusRepository->getOfferStatusByName(OfferStatusConstants::STATUS_REJECTED);
+                break;
+        }
+
+        $offer = Offer::with(['category', 'status', 'supervisor'])->find($offer->first()->id);
+        $offer->offer_status_id = $offerStatus->id;
+
+        if ($offer->save()) {
+            return $offer;
+        }
+
+        return null;
     }
 }

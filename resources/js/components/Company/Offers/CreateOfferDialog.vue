@@ -2,7 +2,7 @@
     <v-dialog
         v-model="createOfferDialog"
         persistent
-        max-width="800px"
+        max-width="1000px"
         :fullscreen="this.$vuetify.breakpoint.smAndDown"
     >
         <expand-card
