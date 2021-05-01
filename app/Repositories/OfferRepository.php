@@ -17,7 +17,7 @@ use Illuminate\Support\Str;
 
 class OfferRepository implements OfferRepositoryInterface
 {
-    private $with = ['category', 'status', 'supervisor'];
+    private $with = ['category', 'status', 'supervisor','company'];
 
     /**
      * @var OfferCategoryRepository
@@ -50,7 +50,7 @@ class OfferRepository implements OfferRepositoryInterface
 
     public function getOfferBySlug(string $slug)
     {
-        return Offer::with($this->with)->where('slug', $slug)->get();
+        return Offer::with($this->with)->where('slug', $slug)->first();
     }
 
     /**
@@ -138,23 +138,24 @@ class OfferRepository implements OfferRepositoryInterface
     {
         $offer = $this->getOfferBySlug($slug);
 
-        switch ($offer->first()->status->name) {
-            case OfferStatusConstants::STATUS_DRAFT_NEW:
-                $offerStatus = $this->offerStatusRepository->getOfferStatusByName(OfferStatusConstants::STATUS_DRAFT_ACCEPTED);
-                break;
-            case OfferStatusConstants::STATUS_STUDENT_NEW:
-                $offerStatus = $this->offerStatusRepository->getOfferStatusByName(OfferStatusConstants::STATUS_STUDENT_ACCEPTED);
-                break;
-            default:
-                $offerStatus = $this->offerStatusRepository->getOfferStatusByName(OfferStatusConstants::STATUS_ACCEPTED);
-                break;
-        }
+        if($offer) {
+            switch ($offer->status->name) {
+                case OfferStatusConstants::STATUS_DRAFT_NEW:
+                    $offerStatus = $this->offerStatusRepository->getOfferStatusByName(OfferStatusConstants::STATUS_DRAFT_ACCEPTED);
+                    break;
+                case OfferStatusConstants::STATUS_STUDENT_NEW:
+                    $offerStatus = $this->offerStatusRepository->getOfferStatusByName(OfferStatusConstants::STATUS_STUDENT_ACCEPTED);
+                    break;
+                default:
+                    $offerStatus = $this->offerStatusRepository->getOfferStatusByName(OfferStatusConstants::STATUS_ACCEPTED);
+                    break;
+            }
 
-        $offer = Offer::with(['category', 'status', 'supervisor'])->find($offer->first()->id);
-        $offer->offer_status_id = $offerStatus->id;
+            $offer->offer_status_id = $offerStatus->id;
 
-        if ($offer->update()) {
-            return $offer;
+            if ($offer->update()) {
+                return $offer;
+            }
         }
 
         return null;

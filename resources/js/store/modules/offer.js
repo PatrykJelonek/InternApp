@@ -3,6 +3,7 @@ export default {
 
     state: {
         offer: '',
+        offerLoading: true,
         offers: [],
         offersLoading: true,
         offerCategories: [],
@@ -14,6 +15,10 @@ export default {
     getters: {
         offer: state => {
             return state.offer;
+        },
+
+        offerLoading: state => {
+            return state.offerLoading;
         },
 
         offers: state => {
@@ -70,6 +75,10 @@ export default {
             state.offer = data;
         },
 
+        SET_OFFER_LOADING(state, data) {
+            state.offerLoading = data;
+        },
+
         SET_OFFER_STATUS(state, data) {
             state.offers.forEach((offer) => {
                 if(offer.id === data.id) {
@@ -98,12 +107,15 @@ export default {
             }
         },
 
-        async fetchOffer({commit}, id) {
+        async fetchOffer({commit}, slug) {
+            commit('SET_OFFER_LOADING', true);
             try{
-                let response = await axios.get(`/api/offers/${id}`);
-                commit('SET_OFFER', response.data.data);
+                let response = await axios.get(`/api/offers/${slug}`);
+                commit('SET_OFFER', response.data);
+                commit('SET_OFFER_LOADING', false);
             } catch (e) {
                 commit('SET_OFFER', '');
+                commit('SET_OFFER_LOADING', false);
             }
         },
 

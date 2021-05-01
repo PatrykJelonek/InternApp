@@ -41,9 +41,9 @@ import TheUniversityWorkers from "../components/University/Workers/TheUniversity
 import TheUniversityAgreements from "../components/University/Agreements/TheUniversityAgreements";
 import TheUniversityInternships from "../components/University/Internships/TheUniversityInternships";
 import TheUniversitySettings from "../components/University/Settings/TheUniversitySettings";
-import StudentOffersList from "../components/Offers/StudentOffersList";
-import TheStudentOfferApplicationsList from "../components/Offers/TheStudentOfferApplicationsList";
-import TheStudentOffers from "../components/Offers/TheStudentOffers";
+import StudentOffersList from "../components/Offers/Student/StudentOffersList";
+import TheStudentOfferApplicationsList from "../components/Offers/Student/TheStudentOfferApplicationsList";
+import TheStudentOffers from "../components/Offers/Student/TheStudentOffers";
 import LandingPage from "../views/LandingPage";
 import Admin from "../views/Admin";
 import TheAdminOffers from "../components/Admin/Offers/TheAdminOffers";
@@ -55,6 +55,8 @@ import TheCompanyAgreements from "../components/Company/Agreements/TheCompanyAgr
 import TheCompanyWorkers from "../components/Company/Workers/TheCompanyWorkers";
 import TheCompanySettings from "../components/Company/Settings/TheCompanySettings";
 import TheAdminSettings from "../components/Admin/Settings/TheAdminSettings";
+import OffersList from "../components/Offers/OffersList";
+import OffersLists from "../components/Offers/OffersLists";
 
 Vue.use(VueRouter);
 
@@ -245,7 +247,7 @@ const router = new VueRouter({
                             path: '',
                             name: 'offers',
                             meta: {title: 'Oferty Praktyk'},
-                            component: TheStudentOffers
+                            component: OffersLists
                         },
                         {
                             path: 'applications',
@@ -256,7 +258,7 @@ const router = new VueRouter({
                     ]
                 },
                 {
-                    path: '/dashboard/offers/:id',
+                    path: '/dashboard/offers/:slug',
                     name: 'offer',
                     component: Offer,
                 },
@@ -407,7 +409,7 @@ router.beforeEach((to, from, next) => {
     next();
 });
 
-const haveRole = function (rolesToCheck) {
+const hasRole = function (rolesToCheck) {
     let haveRole = false;
 
     if(store.getters['auth/roles'].length > 0)

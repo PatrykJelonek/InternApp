@@ -28,7 +28,7 @@ class OfferController extends Controller
     /**
      * OfferController constructor.
      *
-     * @param OfferService $offerService
+     * @param OfferService    $offerService
      * @param OfferRepository $offerRepository
      */
     public function __construct(OfferService $offerService, OfferRepository $offerRepository)
@@ -91,35 +91,19 @@ class OfferController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  $id
+     * @param  $slug
      *
      * @return Response
      */
-    public function show($id)
+    public function show($slug)
     {
-        $offer = Offer::with(['company', 'offerCategory', 'offerStatus', 'company.city', 'supervisor'])->where(
-            ['id' => $id]
-        )->get();
+        $offer = $this->offerRepository->getOfferBySlug($slug);
 
-        if (isset($offer)) {
-            return response(
-                [
-                    'status' => 'success',
-                    'data' => $offer[0],
-                    'message' => null,
-                ],
-                Response::HTTP_OK
-            );
-        } else {
-            return response(
-                [
-                    'status' => 'error',
-                    'data' => null,
-                    'message' => "Nie znaleziono oferty!",
-                ],
-                Response::HTTP_NOT_FOUND
-            );
+        if (!empty($offer)) {
+            return response($offer, Response::HTTP_OK);
         }
+
+        return response(null, Response::HTTP_NOT_FOUND);
     }
 
     /**
@@ -169,18 +153,18 @@ class OfferController extends Controller
     {
         $offer = $this->offerRepository->acceptOfferBySlug($slug);
 
-        if(!empty($offer)) {
+        if (!empty($offer)) {
             return response($offer, Response::HTTP_OK);
         }
 
         return response(null, Response::HTTP_NOT_MODIFIED);
     }
 
-    public function reject(ChangeOfferStatusRequest $request,  string $slug)
+    public function reject(ChangeOfferStatusRequest $request, string $slug)
     {
         $offer = $this->offerRepository->rejectOfferBySlug($slug);
 
-        if(!empty($offer)) {
+        if (!empty($offer)) {
             return response($offer, Response::HTTP_OK);
         }
 

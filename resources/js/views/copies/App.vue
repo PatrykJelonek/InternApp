@@ -145,4 +145,8 @@
     .font-m {
         font-family: 'Montserrat', sans-serif !important;
     }
+
+    .table-cursor tbody tr:hover {
+        cursor: pointer;
+    }
 </style>

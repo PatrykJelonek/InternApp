@@ -67,4 +67,16 @@ class OfferStatusConstants
         self::STATUS_STUDENT_ACCEPTED => '#C8E6C9',
         self::STATUS_STUDENT_REJECTED => '#FFCDD2',
     ];
+
+    public const STATUS_GROUP = [
+        self::STATUS_NEW => 'new',
+        self::STATUS_ACCEPTED => 'accepted',
+        self::STATUS_REJECTED => 'rejected',
+        self::STATUS_DRAFT_NEW => 'new',
+        self::STATUS_DRAFT_ACCEPTED => 'accepted',
+        self::STATUS_DRAFT_REJECTED => 'rejected',
+        self::STATUS_STUDENT_NEW => 'new',
+        self::STATUS_STUDENT_ACCEPTED => 'accepted',
+        self::STATUS_STUDENT_REJECTED => 'rejected',
+    ];
 }

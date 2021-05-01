@@ -242,7 +242,7 @@ export default {
             try {
                 let response = await axios.get(`/api/statistics/offers/new/count`);
                 commit('SET_NUMBER_OF_NEW_OFFERS', response.data);
-                commit('SET_NUMBER_OF_NEW_OFFERS__LOADING', false);
+                commit('SET_NUMBER_OF_NEW_OFFERS_LOADING', false);
             } catch (e) {
                 commit('SET_NUMBER_OF_NEW_OFFERS', 0);
                 commit('SET_NUMBER_OF_NEW_OFFERS_LOADING', false);

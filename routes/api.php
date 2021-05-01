@@ -103,6 +103,7 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::post('/offers', 'Api\OfferController@store');
     Route::get('/offers/statuses', 'Api\OfferStatusController@index');
     Route::get('/offers/categories', 'Api\OfferCategoryController@index');
+    Route::get('/offers/{slug}','Api\OfferController@show');
     Route::get('/offers/{slug}/accept','Api\OfferController@accept');
     Route::get('/offers/{slug}/reject','Api\OfferController@reject');
 

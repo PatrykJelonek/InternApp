@@ -24,9 +24,18 @@
                     :items="offerStatuses"
                     :loading="offerStatusesLoading"
                     :headers="headers"
-                    :items-per-page="5"
+                    :items-per-page="10"
                     no-data-text="Pobierz statusy"
+                    group-by="group"
                 >
+                    <template v-slot:group.header="{ group, toggle, headers, isOpen }">
+                        <th v-bind:colspan="headers.length">
+                            {{ getStatusDisplayName(group) }}
+                            <v-btn icon >
+                                <v-icon @click="toggle">{{ isOpen ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
+                            </v-btn>
+                        </th>
+                    </template>
                     <template v-slot:item.hex_color="{ item }">
                         <v-chip
                             small
@@ -105,7 +114,20 @@ export default {
 
         formatDate(date) {
             return moment(date).format('DD.MM.YYYY - HH:mm');
-        }
+        },
+
+        getStatusDisplayName(item) {
+            switch (item) {
+                case 'new':
+                    return 'Nowe';
+                case 'accepted':
+                    return 'Zaakceptowane';
+                case 'rejected':
+                    return 'Odrzucone';
+                default:
+                    return 'Niezgrupowany';
+            }
+        },
     },
 
     created() {

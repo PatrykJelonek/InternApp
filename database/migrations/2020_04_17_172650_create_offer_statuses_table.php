@@ -19,6 +19,7 @@ class CreateOfferStatusesTable extends Migration
             $table->string('description', 128)->nullable();
             $table->string('display_name', 128)->nullable();
             $table->string('hex_color', 7)->nullable();
+            $table->enum('group',['new','accepted','rejected'])->nullable();
             $table->dateTime('created_at', 0);
             $table->dateTime('updated_at', 0);
         });

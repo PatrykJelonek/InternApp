@@ -15,10 +15,18 @@ class OfferIndexRequest extends FormRequest
      */
     public function authorize()
     {
+        return true;
+    }
+
+    public function all($keys = null): array
+    {
+        $data = parent::all();
+
         if (Auth::user()->hasRole([RoleConstants::ROLE_ADMIN])) {
-            return true;
+            $data['categories'] = ['accepted'];
         }
-        return false;
+
+        return $data;
     }
 
     /**
