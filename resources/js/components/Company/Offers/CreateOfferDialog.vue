@@ -22,7 +22,7 @@
                             <v-icon>mdi-close</v-icon>
                         </v-btn>
                     </template>
-                    <span>Zamknij Okno</span>
+                    <span>Zamknij</span>
                 </v-tooltip>
             </template>
             <v-row class="pa-5">
@@ -58,7 +58,7 @@ export default {
         ...mapActions({
             toggleCreateOfferDialog: 'helpers/toggleCreateOfferDialog',
         }),
-    }
+    },
 }
 </script>
 

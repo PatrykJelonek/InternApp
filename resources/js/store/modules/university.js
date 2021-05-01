@@ -15,7 +15,7 @@ export default {
         university: null,
         universityLoading: true,
         workers: [],
-        workersLoading: true,
+        workersLoading: false,
         agreements: [],
         agreementsLoading: true,
         faculties: [],

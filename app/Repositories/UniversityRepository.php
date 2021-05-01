@@ -123,7 +123,6 @@ class UniversityRepository implements UniversityRepositoryInterface
                         RoleConstants::ROLE_UNIVERSITY_SUPERVISOR,
                         RoleConstants::ROLE_UNIVERSITY_WORKER,
                         RoleConstants::ROLE_UNIVERSITY_OWNER,
-                        RoleConstants::ROLE_DEANERY_WORKER,
                     ]
                 );
             }

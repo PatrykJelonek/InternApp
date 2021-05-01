@@ -17,7 +17,8 @@ class CreateAgreementsTable extends Migration
             $table->id();
             $table->string('name', 80)->unique();
             $table->string('slug', 80)->unique();
-            $table->date('signing_date');
+            $table->integer('places_number')->default(1);
+            $table->date('signing_date')->nullable();
             $table->date('date_from');
             $table->date('date_to');
             $table->longText('program')->nullable();

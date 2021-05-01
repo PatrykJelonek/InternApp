@@ -6,6 +6,9 @@ export default {
         createOfferDialog: false,
         acceptOfferDialog: false,
         rejectOfferDialog: false,
+        createAgreementDialog: false,
+        acceptAgreementDialog: false,
+        rejectAgreementDialog: false,
         fillHeight: false,
     },
 
@@ -24,6 +27,18 @@ export default {
 
         rejectOfferDialog(state) {
             return state.rejectOfferDialog;
+        },
+
+        createAgreementDialog(state) {
+            return state.createAgreementDialog;
+        },
+
+        acceptAgreementDialog(state) {
+            return state.acceptAgreementDialog;
+        },
+
+        rejectAgreementDialog(state) {
+            return state.rejectAgreementDialog;
         },
 
         fillHeight(state) {
@@ -52,6 +67,18 @@ export default {
             state.rejectOfferDialog = value;
         },
 
+        TOGGLE_CREATE_AGREEMENT_DIALOG(state, value) {
+            state.createAgreementDialog = value;
+        },
+
+        TOGGLE_ACCEPT_AGREEMENT_DIALOG(state, value) {
+            state.acceptAgreementDialog = value;
+        },
+
+        TOGGLE_REJECT_AGREEMENT_DIALOG(state, value) {
+            state.rejectAgreementDialog = value;
+        },
+
         SET_FILL_HEIGHT(state, value) {
             state.fillHeight = value;
         }
@@ -72,6 +99,18 @@ export default {
 
         toggleRejectOfferDialog({commit}, value) {
             commit('TOGGLE_REJECT_OFFER_DIALOG', value);
+        },
+
+        toggleCreateAgreementDialog({commit}, value) {
+            commit('TOGGLE_CREATE_AGREEMENT_DIALOG', value);
+        },
+
+        toggleAcceptAgreementDialog({commit}, value) {
+            commit('TOGGLE_ACCEPT_AGREEMENT_DIALOG', value);
+        },
+
+        toggleRejectAgreementDialog({commit}, value) {
+            commit('TOGGLE_REJECT_AGREEMENT_DIALOG', value);
         },
 
         setFillHeight({commit}, value) {
