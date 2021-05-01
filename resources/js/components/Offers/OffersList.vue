@@ -61,7 +61,7 @@
         },
 
         created() {
-            this.fetchOffers().then(() => {
+            this.fetchOffers({statuses:['accepted']}).then(() => {
                 this.isLoading = false;
             });
         }
