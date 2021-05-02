@@ -10,4 +10,5 @@ return [
     'acceptableDifferenceDays' => 100,
     'defaultDifferenceBetweenStartAndEndOfferDate' => 100,
     'acceptableAttachmentsMimeTypes' => ['application/pdf'],
+    'acceptManyStudentInternships' => false,
 ];

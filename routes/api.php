@@ -51,7 +51,7 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::resource('/user-companies', 'Api\UserCompanyController');
     Route::resource('/offers/categories', 'Api\OfferCategoryController');
 //    Route::resource('/offers', 'Api\OfferController');
-    Route::resource('/agreements', 'Api\AgreementController');
+    //Route::resource('/agreements', 'Api\AgreementController');
     Route::resource('/internships', 'Api\InternshipController');
     Route::resource('/journals', 'Api\JournalController');
     Route::post('/university/generate-code', 'Api\UniversityController@setNewAccessCode');
@@ -67,7 +67,7 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     //Route::get('/companies/{id}/offers', 'Api\CompanyController@getCompanyOffers');
     //Route::get('/companies/{id}/agreements', 'Api\CompanyController@getCompanyAgreements');
     Route::get('/companies/{id}/interns', 'Api\CompanyController@getInterns');
-    Route::post('/agreements/{id}/active', 'Api\AgreementController@active');
+//    Route::post('/agreements/{id}/active', 'Api\AgreementController@active');
     Route::get('/internships/{id}/confirm', 'Api\InternshipController@confirm');
     Route::get('/user/internships', 'Api\UserController@getInternships');
     Route::get('/user/journals', 'Api\UserController@getJournals');
@@ -110,6 +110,7 @@ Route::group(['middleware' => ['jwt.verify']], function() {
 
     # Agreements
     Route::post('/agreements', 'Api\AgreementController@store');
+    Route::get('/agreements/{slug}', 'Api\AgreementController@show');
     Route::get('/agreements/{slug}/accept','Api\agreementController@accept');
     Route::get('/agreements/{slug}/reject','Api\agreementController@reject');
 

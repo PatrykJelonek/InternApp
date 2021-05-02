@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreInternshipRequest;
+use App\Http\Requests\InternshipStoreRequest;
 use App\Http\Resources\InternshipResource;
 use App\Models\Agreement;
 use App\Models\Internship;
@@ -13,6 +13,7 @@ use App\Models\Student;
 use App\Models\User;
 use App\Repositories\InternshipRepository;
 use App\Repositories\UserRepository;
+use App\Services\InternshipService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Arr;
@@ -31,15 +32,22 @@ class InternshipController extends Controller
     private $userRepository;
 
     /**
+     * @var InternshipService
+     */
+    private $internshipService;
+
+    /**
      * InternshipController constructor.
      *
      * @param InternshipRepository $internshipRepository
      * @param UserRepository       $userRepository
+     * @param InternshipService    $internshipService
      */
-    public function __construct(InternshipRepository $internshipRepository, UserRepository $userRepository)
+    public function __construct(InternshipRepository $internshipRepository, UserRepository $userRepository, InternshipService $internshipService)
     {
         $this->internshipRepository = $internshipRepository;
         $this->userRepository = $userRepository;
+        $this->internshipService = $internshipService;
     }
 
     /**
@@ -77,25 +85,21 @@ class InternshipController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param StoreInternshipRequest $request
+     * @param InternshipStoreRequest $request
      *
      * @return Response
      */
-    public function store(StoreInternshipRequest $request)
+    public function store(InternshipStoreRequest $request)
     {
-        $result = $this->internshipRepository->create(
-            Auth::user()->id,
-            $request->input('offerId'),
-            $request->input('agreementId'),
-            $request->input('companySupervisorId'),
-            $request->input('universitySupervisorId')
-        );
+        $data = array_merge(['userId' => Auth::user()->id], $request->all());
 
-        if (!empty($result)) {
-            return \response($result, Response::HTTP_OK);
+        $internship = $this->internshipService->applyToInternship($data);
+
+        if ($internship !== null) {
+            return response($internship, Response::HTTP_OK);
         }
 
-        return \response(null, Response::HTTP_NOT_FOUND);
+        return response(null, Response::HTTP_NOT_FOUND);
     }
 
     /**

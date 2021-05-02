@@ -258,11 +258,6 @@ const router = new VueRouter({
                     ]
                 },
                 {
-                    path: '/dashboard/offers/:slug',
-                    name: 'offer',
-                    component: Offer,
-                },
-                {
                     path: '/create-offer',
                     name: 'create-offer',
                     component: OfferCreate,
@@ -273,22 +268,6 @@ const router = new VueRouter({
                     component: AgreementCreate,
                 },
                 {
-                    path: '/agreement/:id',
-                    name: 'agreement',
-                    component: Agreement,
-                },
-                // {
-                //     path: '/internships',
-                //     name: 'internships',
-                //     component: Internships,
-                //     beforeEnter: (to, from, next) => {
-                //         if(haveRole(['user']))
-                //             return next();
-                //         else
-                //             return next({name: 'no-permissions'});
-                //     }
-                // },
-                {
                     path: '/journal',
                     name: 'journal',
                     component: Journal,
@@ -298,6 +277,16 @@ const router = new VueRouter({
                     path: '/internship/:id/journal',
                     name: 'internship-journal',
                     component: InternshipJournal,
+                },
+                {
+                    path: '/dashboard/offers/:slug',
+                    name: 'offer',
+                    component: Offer,
+                },
+                {
+                    path: '/dashboard/agreements/:slug',
+                    name: 'agreement',
+                    component: Agreement,
                 },
                 {
                     path: '/dashboard/account',

@@ -12,6 +12,8 @@
                     :items="companyAgreements"
                     :loading="companyAgreementsLoading"
                     :headers="headers"
+                    class="table-cursor"
+                    @click:row="(item) => {this.$router.push({name: 'agreement', params: {slug: item.slug}})}"
                 >
                     <template v-slot:item.status="{ item }">
                         <v-chip small :color="item.status.hex_color">
@@ -76,7 +78,6 @@ export default {
                 {text: 'Od', value: 'date_from'},
                 {text: 'Do', value: 'date_to'},
                 {text: 'Status', value: 'status'},
-                {text: 'Slug', value: 'slug'},
                 {text: 'Akcje', value: 'actions'},
             ],
         }
@@ -130,6 +131,10 @@ export default {
 </script>
 
 <style scoped>
+.table-cursor tbody tr:hover {
+    cursor: pointer;
+}
+
 .cursor-pointer {
     cursor: pointer;
 }

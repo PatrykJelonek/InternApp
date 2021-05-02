@@ -15,9 +15,9 @@ use Illuminate\Support\Str;
 
 class AgreementRepository implements AgreementRepositoryInterface
 {
-    private $with = ['offer', 'university', 'company', 'status'];
+    private $with = ['offer.category', 'university', 'company', 'status','company.city', 'supervisor'];
 
-    public function one(string $slug)
+    public function getAgreementBySlug(string $slug)
     {
         return Agreement::with($this->with)->where('slug', $slug)->first();
     }
@@ -53,6 +53,7 @@ class AgreementRepository implements AgreementRepositoryInterface
         $agreement->company_id = $data['companyId'];
         $agreement->university_id = $data['universityId'];
         $agreement->university_supervisor_id = $data['universitySupervisorId'];
+        $agreement->agreement_status_id = $data['agreementStatusId'];
         $agreement->offer_id = $data['offerId'];
         $agreement->user_id = $data['userId'] ?? Auth::id();
         $agreement->is_active = $data['isActive'] ?? false;

@@ -9,7 +9,9 @@ export default {
         createAgreementDialog: false,
         acceptAgreementDialog: false,
         rejectAgreementDialog: false,
+        applyInternshipDialog: false,
         fillHeight: false,
+        errorMessage: '',
     },
 
     getters: {
@@ -39,6 +41,14 @@ export default {
 
         rejectAgreementDialog(state) {
             return state.rejectAgreementDialog;
+        },
+
+        applyInternshipDialog(state) {
+            return state.applyInternshipDialog;
+        },
+
+        errorMessage(state) {
+            return state.errorMessage;
         },
 
         fillHeight(state) {
@@ -79,6 +89,14 @@ export default {
             state.rejectAgreementDialog = value;
         },
 
+        TOGGLE_APPLY_INTERNSHIP_DIALOG(state, value) {
+            state.applyInternshipDialog = value;
+        },
+
+        SET_ERROR_MESSAGE(state, value) {
+            state.errorMessage = value;
+        },
+
         SET_FILL_HEIGHT(state, value) {
             state.fillHeight = value;
         }
@@ -111,6 +129,24 @@ export default {
 
         toggleRejectAgreementDialog({commit}, value) {
             commit('TOGGLE_REJECT_AGREEMENT_DIALOG', value);
+        },
+
+        toggleApplyInternshipDialog({commit}, value) {
+            commit('TOGGLE_APPLY_INTERNSHIP_DIALOG', value);
+        },
+
+        parseErrorMessage({commit}, status) {
+            switch (status) {
+                case 404:
+                    commit('SET_ERROR_MESSAGE', 'Nie znaleziono zasobu');
+                    break;
+                case 403:
+                    commit('SET_ERROR_MESSAGE', 'Nie masz uprawnień');
+                    break;
+                default:
+                    commit('SET_ERROR_MESSAGE', 'Nieznany błąd');
+                    break;
+            }
         },
 
         setFillHeight({commit}, value) {

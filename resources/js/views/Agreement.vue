@@ -1,158 +1,177 @@
 <template>
-    <v-container fluid class="pa-0 ma-0">
-        <page-details-header :header="agreement.offer.name"></page-details-header>
-        <v-container class="mt-10">
-            <v-row v-if="!agreement.is_active">
-                <v-col class="body-2 grey--text text--darken-2">Akcje:</v-col>
-            </v-row>
-            <v-row v-if="!agreement.is_active">
-                <v-col>
-                    <v-btn @click="active" color="blue accent-4" dark small>Potwierdź</v-btn>
-                </v-col>
-            </v-row>
-
-            <v-row class="mt-10">
-                <v-col class="body-2 grey--text text--darken-2">Informacje:</v-col>
-            </v-row>
-            <v-row>
-                <v-col cols="auto">
-                    <v-card
-                        max-width="300"
-                        outlined
-                        class="fill-height"
-                    >
-                        <v-list-item three-line>
-                            <v-list-item-content>
-                                <div class="overline mb-4">Firma</div>
-                                <v-list-item-title class="headline mb-2">{{ agreement.company.name }}</v-list-item-title>
-                                <v-list-item-subtitle class="pa-0">
-                                    ul. {{ agreement.company.street }} {{ agreement.company.street_number }}, {{ agreement.company.city.name }}
-                                </v-list-item-subtitle>
-                            </v-list-item-content>
-                        </v-list-item>
-
-                        <v-card-actions>
-                            <v-btn @click="toCompany" text x-small>Więcej informacji...</v-btn>
-                        </v-card-actions>
-                    </v-card>
-                </v-col>
-                <v-col cols="auto">
-                    <v-card
-                        max-width="300"
-                        outlined
-                        class="fill-height"
-                    >
-                        <v-list-item three-line>
-                            <v-list-item-content>
-                                <div class="overline mb-4">Uczelnia</div>
-                                <v-list-item-title class="headline mb-2">{{ agreement.university.name }}</v-list-item-title>
-                                <v-list-item-subtitle class="pa-0">
-                                    ul. {{ agreement.university.street }} {{ agreement.university.street_number }}, {{ agreement.university.city.name }}
-                                </v-list-item-subtitle>
-                            </v-list-item-content>
-                        </v-list-item>
-
-                        <v-card-actions>
-                            <v-btn @click="toCompany" text x-small>Więcej informacji...</v-btn>
-                        </v-card-actions>
-                    </v-card>
-                </v-col>
-                <v-col cols="auto">
-                    <v-card
-                        max-width="300"
-                        outlined
-                        class="fill-height"
-                    >
-                        <v-list-item two-line>
-                            <v-list-item-content>
-                                <div class="overline mb-2">Data początkowa porozumienia</div>
-                                <v-list-item-title class="headline mb-4">{{ agreement.date_from }}</v-list-item-title>
-                                <div class="overline mb-2">Data końcowa porozumienia</div>
-                                <v-list-item-title class="headline mb-1">{{ agreement.date_to}}</v-list-item-title>
-                            </v-list-item-content>
-                        </v-list-item>
-                    </v-card>
-                </v-col>
-                <v-col cols="auto">
-                    <v-card
-                        max-width="300"
-                        outlined
-                        class="fill-height"
-                    >
-                        <v-list-item two-line>
-                            <v-list-item-content>
-                                <div class="overline mb-2">Opiekun z firmy</div>
-                                <v-list-item-title class="headline mb-4">{{ agreement.offer.supervisor.first_name +' '+ agreement.offer.supervisor.last_name }}</v-list-item-title>
-                                <div class="overline mb-2">Opiekun z uczelni</div>
-                                <v-list-item-title class="headline mb-1">{{ agreement.university_supervisor.first_name +' '+ agreement.university_supervisor.last_name }}</v-list-item-title>
-                            </v-list-item-content>
-                        </v-list-item>
-                    </v-card>
-                </v-col>
-            </v-row>
-
-            <v-row class="mt-10">
-                <v-col>
-                    <v-tabs v-model="tab" background-color="transparent" color="blue accent-4">
-                        <v-tab>Program</v-tab>
-                        <v-tab>Harmonogram</v-tab>
-                        <v-tab>Treść Porozumienia</v-tab>
-                    </v-tabs>
-                    <v-tabs-items class="transparent mt-5 body-2 text-justify" v-model="tab">
-                        <v-tab-item>
-                            {{ agreement.program }}
-                        </v-tab-item>
-                        <v-tab-item>
-                            {{ agreement.schedule }}
-                        </v-tab-item>
-                        <v-tab-item>
-                            {{ agreement.content }}
-                        </v-tab-item>
-                    </v-tabs-items>
-                </v-col>
-            </v-row>
-        </v-container>
-
-        <v-snackbar
-            v-model="snackbar"
-            bottom
-            color="success"
-            right
-            :timeout="3000"
-        >
-            Porozumienie zostało potwierdzone!
-            <template v-slot:action="{ attrs }">
-                <v-btn
-                    dark
-                    text
-                    v-bind="attrs"
-                    @click="snackbar = false"
+    <v-container>
+        <apply-internship-dialog :agreement="agreement" v-if="!agreementLoading"></apply-internship-dialog>
+        <v-row v-if="!agreementLoading">
+            <v-col cols="12">
+                <page-title>{{ agreement.name }}</page-title>
+            </v-col>
+            <v-col cols="12" v-has="['student']" v-if="agreement.places_number > 0">
+                <v-card color="card-background" elevation="0">
+                    <v-card-actions class="d-flex justify-end">
+                        <v-btn color="primary" outlined @click="toggleApplyInternshipDialog(true)">Aplikuj</v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-col>
+            <v-col cols="12" lg="4">
+                <expand-card
+                    title="Miejsce praktyk"
+                    description="Informacje na temat miejsca odbywania praktyki."
+                    :expand="false"
                 >
-                    Zamknij
-                </v-btn>
-            </template>
-        </v-snackbar>
+                    <v-list>
+                        <v-row>
+                            <v-col cols="6">
+                                <v-list-item two-line>
+                                    <v-list-item-content>
+                                        <v-list-item-title>Firma</v-list-item-title>
+                                        <v-list-item-subtitle>{{ agreement.company.name }}</v-list-item-subtitle>
+                                    </v-list-item-content>
+                                </v-list-item>
+                                <v-list-item two-line>
+                                    <v-list-item-content>
+                                        <v-list-item-title>Adres</v-list-item-title>
+                                        <v-list-item-subtitle>
+                                            {{ agreement.company.street + ' ' + agreement.company.street_number + ', ' + agreement.company.city.name + ' ' + agreement.company.city.post_code }}
+                                        </v-list-item-subtitle>
+                                    </v-list-item-content>
+                                </v-list-item>
+                            </v-col>
+                            <v-col cols="6">
+                                <v-list-item two-line>
+                                    <v-list-item-content>
+                                        <v-list-item-title>Email</v-list-item-title>
+                                        <v-list-item-subtitle>{{ agreement.company.email }}</v-list-item-subtitle>
+                                    </v-list-item-content>
+                                </v-list-item>
+                                <v-list-item two-line>
+                                    <v-list-item-content>
+                                        <v-list-item-title>Website</v-list-item-title>
+                                        <v-list-item-subtitle>{{ agreement.company.website }}</v-list-item-subtitle>
+                                    </v-list-item-content>
+                                </v-list-item>
+                            </v-col>
+                        </v-row>
+                    </v-list>
+                </expand-card>
+            </v-col>
+            <v-col cols="12" md="12" lg="8">
+                <expand-card
+                    title="Informacje"
+                    description="Podstawowe informacje na temat praktyki"
+                    :expand="false"
+                >
+                    <v-list>
+                        <v-row>
+                            <v-col cols="4">
+                                <v-list-item two-line>
+                                    <v-list-item-content>
+                                        <v-list-item-title>Uczelnia</v-list-item-title>
+                                        <v-list-item-subtitle>
+                                            {{ agreement.university.name }}
+                                        </v-list-item-subtitle>
+                                    </v-list-item-content>
+                                </v-list-item>
+                                <v-list-item two-line>
+                                    <v-list-item-content>
+                                        <v-list-item-title>Opiekun z uczelni</v-list-item-title>
+                                        <v-list-item-subtitle>{{ agreement.supervisor.first_name + ' ' + agreement.supervisor.last_name }}</v-list-item-subtitle>
+                                    </v-list-item-content>
+                                </v-list-item>
+                            </v-col>
+                            <v-col cols="4">
+                                <v-list-item two-line>
+                                    <v-list-item-content>
+                                        <v-list-item-title>Liczba miejsc</v-list-item-title>
+                                        <v-list-item-subtitle>{{ agreement.places_number }}</v-list-item-subtitle>
+                                    </v-list-item-content>
+                                </v-list-item>
+                                <v-list-item two-line>
+                                    <v-list-item-content>
+                                        <v-list-item-title>Data</v-list-item-title>
+                                        <v-list-item-subtitle>
+                                            {{ formatDate(agreement.date_from) + ' - ' + formatDate(agreement.date_to) }}
+                                        </v-list-item-subtitle>
+                                    </v-list-item-content>
+                                </v-list-item>
+                            </v-col>
+                            <v-col cols="4">
+                                <v-list-item two-line>
+                                    <v-list-item-content>
+                                        <v-list-item-title>Interview</v-list-item-title>
+                                        <v-list-item-subtitle>
+                                            <v-chip small :color="agreement.offer.interview ? '#C8E6C9' : 'grey lighten-3'">
+                                                {{ agreement.offer.interview ? 'Wymagane' : 'Niewymagane' }}
+                                            </v-chip>
+                                        </v-list-item-subtitle>
+                                    </v-list-item-content>
+                                </v-list-item>
+                                <v-list-item two-line>
+                                    <v-list-item-content>
+                                        <v-list-item-title>Kategoria</v-list-item-title>
+                                        <v-list-item-subtitle>{{ agreement.offer.category.display_name }}</v-list-item-subtitle>
+                                    </v-list-item-content>
+                                </v-list-item>
+                            </v-col>
+                        </v-row>
+                    </v-list>
+                </expand-card>
+            </v-col>
+            <v-col cols="12" :xl="agreement.schedule !== null ? '6' : '12'">
+                <expand-card title="Program praktyk" :expand="false">
+                    <v-row>
+                        <v-col cols="12" class="pa-7">{{ agreement.program }}</v-col>
+                    </v-row>
+                </expand-card>
+            </v-col>
+            <v-col cols="12" xl="6" v-if="agreement.schedule !== null">
+                <expand-card title="Harmonogram praktyk" :expand="false">
+                    <v-row>
+                        <v-col cols="12" class="pa-7">{{ agreement.schedule }}</v-col>
+                    </v-row>
+                </expand-card>
+            </v-col>
+            <v-col
+                cols="12" xl="4"
+                v-if="agreement.content !== null"
+                v-has="['admin','university_worker','university_owner','university_supervisor','deanery_worker']"
+            >
+                <expand-card title="Treść umowy" :expand="false">
+                    <v-row>
+                        <v-col cols="12" class="pa-7">{{ agreement.content }}</v-col>
+                    </v-row>
+                </expand-card>
+            </v-col>
+        </v-row>
+        <v-row v-else class="text-center">
+            <v-col cols="12">
+                <page-loader></page-loader>
+            </v-col>
+        </v-row>
     </v-container>
 </template>
 
 <script>
     import {mapActions, mapGetters} from 'vuex';
-    import PageDetailsHeader from "../components/Page/PageDetailsHeader";
+    import ExpandCard from "../components/_Helpers/ExpandCard";
+    import PageLoader from "../components/_General/PageLoader";
+    import PageTitle from "../components/_Helpers/PageTitle";
+    import moment from "moment";
+    import ApplyInternshipDialog from "../components/Offers/Student/ApplyInternshipDialog";
     export default {
         name: "Agreement",
 
-        components: {PageDetailsHeader},
+        components: {ApplyInternshipDialog, PageTitle, PageLoader, ExpandCard},
 
         data() {
             return {
-                tab: null,
-                snackbar: false,
+
             }
         },
 
         computed: {
             ...mapGetters({
-                agreement: 'agreement/agreement'
+                agreement: 'agreement/agreement',
+                agreementLoading: 'agreement/agreementLoading'
             }),
         },
 
@@ -160,6 +179,8 @@
             ...mapActions({
                 fetchAgreement: 'agreement/fetchAgreement',
                 activeAgreement: 'agreement/activeAgreement',
+                setSnackbar: 'snackbar/setSnackbar',
+                toggleApplyInternshipDialog: 'helpers/toggleApplyInternshipDialog',
             }),
 
             toCompany() {
@@ -171,16 +192,21 @@
                 return this.$router.push({name: 'company', params: {id: this.agreement.company.id}})
             },
 
-            active() {
-                this.activeAgreement(this.agreement.id).then(() => {
-                    this.agreement.is_active = true;
-                    this.snackbar = true;
-                })
-            }
+            formatDate(date) {
+                if (date) {
+                    return moment(date).format('DD.MM.YYYY');
+                }
+
+                return '---';
+            },
         },
 
         created() {
-            this.fetchAgreement(this.$route.params.id);
+            this.fetchAgreement(this.$route.params.slug).then(() => {
+
+            }).catch((e) => {
+
+            });
         },
     }
 </script>

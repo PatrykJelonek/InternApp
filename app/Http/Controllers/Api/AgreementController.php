@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Requests\AgreementChangeStatusRequest;
+use App\Http\Requests\AgreementShowRequest;
 use App\Http\Requests\AgreementStoreRequest;
 use App\Models\Agreement;
 use App\Http\Controllers\Controller;
+use App\Repositories\AgreementRepository;
 use App\Services\AgreementService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -18,13 +20,20 @@ class AgreementController extends Controller
     private $agreementService;
 
     /**
+     * @var AgreementRepository
+     */
+    private $agreementRepository;
+
+    /**
      * AgreementController constructor.
      *
-     * @param AgreementService $agreementService
+     * @param AgreementService    $agreementService
+     * @param AgreementRepository $agreementRepository
      */
-    public function __construct(AgreementService $agreementService)
+    public function __construct(AgreementService $agreementService, AgreementRepository $agreementRepository)
     {
         $this->agreementService = $agreementService;
+        $this->agreementRepository = $agreementRepository;
     }
 
     /**
@@ -88,43 +97,20 @@ class AgreementController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  $id
+     * @param AgreementShowRequest $request
+     * @param                      $slug
      *
      * @return Response
      */
-    public function show($id)
+    public function show(AgreementShowRequest $request, $slug): ?Response
     {
-        $agreement = Agreement::with(
-            [
-                'company',
-                'university',
-                'author',
-                'universitySupervisor',
-                'offer.supervisor',
-                'company.city',
-                'university.city',
-            ]
-        )->where(['id' => $id])->get();
+        $agreement = $this->agreementRepository->getAgreementBySlug($slug);
 
         if (isset($agreement)) {
-            return response(
-                [
-                    'status' => 'success',
-                    'data' => $agreement[0],
-                    'message' => null,
-                ],
-                Response::HTTP_OK
-            );
-        } else {
-            return response(
-                [
-                    'status' => 'error',
-                    'data' => null,
-                    'message' => "Nie znaleziono umowy!",
-                ],
-                Response::HTTP_NOT_FOUND
-            );
+            return response($agreement, Response::HTTP_OK);
         }
+
+        return response(null, Response::HTTP_NO_CONTENT);
     }
 
     /**
@@ -161,20 +147,22 @@ class AgreementController extends Controller
         }
     }
 
-    public function accept(AgreementChangeStatusRequest $request, $slug) {
+    public function accept(AgreementChangeStatusRequest $request, $slug)
+    {
         $agreement = $this->agreementService->acceptAgreement($slug);
 
-        if($agreement !== null) {
+        if ($agreement !== null) {
             return response($agreement, Response::HTTP_OK);
         }
 
         return response(null, Response::HTTP_NOT_MODIFIED);
     }
 
-    public function reject(AgreementChangeStatusRequest $request, $slug) {
+    public function reject(AgreementChangeStatusRequest $request, $slug)
+    {
         $agreement = $this->agreementService->rejectAgreement($slug);
 
-        if($agreement !== null) {
+        if ($agreement !== null) {
             return response($agreement, Response::HTTP_OK);
         }
 
@@ -196,7 +184,7 @@ class AgreementController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param Request $request
+     * @param Request   $request
      * @param Agreement $agreement
      *
      * @return Response

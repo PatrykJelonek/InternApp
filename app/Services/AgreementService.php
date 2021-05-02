@@ -78,6 +78,8 @@ class AgreementService
         DB::beginTransaction();
 
         $university = $this->universityRepository->one($data['universitySlug']);
+        $agreementStatus = $this->agreementStatusRepository->getStatusByName('new');
+
         $this->offerRepository->updateOffer(
             ['placesNumber' => $data['offerPlacesNumber'] - $data['placesNumber']],
             $data['offerId']
@@ -85,6 +87,7 @@ class AgreementService
 
         $data['userId'] = Auth()->id();
         $data['universityId'] = $university->id;
+        $data['agreementStatusId'] = $agreementStatus->id;
 
         $agreement = $this->agreementRepository->create($data);
 

@@ -15,24 +15,28 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Notification;
 
-class InternshipRepository implements InternshipRepositoryInterface {
+class InternshipRepository implements InternshipRepositoryInterface
+{
 
     /**
      * @param $id // InternshipId
+     *
      * @return mixed // Return specific internship
      */
     public function one($id)
     {
         $internship = null;
 
-        if(Auth::user()->hasRole(RoleConstants::ROLE_ADMIN)) {
+        if (Auth::user()->hasRole(RoleConstants::ROLE_ADMIN)) {
             $internship = Internship::find($id);
         } else {
             $internship = Internship::where('id', $id)
-                ->where(function ($query) {
-                    $query->where('university_supervisor_id', Auth::user()->id)
-                        ->orWhere('company_supervisor_id', Auth::user()->id);
-                })->with(['agreement.university','agreement.company'])->first();
+                ->where(
+                    function ($query) {
+                        $query->where('university_supervisor_id', Auth::user()->id)
+                            ->orWhere('company_supervisor_id', Auth::user()->id);
+                    }
+                )->with(['agreement.university', 'agreement.company'])->first();
         }
 
         return $internship;
@@ -48,38 +52,30 @@ class InternshipRepository implements InternshipRepositoryInterface {
         return $this->one($id)->students;
     }
 
-    public function create(int $userId, int $offerId, int $agreementId, int $companySupervisorId, int $universitySupervisorId)
-    {
-        DB::beginTransaction();
+    public function create(
+        int $userId,
+        int $offerId,
+        int $agreementId,
+        int $companySupervisorId,
+        int $universitySupervisorId
+    ) {
+        $internshipStatus = InternshipStatus::select(['id'])->where(
+            ['name' => InternshipStatusConstants::STATUS_NEW]
+        )->first();
 
-        $offer = Offer::find($offerId);
+        $internship = new Internship();
+        $internship->offer_id = $offerId;
+        $internship->agreement_id = $agreementId;
+        $internship->company_supervisor_id = $companySupervisorId;
+        $internship->university_supervisor_id = $universitySupervisorId;
+        $internship->internship_status_id = $internshipStatus->id;
+        $internship->freshTimestamp();
 
-        if ($offer->places_number > 0) {
-            $internship = new Internship();
-            $student = Student::with(['user'])->where(['user_id' => $userId])->first();
-            $internshipStatus = InternshipStatus::select(['id'])->where(['name' => InternshipStatusConstants::STATUS_NEW])->first();
 
-            $internship->offer_id = $offerId;
-            $internship->agreement_id = $agreementId;
-            $internship->company_supervisor_id = $companySupervisorId;
-            $internship->university_supervisor_id = $universitySupervisorId;
-            $internship->internship_status_id = $internshipStatus->id;
-            $internship->updated_at = Carbon::today();
-            $internship->created_at = Carbon::today();
-
-            $offer->places_number--;
-
-            if($offer->save() && $internship->save()) {
-                $internship->students()->attach($student->id);
-                Notification::send([$internship->universitySupervisor->email], new InternshipCreated($internship, $student->user));
-
-                DB::commit();
-                return $internship;
-            }
-
-            DB::rollBack();
+        if ($internship->save()) {
+            return $internship;
         }
 
-        return [];
+        return null;
     }
 }

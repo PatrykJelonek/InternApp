@@ -9,7 +9,7 @@ namespace App\Repositories\Interfaces;
 
 interface AgreementRepositoryInterface
 {
-    public function one(string $slug);
+    public function getAgreementBySlug(string $slug);
 
     public function all(bool $onlyActive);
 

@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Constants\AgreementStatusConstants;
 use App\Models\Company;
 use App\Models\JournalEntry;
 use App\Models\Student;
@@ -135,8 +136,12 @@ class StudentRepository implements StudentRepositoryInterface
             $agreements = [];
 
             foreach ($userUniversities as $university) {
-                $agreements[] =  $university->agreements()->with(['offer','offer.category','offer.company.city'])->where(function (Builder $query) {
-                    $query->where('is_active', true)->where('date_from','>', Carbon::today()->subDays(config('global.acceptableDifferenceDays'))->toDateString());
+                $agreements[] =  $university->agreements()->with(['offer','offer.category','offer.company.city'])->whereHas('status', function (Builder $query) {
+                    $query->where(['name' => AgreementStatusConstants::STATUS_ACCEPTED]);
+                })->where(function (Builder $query) {
+                    $query->where('is_active', true)
+                        ->where('date_from','>', Carbon::today()->subDays(config('global.acceptableDifferenceDays'))->toDateString())
+                        ->where('places_number', '>', '0');
                 })->get()->toArray();
             }
 
