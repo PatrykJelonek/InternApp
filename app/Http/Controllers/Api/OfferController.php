@@ -49,6 +49,7 @@ class OfferController extends Controller
         $offers = $this->offerRepository->getAllOffers(
             $request->query('categories'),
             $request->query('statuses'),
+            $request->query('onlyWithPlaces'),
             $request->query('limit')
         );
 

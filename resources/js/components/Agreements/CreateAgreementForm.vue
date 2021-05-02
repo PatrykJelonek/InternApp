@@ -53,7 +53,7 @@
                             outlined
                             hide-details="auto"
                             :error-messages="errors"
-                            @input="fetchUniversityWorkers(selectedUniversity)"
+                            @input="selectUniversity"
                         >
                             <template v-slot:label>
                                 Uczelnia <sup class="red--text">*</sup>
@@ -111,6 +111,21 @@
                         <v-textarea
                             label="Harmonogram Praktyk"
                             v-model="agreement.schedule"
+                            outlined
+                            hide-details="auto"
+                            :error-messages="errors"
+                        ></v-textarea>
+                    </validation-provider>
+                </v-col>
+                <v-col cols="12">
+                    <validation-provider
+                        v-slot="{ errors }"
+                        vid="content"
+                        rules=""
+                    >
+                        <v-textarea
+                            label="Treść umowy"
+                            v-model="agreement.content"
                             outlined
                             hide-details="auto"
                             :error-messages="errors"
@@ -262,11 +277,13 @@ export default {
                 schedule: null,
                 content: null,
                 companyId: null,
-                universityId: null,
+                universitySlug: null,
                 universitySupervisorId: null,
                 offerId: null,
                 userId: null,
                 attachments: [],
+                placesNumber: null,
+                offerPlacesNumber: null,
             },
             attachmentsFiles: [],
         }
@@ -286,10 +303,27 @@ export default {
             setSnackbar: 'snackbar/setSnackbar',
             fetchUserUniversities: 'user/fetchUserUniversities',
             fetchUniversityWorkers: 'university/fetchWorkers',
+            createAgreement: 'agreement/createAgreement',
+            toggleCreateAgreementDialog: 'helpers/toggleCreateAgreementDialog'
         }),
 
         async submit() {
+            await this.$refs.observer.validate().then((value) => {
+                if (value) {
+                    this.createAgreement(this.agreement).then(() => {
+                        this.setSnackbar({message: 'Umowa została dodana.', color: 'success'});
+                        this.toggleCreateAgreementDialog(false);
+                        this.agreement = null;
+                    }).catch((e) => {
+                        if (e.response.status === 422) {
+                            console.log(e.response.data.errors);
+                            this.$refs.observer.setErrors(e.response.data.errors);
+                        }
 
+                        this.setSnackbar({message: 'Nie udało się dodać umowy.', color: 'error'});
+                    });
+                }
+            });
         },
 
         getDecrementDateTo(date, decrementValue) {
@@ -298,27 +332,34 @@ export default {
             }
             return moment().format('YYYY-MM-DD');
         },
+
+        selectUniversity() {
+            this.agreement.universitySlug = this.selectedUniversity;
+            this.fetchUniversityWorkers(this.selectedUniversity);
+        },
     },
 
     created() {
         this.$store.subscribe(mutation => {
-            if(mutation.type === 'helper/TOGGLE_CREATE_OFFER_DIALOG' && !mutation.payload) {
+            if (mutation.type === 'helper/TOGGLE_CREATE_OFFER_DIALOG' && !mutation.payload) {
                 this.agreement = null;
             }
         });
 
         this.agreement.name = this.offer.name;
         this.agreement.placesNumber = this.offer.places_number;
+        this.agreement.offerPlacesNumber = this.offer.places_number;
         this.agreement.dateFrom = this.offer.date_from;
         this.agreement.dateTo = this.offer.date_to;
         this.agreement.program = this.offer.program;
         this.agreement.schedule = this.offer.schedule;
-        this.agreement.companyId = this.offer.companyId;
+        this.agreement.companyId = this.offer.company.id;
         this.agreement.offerId = this.offer.id;
 
         this.fetchUserUniversities().then(() => {
-            if(this.userUniversities.length === 1) {
+            if (this.userUniversities.length === 1) {
                 this.selectedUniversity = this.userUniversities[0];
+                this.agreement.universitySlug = this.userUniversities[0].slug;
                 this.fetchUniversityWorkers(this.userUniversities[0].slug);
             }
         }).catch((e) => {

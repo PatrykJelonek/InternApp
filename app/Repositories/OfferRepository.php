@@ -56,11 +56,12 @@ class OfferRepository implements OfferRepositoryInterface
     /**
      * @param array|null $categories
      * @param array|null $statuses
+     * @param bool|null  $onlyWithPlaces
      * @param int|null   $limit
      *
      * @return Builder[]|\Illuminate\Database\Eloquent\Collection
      */
-    public function getAllOffers(?array $categories = null, ?array $statuses = null, ?int $limit = null)
+    public function getAllOffers(?array $categories = null, ?array $statuses = null,?bool $onlyWithPlaces = false, ?int $limit = null)
     {
         $offers = Offer::with($this->with);
 
@@ -80,6 +81,10 @@ class OfferRepository implements OfferRepositoryInterface
                     $query->where('name',  $categories);
                 }
             );
+        }
+
+        if ($onlyWithPlaces) {
+            $offers->where('places_number','>', 0);
         }
 
         if ($limit !== null) {
@@ -182,6 +187,34 @@ class OfferRepository implements OfferRepositoryInterface
 
         if ($offer->save()) {
             return $offer;
+        }
+
+        return null;
+    }
+
+    public function updateOffer(array $data, ?int $offerId  = null, ?string $offerSlug = null)
+    {
+        if($offerId !== null || $offerSlug !== null) {
+            $offer = $offerId !== null ? $this->getOfferById($offerId) : $this->getOfferBySlug($offerSlug);
+
+            $offer->company_id = $data['companyId'] ?? $offer->company_id;
+            $offer->user_id = $data['userId'] ?? $offer->user_id;
+            $offer->name = $data['name'] ?? $offer->name;
+            $offer->places_number = $data['placesNumber'] ?? $offer->places_number;
+            $offer->program = $data['program'] ?? $offer->program;
+            $offer->schedule = $data['schedule'] ?? $offer->schedule;
+            $offer->offer_category_id = $data['offerCategoryId'] ?? $offer->offer_category_id;
+            $offer->offer_status_id = $data['offerStatusId'] ?? $offer->offer_status_id;
+            $offer->company_supervisor_id = $data['companySupervisorId'] ?? $offer->company_supervisor_id;
+            $offer->slug = isset($data['name']) ? Str::slug($data['name']) : $offer->slug;
+            $offer->interview = $data['interview'] ?? $offer->interview;
+            $offer->date_from = $data['dateFrom'] ?? $offer->date_from;
+            $offer->date_to = $data['dateTo'] ?? $offer->date_to;
+            $offer->updateTimestamps();
+
+            if ($offer->update()) {
+                return $offer;
+            }
         }
 
         return null;

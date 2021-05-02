@@ -13,9 +13,11 @@ interface AgreementRepositoryInterface
 
     public function all(bool $onlyActive);
 
-    public function create();
+    public function create(array $date);
 
     public function edit(string $slug);
 
     public function delete(string $slug);
+
+    public function changeAgreementStatus(string $slug, int $statusId);
 }

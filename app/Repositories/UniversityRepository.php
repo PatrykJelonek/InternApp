@@ -157,7 +157,7 @@ class UniversityRepository implements UniversityRepositoryInterface
             function (Builder $query) use ($slug) {
                 $query->where('slug', $slug);
             }
-        )->get();
+        )->orderByDesc('created_at')->get();
     }
 
     public function getOffers(string $slug)

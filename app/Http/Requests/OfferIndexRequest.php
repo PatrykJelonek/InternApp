@@ -22,8 +22,9 @@ class OfferIndexRequest extends FormRequest
     {
         $data = parent::all();
 
-        if (Auth::user()->hasRole([RoleConstants::ROLE_ADMIN])) {
+        if (!Auth::user()->hasRole([RoleConstants::ROLE_ADMIN])) {
             $data['categories'] = ['accepted'];
+            $data['onlyWithPlaces'] = true;
         }
 
         return $data;
@@ -39,6 +40,7 @@ class OfferIndexRequest extends FormRequest
         return [
             'categories' => 'sometimes|array',
             'statuses' => 'sometimes|array',
+            'onlyWithPlaces' => 'sometimes|boolean',
             'limit' => 'sometimes|array',
         ];
     }

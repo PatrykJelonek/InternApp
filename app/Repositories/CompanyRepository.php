@@ -8,6 +8,7 @@
 
 namespace App\Repositories;
 
+use App\Models\Agreement;
 use App\Models\Company;
 use App\Models\Offer;
 use App\Models\User;
@@ -82,8 +83,12 @@ class CompanyRepository implements CompanyRepositoryInterface
         return $randomAccessCode;
     }
 
-    public function getCompanyOffers(string $slug, ?array $categories = null, ?array $statuses = null, ?int $limit = null)
-    {
+    public function getCompanyOffers(
+        string $slug,
+        ?array $categories = null,
+        ?array $statuses = null,
+        ?int $limit = null
+    ) {
         $company = $this->getOneBySlug($slug);
 
         if ($company === null) {
@@ -107,7 +112,7 @@ class CompanyRepository implements CompanyRepositoryInterface
             $companyOffers->whereHas(
                 'category',
                 function (Builder $query) use ($categories) {
-                    $query->where('name',  $categories);
+                    $query->where('name', $categories);
                 }
             );
         }
@@ -121,26 +126,51 @@ class CompanyRepository implements CompanyRepositoryInterface
 
     public function getCompanyWorkers(string $slug, ?array $roles = null, ?array $statuses = null, ?int $limit = null)
     {
-        $companyWorkers = User::with(['status'])->whereHas('companies', function (Builder $query) use ($slug) {
-            $query->where(['slug' => $slug]);
-        });
+        $companyWorkers = User::with(['status'])->whereHas(
+            'companies',
+            function (Builder $query) use ($slug) {
+                $query->where(['slug' => $slug]);
+            }
+        );
 
         if (!empty($roles)) {
-            $companyWorkers->whereHas('roles', function (Builder $query) use ($roles) {
-               $query->where(['name' => $roles]);
-            });
+            $companyWorkers->whereHas(
+                'roles',
+                function (Builder $query) use ($roles) {
+                    $query->where(['name' => $roles]);
+                }
+            );
         }
 
         if (!empty($statuses)) {
-            $companyWorkers->whereHas('status', function (Builder $query) use ($statuses) {
-               $query->where(['name' => $statuses]);
-            });
+            $companyWorkers->whereHas(
+                'status',
+                function (Builder $query) use ($statuses) {
+                    $query->where(['name' => $statuses]);
+                }
+            );
         }
 
-        if($limit !== null) {
+        if ($limit !== null) {
             $companyWorkers->limit($limit);
         }
 
         return $companyWorkers->get();
+    }
+
+    public function getCompanyAgreements(string $slug, ?bool $isActive = null)
+    {
+        $agreements = Agreement::with(['university', 'supervisor', 'author', 'internships', 'offer','status'])->whereHas(
+            'company',
+            function (Builder $query) use ($slug) {
+                $query->where(['slug' => $slug]);
+            }
+        );
+
+        if ($isActive !== null) {
+            $agreements->where(['isActive', $isActive]);
+        }
+
+        return $agreements->get();
     }
 }

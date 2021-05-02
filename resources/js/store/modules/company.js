@@ -11,9 +11,10 @@ export default {
         companyUsers: [],
         companyOffers: [],
         companyOffersLoading: true,
+        companyAgreements: [],
+        companyAgreementsLoading: true,
         companyWorkers: [],
         companyWorkersLoading: true,
-        companyAgreements: [],
         companies: [],
         companiesLoading: [],
         interns: [],
@@ -52,16 +53,20 @@ export default {
             return state.companyOffersLoading;
         },
 
+        companyAgreements(state) {
+            return state.companyAgreements;
+        },
+
+        companyAgreementsLoading(state) {
+            return state.companyAgreementsLoading;
+        },
+
         companyWorkers(state) {
             return state.companyWorkers;
         },
 
         companyWorkersLoading(state) {
             return state.companyWorkersLoading;
-        },
-
-        companyAgreements(state) {
-            return state.companyAgreements;
         },
 
         selectedCompanyId(state) {
@@ -132,6 +137,10 @@ export default {
 
         SET_COMPANY_AGREEMENTS(state, data) {
             state.companyAgreements = data;
+        },
+
+        SET_COMPANY_AGREEMENTS_LOADING(state, data) {
+            state.companyAgreementsLoading = data;
         },
 
         SET_SELECTED_COMPANY_ID(state, data) {
@@ -209,12 +218,15 @@ export default {
             }
         },
 
-        async fetchCompanyAgreements({commit}, id) {
+        async fetchCompanyAgreements({commit}, slug) {
+            commit('SET_COMPANY_AGREEMENTS_LOADING', true);
             try {
-                let response = await axios.get(`/api/companies/${id}/agreements`);
-                commit('SET_COMPANY_AGREEMENTS', response.data.data);
+                let response = await axios.get(`/api/companies/${slug}/agreements`);
+                commit('SET_COMPANY_AGREEMENTS', response.data);
+                commit('SET_COMPANY_AGREEMENTS_LOADING', false);
             } catch (e) {
                 commit('SET_COMPANY_AGREEMENTS', []);
+                commit('SET_COMPANY_AGREEMENTS_LOADING', false);
             }
         },
 

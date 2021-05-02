@@ -2,13 +2,31 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Requests\AgreementChangeStatusRequest;
+use App\Http\Requests\AgreementStoreRequest;
 use App\Models\Agreement;
 use App\Http\Controllers\Controller;
+use App\Services\AgreementService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 class AgreementController extends Controller
 {
+    /**
+     * @var AgreementService
+     */
+    private $agreementService;
+
+    /**
+     * AgreementController constructor.
+     *
+     * @param AgreementService $agreementService
+     */
+    public function __construct(AgreementService $agreementService)
+    {
+        $this->agreementService = $agreementService;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -18,19 +36,25 @@ class AgreementController extends Controller
     {
         $agreements = Agreement::all();
 
-        if (isset($agreements))
-            return response([
-                'status' => 'success',
-                'data' => $agreements,
-                'message' => null
-            ], Response::HTTP_OK);
-        else
-            return response([
-                'status' => 'error',
-                'data' => null,
-                'message' => "Nie znaleziono żadnej umowy!"
-            ], Response::HTTP_NOT_FOUND);
-
+        if (isset($agreements)) {
+            return response(
+                [
+                    'status' => 'success',
+                    'data' => $agreements,
+                    'message' => null,
+                ],
+                Response::HTTP_OK
+            );
+        } else {
+            return response(
+                [
+                    'status' => 'error',
+                    'data' => null,
+                    'message' => "Nie znaleziono żadnej umowy!",
+                ],
+                Response::HTTP_NOT_FOUND
+            );
+        }
     }
 
     /**
@@ -46,84 +70,68 @@ class AgreementController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param Request $request
+     * @param AgreementStoreRequest $request
+     *
      * @return Response
      */
-    public function store(Request $request)
+    public function store(AgreementStoreRequest $request)
     {
-        $vallidatedData  = $request->validate([
-            'dateFrom' => 'required',
-            'dateTo' => 'required',
-            'program' => 'required',
-            'schedule' => 'required',
-            'content' => 'required',
-            'companyId' => 'required',
-            'universityId' => 'required',
-            'universitySupervisorId' => 'required',
-            'offerId' => 'required',
-        ]);
+        $agreement = $this->agreementService->createAgreement($request->all());
 
-        $agreement = new Agreement;
+        if ($agreement !== null) {
+            return response($agreement, Response::HTTP_OK);
+        }
 
-        $agreement->signing_date = date('Y-m-d H:i:s');
-        $agreement->date_from = $request->input('dateFrom');
-        $agreement->date_to = $request->input('dateTo');
-        $agreement->program = $request->input('program');
-        $agreement->schedule = $request->input('schedule');
-        $agreement->content = $request->input('content');
-        $agreement->company_id = $request->input('companyId');
-        $agreement->university_id = $request->input('universityId');
-        $agreement->university_supervisor_id = $request->input('universitySupervisorId');
-        $agreement->offer_id = $request->input('offerId');
-        $agreement->user_id = auth()->id();
-        $agreement->updated_at = date('Y-m-d H:i:s');
-        $agreement->created_at = date('Y-m-d H:i:s');
-
-        if($agreement->save())
-        {
-            return response([
-                'status' => 'success',
-                'data' => $agreement,
-                'message' => null
-            ], Response::HTTP_OK);
-        } else
-            return response([
-                'status' => 'error',
-                'data' => null,
-                'message' => 'Nie udało się utworzyć umowy!'
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
-
+        return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
     /**
      * Display the specified resource.
      *
      * @param  $id
+     *
      * @return Response
      */
     public function show($id)
     {
-        $agreement = Agreement::with(['company', 'university', 'author', 'universitySupervisor', 'offer.supervisor', 'company.city', 'university.city'])->where(['id' => $id])->get();
+        $agreement = Agreement::with(
+            [
+                'company',
+                'university',
+                'author',
+                'universitySupervisor',
+                'offer.supervisor',
+                'company.city',
+                'university.city',
+            ]
+        )->where(['id' => $id])->get();
 
-        if (isset($agreement))
-        return response([
-            'status' => 'success',
-            'data' => $agreement[0],
-            'message' => null
-        ], Response::HTTP_OK);
-    else
-        return response([
-            'status' => 'error',
-            'data' => null,
-            'message' => "Nie znaleziono umowy!"
-        ], Response::HTTP_NOT_FOUND);
-
+        if (isset($agreement)) {
+            return response(
+                [
+                    'status' => 'success',
+                    'data' => $agreement[0],
+                    'message' => null,
+                ],
+                Response::HTTP_OK
+            );
+        } else {
+            return response(
+                [
+                    'status' => 'error',
+                    'data' => null,
+                    'message' => "Nie znaleziono umowy!",
+                ],
+                Response::HTTP_NOT_FOUND
+            );
+        }
     }
 
     /**
      * Active specified agreements
      *
      * @param $id
+     *
      * @return Response
      */
     public function active($id)
@@ -132,24 +140,52 @@ class AgreementController extends Controller
 
         $agreement->is_active = 1;
 
-        if($agreement->save())
-            return response([
-                'status' => 'success',
-                'data' => null,
-                'message' => 'Porozumienie zostało potwierdzone!'
-            ], Response::HTTP_OK);
-        else
-            return response([
-                'status' => 'error',
-                'data' => null,
-                'message' => "Nie udało się potwierdzić porozumienia!"
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        if ($agreement->save()) {
+            return response(
+                [
+                    'status' => 'success',
+                    'data' => null,
+                    'message' => 'Porozumienie zostało potwierdzone!',
+                ],
+                Response::HTTP_OK
+            );
+        } else {
+            return response(
+                [
+                    'status' => 'error',
+                    'data' => null,
+                    'message' => "Nie udało się potwierdzić porozumienia!",
+                ],
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            );
+        }
+    }
+
+    public function accept(AgreementChangeStatusRequest $request, $slug) {
+        $agreement = $this->agreementService->acceptAgreement($slug);
+
+        if($agreement !== null) {
+            return response($agreement, Response::HTTP_OK);
+        }
+
+        return response(null, Response::HTTP_NOT_MODIFIED);
+    }
+
+    public function reject(AgreementChangeStatusRequest $request, $slug) {
+        $agreement = $this->agreementService->rejectAgreement($slug);
+
+        if($agreement !== null) {
+            return response($agreement, Response::HTTP_OK);
+        }
+
+        return response(null, Response::HTTP_NOT_MODIFIED);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
      * @param Agreement $agreement
+     *
      * @return Response
      */
     public function edit(Agreement $agreement)
@@ -162,6 +198,7 @@ class AgreementController extends Controller
      *
      * @param Request $request
      * @param Agreement $agreement
+     *
      * @return Response
      */
     public function update(Request $request, Agreement $agreement)
@@ -172,16 +209,18 @@ class AgreementController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  Agreement $agreement
+     * @param Agreement $agreement
+     *
      * @return Response
      */
     public function destroy($id)
     {
         $agreement = Agreement::find($id);
 
-        if ($agreement->delete())
+        if ($agreement->delete()) {
             return response("Agreement has been deleted!", Response::HTTP_OK);
-        else
+        } else {
             return response("Agreement has not been deleted!", Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 }

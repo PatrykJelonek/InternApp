@@ -1,62 +1,63 @@
 <template>
-    <v-card elevation="0" color="card-background">
-        <v-list color="card-background">
-            <v-list-item>
-                <v-list-item-content>
-                    <v-list-item-title class="text-h5 font-weight-medium">Informacje podstawowe</v-list-item-title>
-                    <v-list-item-subtitle>Ponieżej znajdują się podstawowe informacje na temat tego uniwersytetu.
-                    </v-list-item-subtitle>
-                </v-list-item-content>
-                <v-list-item-action>
-                    <v-btn icon @click="show = !show">
-                        <v-icon>{{ show ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
-                    </v-btn>
-                </v-list-item-action>
-            </v-list-item>
-        </v-list>
-        <v-divider></v-divider>
-        <v-expand-transition>
-            <v-row v-show="show" no-gutters>
-                <v-col cols="12" sm="12" md="6" lg="6">
-                    <v-list nav color="card-background">
-                        <v-list-item>
-                            <v-list-item-content class="font-weight-bold">Nazwa:</v-list-item-content>
-                            <v-list-item-content>{{ name }}</v-list-item-content>
-                        </v-list-item>
-                        <v-list-item>
-                            <v-list-item-content class="font-weight-bold">Typ:</v-list-item-content>
-                            <v-list-item-content>{{ type }}</v-list-item-content>
-                        </v-list-item>
-                        <v-list-item>
-                            <v-list-item-content class="font-weight-bold">Adres:</v-list-item-content>
-                            <v-list-item-content>{{ address }}</v-list-item-content>
-                        </v-list-item>
-                    </v-list>
-                </v-col>
-                <v-col cols="12" sm="12" md="6" lg="6">
-                    <v-list nav color="card-background">
-                        <v-list-item>
-                            <v-list-item-content class="font-weight-bold">Adres email:</v-list-item-content>
-                            <v-list-item-content>{{ email }}</v-list-item-content>
-                        </v-list-item>
-                        <v-list-item>
-                            <v-list-item-content class="font-weight-bold">Numer kontaktowy:</v-list-item-content>
-                            <v-list-item-content>{{ phone }}</v-list-item-content>
-                        </v-list-item>
-                        <v-list-item>
-                            <v-list-item-content class="font-weight-bold">Strona internetowa:</v-list-item-content>
-                            <v-list-item-content>{{ website }}</v-list-item-content>
-                        </v-list-item>
-                    </v-list>
-                </v-col>
-            </v-row>
-        </v-expand-transition>
-    </v-card>
+    <expand-card
+        title="Informacje podstawowe"
+        description="Ponieżej znajdują się podstawowe informacje na temat tego uniwersytetu."
+    >
+        <v-row no-gutters>
+            <v-col cols="12" sm="12" md="6" lg="6">
+                <v-list nav color="card-background">
+                    <v-list-item two-line>
+                        <v-list-item-content>
+                            <v-list-item-title>Nazwa</v-list-item-title>
+                            <v-list-item-subtitle>{{ name }}</v-list-item-subtitle>
+                        </v-list-item-content>
+                    </v-list-item>
+                    <v-list-item>
+                        <v-list-item-content>
+                            <v-list-item-title>Typ</v-list-item-title>
+                            <v-list-item-subtitle>{{ type }}</v-list-item-subtitle>
+                        </v-list-item-content>
+                    </v-list-item>
+                    <v-list-item>
+                        <v-list-item-content>
+                            <v-list-item-title>Adres</v-list-item-title>
+                            <v-list-item-subtitle>{{ address }}</v-list-item-subtitle>
+                        </v-list-item-content>
+                    </v-list-item>
+                </v-list>
+            </v-col>
+            <v-col cols="12" sm="12" md="6" lg="6">
+                <v-list nav color="card-background">
+                    <v-list-item>
+                        <v-list-item-content>
+                            <v-list-item-title>Adres email</v-list-item-title>
+                            <v-list-item-subtitle>{{ email }}</v-list-item-subtitle>
+                        </v-list-item-content>
+                    </v-list-item>
+                    <v-list-item>
+                        <v-list-item-content>
+                            <v-list-item-title>Numer kontaktowy</v-list-item-title>
+                            <v-list-item-subtitle>{{ phone }}</v-list-item-subtitle>
+                        </v-list-item-content>
+                    </v-list-item>
+                    <v-list-item>
+                        <v-list-item-content>
+                            <v-list-item-title>Strona internetowa</v-list-item-title>
+                            <v-list-item-subtitle>{{ website }}</v-list-item-subtitle>
+                        </v-list-item-content>
+                    </v-list-item>
+                </v-list>
+            </v-col>
+        </v-row>
+    </expand-card>
 </template>
 
 <script>
+import ExpandCard from "../../_Helpers/ExpandCard";
+
 export default {
     name: "TheUniversityDetails",
+    components: {ExpandCard},
     props: ['name', 'type', 'address', 'email', 'phone', 'website'],
 
     data() {

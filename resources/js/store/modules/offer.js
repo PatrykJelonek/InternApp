@@ -96,6 +96,7 @@ export default {
                     params: {
                         categories: data.categories ?? null,
                         statuses: data.statuses ?? null,
+                        onlyWithPlaces: data.onlyWithPlaces ?? null,
                         limit: data.limit ?? null,
                     }
                 });

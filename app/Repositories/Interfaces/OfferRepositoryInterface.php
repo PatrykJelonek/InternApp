@@ -13,9 +13,11 @@ interface OfferRepositoryInterface
 
     public function getOfferBySlug(string $slug);
 
-    public function getAllOffers(?array $categories = null, ?array $statuses = null, ?int $limit = null);
+    public function getAllOffers(?array $categories = null, ?array $statuses = null,?bool $onlyWithPlaces = false, ?int $limit = null);
 
     public function createOffer(array $data);
+
+    public function updateOffer(array $data, ?int $offerId  = null, ?string $offerSlug = null);
 
     public function updateOfferBySlug(string $slug);
 

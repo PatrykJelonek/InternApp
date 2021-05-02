@@ -8,6 +8,7 @@
 
 namespace App\Repositories;
 
+use App\Models\AgreementAttachment;
 use App\Models\Attachment;
 use App\Models\OfferAttachment;
 use App\Repositories\Interfaces\AttachmentRepositoryInterface;
@@ -34,7 +35,7 @@ class AttachmentRepository implements AttachmentRepositoryInterface
         return null;
     }
 
-    public function linkOfferAttachments(array $data): ?OfferAttachment
+    public function linkOfferAttachment(array $data): ?OfferAttachment
     {
         $offerAttachment = new OfferAttachment();
         $offerAttachment->offer_id = $data['offerId'];
@@ -43,6 +44,20 @@ class AttachmentRepository implements AttachmentRepositoryInterface
 
         if ($offerAttachment->save()) {
             return $offerAttachment;
+        }
+
+        return null;
+    }
+
+    public function linkAgreementAttachment(int $agreementId, int $attachmentId)
+    {
+        $agreementAttachment = new AgreementAttachment();
+        $agreementAttachment->agreement_id = $agreementId;
+        $agreementAttachment->attachment_id = $attachmentId;
+        $agreementAttachment->freshTimestamp();
+
+        if ($agreementAttachment->save()) {
+            return $agreementAttachment;
         }
 
         return null;

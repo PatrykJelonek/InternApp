@@ -269,45 +269,31 @@ class CompanyController extends Controller
      */
     public function getCompanyOffers(CompanyOffersRequest $request, $slug)
     {
-       $offers = $this->companyRepository->getCompanyOffers($slug);
+        $offers = $this->companyRepository->getCompanyOffers($slug);
 
-       if (isset($offers) && count($offers) > 0) {
-           return response($offers, Response::HTTP_OK);
-       }
+        if (isset($offers) && count($offers) > 0) {
+            return response($offers, Response::HTTP_OK);
+        }
 
-       return response(null, Response::HTTP_NO_CONTENT);
+        return response(null, Response::HTTP_NO_CONTENT);
     }
 
     /**
      * Get company agreements
      *
-     * @param $id
+     * @param $slug
      *
      * @return Response
      */
-    public function getCompanyAgreements($id)
+    public function getAgreements($slug)
     {
-        $agreements = Agreement::with(['offer', 'university'])->where(['company_id' => $id])->get();
+        $agreements = $this->companyRepository->getCompanyAgreements($slug);
 
         if (isset($agreements)) {
-            return response(
-                [
-                    'status' => 'success',
-                    'data' => $agreements,
-                    'message' => null,
-                ],
-                Response::HTTP_OK
-            );
-        } else {
-            return response(
-                [
-                    'status' => 'error',
-                    'data' => null,
-                    'message' => "Nie znaleziono oferty!",
-                ],
-                Response::HTTP_NOT_FOUND
-            );
+            return response($agreements, Response::HTTP_OK);
         }
+
+        return response(null, Response::HTTP_NOT_FOUND);
     }
 
     /**
@@ -383,10 +369,11 @@ class CompanyController extends Controller
         );
     }
 
-    public function getCompanyWorkers(GetCompanyWorkersRequest $request, $slug) {
+    public function getCompanyWorkers(GetCompanyWorkersRequest $request, $slug)
+    {
         $companyWorkers = $this->companyRepository->getCompanyWorkers($slug);
 
-        if(!empty($companyWorkers)) {
+        if (!empty($companyWorkers)) {
             return response($companyWorkers, Response::HTTP_OK);
         }
 

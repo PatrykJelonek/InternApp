@@ -12,5 +12,7 @@ interface AttachmentRepositoryInterface
 {
     public function storeAttachments(array $data);
 
-    public function linkOfferAttachments(array $data);
+    public function linkOfferAttachment(array $data);
+
+    public function linkAgreementAttachment(int $agreementId, int $attachmentId);
 }

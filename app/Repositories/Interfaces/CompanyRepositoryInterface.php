@@ -28,4 +28,6 @@ interface CompanyRepositoryInterface
     public function getCompanyOffers(string $slug, ?array $categories = null, ?array $statuses = null, ?int $limit = null);
 
     public function getCompanyWorkers(string $slug, ?array $roles = null, ?array $statuses = null, ?int $limit = null);
+
+    public function getCompanyAgreements(string $slug, ?bool $isActive = null);
 }

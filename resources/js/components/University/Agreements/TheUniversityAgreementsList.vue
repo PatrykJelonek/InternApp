@@ -71,10 +71,31 @@
                         <template v-slot:item.dates="{ item }">
                             {{ formatDate(item.date_from) + ' - ' + formatDate(item.date_to) }}
                         </template>
+                        <template v-slot:item.is_active="{ item }">
+                            <v-chip
+                                small
+                                :color="item.is_active  ? '#C8E6C9' : 'grey lighten-3'"
+                            >
+                                {{ item.is_active ? 'Aktywna' : 'Nieaktywna' }}
+                            </v-chip>
+                        </template>
                         <template v-slot:item.actions="{ item }">
-                            <v-btn icon x-small>
-                                <v-icon>mdi-dots-vertical</v-icon>
-                            </v-btn>
+                            <v-menu offset-y>
+                                <template v-slot:activator="{ on, attrs }">
+                                    <v-btn
+                                        icon
+                                        v-bind="attrs"
+                                        v-on="on"
+                                    >
+                                        <v-icon>mdi-dots-vertical</v-icon>
+                                    </v-btn>
+                                </template>
+                                <v-list dense>
+                                    <v-list-item>
+                                        <v-list-item-title class="link">Odrzuć</v-list-item-title>
+                                    </v-list-item>
+                                </v-list>
+                            </v-menu>
                         </template>
                     </v-data-table>
                 </v-col>
@@ -99,6 +120,7 @@ export default {
                 {text: 'Opiekun z uczelni', value: 'universitySupervisor'},
                 {text: 'Opiekun z firmy', value: 'companySupervisor'},
                 {text: 'Okres ważności', value: 'dates'},
+                {text: 'Status', value: 'is_active'},
                 {text: 'Akcje', value: 'actions', sortable: false, align: 'center'},
             ],
         }
@@ -132,6 +154,6 @@ export default {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 
 </style>

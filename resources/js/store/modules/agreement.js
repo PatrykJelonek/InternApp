@@ -2,7 +2,7 @@ export default {
     namespaced: true,
 
     state: {
-        agreement: ''
+        agreement: '',
     },
 
     getters: {
@@ -22,6 +22,24 @@ export default {
             try {
                 let response = await axios.get(`/api/agreements/${id}`);
                 commit('SET_AGREEMENT', response.data.data);
+            } catch(e) {
+                commit('SET_AGREEMENT', null);
+            }
+        },
+
+        async acceptAgreement({commit}, slug) {
+            try {
+                let response = await axios.get(`/api/agreements/${slug}/accept`);
+                commit('SET_AGREEMENT', response.data);
+            } catch(e) {
+                commit('SET_AGREEMENT', null);
+            }
+        },
+
+        async rejectAgreement({commit}, slug) {
+            try {
+                let response = await axios.get(`/api/agreements/${slug}/reject`);
+                commit('SET_AGREEMENT', response.data);
             } catch(e) {
                 commit('SET_AGREEMENT', null);
             }

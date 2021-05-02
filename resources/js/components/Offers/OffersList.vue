@@ -125,7 +125,7 @@ export default {
     },
 
     created() {
-        this.fetchOffers({categories: null, statuses: ['accepted']}).then(() => {
+        this.fetchOffers({categories: null, statuses: ['accepted'], onlyWithPlaces: true}).then(() => {
             this.isLoading = false;
         });
     }

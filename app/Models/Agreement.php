@@ -9,7 +9,7 @@ class Agreement extends Model
 {
     use HasFactory;
 
-    protected $table ='agreements';
+    protected $table = 'agreements';
 
     public function company()
     {
@@ -33,11 +33,16 @@ class Agreement extends Model
 
     public function supervisor()
     {
-        return $this->belongsTo('App\Models\User','university_supervisor_id', 'id');
+        return $this->belongsTo('App\Models\User', 'university_supervisor_id', 'id');
     }
 
     public function internships()
     {
-        return $this->hasMany('App\Models\Internship', 'agreement_id','id');
+        return $this->hasMany('App\Models\Internship', 'agreement_id', 'id');
+    }
+
+    public function status()
+    {
+        return $this->belongsTo('App\Models\AgreementStatus', 'agreement_status_id', 'id');
     }
 }

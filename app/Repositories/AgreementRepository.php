@@ -10,10 +10,12 @@ namespace App\Repositories;
 
 use App\Models\Agreement;
 use App\Repositories\Interfaces\AgreementRepositoryInterface;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class AgreementRepository implements AgreementRepositoryInterface
 {
-    private $with = ['offer','university','company'];
+    private $with = ['offer', 'university', 'company', 'status'];
 
     public function one(string $slug)
     {
@@ -24,16 +26,43 @@ class AgreementRepository implements AgreementRepositoryInterface
     {
         $agreements = Agreement::with($this->with);
 
-        if($onlyActive) {
+        if ($onlyActive) {
             $agreements->where('is_active', '=', true);
         }
 
         return $agreements->get();
     }
 
-    public function create()
+    /**
+     * @param array $data
+     *
+     * @return Agreement|null
+     */
+    public function create(array $data): ?Agreement
     {
-        // TODO: Implement create() method.
+        $agreement = new Agreement();
+
+        $agreement->name = $data['name'];
+        $agreement->slug = Str::slug($data['name']) . '-' . Str::random(5);
+        $agreement->signing_date = $data['signingDate'] ?? null;
+        $agreement->date_from = $data['dateFrom'];
+        $agreement->date_to = $data['dateTo'];
+        $agreement->program = $data['program'];
+        $agreement->schedule = $data['schedule'];
+        $agreement->content = $data['content'];
+        $agreement->company_id = $data['companyId'];
+        $agreement->university_id = $data['universityId'];
+        $agreement->university_supervisor_id = $data['universitySupervisorId'];
+        $agreement->offer_id = $data['offerId'];
+        $agreement->user_id = $data['userId'] ?? Auth::id();
+        $agreement->is_active = $data['isActive'] ?? false;
+        $agreement->freshTimestamp();
+
+        if ($agreement->save()) {
+            return $agreement;
+        }
+
+        return null;
     }
 
     public function edit(string $slug)
@@ -44,5 +73,17 @@ class AgreementRepository implements AgreementRepositoryInterface
     public function delete(string $slug)
     {
         // TODO: Implement delete() method.
+    }
+
+    public function changeAgreementStatus(string $slug, int $statusId)
+    {
+        $agreement = Agreement::where(['slug' => $slug])->first();
+        $agreement->agreement_status_id = $statusId;
+
+        if($agreement->update()) {
+            return $agreement;
+        }
+
+        return null;
     }
 }

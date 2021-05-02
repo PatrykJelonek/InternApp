@@ -38,7 +38,7 @@ class AttachmentService
             $savedAttachment = $this->attachmentRepository->storeAttachments($attachment);
 
             if ($savedAttachment) {
-                return $this->attachmentRepository->linkOfferAttachments(
+                return $this->attachmentRepository->linkOfferAttachment(
                     [
                         'offerId' => $offerId,
                         'attachmentId' => $savedAttachment->id,
@@ -48,13 +48,41 @@ class AttachmentService
 
         } catch (\Exception $e) {
             clock()->info(
-                'BŁĄD POCZAS DODAWANIA ZAŁĄCZNIKA DO PRAKTYKI',
+                'BŁĄD POCZAS DODAWANIA ZAŁĄCZNIKA DO OFERTY',
                 [
                     'method' => 'AttachmentService::storeOfferAttachment',
                     'dump' => (array)$e,
                 ]
             );
             return false;
+        }
+    }
+
+    public function storeAgreementAttachments(array $attachments, int $agreementId)
+    {
+        try {
+            $result = [];
+
+            foreach ($attachments as $attachment) {
+                $path = Storage::disk('agreements')->put($attachment['name'], base64_encode($attachment['content']));
+                $attachment['path'] = $path;
+                $savedAttachment = $this->attachmentRepository->storeAttachments($attachment);
+
+                if ($savedAttachment) {
+                    $result[$attachment['name']] = $savedAttachment !== null;
+                    $this->attachmentRepository->linkAgreementAttachment($savedAttachment->id, $agreementId);
+                }
+            }
+
+            return $result;
+        } catch (\Exception $e) {
+            clock()->info(
+                'BŁĄD POCZAS DODAWANIA ZAŁĄCZNIKA DO UMOWY',
+                [
+                    'method' => 'AttachmentService::storeAgreementAttachments',
+                    'dump' => (array)$e,
+                ]
+            );
         }
     }
 }
