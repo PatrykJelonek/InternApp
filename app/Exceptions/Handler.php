@@ -41,6 +41,10 @@ class Handler extends ExceptionHandler
             app('sentry')->captureException($exception);
         }
 
+        clock()->info('Error Handling', [
+            'dump' => json_encode((array)$exception, JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT),
+        ]);
+
         parent::report($exception);
     }
 
@@ -56,6 +60,10 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Throwable $exception)
     {
+        clock()->info('Error Handling', [
+            'dump' => json_encode((array)$exception, JSON_THROW_ON_ERROR | JSON_PRETTY_PRINT),
+        ]);
+
         return parent::render($request, $exception);
     }
 }

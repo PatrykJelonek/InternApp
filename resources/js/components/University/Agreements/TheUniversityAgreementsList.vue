@@ -1,50 +1,28 @@
 <template>
-    <v-card elevation="0" color="card-background">
-        <v-list color="card-background">
-            <v-list-item>
-                <v-list-item-content>
-                    <v-list-item-title class="text-h5 font-weight-medium">Umowy</v-list-item-title>
-                    <v-list-item-subtitle>Lista umów należących do {{
-                            university.name
-                        }}.
-                    </v-list-item-subtitle>
-                </v-list-item-content>
-                <v-list-item-action>
-                    <v-btn-toggle borderless dense>
-                        <v-tooltip top>
+    <div>
+        <v-row>
+            <create-own-agreement-dialog></create-own-agreement-dialog>
+            <v-col cols="12">
+                <expand-card
+                    title="Umowy"
+                    :description="`Lista umów należących do ${university.name}.`"
+                >
+                    <template v-slot:buttons>
+                        <v-tooltip top v-has="['deanery_worker']">
                             <template v-slot:activator="{ on, attrs }">
                                 <v-btn
                                     small
                                     icon
                                     v-bind="attrs"
                                     v-on="on"
+                                    @click="toggleCreateOwnAgreementDialog(true)"
                                 >
                                     <v-icon>mdi-plus</v-icon>
                                 </v-btn>
                             </template>
                             <span>Dodaj Umowę</span>
                         </v-tooltip>
-                        <v-tooltip top>
-                            <template v-slot:activator="{ on, attrs }">
-                                <v-btn
-                                    small
-                                    icon
-                                    v-bind="attrs"
-                                    v-on="on"
-                                    @click="show = !show">
-                                    <v-icon>{{ show ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
-                                </v-btn>
-                            </template>
-                            <span>{{ show ? 'Zwiń Listę' : 'Rozwiń Listę' }}</span>
-                        </v-tooltip>
-                    </v-btn-toggle>
-                </v-list-item-action>
-            </v-list-item>
-        </v-list>
-        <v-divider></v-divider>
-        <v-expand-transition>
-            <v-row v-show="show" no-gutters>
-                <v-col cols="12">
+                    </template>
                     <v-data-table
                         :headers="headers"
                         :items="agreements"
@@ -98,19 +76,21 @@
                             </v-menu>
                         </template>
                     </v-data-table>
-                </v-col>
-            </v-row>
-        </v-expand-transition>
-    </v-card>
+                </expand-card>
+            </v-col>
+        </v-row>
+    </div>
 </template>
 
 <script>
 import moment from "moment";
 import {mapActions, mapGetters} from "vuex";
+import ExpandCard from "../../_Helpers/ExpandCard";
+import CreateOwnAgreementDialog from "./CreateOwnAgreementDialog";
 
 export default {
     name: "TheUniversityAgreementsList",
-
+    components: {CreateOwnAgreementDialog, ExpandCard},
     data() {
         return {
             show: true,
@@ -137,6 +117,7 @@ export default {
     methods: {
         ...mapActions({
             fetchAgreements: 'university/fetchAgreements',
+            toggleCreateOwnAgreementDialog: 'helpers/toggleCreateOwnAgreementDialog',
         }),
 
         formatDate(date) {

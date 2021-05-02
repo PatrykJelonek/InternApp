@@ -27,7 +27,7 @@
                         <validation-observer ref="observerStepOne" v-slot="{ validate }">
                             <v-stepper-content step="1">
                                 <v-expand-transition>
-                                    <v-row v-if="searchCompanyInput && canSearchable" class="mt-1" v>
+                                    <v-row v-if="searchCompanyInput && canSearchable" class="mt-1">
                                         <v-col cols="12" class="text-center subtitle-1">
                                             Sprawdź czy nie ma już twojej firmy w naszym systemie.
                                         </v-col>

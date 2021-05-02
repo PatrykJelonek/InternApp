@@ -10,6 +10,7 @@ export default {
         acceptAgreementDialog: false,
         rejectAgreementDialog: false,
         applyInternshipDialog: false,
+        createOwnAgreementDialog: false,
         fillHeight: false,
         errorMessage: '',
     },
@@ -33,6 +34,10 @@ export default {
 
         createAgreementDialog(state) {
             return state.createAgreementDialog;
+        },
+
+        createOwnAgreementDialog(state) {
+            return state.createOwnAgreementDialog;
         },
 
         acceptAgreementDialog(state) {
@@ -81,6 +86,10 @@ export default {
             state.createAgreementDialog = value;
         },
 
+        TOGGLE_CREATE_OWN_AGREEMENT_DIALOG(state, value) {
+            state.createOwnAgreementDialog = value;
+        },
+
         TOGGLE_ACCEPT_AGREEMENT_DIALOG(state, value) {
             state.acceptAgreementDialog = value;
         },
@@ -121,6 +130,10 @@ export default {
 
         toggleCreateAgreementDialog({commit}, value) {
             commit('TOGGLE_CREATE_AGREEMENT_DIALOG', value);
+        },
+
+        toggleCreateOwnAgreementDialog({commit}, value) {
+            commit('TOGGLE_CREATE_OWN_AGREEMENT_DIALOG', value);
         },
 
         toggleAcceptAgreementDialog({commit}, value) {

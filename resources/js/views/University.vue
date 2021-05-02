@@ -13,14 +13,11 @@
                 </v-container>
             </v-row>
         </div>
-        <div v-else class="mt-15 text-center">
-            <v-progress-circular
-                indeterminate
-                size="100"
-                width="8"
-                color="primary"
-            ></v-progress-circular>
-        </div>
+        <v-row v-else class="text-center">
+            <v-col cols="12">
+                <page-loader></page-loader>
+            </v-col>
+        </v-row>
     </v-container>
 </template>
 
@@ -28,10 +25,11 @@
 import {mapActions, mapGetters} from "vuex";
 import PageTitle from "../components/_Helpers/PageTitle";
 import TheUniversitySubPages from "../components/University/TheUniversitySubPages";
+import PageLoader from "../components/_General/PageLoader";
 
 export default {
     name: "University",
-    components: {TheUniversitySubPages, PageTitle},
+    components: {PageLoader, TheUniversitySubPages, PageTitle},
     computed: {
         ...mapGetters({
             university: 'university/university',

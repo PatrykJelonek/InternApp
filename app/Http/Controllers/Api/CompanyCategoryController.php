@@ -17,11 +17,12 @@ class CompanyCategoryController extends Controller
     public function index()
     {
         $companyCategories = CompanyCategory::all();
-
-        if (isset($companyCategories))
+        clock()->info('asd');
+        if (!empty($companyCategories)) {
             return response($companyCategories, Response::HTTP_OK);
-        else
-            return response(null, Response::HTTP_NOT_FOUND);
+        }
+
+        return response(null, Response::HTTP_NO_CONTENT);
     }
 
     /**
