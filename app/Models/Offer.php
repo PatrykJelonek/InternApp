@@ -42,6 +42,11 @@ class Offer extends Model
 
     }
 
+    public function scopeWithPlaces($query)
+    {
+        return $query->where('places_number', '>', 0);
+    }
+
     // TODO:supervisior_ids
     public static function messages()
     {

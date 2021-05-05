@@ -13,11 +13,13 @@ use App\Models\Offer;
 use App\Repositories\Interfaces\OfferRepositoryInterface;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Env;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Str;
 
 class OfferRepository implements OfferRepositoryInterface
 {
-    private $with = ['category', 'status', 'supervisor','company', 'company.city'];
+    private $with = ['category', 'status', 'supervisor', 'company', 'company.city'];
 
     /**
      * @var OfferCategoryRepository
@@ -61,15 +63,19 @@ class OfferRepository implements OfferRepositoryInterface
      *
      * @return Builder[]|\Illuminate\Database\Eloquent\Collection
      */
-    public function getAllOffers(?array $categories = null, ?array $statuses = null,?bool $onlyWithPlaces = false, ?int $limit = null)
-    {
+    public function getAllOffers(
+        ?array $categories = null,
+        ?array $statuses = null,
+        ?bool $onlyWithPlaces = false,
+        ?int $limit = null
+    ) {
         $offers = Offer::with($this->with);
 
         if ($statuses !== null) {
             $offers->whereHas(
                 'status',
                 function (Builder $query) use ($statuses) {
-                    $query->where('name', $statuses);
+                    $query->where(['name' => $statuses]);
                 }
             );
         }
@@ -78,13 +84,13 @@ class OfferRepository implements OfferRepositoryInterface
             $offers->whereHas(
                 'category',
                 function (Builder $query) use ($categories) {
-                    $query->where('name',  $categories);
+                    $query->where(['name' => $categories]);
                 }
             );
         }
 
         if ($onlyWithPlaces) {
-            $offers->where('places_number','>', 0);
+            $offers->withPlaces();
         }
 
         if ($limit !== null) {
@@ -93,7 +99,22 @@ class OfferRepository implements OfferRepositoryInterface
 
         $offers->orderByDesc('created_at');
 
-        return $offers->get();
+        $sql = $offers->toSql();
+        $offers = $offers->get();
+
+        if (App::environment('local')) {
+            clock()->info(
+                'OfferRepository::GetAllOffers',
+                [
+                    'dump' => [
+                        'offers' => $offers->toArray(),
+                        'sql' => $sql,
+                    ],
+                ]
+            );
+        }
+
+        return $offers;
     }
 
     /**
@@ -118,7 +139,9 @@ class OfferRepository implements OfferRepositoryInterface
         $offer->slug = Str::slug($data['name']);
         $offer->interview = $data['interview'] ?? false;
         $offer->date_from = $data['dateFrom'] ?? Carbon::today();
-        $offer->date_to = $data['dateTo'] ?? Carbon::today()->addMonths(config('global.defaultDifferenceBetweenStartAndEndOfferDate'));
+        $offer->date_to = $data['dateTo'] ?? Carbon::today()->addMonths(
+                config('global.defaultDifferenceBetweenStartAndEndOfferDate')
+            );
         $offer->created_at = Carbon::today();
         $offer->updated_at = Carbon::today();
 
@@ -143,16 +166,22 @@ class OfferRepository implements OfferRepositoryInterface
     {
         $offer = $this->getOfferBySlug($slug);
 
-        if($offer) {
+        if ($offer) {
             switch ($offer->status->name) {
                 case OfferStatusConstants::STATUS_DRAFT_NEW:
-                    $offerStatus = $this->offerStatusRepository->getOfferStatusByName(OfferStatusConstants::STATUS_DRAFT_ACCEPTED);
+                    $offerStatus = $this->offerStatusRepository->getOfferStatusByName(
+                        OfferStatusConstants::STATUS_DRAFT_ACCEPTED
+                    );
                     break;
                 case OfferStatusConstants::STATUS_STUDENT_NEW:
-                    $offerStatus = $this->offerStatusRepository->getOfferStatusByName(OfferStatusConstants::STATUS_STUDENT_ACCEPTED);
+                    $offerStatus = $this->offerStatusRepository->getOfferStatusByName(
+                        OfferStatusConstants::STATUS_STUDENT_ACCEPTED
+                    );
                     break;
                 default:
-                    $offerStatus = $this->offerStatusRepository->getOfferStatusByName(OfferStatusConstants::STATUS_ACCEPTED);
+                    $offerStatus = $this->offerStatusRepository->getOfferStatusByName(
+                        OfferStatusConstants::STATUS_ACCEPTED
+                    );
                     break;
             }
 
@@ -172,13 +201,19 @@ class OfferRepository implements OfferRepositoryInterface
 
         switch ($offer->first()->status->name) {
             case OfferStatusConstants::STATUS_DRAFT_NEW:
-                $offerStatus = $this->offerStatusRepository->getOfferStatusByName(OfferStatusConstants::STATUS_DRAFT_REJECTED);
+                $offerStatus = $this->offerStatusRepository->getOfferStatusByName(
+                    OfferStatusConstants::STATUS_DRAFT_REJECTED
+                );
                 break;
             case OfferStatusConstants::STATUS_STUDENT_NEW:
-                $offerStatus = $this->offerStatusRepository->getOfferStatusByName(OfferStatusConstants::STATUS_STUDENT_REJECTED);
+                $offerStatus = $this->offerStatusRepository->getOfferStatusByName(
+                    OfferStatusConstants::STATUS_STUDENT_REJECTED
+                );
                 break;
             default:
-                $offerStatus = $this->offerStatusRepository->getOfferStatusByName(OfferStatusConstants::STATUS_REJECTED);
+                $offerStatus = $this->offerStatusRepository->getOfferStatusByName(
+                    OfferStatusConstants::STATUS_REJECTED
+                );
                 break;
         }
 
@@ -192,9 +227,9 @@ class OfferRepository implements OfferRepositoryInterface
         return null;
     }
 
-    public function updateOffer(array $data, ?int $offerId  = null, ?string $offerSlug = null)
+    public function updateOffer(array $data, ?int $offerId = null, ?string $offerSlug = null)
     {
-        if($offerId !== null || $offerSlug !== null) {
+        if ($offerId !== null || $offerSlug !== null) {
             $offer = $offerId !== null ? $this->getOfferById($offerId) : $this->getOfferBySlug($offerSlug);
 
             $offer->company_id = $data['companyId'] ?? $offer->company_id;

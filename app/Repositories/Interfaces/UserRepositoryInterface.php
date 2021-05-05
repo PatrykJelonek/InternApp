@@ -15,4 +15,6 @@ interface UserRepositoryInterface
     public function getUniversities();
 
     public function getCompanies();
+
+    public function getMessages(int $userId);
 }

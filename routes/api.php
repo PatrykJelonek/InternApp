@@ -141,6 +141,7 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::get('/me/companies', 'Api\UserCompanyController@index');
     Route::get('/me/notifications', 'Api\NotificationController@index');
     Route::get('/me/offers','Api\StudentController@getAvailableInternshipOffers');
+    Route::get('/me/messages', 'Api\UserMessageController@index');
 
     # Statistics
     Route::get('/statistics/offers/count','Api\StatisticController@getNumberOfOffers');

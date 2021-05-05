@@ -2,15 +2,17 @@
     <v-container fluid >
         <v-row>
             <v-col>
-                <h2 class="text--welcome text-h3 font-weight-black">Wiadomości</h2>
+                <messages-list></messages-list>
             </v-col>
         </v-row>
     </v-container>
 </template>
 
 <script>
+import MessagesList from "../components/Messages/MessagesList";
 export default {
-    name: "Messages"
+    name: "Messages",
+    components: {MessagesList}
 }
 </script>
 

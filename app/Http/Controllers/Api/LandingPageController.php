@@ -28,7 +28,7 @@ class LandingPageController extends Controller
 
     public function offers(Request $request)
     {
-        $offers = $this->offerRepository->getAllOffers(null, [OfferStatusConstants::STATUS_ACCEPTED], 10);
+        $offers = $this->offerRepository->getAllOffers(null, [OfferStatusConstants::STATUS_ACCEPTED], false,10);
 
         if (count($offers) > 0) {
             return response(LandingPageOfferResource::collection($offers), Response::HTTP_OK);

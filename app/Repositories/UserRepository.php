@@ -3,11 +3,15 @@
 namespace App\Repositories;
 
 use App\Constants\RoleConstants;
+use App\Http\Resources\Collections\MessageCollection;
 use App\Models\Internship;
 use App\Models\InternshipStatus;
+use App\Models\Message;
 use App\Models\User;
 use App\Repositories\Interfaces\UserRepositoryInterface;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 use Illuminate\Support\Facades\Auth;
 
 class UserRepository implements UserRepositoryInterface
@@ -31,7 +35,7 @@ class UserRepository implements UserRepositoryInterface
                 function (Builder $query) use ($userId) {
                     $query->where('university_supervisor_id', $userId)->orWhere('company_supervisor_id', $userId);
                 }
-            )->with(['agreement.company','offer','status'])->get();
+            )->with(['agreement.company', 'offer', 'status'])->get();
         }
 
         if ($user->hasRole(RoleConstants::ROLE_STUDENT)) {
@@ -47,7 +51,7 @@ class UserRepository implements UserRepositoryInterface
                 function (Builder $query) use ($userId) {
                     $query->where(['user_id' => $userId]);
                 }
-            )->with(['agreement.company','offer','status'])
+            )->with(['agreement.company', 'offer', 'status'])
                 ->get();
         }
 
@@ -78,5 +82,24 @@ class UserRepository implements UserRepositoryInterface
         }
 
         return null;
+    }
+
+    public function getMessages(int $userId)
+    {
+        $messages = Message::with(['sender', 'receiver',])->whereHas(
+            'sender',
+            function (Builder $query) use ($userId) {
+                $query->where(['id' => $userId]);
+            }
+        )->orWhereHas(
+            'receiver',
+            function (Builder $query) use ($userId) {
+                $query->where(['id' => $userId]);
+            }
+        )->orderByDesc('created_at')->get();
+
+        $messagesCollection = new MessageCollection($messages);
+
+        return $messagesCollection->toArray(new Request());
     }
 }

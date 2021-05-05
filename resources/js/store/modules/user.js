@@ -20,6 +20,8 @@ export default {
         acceptedInternships: [],
         acceptedInternshipsLoading: true,
         userUniversitiesLoading: true,
+        userMessages: [],
+        userMessagesLoading: true,
     },
 
     getters: {
@@ -37,6 +39,14 @@ export default {
 
         userCompaniesLoading(state) {
             return state.userCompaniesLoading;
+        },
+
+        userMessages(state) {
+            return state.userMessages;
+        },
+
+        userMessagesLoading(state) {
+            return state.userMessagesLoading;
         },
 
         roles(state) {
@@ -93,6 +103,14 @@ export default {
 
         SET_USER_UNIVERSITIES_LOADING(state, data) {
             state.userUniversitiesLoading = data;
+        },
+
+        SET_USER_MESSAGES(state, data) {
+            state.userMessages = data;
+        },
+
+        SET_USER_MESSAGES_LOADING(state, data) {
+            state.userMessagesLoading = data;
         },
 
         SET_USER_COMPANIES(state, data) {
@@ -175,6 +193,18 @@ export default {
             } catch (e) {
                 commit('SET_USER_UNIVERSITIES', []);
                 commit('SET_USER_UNIVERSITIES_LOADING', false);
+            }
+        },
+
+        async fetchUserMessages({ commit }) {
+            commit('SET_USER_MESSAGES_LOADING', true);
+            try {
+                let response = await axios.get('/api/me/messages');
+                commit('SET_USER_MESSAGES', response.data);
+                commit('SET_USER_MESSAGES_LOADING', false);
+            } catch (e) {
+                commit('SET_USER_MESSAGES', []);
+                commit('SET_USER_MESSAGES_LOADING', false);
             }
         },
 

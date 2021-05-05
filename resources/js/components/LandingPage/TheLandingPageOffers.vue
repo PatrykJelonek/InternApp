@@ -25,12 +25,12 @@
                     <v-fade-transition>
                         <v-card elevation="0" width="300px" class="mx-5 my-10 grey lighten-3">
                             <v-card-subtitle class="my-0 py-0">
-                                <a class="green--text text--accent-4 font-weight-bold" :href="offer.company.website">
+                                <a class="green--text text--accent-4 font-weight-bold text-decoration-none" :href="offer.company.website">
                                     {{offer.company.name}}
                                 </a>
                             </v-card-subtitle>
                             <v-card-title class="mt-0 pt-0 text-h6 font-weight-bold text-uppercase text-break">{{ offer.name }}</v-card-title>
-                            <v-card-text class="mt-5 text--secondary">{{ offer.program.substring(0, 64) }} {{ offer.program.length > 64 ? '...' : ''}}</v-card-text>
+                            <v-card-text class="mt-3 text--secondary">{{ offer.program.substring(0, 64) }} {{ offer.program.length > 64 ? '...' : ''}}</v-card-text>
                         </v-card>
                     </v-fade-transition>
                 </v-slide-item>
@@ -78,7 +78,7 @@ export default {
     created() {
         this.fetchOffers().then(() => {
 
-        }).catch(() => {
+        }).catch((e) => {
 
         });
     }
