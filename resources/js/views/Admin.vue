@@ -15,6 +15,7 @@
                         </v-tab>
                         <v-tab :to="{name: 'admin-users'}">Użytkownicy</v-tab>
                         <v-tab :to="{name: 'admin-settings'}">Ustawienia</v-tab>
+                        <v-tab :to="{name: 'admin-test'}">Test</v-tab>
                     </v-tabs>
                 </v-card>
             </v-col>

@@ -9,6 +9,8 @@
     "license": "MIT",
     "require": {
         "php": "^7.3.0",
+        "ext-json": "*",
+        "beyondcode/laravel-websockets": "^1.12",
         "binarytorch/larecipe": "^2.4",
         "fideloper/proxy": "^4.2",
         "fruitcake/laravel-cors": "^1.0",
@@ -18,10 +20,10 @@
         "laravel/legacy-factories": "^1.1",
         "laravel/tinker": "^2.0",
         "laravel/ui": "^3.0",
+        "pusher/pusher-php-server": "^5.0",
         "santigarcor/laratrust": "^6.0",
         "sentry/sentry-laravel": "^2.3",
-        "tymon/jwt-auth": "^1.0",
-      "ext-json": "*"
+        "tymon/jwt-auth": "^1.0"
     },
     "require-dev": {
         "facade/ignition": "^2.3.6",

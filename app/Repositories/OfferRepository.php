@@ -103,15 +103,9 @@ class OfferRepository implements OfferRepositoryInterface
         $offers = $offers->get();
 
         if (App::environment('local')) {
-            clock()->info(
-                'OfferRepository::GetAllOffers',
-                [
-                    'dump' => [
-                        'offers' => $offers->toArray(),
-                        'sql' => $sql,
-                    ],
-                ]
-            );
+            $clockOffers = clock()->userData('offers')->title('Offers');
+            $clockOffers->counters(['offers' => $offers->count()]);
+            $clockOffers->table('Offers', $offers->toArray());
         }
 
         return $offers;

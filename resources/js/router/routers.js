@@ -26,8 +26,6 @@ import Journal from "../views/Journal";
 import InternshipJournal from "../views/InternshipJournal";
 import NoPermissions from "../views/NoPermissions";
 import Welcome from "../views/Welcome";
-import WelcomeTabs from "../components/Tabs/WelcomeTabs";
-import UniversitiesTabs from "../components/Tabs/UniversitiesTabs";
 import Internship from "../views/Internship";
 import Profile from "../views/Profile";
 import Settings from "../views/Settings";
@@ -41,9 +39,7 @@ import TheUniversityWorkers from "../components/University/Workers/TheUniversity
 import TheUniversityAgreements from "../components/University/Agreements/TheUniversityAgreements";
 import TheUniversityInternships from "../components/University/Internships/TheUniversityInternships";
 import TheUniversitySettings from "../components/University/Settings/TheUniversitySettings";
-import StudentOffersList from "../components/Offers/Student/StudentOffersList";
 import TheStudentOfferApplicationsList from "../components/Offers/Student/TheStudentOfferApplicationsList";
-import TheStudentOffers from "../components/Offers/Student/TheStudentOffers";
 import LandingPage from "../views/LandingPage";
 import Admin from "../views/Admin";
 import TheAdminOffers from "../components/Admin/Offers/TheAdminOffers";
@@ -55,8 +51,8 @@ import TheCompanyAgreements from "../components/Company/Agreements/TheCompanyAgr
 import TheCompanyWorkers from "../components/Company/Workers/TheCompanyWorkers";
 import TheCompanySettings from "../components/Company/Settings/TheCompanySettings";
 import TheAdminSettings from "../components/Admin/Settings/TheAdminSettings";
-import OffersList from "../components/Offers/OffersList";
 import OffersLists from "../components/Offers/OffersLists";
+import TheAdminTest from "../components/Admin/Test/TheAdminTest";
 
 Vue.use(VueRouter);
 
@@ -363,6 +359,12 @@ const router = new VueRouter({
                             path: '/dashboard/admin/settings',
                             name: 'admin-settings',
                             component: TheAdminSettings,
+                            meta: {have: ['admin']},
+                        },
+                        {
+                            path: '/dashboard/admin/test',
+                            name: 'admin-test',
+                            component: TheAdminTest,
                             meta: {have: ['admin']},
                         }
                     ]

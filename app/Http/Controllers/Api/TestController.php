@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers\api;
 
+use App\Events\MessageSent;
 use App\Models\Offer;
+use App\Models\User;
 use App\Repositories\StudentRepository;
+use http\Message;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
@@ -21,6 +24,6 @@ class TestController extends Controller
     }
 
     public function test() {
-        return \response(Offer::with(['category'])->find(1),Response::HTTP_OK);
+        broadcast(new MessageSent(User::find(Auth::id())));
     }
 }
