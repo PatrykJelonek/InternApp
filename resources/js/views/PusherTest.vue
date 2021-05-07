@@ -1,9 +1,12 @@
 <template>
-    <ul>
-        <li v-for="message in messages">
-            {{ message }}
-        </li>
-    </ul>
+    <div>
+        <h2>Test</h2>
+        <ul>
+            <li v-for="message in messages">
+                {{ message }}
+            </li>
+        </ul>
+    </div>
 </template>
 
 <script>
@@ -31,9 +34,9 @@ export default {
     },
 
     created() {
-        console.log('asd');
-        Echo.channel('channel').listen('.task.created', (e) => {
-            this.tasks.push(task.body)
+        Echo.channel('channel').listen(`.messageSent`, (e) => {
+            console.log(e);
+            this.messages.push(e.message);
         });
     }
 }

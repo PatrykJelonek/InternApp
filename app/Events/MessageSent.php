@@ -22,25 +22,30 @@ class MessageSent implements ShouldBroadcast
     private $user;
 
     /**
+     * @var string
+     */
+    private $message;
+
+    /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(string $message)
     {
-
+        $this->message = $message;
     }
 
     public function broadcastWith()
     {
         return [
-            'message' => \Illuminate\Support\Str::random(5)
+            'message' => $this->message
         ];
     }
 
     public function broadcastAs()
     {
-        return 'task.created';
+        return 'messageSent';
     }
 
     /**

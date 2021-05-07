@@ -13,10 +13,13 @@ use Illuminate\Support\Facades\Broadcast;
 |
 */
 
-Broadcast::channel('App.User.{id}', function ($user, $id) {
-    return (int) $user->id === (int) $id;
+// This is only for testing purposes
+Broadcast::channel('channel', function () {
+    return true;
 });
 
-Broadcast::channel('user', function (\App\Models\User  $user, $id) {
+// This is probably closer to what most would use in production
+Broadcast::channel('user.{id}', function ($user, $id) {
+    //return true if api user is authenticated
     return (int) $user->id === (int) $id;
 });

@@ -3,12 +3,10 @@
 namespace App\Http\Controllers\api;
 
 use App\Events\MessageSent;
-use App\Models\Offer;
+use App\Events\Test;
 use App\Models\User;
-use App\Repositories\StudentRepository;
-use http\Message;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use App\Repositories\StudentRepository;
 use Illuminate\Support\Facades\Auth;
 
 class TestController extends Controller
@@ -24,6 +22,11 @@ class TestController extends Controller
     }
 
     public function test() {
-        broadcast(new MessageSent(User::find(Auth::id())));
+        broadcast(new MessageSent());
+    }
+
+    public function testPost(Request $request) {
+        broadcast(new MessageSent($request->message));
+        return "Event has been sent!";
     }
 }

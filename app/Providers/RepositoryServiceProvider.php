@@ -5,10 +5,12 @@ namespace App\Providers;
 use App\Repositories\AgreementRepository;
 use App\Repositories\AgreementStatusRepository;
 use App\Repositories\AttachmentRepository;
+use App\Repositories\ChatRepository;
 use App\Repositories\CityRepository;
 use App\Repositories\Interfaces\AgreementRepositoryInterface;
 use App\Repositories\Interfaces\AgreementStatusRepositoryInterface;
 use App\Repositories\Interfaces\AttachmentRepositoryInterface;
+use App\Repositories\Interfaces\ChatRepositoryInterface;
 use App\Repositories\Interfaces\CityRepositoryInterface;
 use App\Repositories\Interfaces\InternshipRepositoryInterface;
 use App\Repositories\Interfaces\OfferCategoryRepositoryInterface;
@@ -46,6 +48,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(OfferCategoryRepositoryInterface::class, OfferCategoryRepository::class);
         $this->app->bind(AttachmentRepositoryInterface::class, AttachmentRepository::class);
         $this->app->bind(AgreementStatusRepositoryInterface::class, AgreementStatusRepository::class);
+        $this->app->bind(ChatRepositoryInterface::class, ChatRepository::class);
     }
 
     /**

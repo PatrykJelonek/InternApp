@@ -142,6 +142,7 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::get('/me/notifications', 'Api\NotificationController@index');
     Route::get('/me/offers','Api\StudentController@getAvailableInternshipOffers');
     Route::get('/me/messages', 'Api\UserMessageController@index');
+    Route::get('/me/chats', 'Api\ChatController@getUserChats');
 
     # Statistics
     Route::get('/statistics/offers/count','Api\StatisticController@getNumberOfOffers');
@@ -154,6 +155,7 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::get('/statistics/offers/attachments/count','Api\StatisticController@getNumberOfOffersAttachments');
 
     Route::get('/test', 'Api\TestController@test');
+    Route::post('/test', 'Api\TestController@testPost');
 
 
     Route::get('/me', [
