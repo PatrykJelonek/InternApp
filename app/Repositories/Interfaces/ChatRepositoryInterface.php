@@ -17,4 +17,6 @@ interface ChatRepositoryInterface
     public function getChatUsers(string $chatUuid);
 
     public function getUserChats(string $userId);
+
+    public function saveMessage(string $chatUuid, int $userId, string $message);
 }

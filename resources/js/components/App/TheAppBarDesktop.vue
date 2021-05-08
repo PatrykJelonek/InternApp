@@ -75,25 +75,25 @@
             </template>
 
             <v-list dense>
-                <v-list-item to="/dashboard/profile">
+                <v-list-item :to="{name: 'user', params: {id: user.id}}">
                     <v-list-item-icon>
                         <v-icon>mdi-account-outline</v-icon>
                     </v-list-item-icon>
                     <v-list-item-title>Profil</v-list-item-title>
                 </v-list-item>
-                <v-list-item to="/dashboard/notifications">
+                <v-list-item :to="{name: 'notifications'}">
                     <v-list-item-icon>
                         <v-icon>mdi-bell-outline</v-icon>
                     </v-list-item-icon>
                     <v-list-item-title>Powiadomienia</v-list-item-title>
                 </v-list-item>
-                <v-list-item to="/dashboard/messages">
+                <v-list-item :to="{name: 'chats'}">
                     <v-list-item-icon>
                         <v-icon>mdi-android-messages</v-icon>
                     </v-list-item-icon>
                     <v-list-item-title>Wiadomości</v-list-item-title>
                 </v-list-item>
-                <v-list-item to="/dashboard/settings">
+                <v-list-item :to="{name: 'settings'}">
                     <v-list-item-icon>
                         <v-icon dense>mdi-cog-outline</v-icon>
                     </v-list-item-icon>

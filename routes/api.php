@@ -134,6 +134,10 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     # Student
     Route::post('/students/internships', 'Api\StudentController@createStudentOwnInternship');
 
+    # Chat
+    Route::get('/chats/{uuid}', 'Api\ChatController@getChatMessages');
+    Route::post('/chats/{uuid}', 'Api\ChatController@sendMessage');
+
     # User
     Route::get('/me/internships/{status?}', 'Api\UserController@getUserInternships')->where('status', \App\Constants\InternshipStatusConstants::STATUS_ACCEPTED.'|'.\App\Constants\InternshipStatusConstants::STATUS_NEW);
     Route::get('/me/internships', 'Api\UserController@getUserInternships');

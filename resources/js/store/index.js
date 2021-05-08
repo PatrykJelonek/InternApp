@@ -22,6 +22,7 @@ import task from "./modules/task";
 import helpers from "./modules/__helpers";
 import statistic from "./modules/statistic";
 import landingPage from "./modules/ladingPage";
+import chat from "./modules/chat";
 
 Vue.use(Vuex);
 
@@ -49,7 +50,8 @@ export default new Vuex.Store({
         task,
         helpers,
         statistic,
-        landingPage
+        landingPage,
+        chat,
     },
     strict: debug
 });

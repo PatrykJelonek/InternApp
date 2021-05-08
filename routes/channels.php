@@ -18,6 +18,10 @@ Broadcast::channel('channel', function () {
     return true;
 });
 
+Broadcast::channel('chat.{uuid}', function () {
+    return true;
+});
+
 // This is probably closer to what most would use in production
 Broadcast::channel('user.{id}', function ($user, $id) {
     //return true if api user is authenticated

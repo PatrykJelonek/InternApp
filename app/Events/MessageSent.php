@@ -2,6 +2,7 @@
 
 namespace App\Events;
 
+use App\Models\ChatMessage;
 use App\Models\User;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
@@ -17,29 +18,24 @@ class MessageSent implements ShouldBroadcast
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
     /**
-     * @var User
+     * @var ChatMessage
      */
-    private $user;
-
-    /**
-     * @var string
-     */
-    private $message;
+    private $chatMessage;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct(string $message)
+    public function __construct(ChatMessage $chatMessage)
     {
-        $this->message = $message;
+        $this->chatMessage = $chatMessage;
     }
 
     public function broadcastWith()
     {
         return [
-            'message' => $this->message
+            'data' => $this->chatMessage->toArray(),
         ];
     }
 
@@ -55,7 +51,7 @@ class MessageSent implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new Channel('channel');
+        return new Channel('chat.'.$this->chatMessage->chat_uuid);
     }
 
 }

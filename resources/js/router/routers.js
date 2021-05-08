@@ -53,6 +53,8 @@ import TheCompanySettings from "../components/Company/Settings/TheCompanySetting
 import TheAdminSettings from "../components/Admin/Settings/TheAdminSettings";
 import OffersLists from "../components/Offers/OffersLists";
 import TheAdminTest from "../components/Admin/Test/TheAdminTest";
+import Chats from "../views/Chats";
+import Chat from "../views/Chat";
 
 Vue.use(VueRouter);
 
@@ -297,7 +299,7 @@ const router = new VueRouter({
                 },
                 {
                     path: '/dashboard/settings',
-                    name: 'setting',
+                    name: 'settings',
                     component: Settings,
                     meta: {title: 'Ustawienia'},
                 },
@@ -309,8 +311,14 @@ const router = new VueRouter({
                 },
                 {
                     path: '/dashboard/messages',
-                    name: 'messages',
-                    component: Messages,
+                    name: 'chats',
+                    component: Chats,
+                    meta: {title: 'Wiadomości'},
+                },
+                {
+                    path: '/dashboard/messages/:uuid',
+                    name: 'chat',
+                    component: Chat,
                     meta: {title: 'Wiadomości'},
                 },
                 {
