@@ -63,7 +63,7 @@
 </template>
 
 <script>
-    import {mapGetters} from "vuex";
+import {mapActions, mapGetters} from "vuex";
     import TheAppBarDesktop from "../components/App/TheAppBarDesktop";
     import TheAppBarMobile from "../components/App/TheAppBarMobile";
     import TheAppNavigationDrawer from "../components/App/TheAppNavigationDrawer";
@@ -104,15 +104,25 @@
             }
         },
 
+        methods: {
+          ...mapActions({
+              setSnackbar: 'snackbar/setSnackbar'
+          }),
+        },
+
         computed: {
             ...mapGetters({
                 user: 'auth/user',
-                fillHeight: 'helpers/fillHeight'
+                fillHeight: 'helpers/fillHeight',
             }),
 
             theme(){
                 return (this.$vuetify.theme.dark) ? 'dark' : 'light'
             }
+        },
+
+        created() {
+
         },
 
         watch: {

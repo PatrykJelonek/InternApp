@@ -9,8 +9,12 @@
 namespace App\Services;
 
 use App\Events\MessageSent;
+use App\Notifications\JournalEntryCreated;
+use App\Notifications\MessageSentNotification;
 use App\Repositories\ChatRepository;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Notification;
 
 class ChatService
 {
@@ -37,6 +41,7 @@ class ChatService
         if ($result !== null) {
             DB::commit();
             broadcast(new MessageSent($result));
+           Auth::user()->notify(new MessageSentNotification());
 
             return $result;
         }
