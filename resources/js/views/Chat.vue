@@ -39,7 +39,7 @@
                                         :user-id="message.user.id"
                                         :date="message.created_at"
                                         :next-date="index !== messages.length - 1 ? messages[index+1].created_at : message.created_at"
-                                        :visible-central-date="index !== 0 && index !== messages.length - 1 ? isDateVisible(message.created_at, messages[index+1].created_at) : (index!==messages.length - 1)"
+                                        :visible-central-date="index !== 0 && index !== messages.length - 1 ? isDateVisible(messages[index-1].created_at, message.created_at, messages[index+1].created_at) : (index!==messages.length - 1)"
                                         :self="message.user_id === user.id"
                                         :message-group-start="index !== 0 && index !== messages.length - 1 ? message.user.id !== messages[index-1].user.id : index === 0"
                                         :message-group="index !== 0 && index !== messages.length - 1 ? message.user.id === messages[index-1].user.id && message.user.id === messages[index+1].user.id : (index !== 0 || index !== messages.length - 1)"
@@ -115,8 +115,8 @@ export default {
             sendMessage: 'chat/sendMessage',
         }),
 
-        isDateVisible(date, nextDate) {
-            return moment(date).format('DD.MM.YYYY') !== moment(nextDate).format('DD.MM.YYYY');
+        isDateVisible(previousDate, date, nextDate) {
+            return moment(date).format('DD.MM.YYYY') !== moment(nextDate).format('DD.MM.YYYY') || moment(previousDate).format('DD.MM.YYYY') !== moment(date).format('DD.MM.YYYY');
         },
 
         async submit() {

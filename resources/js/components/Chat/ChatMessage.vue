@@ -1,7 +1,8 @@
 <template>
     <v-row no-gutters v-bind:class="loading ? 'opacity' : ''">
         <v-col cols="12">
-            <v-row no-gutters
+            <v-row
+                no-gutters
                 v-if="visibleCentralDate"
                 class="text-center text-caption text--disabled pa-0 ma-3"
             >
@@ -44,20 +45,18 @@
                                         </v-card>
                                     </v-col>
                                 </v-row>
-                                <v-scale-transition>
-                                    <v-row
-                                        no-gutters
-                                        v-if="messageGroupEnd"
+                                <v-row
+                                    no-gutters
+                                    v-if="messageGroupEnd"
+                                >
+                                    <v-col
+                                        cols="12"
+                                        class="text-caption grey--text text--darken-1 mt-1 pt-0 px-2"
+                                        v-bind:class="self ? 'text-left' : 'text-right'"
                                     >
-                                        <v-col
-                                            cols="12"
-                                            class="text-caption grey--text text--darken-1 mt-1 pt-0 px-2"
-                                            v-bind:class="self ? 'text-left' : 'text-right'"
-                                        >
-                                            {{ userFirstName + ' ' + userLastName }}
-                                        </v-col>
-                                    </v-row>
-                                </v-scale-transition>
+                                        {{ userFirstName + ' ' + userLastName }}
+                                    </v-col>
+                                </v-row>
                             </v-col>
                         </template>
                         <span>{{ formatDateFullDate(date) }}</span>
@@ -73,7 +72,7 @@ import moment from 'moment';
 
 export default {
     name: "ChatMessage",
-    props: ['message', 'userFirstName', 'userLastName', 'userId', 'date', 'nextDate', 'self', 'messageGroupStart','messageGroup', 'messageGroupEnd', 'loading', 'visibleCentralDate'],
+    props: ['message', 'userFirstName', 'userLastName', 'userId', 'date', 'nextDate', 'self', 'messageGroupStart', 'messageGroup', 'messageGroupEnd', 'loading', 'visibleCentralDate'],
 
     data() {
         return {
@@ -95,13 +94,11 @@ export default {
                 formattedDate = moment(date).format('DD.MM.YYYY HH:mm');
             }
 
-            if (moment(this.date).diff(moment(this.nextDate), 'day', true) >= 1)
-            {
+            if (moment(this.date).diff(moment(this.nextDate), 'day', true) >= 1) {
                 formattedDate = moment(date).format('DD.MM HH:mm');
             }
 
-            if (moment(this.date).diff(moment(this.nextDate), 'day', true) < 1)
-            {
+            if (moment(this.date).diff(moment(this.nextDate), 'day', true) < 1) {
                 formattedDate = moment(date).format('HH:mm');
             }
 
