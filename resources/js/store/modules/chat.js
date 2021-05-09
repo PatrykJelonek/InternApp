@@ -57,10 +57,14 @@ export default {
             }
         },
 
-        async fetchChatMessages({commit}, uuid) {
+        async fetchChatMessages({commit}, {uuid, page}) {
             commit('SET_CHAT_MESSAGES_LOADING', true);
             try {
-                let response = await axios.get(`/api/chats/${uuid}`);
+                let response = await axios.get(`/api/chats/${uuid}`, {
+                    params: {
+                        page: page
+                    }
+                });
                 commit('SET_CHAT_MESSAGES', response.data);
                 commit('SET_CHAT_MESSAGES_LOADING', false);
             } catch (e) {

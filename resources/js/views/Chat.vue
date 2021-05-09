@@ -1,6 +1,6 @@
 <template>
     <v-container>
-        <v-row v-if="!chatMessagesLoading">
+        <v-row v-if="!firstLoading">
             <v-col cols="12">
                 <page-title>Konwersacja</page-title>
             </v-col>
@@ -10,24 +10,44 @@
                     description="abc"
                     :expand="false"
                 >
-
-                    <div class="pa-5">
-                        <template
-                            v-for="(message, index) in messages"
+                    <div class="my-5">
+                        <v-row
+                            no-gutters
+                            class="cursor-pointer"
+                            @click="loadMore"
+                            v-if="chatMessages.next_page_url !== null"
                         >
-                            <chat-message
-                                :message="message.content"
-                                :user-first-name="message.user.first_name"
-                                :user-last-name="message.user.last_name"
-                                :user-id="message.user.id"
-                                :date="message.created_at"
-                                :next-date="index !== messages.length - 1 ? messages[index+1].created_at : message.created_at"
-                                :self="message.user_id === user.id"
-                                :message-group-start="index !== 0 && index !== messages.length - 1 ? message.user.id !== messages[index-1].user.id && message.user.id === messages[index+1].user.id : index === 0 || index === messages.length - 1"
-                                :message-group="index !== 0 && index !== messages.length - 1 ? message.user.id === messages[index-1].user.id && message.user.id === messages[index+1].user.id : (index !== 0 || index !== messages.length - 1)"
-                                :message-group-end="index !== messages.length - 1 ? message.user.id !== messages[index+1].user.id : index === messages.length - 1"
-                            ></chat-message>
-                        </template>
+                            <v-col
+                                cols="12"
+                                v-if="!newMessageLoading"
+                                class="text-center text-caption text--secondary"
+                            >
+                                <v-icon small color="secondary">mdi-arrow-up</v-icon>
+                                <p>Załaduj poprzednie wiadomości</p>
+                            </v-col>
+                            <v-col v-else class="text-center">
+                                <v-progress-circular indeterminate color="primary"></v-progress-circular>
+                            </v-col>
+                        </v-row>
+                        <v-row>
+                            <v-col cols="12" class="pa-5s">
+                                <template v-for="(message, index) in messages">
+                                    <chat-message
+                                        :message="message.content"
+                                        :user-first-name="message.user.first_name"
+                                        :user-last-name="message.user.last_name"
+                                        :user-id="message.user.id"
+                                        :date="message.created_at"
+                                        :next-date="index !== messages.length - 1 ? messages[index+1].created_at : message.created_at"
+                                        :visible-central-date="index !== 0 && index !== messages.length - 1 ? isDateVisible(message.created_at, messages[index+1].created_at) : (index!==messages.length - 1)"
+                                        :self="message.user_id === user.id"
+                                        :message-group-start="index !== 0 && index !== messages.length - 1 ? message.user.id !== messages[index-1].user.id : index === 0"
+                                        :message-group="index !== 0 && index !== messages.length - 1 ? message.user.id === messages[index-1].user.id && message.user.id === messages[index+1].user.id : (index !== 0 || index !== messages.length - 1)"
+                                        :message-group-end="index !== messages.length - 1 ? message.user.id !== messages[index+1].user.id : index === messages.length - 1"
+                                    ></chat-message>
+                                </template>
+                            </v-col>
+                        </v-row>
                     </div>
                 </expand-card>
             </v-col>
@@ -66,6 +86,7 @@ import PageTitle from "../components/_Helpers/PageTitle";
 import {mapActions, mapGetters} from "vuex";
 import ExpandCard from "../components/_Helpers/ExpandCard";
 import ChatMessage from "../components/Chat/ChatMessage";
+import moment from "moment";
 
 export default {
     name: "Chat",
@@ -75,6 +96,8 @@ export default {
         return {
             message: null,
             messages: null,
+            firstLoading: false,
+            newMessageLoading: false,
         }
     },
 
@@ -92,6 +115,10 @@ export default {
             sendMessage: 'chat/sendMessage',
         }),
 
+        isDateVisible(date, nextDate) {
+            return moment(date).format('DD.MM.YYYY') !== moment(nextDate).format('DD.MM.YYYY');
+        },
+
         async submit() {
             await this.sendMessage({
                 uuid: this.$route.params.uuid,
@@ -99,20 +126,39 @@ export default {
             }).then(() => {
                 this.message = null;
             }).catch((e) => {
-                console.log(e.response)
+
             });
-        }
+        },
+
+        loadMore() {
+            if (this.chatMessages.next_page_url !== null) {
+                this.newMessageLoading = true;
+                this.fetchChatMessages({
+                    uuid: this.$route.params.uuid,
+                    page: this.chatMessages.current_page + 1
+                }).then(() => {
+                    let responseMessages = [...this.chatMessages.data];
+                    this.messages.unshift(...responseMessages.reverse());
+                    this.newMessageLoading = false;
+                }).catch((e) => {
+                    this.newMessageLoading = false;
+                });
+            }
+        },
     },
 
     created() {
-        this.fetchChatMessages(this.$route.params.uuid).then(() => {
-            this.messages = this.chatMessages;
-        }).catch((e) => {
+        this.firstLoading = this.chatMessagesLoading;
 
+        this.fetchChatMessages({uuid: this.$route.params.uuid}).then(() => {
+            this.messages = [...this.chatMessages.data];
+            this.firstLoading = this.chatMessagesLoading;
+            this.messages.reverse();
+        }).catch((e) => {
+            this.firstLoading = this.chatMessagesLoading;
         });
 
         Echo.channel(`chat.${this.$route.params.uuid}`).listen(`.messageSent`, (e) => {
-            console.log(e);
             this.messages.push(e.data);
         });
     }
@@ -120,5 +166,7 @@ export default {
 </script>
 
 <style scoped>
-
+.cursor-pointer {
+    cursor: pointer;
+}
 </style>

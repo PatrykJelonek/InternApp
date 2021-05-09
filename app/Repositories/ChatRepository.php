@@ -26,7 +26,7 @@ class ChatRepository implements ChatRepositoryInterface
     {
         $chat = Chat::with(['messages','messages.user'])->where(['uuid' => $chatUuid])->first();
 
-        return $chat->messages;
+        return $chat->messages()->with(['user'])->orderByDesc('created_at')->simplePaginate(config('global.numberOfReturnedMessages'));
     }
 
     public function getChatUsers(string $chatUuid)

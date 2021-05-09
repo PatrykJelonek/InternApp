@@ -11,4 +11,5 @@ return [
     'defaultDifferenceBetweenStartAndEndOfferDate' => 100,
     'acceptableAttachmentsMimeTypes' => ['application/pdf'],
     'acceptManyStudentInternships' => false,
+    'numberOfReturnedMessages' => 15,
 ];

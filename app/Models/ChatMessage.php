@@ -10,6 +10,8 @@ class ChatMessage extends Model
 {
     use HasFactory;
 
+    public $hidden = [];
+
     public function user(): HasOne
     {
         return $this->hasOne(User::class,'id','user_id');
