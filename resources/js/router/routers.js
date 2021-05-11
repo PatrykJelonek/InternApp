@@ -295,7 +295,9 @@ const router = new VueRouter({
                     path: '/dashboard/users/:id',
                     name: 'user',
                     component: Profile,
-                    meta: {title: 'Profil'},
+                    meta: {
+                        title: 'Profil',
+                    },
                 },
                 {
                     path: '/dashboard/settings',

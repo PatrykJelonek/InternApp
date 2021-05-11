@@ -9,12 +9,10 @@
 namespace App\Services;
 
 use App\Events\MessageSent;
-use App\Notifications\JournalEntryCreated;
 use App\Notifications\MessageSentNotification;
 use App\Repositories\ChatRepository;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Notification;
 
 class ChatService
 {
@@ -41,9 +39,38 @@ class ChatService
         if ($result !== null) {
             DB::commit();
             broadcast(new MessageSent($result));
-           Auth::user()->notify(new MessageSentNotification());
+            Auth::user()->notify(new MessageSentNotification());
 
             return $result;
+        }
+
+        DB::rollBack();
+        return null;
+    }
+
+    public function addUserToChat(array $data)
+    {
+        DB::beginTransaction();
+
+        $chat = $this->chatRepository->getOneOneChatByUsersIds($data['firstUserId'], $data['secondUserId']);
+
+        clock()->info('ChatService::addUserToChat', [
+            'dump' => [
+              'getOneOneChatByUsersIdsResult' => $chat,
+            ],
+        ]);
+
+        if($chat === null) {
+            $chat = $this->chatRepository->createChat(true);
+        }
+
+        if ($chat !== null) {
+            $chat = $this->chatRepository->addUsersToChat($chat->uuid, [$data['firstUserId'], $data['secondUserId']]);
+
+            if ($chat !== null) {
+               DB::commit();
+               return $chat;
+            }
         }
 
         DB::rollBack();

@@ -22,6 +22,8 @@ export default {
         userUniversitiesLoading: true,
         userMessages: [],
         userMessagesLoading: true,
+        user: null,
+        userLoading: true,
     },
 
     getters: {
@@ -83,6 +85,14 @@ export default {
 
         interns(state) {
             return state.interns;
+        },
+
+        user(state) {
+            return state.user;
+        },
+
+        userLoading(state) {
+            return state.userLoading;
         },
     },
 
@@ -155,7 +165,15 @@ export default {
 
         SET_INTERNS(state, data) {
             state.interns = data;
-        }
+        },
+
+        SET_USER(state, data) {
+            state.user = data;
+        },
+
+        SET_USER_LOADING(state, data) {
+            state.userLoading = data;
+        },
     },
 
     actions: {
@@ -279,5 +297,23 @@ export default {
                 commit('SET_NEW_INTERNSHIPS_LOADING', false);
             }
         },
+
+        async fetchUser({ commit }, id) {
+            commit('SET_USER_LOADING', true);
+            try {
+                let response = await axios.get(`/api/users/${id}`);
+                commit('SET_USER', response.data);
+                commit('SET_USER_LOADING', false);
+            } catch (e) {
+                commit('SET_USER', []);
+                commit('SET_USER_LOADING', false);
+            }
+        },
+
+        createOneOnOneChat({ commit }, id) {
+            return axios.post(`/api/chats/`, {
+               secondUserId: id
+            });
+        }
     }
 };

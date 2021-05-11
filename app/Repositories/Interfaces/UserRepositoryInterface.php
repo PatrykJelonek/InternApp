@@ -17,4 +17,6 @@ interface UserRepositoryInterface
     public function getCompanies();
 
     public function getMessages(int $userId);
+
+    public function getUserById(int $userId);
 }

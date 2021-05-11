@@ -102,4 +102,9 @@ class UserRepository implements UserRepositoryInterface
 
         return $messagesCollection->toArray(new Request());
     }
+
+    public function getUserById(int $userId)
+    {
+        return User::with(['universities','companies'])->find($userId);
+    }
 }

@@ -68,9 +68,10 @@ import {mapActions, mapGetters} from "vuex";
     import TheAppBarMobile from "../components/App/TheAppBarMobile";
     import TheAppNavigationDrawer from "../components/App/TheAppNavigationDrawer";
     import Snackbar from "../components/_Helpers/Snackbar";
+import TheAppBreadcrumbs from "../components/App/TheAppBreadcrumbs";
 
     export default {
-        components: {Snackbar, TheAppNavigationDrawer, TheAppBarMobile, TheAppBarDesktop},
+        components: {TheAppBreadcrumbs, Snackbar, TheAppNavigationDrawer, TheAppBarMobile, TheAppBarDesktop},
         data() {
             return {
                 menuDialog: false,

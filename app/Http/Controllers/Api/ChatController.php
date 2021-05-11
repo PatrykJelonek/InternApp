@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ChatAddUserToChatRequest;
 use App\Http\Requests\ChatGetChatMessagesRequest;
 use App\Http\Requests\ChatGetUserChatsRequest;
 use App\Http\Requests\ChatSendMessageRequest;
@@ -60,6 +61,17 @@ class ChatController extends Controller
     public function sendMessage(ChatSendMessageRequest $request, string $uuid)
     {
         $result = $this->chatService->sendMessage($request->all());
+
+        if ($result !== null) {
+            return response($result, Response::HTTP_OK);
+        }
+
+        return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+
+    public function addUserToChat(ChatAddUserToChatRequest $request)
+    {
+        $result = $this->chatService->addUserToChat($request->all());
 
         if ($result !== null) {
             return response($result, Response::HTTP_OK);

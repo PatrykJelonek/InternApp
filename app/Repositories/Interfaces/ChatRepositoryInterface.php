@@ -19,4 +19,10 @@ interface ChatRepositoryInterface
     public function getUserChats(string $userId);
 
     public function saveMessage(string $chatUuid, int $userId, string $message);
+
+    public function createChat(bool $oneOne = false);
+
+    public function addUsersToChat(string $chatUuid, array $usersId);
+
+    public function getOneOneChatByUsersIds(int $firstUserId, int $secondUserId);
 }

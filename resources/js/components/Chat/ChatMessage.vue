@@ -28,7 +28,9 @@
                                     <v-col :order="self ? 2 : 1" cols="auto">
                                         <v-avatar
                                             :color="messageGroupStart ? (self ? 'primary' : 'grey lighten-2') : 'transparent'"
-                                            class="mx-3">
+                                            class="mx-3 cursor-pointer"
+                                            @click="$router.push({name: 'user', params: {id: userId}})"
+                                        >
                                             <template v-if="messageGroupStart">
                                                 {{ userFirstName[0] + userLastName[0] }}
                                             </template>
@@ -141,5 +143,9 @@ export default {
 <style scoped>
 .opacity {
     opacity: 0.5;
+}
+
+.cursor-pointer {
+    cursor: pointer;
 }
 </style>

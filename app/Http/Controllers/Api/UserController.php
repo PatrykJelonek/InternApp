@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Constants\InternshipStatusConstants;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UserShowRequest;
 use App\Http\Resources\Collections\InternshipCollection;
 use App\Models\User;
 use App\Repositories\UserRepository;
@@ -102,12 +103,20 @@ class UserController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param User $user
+     * @param UserShowRequest $request
+     * @param int             $id
+     *
      * @return Response
      */
-    public function show(User $user)
+    public function show(UserShowRequest $request, int $id): Response
     {
-        //
+        $user = $this->userRepository->getUserById($id);
+
+        if ($user !== null) {
+            return response($user, Response::HTTP_OK);
+        }
+
+        return response(null, Response::HTTP_NO_CONTENT);
     }
 
     /**

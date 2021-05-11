@@ -6,7 +6,7 @@
                     <v-list-item-title class="text-h5 font-weight-medium">{{ title }}</v-list-item-title>
                     <v-list-item-subtitle>{{ description }}</v-list-item-subtitle>
                 </v-list-item-content>
-                <v-list-item-action>
+                <v-list-item-action v-if="actions">
                     <v-btn-toggle borderless dense background-color="card-background">
                         <slot name="buttons"></slot>
                         <v-tooltip v-if="expand" top>
@@ -44,6 +44,10 @@ export default {
         title: String,
         description: String,
         expand: {
+            type: Boolean,
+            default: true
+        },
+        actions: {
             type: Boolean,
             default: true
         }

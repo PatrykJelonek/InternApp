@@ -90,7 +90,6 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::put('/cities', 'Api\CityController@edit');
     Route::delete('/cities/{id}', 'Api\CityController@delete');
 
-
     # Companies
     Route::get('/companies', 'Api\CompanyController@index');
     Route::get('/companies/categories', 'Api\CompanyCategoryController@index');
@@ -98,7 +97,6 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::get('/companies/{slug}/offers','Api\CompanyController@getCompanyOffers');
     Route::get('/companies/{slug}/workers','Api\CompanyController@getCompanyWorkers');
     Route::get('/companies/{slug}/agreements','Api\CompanyController@getAgreements');
-
 
     # Offers
     Route::get('/offers','Api\OfferController@index');
@@ -134,7 +132,11 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     # Student
     Route::post('/students/internships', 'Api\StudentController@createStudentOwnInternship');
 
+    # Users
+    Route::get('/users/{id}', 'Api\UserController@show');
+
     # Chat
+    Route::post('/chats/', 'Api\ChatController@addUserToChat');
     Route::get('/chats/{uuid}', 'Api\ChatController@getChatMessages');
     Route::post('/chats/{uuid}', 'Api\ChatController@sendMessage');
 
