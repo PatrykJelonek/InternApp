@@ -55,6 +55,7 @@ import OffersLists from "../components/Offers/OffersLists";
 import TheAdminTest from "../components/Admin/Test/TheAdminTest";
 import Chats from "../views/Chats";
 import Chat from "../views/Chat";
+import TestApp from "../views/TestApp";
 
 Vue.use(VueRouter);
 
@@ -65,6 +66,12 @@ const router = new VueRouter({
             path: '/test',
             name: 'test',
             component: Test,
+            meta: {title: 'Wiadomości'},
+        },
+        {
+            path: '/test-app',
+            name: 'testapp',
+            component: TestApp,
             meta: {title: 'Wiadomości'},
         },
         {
