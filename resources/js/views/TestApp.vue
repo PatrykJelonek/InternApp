@@ -7,7 +7,7 @@
         <v-navigation-drawer
             app
             dark
-            color="blue-grey darken-4"
+            color="#28253F"
         >
             <v-list-item>
                 <v-list-item-content>
@@ -35,21 +35,39 @@
                     </template>
 
                     <v-list-item link>
+                        <v-list-item-icon class="mr-2">
+                            <v-icon dense>mdi-view-dashboard-outline</v-icon>
+                        </v-list-item-icon>
                         <v-list-item-title>Informacje</v-list-item-title>
                     </v-list-item>
                     <v-list-item link>
-                        <v-list-item-title>Studenci</v-list-item-title>
-                    </v-list-item>
-                    <v-list-item link>
-                        <v-list-item-title>Pracownicy</v-list-item-title>
-                    </v-list-item>
-                    <v-list-item link>
+                        <v-list-item-icon class="mr-2">
+                            <v-icon dense>mdi-file-document-multiple-outline</v-icon>
+                        </v-list-item-icon>
                         <v-list-item-title>Umowy</v-list-item-title>
                     </v-list-item>
                     <v-list-item link>
+                        <v-list-item-icon class="mr-2">
+                            <v-icon dense>mdi-certificate-outline</v-icon>
+                        </v-list-item-icon>
                         <v-list-item-title>Praktyki i Staże</v-list-item-title>
                     </v-list-item>
                     <v-list-item link>
+                        <v-list-item-icon class="mr-2">
+                            <v-icon dense>mdi-account-supervisor</v-icon>
+                        </v-list-item-icon>
+                        <v-list-item-title>Studenci</v-list-item-title>
+                    </v-list-item>
+                    <v-list-item link>
+                        <v-list-item-icon class="mr-2">
+                            <v-icon dense>mdi-account-multiple-outline</v-icon>
+                        </v-list-item-icon>
+                        <v-list-item-title>Pracownicy</v-list-item-title>
+                    </v-list-item>
+                    <v-list-item link>
+                        <v-list-item-icon class="mr-2">
+                            <v-icon dense>mdi-cog</v-icon>
+                        </v-list-item-icon>
                         <v-list-item-title>Ustawienia</v-list-item-title>
                     </v-list-item>
                 </v-list-group>
@@ -62,18 +80,33 @@
                     </template>
 
                     <v-list-item link>
+                        <v-list-item-icon class="mr-2">
+                            <v-icon dense>mdi-view-dashboard-outline</v-icon>
+                        </v-list-item-icon>
                         <v-list-item-title>Informacje</v-list-item-title>
                     </v-list-item>
                     <v-list-item link>
+                        <v-list-item-icon class="mr-2">
+                            <v-icon dense>mdi-newspaper-variant-multiple-outline</v-icon>
+                        </v-list-item-icon>
                         <v-list-item-title>Oferty Praktyk</v-list-item-title>
                     </v-list-item>
                     <v-list-item link>
+                        <v-list-item-icon class="mr-2">
+                            <v-icon dense>mdi-file-document-multiple-outline</v-icon>
+                        </v-list-item-icon>
                         <v-list-item-title>Umowy</v-list-item-title>
                     </v-list-item>
                     <v-list-item link>
+                        <v-list-item-icon class="mr-2">
+                            <v-icon dense>mdi-account-multiple-outline</v-icon>
+                        </v-list-item-icon>
                         <v-list-item-title>Pracownicy</v-list-item-title>
                     </v-list-item>
                     <v-list-item link>
+                        <v-list-item-icon class="mr-2">
+                            <v-icon dense>mdi-cog</v-icon>
+                        </v-list-item-icon>
                         <v-list-item-title>Ustawienia</v-list-item-title>
                     </v-list-item>
                 </v-list-group>
