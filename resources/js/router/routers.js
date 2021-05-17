@@ -86,7 +86,7 @@ const router = new VueRouter({
             beforeEnter: (to, from, next) => {
                 if (store.getters['auth/authenticated']) {
                     return next({
-                        name: 'dashboard'
+                        name: 'panel'
                     });
                 }
 
@@ -126,7 +126,7 @@ const router = new VueRouter({
         },
         {
             title: 'Dashboard',
-            path: '/dashboard',
+            path: '/panel',
             beforeEnter: (to, from, next) => {
                 if (!store.getters['auth/authenticated']) {
                     return next({name: 'login'})
@@ -142,8 +142,8 @@ const router = new VueRouter({
             },
             children: [
                 {
-                    path: '/dashboard/',
-                    name: 'dashboard',
+                    path: '/panel/',
+                    name: 'panel',
                     component: Welcome
                 },
                 {
@@ -152,7 +152,7 @@ const router = new VueRouter({
                     component: UserStatusesAdd,
                 },
                 {
-                    path: '/dashboard/universities/',
+                    path: '/panel/universities/',
                     name: 'universities',
                     components: {
                         default: Universities,
@@ -165,49 +165,48 @@ const router = new VueRouter({
                     component: UniversityCreate,
                 },
                 {
-                    path: '/dashboard/companies',
+                    path: '/panel/companies',
                     name: 'companies',
                     component: Companies,
                     meta: { have: ['admin','company_worker','company_owner'], title: 'Firma'}
                 },
                 {
-                    path: '/dashboard/companies/:slug',
+                    path: '/panel/companies/:slug',
                     component: Company,
                     children: [
                         {
-                            path: '/dashboard/companies/:slug/',
+                            path: '',
                             name: 'company',
                             component: TheCompanyOverview,
                         },
                         {
-                            path: '/dashboard/companies/:slug/offers',
+                            path: 'offers',
                             name: 'company-offers',
                             component: TheCompanyOffers
                         },
                         {
-                            path: '/dashboard/companies/:slug/agreements',
+                            path: 'agreements',
                             name: 'company-agreements',
                             component: TheCompanyAgreements
                         },
                         {
-                            path: '/dashboard/companies/:slug/workers',
+                            path: 'workers',
                             name: 'company-workers',
                             component: TheCompanyWorkers
                         },
                         {
-                            path: '/dashboard/companies/:slug/settings',
+                            path: 'settings',
                             name: 'company-settings',
                             component: TheCompanySettings
                         },
                     ]
                 },
-
                 {
-                    path: '/dashboard/universities/:slug',
+                    path: '/panel/universities/:slug',
                     component: University,
                     children: [
                         {
-                            path: '/dashboard/universities/:slug/',
+                            path: '',
                             name: 'university',
                             component: TheUniversityOverview,
                         },
@@ -244,7 +243,7 @@ const router = new VueRouter({
                     component: CompanyCreate,
                 },
                 {
-                    path: '/dashboard/offers',
+                    path: '/panel/offers',
                     component: Offers,
                     meta: {title: 'Oferty Praktyk'},
                     children: [
@@ -284,22 +283,22 @@ const router = new VueRouter({
                     component: InternshipJournal,
                 },
                 {
-                    path: '/dashboard/offers/:slug',
+                    path: '/panel/offers/:slug',
                     name: 'offer',
                     component: Offer,
                 },
                 {
-                    path: '/dashboard/agreements/:slug',
+                    path: '/panel/agreements/:slug',
                     name: 'agreement',
                     component: Agreement,
                 },
                 {
-                    path: '/dashboard/account',
+                    path: '/panel/account',
                     name: 'account',
                     component: Account,
                 },
                 {
-                    path: '/dashboard/users/:id',
+                    path: '/panel/users/:id',
                     name: 'user',
                     component: Profile,
                     meta: {
@@ -307,37 +306,37 @@ const router = new VueRouter({
                     },
                 },
                 {
-                    path: '/dashboard/settings',
+                    path: '/panel/settings',
                     name: 'settings',
                     component: Settings,
                     meta: {title: 'Ustawienia'},
                 },
                 {
-                    path: '/dashboard/notifications',
+                    path: '/panel/notifications',
                     name: 'notifications',
                     component: Notifications,
                     meta: {title: 'Powiadomienia'},
                 },
                 {
-                    path: '/dashboard/messages',
+                    path: '/panel/messages',
                     name: 'chats',
                     component: Chats,
                     meta: {title: 'Wiadomości'},
                 },
                 {
-                    path: '/dashboard/messages/:uuid',
+                    path: '/panel/messages/:uuid',
                     name: 'chat',
                     component: Chat,
                     meta: {title: 'Wiadomości'},
                 },
                 {
-                    path: '/dashboard/internships',
+                    path: '/panel/internships',
                     name: 'internships',
                     component: Internships,
                     meta: {have: ['admin','student','company_worker','university_worker'], title: 'Staże i praktyki'},
                 },
                 {
-                    path: '/dashboard/internships/:internshipId',
+                    path: '/panel/internships/:internshipId',
                     name: 'internship',
                     component: Internship,
                     meta: {have: ['admin','student','company_worker','university_worker']},
@@ -350,36 +349,42 @@ const router = new VueRouter({
                     ]
                 },
                 {
-                    path: '/dashboard/admin',
+                    path: '/admin-panel',
                     component: Admin,
                     meta: {have: ['admin']},
                     children: [
                         {
-                            path: '/dashboard/admin/statistics',
+                            path: '',
                             name: 'admin',
                             component: TheAdminStatistics,
                             meta: {have: ['admin']},
                         },
                         {
-                            path: '/dashboard/admin/offers',
+                            path: 'statistics',
+                            name: 'admin-statistics',
+                            component: TheAdminStatistics,
+                            meta: {have: ['admin']},
+                        },
+                        {
+                            path: 'offers',
                             name: 'admin-offers',
                             component: TheAdminOffers,
                             meta: {have: ['admin']},
                         },
                         {
-                            path: '/dashboard/admin/users',
+                            path: 'users',
                             name: 'admin-users',
                             component: TheAdminUsers,
                             meta: {have: ['admin']},
                         },
                         {
-                            path: '/dashboard/admin/settings',
+                            path: 'settings',
                             name: 'admin-settings',
                             component: TheAdminSettings,
                             meta: {have: ['admin']},
                         },
                         {
-                            path: '/dashboard/admin/test',
+                            path: 'test',
                             name: 'admin-test',
                             component: TheAdminTest,
                             meta: {have: ['admin']},

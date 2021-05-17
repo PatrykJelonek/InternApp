@@ -45,7 +45,7 @@
             grow
             app
         >
-            <v-btn :to="{name: 'dashboard'}" icon>
+            <v-btn :to="{name: 'panel'}" icon>
                 <v-icon>mdi-view-dashboard</v-icon>
             </v-btn>
             <v-btn :to="{name: 'universities'}" icon>

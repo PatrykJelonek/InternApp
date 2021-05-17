@@ -1,5 +1,7 @@
 <template>
-    <v-progress-circular color="primary" size="150" width="8" indeterminate class=""></v-progress-circular>
+    <v-overlay>
+        <v-progress-circular color="primary" size="150" width="8" indeterminate class=""></v-progress-circular>
+    </v-overlay>
 </template>
 
 <script>

@@ -2,17 +2,16 @@
     <v-app-bar
         app
         flat
-        clipped-left
         color="component-background"
     >
-        <v-toolbar-title>
-            <b>Intern<span class="green--text text--accent-4">App</span></b>
-        </v-toolbar-title>
+<!--        <v-toolbar-title>-->
+<!--            <b>Intern<span class="green&#45;&#45;text text&#45;&#45;accent-4">App</span></b>-->
+<!--        </v-toolbar-title>-->
 
         <v-spacer></v-spacer>
 
         <v-btn-toggle group>
-            <v-btn text plain small :ripple="false" :to="{name: 'dashboard'}">
+            <v-btn text plain small :ripple="false" :to="{name: 'panel'}">
                 Dashboard
             </v-btn>
             <v-btn

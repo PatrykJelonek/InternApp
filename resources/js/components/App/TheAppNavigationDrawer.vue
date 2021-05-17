@@ -1,65 +1,56 @@
 <template>
-    <v-navigation-drawer
-        app
-        flat
-        right
-        floating
-        mini-variant
-        class="base-background"
-    >
-        <template v-slot:prepend>
-            <v-list-item class="px-2">
-                <v-list-item-avatar rounded>
-                    <v-img src="https://randomuser.me/api/portraits/women/75.jpg"></v-img>
-                </v-list-item-avatar>
-            </v-list-item>
-        </template>
+    <v-navigation-drawer app dark color="#28253F">
+        <v-list-item>
+            <v-list-item-content>
+                <v-list-item-title class="title">
+                    <b>Intern<span class="green--text text--accent-4">App</span></b>
+                </v-list-item-title>
+                <v-list-item-subtitle>
+                    Solution
+                </v-list-item-subtitle>
+            </v-list-item-content>
+        </v-list-item>
 
-        <v-list>
-            <v-list-item link dense>
-                <v-list-item-icon>
-                    <v-icon>mdi-view-dashboard</v-icon>
-                </v-list-item-icon>
-                <v-list-item-content>
-                    <v-list-item-title>Dashboard</v-list-item-title>
-                </v-list-item-content>
-            </v-list-item>
-            <v-list-item link dense>
-                <v-list-item-icon>
-                    <v-icon>mdi-school-outline</v-icon>
-                </v-list-item-icon>
-                <v-list-item-content>
-                    <v-list-item-title>Uczelnia</v-list-item-title>
-                </v-list-item-content>
-            </v-list-item>
-            <v-list-item link dense>
-                <v-list-item-icon>
-                    <v-icon>mdi-briefcase-outline</v-icon>
-                </v-list-item-icon>
-                <v-list-item-content>
-                    <v-list-item-title>Firma</v-list-item-title>
-                </v-list-item-content>
-            </v-list-item>
-            <v-list-item link dense>
-                <v-list-item-icon>
-                    <v-icon>mdi-notebook</v-icon>
-                </v-list-item-icon>
-                <v-list-item-content>
-                    <v-list-item-title>Dziennik Praktyk</v-list-item-title>
-                </v-list-item-content>
-            </v-list-item>
+        <v-divider></v-divider>
+
+        <v-list nav dense>
+            <template v-for="first in items">
+                <v-list-item v-if="!first.children" :to="first.to" exact active-class="primary--text">
+                    <v-list-item-title>{{ first.text }}</v-list-item-title>
+                </v-list-item>
+                <v-list-group v-else>
+                    <template v-slot:activator>
+                        <v-list-item-content :to="first.to" exact>
+                            <v-list-item-title> {{ first.text }}</v-list-item-title>
+                        </v-list-item-content>
+                    </template>
+                    <template v-for="second in first.children">
+                        <v-list-item link v-if="!second.children" :to="second.to" exact>
+                            <v-list-item-icon class="mr-2">
+                                <v-icon dense>{{ second.icon }}</v-icon>
+                            </v-list-item-icon>
+                            <v-list-item-title>{{ second.text }}</v-list-item-title>
+                        </v-list-item>
+                        <v-list-group sub-group no-action v-else>
+                            <template v-slot:activator>
+                                <v-list-item-content :to="second.to" exact>
+                                    <v-list-item-title>{{ second.text }}</v-list-item-title>
+                                </v-list-item-content>
+                            </template>
+                            <template v-slot:prependIcon class="mr-2">
+                                <v-icon dense class="mr-0">{{ second.icon }}</v-icon>
+                            </template>
+                            <template v-slot:appendIcon>
+                                <v-icon>mdi-chevron-down</v-icon>
+                            </template>
+                            <v-list-item link :to="third.to" v-if="second.children" v-for="third in second.children" :key="third.text" exact>
+                                <v-list-item-title>{{ third.text }}</v-list-item-title>
+                            </v-list-item>
+                        </v-list-group>
+                    </template>
+                </v-list-group>
+            </template>
         </v-list>
-
-        <template v-slot:append>
-            <v-list-item link dense>
-                <v-list-item-icon>
-                    <v-icon dense>mdi-logout-variant</v-icon>
-                </v-list-item-icon>
-                <v-list-item-content>
-                    <v-list-item-title>Wyloguj</v-list-item-title>
-                </v-list-item-content>
-            </v-list-item>
-        </template>
     </v-navigation-drawer>
 </template>
 
@@ -68,6 +59,7 @@ import {mapGetters} from "vuex";
 
 export default {
     name: "TheAppNavigationDrawer",
+    props: ['items'],
 
     computed: {
         ...mapGetters({

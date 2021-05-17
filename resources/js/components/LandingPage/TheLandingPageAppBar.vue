@@ -16,7 +16,7 @@
             dark
             elevation="0"
             color="green accent-4"
-            :to="{name: 'dashboard'}"
+            :to="{name: 'panel'}"
         >
             Panel Użytkownika
         </v-btn>
