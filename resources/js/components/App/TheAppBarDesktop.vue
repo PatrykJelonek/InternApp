@@ -1,66 +1,17 @@
 <template>
-    <v-app-bar
-        app
-        flat
-        color="component-background"
-    >
-<!--        <v-toolbar-title>-->
-<!--            <b>Intern<span class="green&#45;&#45;text text&#45;&#45;accent-4">App</span></b>-->
-<!--        </v-toolbar-title>-->
-
+    <v-app-bar app flat color="white">
+        <v-app-bar-nav-icon @click="toggleNavigationDrawer(!navigationDrawer)"></v-app-bar-nav-icon>
+        <v-divider vertical></v-divider>
+        <user-company-selector v-if="$route.name.match(/company-*[a-z]*/g)"></user-company-selector>
         <v-spacer></v-spacer>
-
-        <v-btn-toggle group>
-            <v-btn text plain small :ripple="false" :to="{name: 'panel'}">
-                Dashboard
-            </v-btn>
-            <v-btn
-                text
-                plain
-                small
-                :ripple="false"
-                :to="{name: 'universities'}"
-                v-has="['admin','university_worker','university_owner','university_supervisor','deanery_worker']"
-            >
-                Uniwersytet
-            </v-btn>
-            <v-btn
-                text
-                plain
-                small
-                :ripple="false"
-                :to="{name: 'companies'}"
-                v-has="['admin','company_worker','company_owner','company_supervisor']"
-            >
-                Firma
-            </v-btn>
-            <v-btn
-                text
-                plain
-                small
-                :ripple="false"
-                to="/dashboard/internships/1">
-                Dziennik Praktyk
-            </v-btn>
-            <v-btn
-                text
-                plain
-                small
-                :ripple="false"
-                :to="{name: 'offers'}"
-            >
-                Oferty Praktyk
-            </v-btn>
-        </v-btn-toggle>
-
         <v-divider vertical inset></v-divider>
-
         <v-menu left bottom offset-y nudge-bottom="3" tile>
             <template v-slot:activator="{ on, attrs }">
                 <v-list flat class="py-1" color="transparent">
                     <v-list-item v-bind="attrs" v-on="on" dense link :ripple="false">
                         <v-list-item-avatar color="primary" rounded size="35">
-                            <v-img src="https://randomuser.me/api/portraits/men/43.jpg" :alt="user.first_name + ' ' + user.last_name + ' avatar'"></v-img>
+                            <v-img src="https://randomuser.me/api/portraits/men/43.jpg"
+                                   :alt="user.first_name + ' ' + user.last_name + ' avatar'"></v-img>
                         </v-list-item-avatar>
                         <v-list-item-content>
                             <v-list-item-title class="">{{ user.first_name + ' ' + user.last_name }}</v-list-item-title>
@@ -134,16 +85,28 @@
 </template>
 
 <script>
-import {mapGetters} from "vuex";
+import {mapActions, mapGetters} from "vuex";
+import UserCompanySelector from "./UserCompanySelector";
 
 export default {
     name: "TheAppBarDesktop",
-
+    components: {UserCompanySelector},
     computed: {
         ...mapGetters({
             user: 'auth/user',
+            navigationDrawer: 'helpers/navigationDrawer'
         }),
-    }
+    },
+
+    methods: {
+        ...mapActions({
+            toggleNavigationDrawer: 'helpers/toggleNavigationDrawer'
+        }),
+    },
+
+    watch: {
+
+    },
 }
 </script>
 

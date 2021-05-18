@@ -12,7 +12,10 @@ export default {
         applyInternshipDialog: false,
         createOwnAgreementDialog: false,
         fillHeight: false,
+        navigationDrawer: false,
         errorMessage: '',
+        selectedCompany: null,
+        selectedUniversity: null,
     },
 
     getters: {
@@ -58,6 +61,18 @@ export default {
 
         fillHeight(state) {
             return state.fillHeight;
+        },
+
+        navigationDrawer(state) {
+            return state.navigationDrawer;
+        },
+
+        selectedCompany(state) {
+            return state.selectedCompany;
+        },
+
+        selectedUniversity(state) {
+            return state.selectedUniversity;
         }
     },
 
@@ -108,6 +123,18 @@ export default {
 
         SET_FILL_HEIGHT(state, value) {
             state.fillHeight = value;
+        },
+
+        TOGGLE_NAVIGATION_DRAWER(state, value) {
+            state.navigationDrawer = value;
+        },
+
+        SET_SELECTED_UNIVERSITY(state, data) {
+            state.selectedUniversity = data;
+        },
+
+        SET_SELECTED_COMPANY(state, data) {
+            state.selectedCompany = data;
         }
     },
 
@@ -148,6 +175,10 @@ export default {
             commit('TOGGLE_APPLY_INTERNSHIP_DIALOG', value);
         },
 
+        toggleNavigationDrawer({commit}, value) {
+            commit('TOGGLE_NAVIGATION_DRAWER', value);
+        },
+
         parseErrorMessage({commit}, status) {
             switch (status) {
                 case 404:
@@ -164,6 +195,14 @@ export default {
 
         setFillHeight({commit}, value) {
             commit('SET_FILL_HEIGHT', value);
-        }
+        },
+
+        setSelectedCompany({commit}, value) {
+            commit('SET_SELECTED_COMPANY', value);
+        },
+
+        setSelectedUniversity({commit}, value) {
+            commit('SET_SELECTED_UNIVERSITY', value);
+        },
     },
 }

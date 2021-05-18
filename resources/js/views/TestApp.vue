@@ -17,9 +17,10 @@ export default {
     data() {
         return {
             items: [
-                {text: 'Dashboard', to: {name: 'panel'}},
+                {text: 'Dashboard', icon: 'mdi-view-dashboard-outline', to: {name: 'panel'}},
                 {
                     text: 'Uczelnia',
+                    icon: 'mdi-view-dashboard-outline',
                     children: [
                         {text: 'Informacje', icon: 'mdi-view-dashboard-outline', to: {name: 'university-overview'}},
                         {text: 'Umowy', icon: 'mdi-file-document-multiple-outline', to: {name: 'university-agreements'}},
@@ -31,6 +32,7 @@ export default {
                 },
                 {
                     text: 'Firma',
+                    icon: 'mdi-view-dashboard-outline',
                     children: [
                         {text: 'Informacje', icon: 'mdi-view-dashboard-outline', to: {name: 'company-overview'}},
                         {text: 'Oferty Praktyk', icon: 'mdi-newspaper-variant-multiple-outline', to: {name: 'company-offers'}},
@@ -41,6 +43,7 @@ export default {
                 },
                 {
                     text: 'Panel Administratora',
+                    icon: 'mdi-view-dashboard-outline',
                     children: [
                         {text: 'Dashboard', icon: 'mdi-monitor-dashboard', to: {name: 'admin'}},
                         {text: 'Statystyki', icon: 'mdi-chart-box-outline', to: {name: 'admin'}},
@@ -63,19 +66,5 @@ export default {
 </script>
 
 <style lang="scss">
-.v-application--is-ltr .v-list--dense .v-list-group--sub-group .v-list-group__header {
-    padding-left: 8px !important;
-}
 
-.v-list-group--sub-group.v-list-group--active .v-list-item__icon.v-list-group__header__prepend-icon .v-icon {
-    transform: none !important;
-}
-
-.v-application--is-ltr .v-list--dense.v-list--nav .v-list-group--no-action.v-list-group--sub-group > .v-list-group__items > .v-list-item {
-    padding-left: 40px !important;
-}
-
-.v-application--is-ltr .v-list-group--sub-group .v-list-item__icon:first-child {
-    margin-right: 8px !important;
-}
 </style>
