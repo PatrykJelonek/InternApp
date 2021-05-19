@@ -1,3 +1,6 @@
+const SELECTED_COMPANY_LOCAL_STORAGE_KEY = 'SELECTED_COMPANY';
+const SELECTED_UNIVERSITY_LOCAL_STORAGE_KEY = 'SELECTED_UNIVERSITY';
+
 export default {
     namespaced: true,
 
@@ -68,17 +71,17 @@ export default {
         },
 
         selectedCompany(state) {
-            return state.selectedCompany;
+            return state.selectedCompany !== null ? state.selectedCompany : JSON.parse(localStorage.getItem(SELECTED_COMPANY_LOCAL_STORAGE_KEY));
         },
 
         selectedUniversity(state) {
-            return state.selectedUniversity;
+            return state.selectedUniversity !== null ? state.selectedUniversity : JSON.parse(localStorage.getItem(SELECTED_UNIVERSITY_LOCAL_STORAGE_KEY));
         }
     },
 
     mutations: {
         TOGGLE_CREATE_INTERNSHIP_DIALOG(state, value) {
-            if(value.length > 0) {
+            if (value.length > 0) {
                 state.createInternshipDialog = value;
             } else {
                 state.createInternshipDialog = !state.createInternshipDialog;
@@ -198,10 +201,12 @@ export default {
         },
 
         setSelectedCompany({commit}, value) {
+            localStorage.setItem(SELECTED_COMPANY_LOCAL_STORAGE_KEY, JSON.stringify(value));
             commit('SET_SELECTED_COMPANY', value);
         },
 
         setSelectedUniversity({commit}, value) {
+            localStorage.setItem(SELECTED_UNIVERSITY_LOCAL_STORAGE_KEY, JSON.stringify(value));
             commit('SET_SELECTED_UNIVERSITY', value);
         },
     },

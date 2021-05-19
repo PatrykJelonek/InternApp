@@ -3,11 +3,6 @@
         <div v-if="!universityLoading && !university.length > 0">
             <page-title>{{ university.name }}</page-title>
             <v-row>
-                <v-col cols="12">
-                    <the-university-sub-pages></the-university-sub-pages>
-                </v-col>
-            </v-row>
-            <v-row>
                 <v-container fluid>
                     <router-view></router-view>
                 </v-container>

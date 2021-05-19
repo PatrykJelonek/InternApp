@@ -1,8 +1,10 @@
 <template>
-    <v-app-bar app flat color="white">
+    <v-app-bar app flat dark clipped-left color="#112A52">
+        <!-- Nav Icon -->
         <v-app-bar-nav-icon @click="toggleNavigationDrawer(!navigationDrawer)"></v-app-bar-nav-icon>
         <v-divider vertical></v-divider>
         <user-company-selector v-if="$route.name.match(/company-*[a-z]*/g)"></user-company-selector>
+        <user-university-selector v-if="$route.name.match(/university-*[a-z]*/g)"></user-university-selector>
         <v-spacer></v-spacer>
         <v-divider vertical inset></v-divider>
         <v-menu left bottom offset-y nudge-bottom="3" tile>
@@ -87,10 +89,11 @@
 <script>
 import {mapActions, mapGetters} from "vuex";
 import UserCompanySelector from "./UserCompanySelector";
+import UserUniversitySelector from "./UserUniversitySelector";
 
 export default {
     name: "TheAppBarDesktop",
-    components: {UserCompanySelector},
+    components: {UserUniversitySelector, UserCompanySelector},
     computed: {
         ...mapGetters({
             user: 'auth/user',
@@ -104,9 +107,7 @@ export default {
         }),
     },
 
-    watch: {
-
-    },
+    watch: {},
 }
 </script>
 

@@ -1,68 +1,221 @@
 <template>
     <v-navigation-drawer
         app
-        dark
-        color="#302D48"
+        color="white"
+        clipped
         :mini-variant="navigationDrawer"
     >
-        <v-list-item class="navigation-logo">
-            <v-list-item-content>
-                <v-list-item-title class="title">
-                    <b>Intern<span class="green--text text--accent-4">App</span></b>
-                </v-list-item-title>
-            </v-list-item-content>
-        </v-list-item>
+        <!--        <v-list-item class="navigation-logo">-->
+        <!--            <v-list-item-content>-->
+        <!--                <v-list-item-title class="title">-->
+        <!--                    <b>Intern<span class="green&#45;&#45;text text&#45;&#45;accent-4">App</span></b>-->
+        <!--                </v-list-item-title>-->
+        <!--            </v-list-item-content>-->
+        <!--        </v-list-item>-->
 
+        <!--        <v-divider></v-divider>-->
+
+        <!-- Navigation -->
         <v-list nav dense>
-            <template v-for="first in items">
-                <v-list-item v-if="!first.children" :to="first.to" exact active-class="primary--text">
-                    <v-list-item-icon v-if="first.icon">
-                        <v-icon dense>{{ first.icon }}</v-icon>
+            <v-list-item :to="{name: 'panel'}" exact active-class="primary--text">
+                <v-list-item-icon>
+                    <v-icon dense>mdi-chart-bubble</v-icon>
+                </v-list-item-icon>
+                <v-list-item-title>Dashboard</v-list-item-title>
+            </v-list-item>
+            <v-list-item :to="{name: 'offers'}" exact active-class="primary--text">
+                <v-list-item-icon>
+                    <v-icon dense>mdi-newspaper-variant-multiple-outline</v-icon>
+                </v-list-item-icon>
+                <v-list-item-title>Oferty Praktyk</v-list-item-title>
+            </v-list-item>
+
+            <!-- Uczelnia -->
+            <v-list-group active-class="primary--text">
+                <template v-slot:activator>
+                    <v-list-item-icon>
+                        <v-icon dense>mdi-school-outline</v-icon>
                     </v-list-item-icon>
-                    <v-list-item-title>{{ first.text }}</v-list-item-title>
-                </v-list-item>
-                <v-list-group v-else>
-                    <template v-slot:activator>
-                        <v-list-item-icon v-if="first.icon">
-                            <v-icon dense>{{ first.icon }}</v-icon>
+                    <v-list-item-content exact>
+                        <v-list-item-title>Uczelnia</v-list-item-title>
+                    </v-list-item-content>
+                </template>
+                <template v-if="user.universities.length > 0">
+                    <v-list-item link :to="{name: 'university', params: {slug: selectedUniversity.slug}}" exact>
+                        <v-list-item-icon class="mr-2">
+                            <v-icon dense>mdi-view-dashboard-outline</v-icon>
                         </v-list-item-icon>
-                        <v-list-item-content :to="first.to" exact>
-                            <v-list-item-title> {{ first.text }}</v-list-item-title>
+                        <v-list-item-title>Informacje</v-list-item-title>
+                    </v-list-item>
+                    <v-list-item link :to="{name: 'university-agreements', params: {slug: selectedUniversity.slug}}"
+                                 exact>
+                        <v-list-item-icon class="mr-2">
+                            <v-icon dense>mdi-file-document-multiple-outline</v-icon>
+                        </v-list-item-icon>
+                        <v-list-item-title>Umowy</v-list-item-title>
+                    </v-list-item>
+                    <v-list-item link :to="{name: 'university-internships', params: {slug: selectedUniversity.slug}}"
+                                 exact>
+                        <v-list-item-icon class="mr-2">
+                            <v-icon dense>mdi-certificate-outline</v-icon>
+                        </v-list-item-icon>
+                        <v-list-item-title>Praktyki i Staże</v-list-item-title>
+                    </v-list-item>
+                    <v-list-item link :to="{name: 'university-students', params: {slug: selectedUniversity.slug}}"
+                                 exact>
+                        <v-list-item-icon class="mr-2">
+                            <v-icon dense>mdi-account-supervisor</v-icon>
+                        </v-list-item-icon>
+                        <v-list-item-title>Studenci</v-list-item-title>
+                    </v-list-item>
+                    <v-list-item link :to="{name: 'university-workers', params: {slug: selectedUniversity.slug}}" exact>
+                        <v-list-item-icon class="mr-2">
+                            <v-icon dense>mdi-account-multiple-outline</v-icon>
+                        </v-list-item-icon>
+                        <v-list-item-title>Pracownicy</v-list-item-title>
+                    </v-list-item>
+                    <v-list-item link :to="{name: 'university-settings', params: {slug: selectedUniversity.slug}}"
+                                 exact>
+                        <v-list-item-icon class="mr-2">
+                            <v-icon dense>mdi-cog</v-icon>
+                        </v-list-item-icon>
+                        <v-list-item-title>Ustawienia</v-list-item-title>
+                    </v-list-item>
+                </template>
+                <template v-else>
+                    <v-list-item link :to="{name: 'university-create'}" exact>
+                        <v-list-item-icon class="mr-2">
+                            <v-icon dense>mdi-plus</v-icon>
+                        </v-list-item-icon>
+                        <v-list-item-title>Dodaj Uczelnie</v-list-item-title>
+                    </v-list-item>
+                </template>
+            </v-list-group>
+
+            <!-- Firma -->
+            <v-list-group active-class="primary--text">
+                <template v-slot:activator>
+                    <v-list-item-icon>
+                        <v-icon dense>mdi-briefcase-outline</v-icon>
+                    </v-list-item-icon>
+                    <v-list-item-content exact>
+                        <v-list-item-title>Firma</v-list-item-title>
+                    </v-list-item-content>
+                </template>
+                <template v-if="user.companies.length > 0">
+                    <v-list-item link :to="{name: 'company', params: {slug: selectedCompany.slug}}" exact>
+                        <v-list-item-icon class="mr-2">
+                            <v-icon dense>mdi-view-dashboard-outline</v-icon>
+                        </v-list-item-icon>
+                        <v-list-item-title>Informacje</v-list-item-title>
+                    </v-list-item>
+                    <v-list-item link :to="{name: 'company-offers', params: {slug: selectedCompany.slug}}" exact>
+                        <v-list-item-icon class="mr-2">
+                            <v-icon dense>mdi-newspaper-variant-multiple-outline</v-icon>
+                        </v-list-item-icon>
+                        <v-list-item-title>Oferty Praktyk</v-list-item-title>
+                    </v-list-item>
+                    <v-list-item link :to="{name: 'company-agreements', params: {slug: selectedCompany.slug}}" exact>
+                        <v-list-item-icon class="mr-2">
+                            <v-icon dense>mdi-file-document-multiple-outline</v-icon>
+                        </v-list-item-icon>
+                        <v-list-item-title>Umowy</v-list-item-title>
+                    </v-list-item>
+                    <v-list-item link :to="{name: 'company-workers', params: {slug: selectedCompany.slug}}" exact>
+                        <v-list-item-icon class="mr-2">
+                            <v-icon dense>mdi-account-multiple-outline</v-icon>
+                        </v-list-item-icon>
+                        <v-list-item-title>Pracownicy</v-list-item-title>
+                    </v-list-item>
+                    <v-list-item link :to="{name: 'company-settings', params: {slug: selectedCompany.slug}}" exact>
+                        <v-list-item-icon class="mr-2">
+                            <v-icon dense>mdi-cog</v-icon>
+                        </v-list-item-icon>
+                        <v-list-item-title>Ustawienia</v-list-item-title>
+                    </v-list-item>
+                </template>
+                <template v-else>
+                    <v-list-item link :to="{name: 'company-create'}" exact>
+                        <v-list-item-icon class="mr-2">
+                            <v-icon dense>mdi-plus</v-icon>
+                        </v-list-item-icon>
+                        <v-list-item-title>Dodaj Firmę</v-list-item-title>
+                    </v-list-item>
+                </template>
+            </v-list-group>
+
+            <!-- Panel Administratora -->
+            <v-list-group v-has="['admin']" active-class="primary--text">
+                <template v-slot:activator>
+                    <v-list-item-icon>
+                        <v-icon dense>mdi-application-cog</v-icon>
+                    </v-list-item-icon>
+                    <v-list-item-content exact>
+                        <v-list-item-title>Panel Administratora</v-list-item-title>
+                    </v-list-item-content>
+                </template>
+                <v-list-item link :to="{name: 'admin'}" exact>
+                    <v-list-item-icon class="mr-2">
+                        <v-icon dense>mdi-monitor-dashboard</v-icon>
+                    </v-list-item-icon>
+                    <v-list-item-title>Dashboard</v-list-item-title>
+                </v-list-item>
+                <v-list-item link :to="{name: 'admin-statistics'}" exact>
+                    <v-list-item-icon class="mr-2">
+                        <v-icon dense>mdi-chart-box-outline</v-icon>
+                    </v-list-item-icon>
+                    <v-list-item-title>Statystyki</v-list-item-title>
+                </v-list-item>
+                <v-list-item link :to="{name: 'admin-users'}" exact>
+                    <v-list-item-icon class="mr-2">
+                        <v-icon dense>mdi-account-group-outline</v-icon>
+                    </v-list-item-icon>
+                    <v-list-item-title>Użytkownicy</v-list-item-title>
+                </v-list-item>
+                <v-list-group sub-group no-action>
+                    <template v-slot:activator>
+                        <v-list-item-content exact>
+                            <v-list-item-title>Oferty Praktyk</v-list-item-title>
                         </v-list-item-content>
                     </template>
-                    <template v-for="second in first.children">
-                        <v-list-item link v-if="!second.children" :to="second.to" exact>
-                            <v-list-item-icon class="mr-2">
-                                <v-icon dense>{{ second.icon }}</v-icon>
-                            </v-list-item-icon>
-                            <v-list-item-title>{{ second.text }}</v-list-item-title>
-                        </v-list-item>
-                        <v-list-group sub-group no-action v-else>
-                            <template v-slot:activator>
-                                <v-list-item-content :to="second.to" exact>
-                                    <v-list-item-title>{{ second.text }}</v-list-item-title>
-                                </v-list-item-content>
-                            </template>
-                            <template v-slot:prependIcon class="mr-2">
-                                <v-icon dense class="mr-0">{{ second.icon }}</v-icon>
-                            </template>
-                            <template v-slot:appendIcon>
-                                <v-icon>mdi-chevron-down</v-icon>
-                            </template>
-                            <v-list-item link :to="third.to" v-if="second.children" v-for="third in second.children"
-                                         :key="third.text" exact>
-                                <v-list-item-title>{{ third.text }}</v-list-item-title>
-                            </v-list-item>
-                        </v-list-group>
+                    <template v-slot:prependIcon class="mr-2">
+                        <v-icon dense class="mr-0">mdi-newspaper-variant-multiple-outline</v-icon>
                     </template>
+                    <template v-slot:appendIcon>
+                        <v-icon>mdi-chevron-down</v-icon>
+                    </template>
+                    <v-list-item link :to="{name: 'admin-offers', query: {categories: ['new']}}" exact>
+                        <v-list-item-title>Do Akceptacji</v-list-item-title>
+                    </v-list-item>
+                    <v-list-item link :to="{name: 'admin-offers'}" exact>
+                        <v-list-item-title>Wszystkie</v-list-item-title>
+                    </v-list-item>
                 </v-list-group>
-            </template>
+                <v-list-item link :to="{name: 'admin-settings'}" exact>
+                    <v-list-item-icon class="mr-2">
+                        <v-icon dense>mdi-cogs</v-icon>
+                    </v-list-item-icon>
+                    <v-list-item-title>Ustawienia</v-list-item-title>
+                </v-list-item>
+            </v-list-group>
         </v-list>
+
+        <!-- Navigation Drawer Append -->
+        <template v-slot:append>
+            <v-list nav dense>
+                <v-list-item link :to="{name: 'admin-settings'}" exact>
+                    <v-list-item-icon class="mr-2">
+                        <v-icon dense>{{ navigationDrawer ?'mdi-chevron-right' : 'mdi-chevron-left'}}</v-icon>
+                    </v-list-item-icon>
+                    <v-list-item-title>Zwiń Menu</v-list-item-title>
+                </v-list-item>
+            </v-list>
+        </template>
     </v-navigation-drawer>
 </template>
 
 <script>
-import {mapGetters} from "vuex";
+import {mapActions, mapGetters} from "vuex";
 
 export default {
     name: "TheAppNavigationDrawer",
@@ -171,6 +324,13 @@ export default {
         }
     },
 
+    methods: {
+        ...mapActions({
+            setSelectedUniversity: 'helpers/setSelectedUniversity',
+            setSelectedCompany: 'helpers/setSelectedCompany'
+        })
+    },
+
     computed: {
         ...mapGetters({
             user: 'auth/user',
@@ -180,36 +340,14 @@ export default {
         }),
     },
 
-    watch: {
-        $route(to, from) {
-            if (to.name.match(/company-*[a-z]*/g)) {
-                this.items.forEach((first) => {
-                    first.to.params.slug.replaceAll('%company_slug%', this.selectedCompany.slug);
-                    first.children.forEach((second) => {
-                        second.to.params.slug.replaceAll('%company_slug%', this.selectedCompany.slug);
-                        second.children.forEach((third) => {
-                            third.to.params.slug.replaceAll('%company_slug%', this.selectedCompany.slug);
-                        });
-                    });
-                });
-            }
-
-            if (to.name.match(/university-*[a-z]*/g)) {
-                this.items.forEach((first) => {
-                    first.to.params.slug.replaceAll('%university_slug%', this.selectedUniversity.slug);
-                    first.children.forEach((second) => {
-                        second.to.params.slug.replaceAll('%university_slug%', this.selectedUniversity.slug);
-                        second.children.forEach((third) => {
-                            third.to.params.slug.replaceAll('%university_slug%', this.selectedUniversity.slug);
-                        });
-                    });
-                });
-            }
-        }
-    },
-
     created() {
+        if ((this.selectedCompany === undefined || this.selectedCompany === null) && this.user.companies.length > 0) {
+            this.setSelectedCompany(this.user.companies[0]);
+        }
 
+        if ((this.selectedUniversity === undefined || this.selectedUniversity === null) && this.user.universities.length > 0) {
+            this.setSelectedUniversity(this.user.universities[0]);
+        }
     },
 }
 </script>
