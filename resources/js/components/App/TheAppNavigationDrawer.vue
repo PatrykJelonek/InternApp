@@ -5,15 +5,15 @@
         clipped
         :mini-variant="navigationDrawer"
     >
-        <!--        <v-list-item class="navigation-logo">-->
-        <!--            <v-list-item-content>-->
-        <!--                <v-list-item-title class="title">-->
-        <!--                    <b>Intern<span class="green&#45;&#45;text text&#45;&#45;accent-4">App</span></b>-->
-        <!--                </v-list-item-title>-->
-        <!--            </v-list-item-content>-->
-        <!--        </v-list-item>-->
+<!--                <v-list-item class="navigation-logo">-->
+<!--                    <v-list-item-content>-->
+<!--                        <v-list-item-title class="title">-->
+<!--                            <b>Intern<span class="green&#45;&#45;text text&#45;&#45;accent-4">App</span></b>-->
+<!--                        </v-list-item-title>-->
+<!--                    </v-list-item-content>-->
+<!--                </v-list-item>-->
 
-        <!--        <v-divider></v-divider>-->
+<!--                <v-divider></v-divider>-->
 
         <!-- Navigation -->
         <v-list nav dense>
