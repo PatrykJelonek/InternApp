@@ -25,6 +25,7 @@
     import PageTitle from "../components/_Helpers/PageTitle";
     import StudentOffersList from "../components/Offers/Student/StudentOffersList";
     import TheStudentOfferApplicationsList from "../components/Offers/Student/TheStudentOfferApplicationsList";
+    import {mapActions} from "vuex";
 
     export default {
         name: "Offers",
@@ -45,6 +46,19 @@
                     },
                 ]
             }
+        },
+
+        methods: {
+            ...mapActions({
+                setBreadcrumbs: 'helpers/setBreadcrumbs'
+            }),
+        },
+
+        created() {
+            this.setBreadcrumbs([
+                {text: 'Panel', to: {name: 'panel'}, exact: true},
+                {text: 'Oferty Praktyk', to: {name: 'offers'}, exact: true},
+            ]);
         }
     }
 </script>

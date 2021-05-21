@@ -7,9 +7,13 @@
         return-object
         dense
         @change="changeUniversity"
-        outlined
-        class="ml-5 text-caption font-weight-bold"
-        style="max-width: 300px"
+        solo
+        flat
+        color="primary"
+        item-color="primary"
+        background-color="transparent"
+        class="mx-4 text-caption rounded-1"
+        style="max-width: 350px;"
         hide-details
     ></v-select>
 </template>

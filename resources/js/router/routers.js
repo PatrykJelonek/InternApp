@@ -144,7 +144,14 @@ const router = new VueRouter({
                 {
                     path: '/panel/',
                     name: 'panel',
-                    component: Welcome
+                    component: Welcome,
+                    meta: {
+                        title: 'Panel',
+                        breadcrumbs: [
+                            {text: 'Panel', to: {name: 'panel'}, exact: true},
+                            {text: 'Uczelnia', to: {name: 'university', params: {slug: 'abc'}}},
+                        ]
+                    }
                 },
                 {
                     path: 'users/new-status',
@@ -399,6 +406,10 @@ const router = new VueRouter({
             component: NotFound
         },
     ],
+});
+
+router.afterEach((to, from) => {
+    store.commit('helpers/SET_BREADCRUMBS', []);
 });
 
 router.beforeEach((to, from, next) => {

@@ -51,12 +51,14 @@
 
         methods: {
             ...mapActions({
-
+                setBreadcrumbs: 'helpers/setBreadcrumbs'
             }),
         },
 
         created() {
-
+            this.setBreadcrumbs([
+                {text: 'Panel', to: {name: 'panel'}}
+            ])
         },
     }
 </script>

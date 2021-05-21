@@ -1,5 +1,5 @@
 <template>
-    <v-row class="my-10">
+    <v-row>
         <v-col>
             <h2 class="text--welcome text-h3 font-weight-black">
                 <slot></slot>

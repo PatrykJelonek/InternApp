@@ -15,7 +15,7 @@
 
 <script>
 import TheUniversityDetails from "./TheUniversityDetails";
-import {mapGetters} from "vuex";
+import {mapActions, mapGetters} from "vuex";
 export default {
 name: "TheUniversityOverview",
     components: {TheUniversityDetails},
@@ -26,6 +26,19 @@ name: "TheUniversityOverview",
             universityLoading: 'university/universityLoading',
         }),
     },
+
+    methods: {
+        ...mapActions({
+            setBreadcrumbs: 'helpers/setBreadcrumbs'
+        }),
+    },
+
+    created() {
+        this.setBreadcrumbs([
+            {text: 'Panel', to: {name: 'panel'}, exact: true},
+            {text: 'Uczelnia', to: {name: 'university', params: {slug: this.$route.params.slug}}, exact: true},
+        ])
+    }
 }
 </script>
 

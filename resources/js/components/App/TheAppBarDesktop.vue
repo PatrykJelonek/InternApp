@@ -1,11 +1,13 @@
 <template>
-    <v-app-bar app flat dark clipped-left color="#112A52">
+    <v-app-bar app flat color="component-background">
         <!-- Nav Icon -->
-        <v-app-bar-nav-icon @click="toggleNavigationDrawer(!navigationDrawer)"></v-app-bar-nav-icon>
-        <v-divider vertical></v-divider>
+<!--        <v-app-bar-nav-icon @click="toggleNavigationDrawer(!navigationDrawer)"></v-app-bar-nav-icon>-->
+<!--        <v-toolbar-title class="text-body-2 text-no-wrap">{{ $route.meta.title ?  $route.meta.title : '' }}</v-toolbar-title >-->
+        <v-breadcrumbs :items="breadcrumbs ? breadcrumbs : []"></v-breadcrumbs>
+<!--        <v-divider vertical></v-divider>-->
+        <v-spacer></v-spacer>
         <user-company-selector v-if="$route.name.match(/company-*[a-z]*/g)"></user-company-selector>
         <user-university-selector v-if="$route.name.match(/university-*[a-z]*/g)"></user-university-selector>
-        <v-spacer></v-spacer>
         <v-divider vertical inset></v-divider>
         <v-menu left bottom offset-y nudge-bottom="3" tile>
             <template v-slot:activator="{ on, attrs }">
@@ -97,7 +99,8 @@ export default {
     computed: {
         ...mapGetters({
             user: 'auth/user',
-            navigationDrawer: 'helpers/navigationDrawer'
+            navigationDrawer: 'helpers/navigationDrawer',
+            breadcrumbs: 'helpers/breadcrumbs',
         }),
     },
 

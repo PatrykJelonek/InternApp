@@ -21,9 +21,24 @@
 import TheUniversityFaculties from "./TheUniversityFaculties";
 import TheUniversitySettingsForm from "./TheUniversitySettingsForm";
 import TheUniversityAccessCode from "./TheUniversityAccessCode";
+import {mapActions} from "vuex";
 export default {
     name: "TheUniversitySettings",
-    components: {TheUniversityAccessCode, TheUniversitySettingsForm, TheUniversityFaculties}
+    components: {TheUniversityAccessCode, TheUniversitySettingsForm, TheUniversityFaculties},
+
+    methods: {
+        ...mapActions({
+            setBreadcrumbs: 'helpers/setBreadcrumbs'
+        }),
+    },
+
+    created() {
+        this.setBreadcrumbs([
+            {text: 'Panel', to: {name: 'panel'}, exact: true},
+            {text: 'Uczelnia', to: {name: 'university', params: {slug: this.$route.params.slug}}, exact: true},
+            {text: 'Ustawienia', to: {name: 'university-settings', params: {slug: this.$route.params.slug}}, exact: true},
+        ])
+    }
 }
 </script>
 

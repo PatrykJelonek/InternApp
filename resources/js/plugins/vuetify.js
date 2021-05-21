@@ -6,20 +6,21 @@ Vue.use(Vuetify);
 
 export default new Vuetify({
     theme: {
-        dark: false,
+        dark: true,
         options: {
             customProperties: true,
         },
         themes: {
             light: {
                 //primary: '#2757FF',
-                primary: '#2565C7',
+                primary: '#00E676',
                 secondary: '#9DA0A5',
                 //background: '#f7f7fa',
                 navigationDrawerExpanded: '#efeff5',
                 'base-background': '#E5E6E8',
                 background: '#E5E6E8',
                 'component-background': '#FFF',
+                'tooltip-background': '#181A20',
                 'card-background': '#fff'
             },
             dark: {
@@ -36,6 +37,7 @@ export default new Vuetify({
                 cardBackground: '#181A20',
                 'base-background': '#0F1115',
                 'component-background': '#181A20',
+                'tooltip-background': '#181A20',
                 'card-background': '#181A20',
             }
         },

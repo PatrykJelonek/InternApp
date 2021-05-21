@@ -10,9 +10,24 @@
 
 <script>
 import TheUniversityInternshipsList from "./TheUniversityInternshipsList";
+import {mapActions} from "vuex";
 export default {
     name: "TheUniversityInternships",
-    components: {TheUniversityInternshipsList}
+    components: {TheUniversityInternshipsList},
+
+    methods: {
+        ...mapActions({
+            setBreadcrumbs: 'helpers/setBreadcrumbs'
+        }),
+    },
+
+    created() {
+        this.setBreadcrumbs([
+            {text: 'Panel', to: {name: 'panel'}, exact: true},
+            {text: 'Uczelnia', to: {name: 'university', params: {slug: this.$route.params.slug}}, exact: true},
+            {text: 'Praktyki i Staże', to: {name: 'university-internships', params: {slug: this.$route.params.slug}}, exact: true},
+        ])
+    }
 }
 </script>
 

@@ -15,10 +15,11 @@ export default {
         applyInternshipDialog: false,
         createOwnAgreementDialog: false,
         fillHeight: false,
-        navigationDrawer: false,
+        navigationDrawer: true,
         errorMessage: '',
         selectedCompany: null,
         selectedUniversity: null,
+        breadcrumbs: [],
     },
 
     getters: {
@@ -76,6 +77,10 @@ export default {
 
         selectedUniversity(state) {
             return state.selectedUniversity !== null ? state.selectedUniversity : JSON.parse(localStorage.getItem(SELECTED_UNIVERSITY_LOCAL_STORAGE_KEY));
+        },
+
+        breadcrumbs(state) {
+            return state.breadcrumbs;
         }
     },
 
@@ -138,6 +143,10 @@ export default {
 
         SET_SELECTED_COMPANY(state, data) {
             state.selectedCompany = data;
+        },
+
+        SET_BREADCRUMBS(state, data) {
+            state.breadcrumbs = data;
         }
     },
 
@@ -209,5 +218,9 @@ export default {
             localStorage.setItem(SELECTED_UNIVERSITY_LOCAL_STORAGE_KEY, JSON.stringify(value));
             commit('SET_SELECTED_UNIVERSITY', value);
         },
+
+        setBreadcrumbs({commit}, value) {
+            commit('SET_BREADCRUMBS', value);
+        }
     },
 }

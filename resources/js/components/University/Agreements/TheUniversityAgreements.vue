@@ -10,10 +10,25 @@
 
 <script>
 import TheUniversityAgreementsList from "./TheUniversityAgreementsList";
+import {mapActions} from "vuex";
 
 export default {
     name: "TheUniversityAgreements",
-    components: {TheUniversityAgreementsList}
+    components: {TheUniversityAgreementsList},
+
+    methods: {
+        ...mapActions({
+            setBreadcrumbs: 'helpers/setBreadcrumbs'
+        }),
+    },
+
+    created() {
+        this.setBreadcrumbs([
+            {text: 'Panel', to: {name: 'panel'}, exact: true},
+            {text: 'Uczelnia', to: {name: 'university', params: {slug: this.$route.params.slug}}, exact: true},
+            {text: 'Umowy', to: {name: 'university-agreements', params: {slug: this.$route.params.slug}}, exact: true},
+        ])
+    }
 }
 </script>
 

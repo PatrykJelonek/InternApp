@@ -1,34 +1,68 @@
 <template>
     <v-navigation-drawer
         app
-        color="white"
-        clipped
+        floating
+        color="component-background"
         :mini-variant="navigationDrawer"
     >
-<!--                <v-list-item class="navigation-logo">-->
-<!--                    <v-list-item-content>-->
-<!--                        <v-list-item-title class="title">-->
-<!--                            <b>Intern<span class="green&#45;&#45;text text&#45;&#45;accent-4">App</span></b>-->
-<!--                        </v-list-item-title>-->
-<!--                    </v-list-item-content>-->
-<!--                </v-list-item>-->
-
-<!--                <v-divider></v-divider>-->
+        <div style="height: 64px;" class="primary">
+            <v-list nav dense>
+                <v-list-item class="mt-1">
+                    <v-list-item-icon>
+                        <v-icon>mdi-school-outline</v-icon>
+                    </v-list-item-icon>
+                    <v-list-item-title>InternApp</v-list-item-title>
+                </v-list-item>
+            </v-list>
+        </div>
 
         <!-- Navigation -->
-        <v-list nav dense>
-            <v-list-item :to="{name: 'panel'}" exact active-class="primary--text">
-                <v-list-item-icon>
-                    <v-icon dense>mdi-chart-bubble</v-icon>
-                </v-list-item-icon>
-                <v-list-item-title>Dashboard</v-list-item-title>
-            </v-list-item>
-            <v-list-item :to="{name: 'offers'}" exact active-class="primary--text">
-                <v-list-item-icon>
-                    <v-icon dense>mdi-newspaper-variant-multiple-outline</v-icon>
-                </v-list-item-icon>
-                <v-list-item-title>Oferty Praktyk</v-list-item-title>
-            </v-list-item>
+        <v-list nav dense class="mt-5">
+            <v-tooltip
+                right
+                nudge-right="10"
+                :open-on-hover="navigationDrawer"
+                content-class="tooltip-background"
+            >
+                <template v-slot:activator="{ on, attrs }">
+                    <v-list-item
+                        exact
+                        v-on="on"
+                        v-bind="attrs"
+                        :to="{name: 'panel'}"
+                        active-class="primary--text"
+                    >
+                        <v-list-item-icon>
+                            <v-icon dense>mdi-chart-bubble</v-icon>
+                        </v-list-item-icon>
+                        <v-list-item-title>Dashboard</v-list-item-title>
+                    </v-list-item>
+                </template>
+                <span>Dashboard</span>
+            </v-tooltip>
+            <v-tooltip
+                right
+                nudge-right="10"
+                :open-on-hover="navigationDrawer"
+                content-class="tooltip-background"
+            >
+                <template v-slot:activator="{ on, attrs }">
+                    <v-list-item
+                        exact
+                        v-on="on"
+                        v-bind="attrs"
+                        :to="{name: 'offers'}"
+                        active-class="primary--text"
+                    >
+                        <v-list-item-icon>
+                            <v-icon dense>mdi-newspaper-variant-multiple-outline</v-icon>
+                        </v-list-item-icon>
+                        <v-list-item-title>Oferty Praktyk</v-list-item-title>
+                    </v-list-item>
+                </template>
+                <span>Oferty Praktyk</span>
+            </v-tooltip>
+
 
             <!-- Uczelnia -->
             <v-list-group active-class="primary--text">
@@ -41,54 +75,162 @@
                     </v-list-item-content>
                 </template>
                 <template v-if="user.universities.length > 0">
-                    <v-list-item link :to="{name: 'university', params: {slug: selectedUniversity.slug}}" exact>
-                        <v-list-item-icon class="mr-2">
-                            <v-icon dense>mdi-view-dashboard-outline</v-icon>
-                        </v-list-item-icon>
-                        <v-list-item-title>Informacje</v-list-item-title>
-                    </v-list-item>
-                    <v-list-item link :to="{name: 'university-agreements', params: {slug: selectedUniversity.slug}}"
-                                 exact>
-                        <v-list-item-icon class="mr-2">
-                            <v-icon dense>mdi-file-document-multiple-outline</v-icon>
-                        </v-list-item-icon>
-                        <v-list-item-title>Umowy</v-list-item-title>
-                    </v-list-item>
-                    <v-list-item link :to="{name: 'university-internships', params: {slug: selectedUniversity.slug}}"
-                                 exact>
-                        <v-list-item-icon class="mr-2">
-                            <v-icon dense>mdi-certificate-outline</v-icon>
-                        </v-list-item-icon>
-                        <v-list-item-title>Praktyki i Staże</v-list-item-title>
-                    </v-list-item>
-                    <v-list-item link :to="{name: 'university-students', params: {slug: selectedUniversity.slug}}"
-                                 exact>
-                        <v-list-item-icon class="mr-2">
-                            <v-icon dense>mdi-account-supervisor</v-icon>
-                        </v-list-item-icon>
-                        <v-list-item-title>Studenci</v-list-item-title>
-                    </v-list-item>
-                    <v-list-item link :to="{name: 'university-workers', params: {slug: selectedUniversity.slug}}" exact>
-                        <v-list-item-icon class="mr-2">
-                            <v-icon dense>mdi-account-multiple-outline</v-icon>
-                        </v-list-item-icon>
-                        <v-list-item-title>Pracownicy</v-list-item-title>
-                    </v-list-item>
-                    <v-list-item link :to="{name: 'university-settings', params: {slug: selectedUniversity.slug}}"
-                                 exact>
-                        <v-list-item-icon class="mr-2">
-                            <v-icon dense>mdi-cog</v-icon>
-                        </v-list-item-icon>
-                        <v-list-item-title>Ustawienia</v-list-item-title>
-                    </v-list-item>
+                    <v-tooltip
+                        right
+                        nudge-right="10"
+                        :open-on-hover="navigationDrawer"
+                        content-class="tooltip-background"
+                    >
+                        <template v-slot:activator="{ on, attrs }">
+                            <v-list-item
+                                link
+                                exact
+                                v-on="on"
+                                v-bind="attrs"
+                                :to="{name: 'university', params: {slug: selectedUniversity.slug}}"
+                            >
+                                <v-list-item-icon class="mr-2">
+                                    <v-icon dense>mdi-view-dashboard-outline</v-icon>
+                                </v-list-item-icon>
+                                <v-list-item-title>Informacje</v-list-item-title>
+                            </v-list-item>
+                        </template>
+                        <span>Informacje</span>
+                    </v-tooltip>
+                    <v-tooltip
+                        right
+                        nudge-right="10"
+                        :open-on-hover="navigationDrawer"
+                        content-class="tooltip-background"
+                    >
+                        <template v-slot:activator="{ on, attrs }">
+                            <v-list-item
+                                link
+                                exact
+                                v-on="on"
+                                v-bind="attrs"
+                                :to="{name: 'university-agreements', params: {slug: selectedUniversity.slug}}"
+                            >
+                                <v-list-item-icon class="mr-2">
+                                    <v-icon dense>mdi-file-document-multiple-outline</v-icon>
+                                </v-list-item-icon>
+                                <v-list-item-title>Umowy</v-list-item-title>
+                            </v-list-item>
+                        </template>
+                        <span>Umowy</span>
+                    </v-tooltip>
+                    <v-tooltip
+                        right
+                        nudge-right="10"
+                        :open-on-hover="navigationDrawer"
+                        content-class="tooltip-background"
+                    >
+                        <template v-slot:activator="{ on, attrs }">
+                            <v-list-item
+                                link
+                                exact
+                                v-on="on"
+                                v-bind="attrs"
+                                :to="{name: 'university-internships', params: {slug: selectedUniversity.slug}}"
+                            >
+                                <v-list-item-icon class="mr-2">
+                                    <v-icon dense>mdi-certificate-outline</v-icon>
+                                </v-list-item-icon>
+                                <v-list-item-title>Praktyki i Staże</v-list-item-title>
+                            </v-list-item>
+                        </template>
+                        <span>Praktyki i Staże</span>
+                    </v-tooltip>
+                    <v-tooltip
+                        right
+                        nudge-right="10"
+                        :open-on-hover="navigationDrawer"
+                        content-class="tooltip-background"
+                    >
+                        <template v-slot:activator="{ on, attrs }">
+                            <v-list-item
+                                link
+                                exact
+                                v-on="on"
+                                v-bind="attrs"
+                                :to="{name: 'university-students', params: {slug: selectedUniversity.slug}}"
+                            >
+                                <v-list-item-icon class="mr-2">
+                                    <v-icon dense>mdi-account-supervisor</v-icon>
+                                </v-list-item-icon>
+                                <v-list-item-title>Studenci</v-list-item-title>
+                            </v-list-item>
+                        </template>
+                        <span>Studenci</span>
+                    </v-tooltip>
+                    <v-tooltip
+                        right
+                        nudge-right="10"
+                        :open-on-hover="navigationDrawer"
+                        content-class="tooltip-background"
+                    >
+                        <template v-slot:activator="{ on, attrs }">
+                            <v-list-item
+                                link
+                                exact
+                                v-on="on"
+                                v-bind="attrs"
+                                :to="{name: 'university-workers', params: {slug: selectedUniversity.slug}}"
+                            >
+                                <v-list-item-icon class="mr-2">
+                                    <v-icon dense>mdi-account-multiple-outline</v-icon>
+                                </v-list-item-icon>
+                                <v-list-item-title>Pracownicy</v-list-item-title>
+                            </v-list-item>
+                        </template>
+                        <span>Pracownicy</span>
+                    </v-tooltip>
+                    <v-tooltip
+                        right
+                        nudge-right="10"
+                        :open-on-hover="navigationDrawer"
+                        content-class="tooltip-background"
+                    >
+                        <template v-slot:activator="{ on, attrs }">
+                            <v-list-item
+                                link
+                                exact
+                                v-on="on"
+                                v-bind="attrs"
+                                :to="{name: 'university-settings', params: {slug: selectedUniversity.slug}}"
+                            >
+                                <v-list-item-icon class="mr-2">
+                                    <v-icon dense>mdi-cog</v-icon>
+                                </v-list-item-icon>
+                                <v-list-item-title>Ustawienia</v-list-item-title>
+                            </v-list-item>
+                        </template>
+                        <span>Ustawienia</span>
+                    </v-tooltip>
                 </template>
                 <template v-else>
-                    <v-list-item link :to="{name: 'university-create'}" exact>
-                        <v-list-item-icon class="mr-2">
-                            <v-icon dense>mdi-plus</v-icon>
-                        </v-list-item-icon>
-                        <v-list-item-title>Dodaj Uczelnie</v-list-item-title>
-                    </v-list-item>
+                    <v-tooltip
+                        right
+                        nudge-right="10"
+                        :open-on-hover="navigationDrawer"
+                        content-class="tooltip-background"
+                    >
+                        <template v-slot:activator="{ on, attrs }">
+                            <v-list-item
+                                link
+                                exact
+                                v-on="on"
+                                v-bind="attrs"
+                                :to="{name: 'university-create'}"
+                            >
+                                <v-list-item-icon class="mr-2">
+                                    <v-icon dense>mdi-plus</v-icon>
+                                </v-list-item-icon>
+                                <v-list-item-title>Dodaj Uczelnie</v-list-item-title>
+                            </v-list-item>
+                        </template>
+                        <span>Dodaj Uczelnie</span>
+                    </v-tooltip>
                 </template>
             </v-list-group>
 
@@ -103,44 +245,140 @@
                     </v-list-item-content>
                 </template>
                 <template v-if="user.companies.length > 0">
-                    <v-list-item link :to="{name: 'company', params: {slug: selectedCompany.slug}}" exact>
-                        <v-list-item-icon class="mr-2">
-                            <v-icon dense>mdi-view-dashboard-outline</v-icon>
-                        </v-list-item-icon>
-                        <v-list-item-title>Informacje</v-list-item-title>
-                    </v-list-item>
-                    <v-list-item link :to="{name: 'company-offers', params: {slug: selectedCompany.slug}}" exact>
-                        <v-list-item-icon class="mr-2">
-                            <v-icon dense>mdi-newspaper-variant-multiple-outline</v-icon>
-                        </v-list-item-icon>
-                        <v-list-item-title>Oferty Praktyk</v-list-item-title>
-                    </v-list-item>
-                    <v-list-item link :to="{name: 'company-agreements', params: {slug: selectedCompany.slug}}" exact>
-                        <v-list-item-icon class="mr-2">
-                            <v-icon dense>mdi-file-document-multiple-outline</v-icon>
-                        </v-list-item-icon>
-                        <v-list-item-title>Umowy</v-list-item-title>
-                    </v-list-item>
-                    <v-list-item link :to="{name: 'company-workers', params: {slug: selectedCompany.slug}}" exact>
-                        <v-list-item-icon class="mr-2">
-                            <v-icon dense>mdi-account-multiple-outline</v-icon>
-                        </v-list-item-icon>
-                        <v-list-item-title>Pracownicy</v-list-item-title>
-                    </v-list-item>
-                    <v-list-item link :to="{name: 'company-settings', params: {slug: selectedCompany.slug}}" exact>
-                        <v-list-item-icon class="mr-2">
-                            <v-icon dense>mdi-cog</v-icon>
-                        </v-list-item-icon>
-                        <v-list-item-title>Ustawienia</v-list-item-title>
-                    </v-list-item>
+                    <v-tooltip
+                        right
+                        nudge-right="10"
+                        :open-on-hover="navigationDrawer"
+                        content-class="tooltip-background"
+                    >
+                        <template v-slot:activator="{ on, attrs }">
+                            <v-list-item
+                                link
+                                exact
+                                v-on="on"
+                                v-bind="attrs"
+                                :to="{name: 'company', params: {slug: selectedCompany.slug}}"
+                            >
+                                <v-list-item-icon class="mr-2">
+                                    <v-icon dense>mdi-view-dashboard-outline</v-icon>
+                                </v-list-item-icon>
+                                <v-list-item-title>Informacje</v-list-item-title>
+                            </v-list-item>
+                        </template>
+                        <span>Informacje</span>
+                    </v-tooltip>
+                    <v-tooltip
+                        right
+                        nudge-right="10"
+                        :open-on-hover="navigationDrawer"
+                        content-class="tooltip-background"
+                    >
+                        <template v-slot:activator="{ on, attrs }">
+                            <v-list-item
+                                link
+                                exact
+                                v-on="on"
+                                v-bind="attrs"
+                                :to="{name: 'company-offers', params: {slug: selectedCompany.slug}}"
+                            >
+                                <v-list-item-icon class="mr-2">
+                                    <v-icon dense>mdi-newspaper-variant-multiple-outline</v-icon>
+                                </v-list-item-icon>
+                                <v-list-item-title>Oferty Praktyk</v-list-item-title>
+                            </v-list-item>
+                        </template>
+                        <span>Oferty Praktyk</span>
+                    </v-tooltip>
+                    <v-tooltip
+                        right
+                        nudge-right="10"
+                        :open-on-hover="navigationDrawer"
+                        content-class="tooltip-background"
+                    >
+                        <template v-slot:activator="{ on, attrs }">
+                            <v-list-item
+                                link
+                                exact
+                                v-on="on"
+                                v-bind="attrs"
+                                :to="{name: 'company-agreements', params: {slug: selectedCompany.slug}}"
+                            >
+                                <v-list-item-icon class="mr-2">
+                                    <v-icon dense>mdi-file-document-multiple-outline</v-icon>
+                                </v-list-item-icon>
+                                <v-list-item-title>Umowy</v-list-item-title>
+                            </v-list-item>
+                        </template>
+                        <span>Umowy</span>
+                    </v-tooltip>
+                    <v-tooltip
+                        right
+                        nudge-right="10"
+                        :open-on-hover="navigationDrawer"
+                        content-class="tooltip-background"
+                    >
+                        <template v-slot:activator="{ on, attrs }">
+                            <v-list-item
+                                link
+                                exact
+                                v-on="on"
+                                v-bind="attrs"
+                                :to="{name: 'company-workers', params: {slug: selectedCompany.slug}}"
+                            >
+                                <v-list-item-icon class="mr-2">
+                                    <v-icon dense>mdi-account-multiple-outline</v-icon>
+                                </v-list-item-icon>
+                                <v-list-item-title>Pracownicy</v-list-item-title>
+                            </v-list-item>
+                        </template>
+                        <span>Pracownicy</span>
+                    </v-tooltip>
+                    <v-tooltip
+                        right
+                        nudge-right="10"
+                        :open-on-hover="navigationDrawer"
+                        content-class="tooltip-background"
+                    >
+                        <template v-slot:activator="{ on, attrs }">
+                            <v-list-item
+                                link
+                                exact
+                                v-on="on"
+                                v-bind="attrs"
+                                :to="{name: 'company-settings', params: {slug: selectedCompany.slug}}"
+                            >
+                                <v-list-item-icon class="mr-2">
+                                    <v-icon dense>mdi-cog</v-icon>
+                                </v-list-item-icon>
+                                <v-list-item-title>Ustawienia</v-list-item-title>
+                            </v-list-item>
+                        </template>
+                        <span>Ustawienia</span>
+                    </v-tooltip>
                 </template>
                 <template v-else>
-                    <v-list-item link :to="{name: 'company-create'}" exact>
-                        <v-list-item-icon class="mr-2">
-                            <v-icon dense>mdi-plus</v-icon>
-                        </v-list-item-icon>
-                        <v-list-item-title>Dodaj Firmę</v-list-item-title>
-                    </v-list-item>
+                    <v-tooltip
+                        right
+                        nudge-right="10"
+                        :open-on-hover="navigationDrawer"
+                        content-class="tooltip-background"
+                    >
+                        <template v-slot:activator="{ on, attrs }">
+                            <v-list-item
+                                link
+                                exact
+                                v-on="on"
+                                v-bind="attrs"
+                                :to="{name: 'company-create'}"
+                            >
+                                <v-list-item-icon class="mr-2">
+                                    <v-icon dense>mdi-plus</v-icon>
+                                </v-list-item-icon>
+                                <v-list-item-title>Dodaj Firmę</v-list-item-title>
+                            </v-list-item>
+                        </template>
+                        <span>Dodaj Firmę</span>
+                    </v-tooltip>
                 </template>
             </v-list-group>
 
@@ -203,9 +441,14 @@
         <!-- Navigation Drawer Append -->
         <template v-slot:append>
             <v-list nav dense>
-                <v-list-item link :to="{name: 'admin-settings'}" exact>
+                <v-list-item
+                    link
+                    :to="{name: 'admin-settings'}"
+                    exact
+                    @click="toggleNavigationDrawer(!navigationDrawer)"
+                >
                     <v-list-item-icon class="mr-2">
-                        <v-icon dense>{{ navigationDrawer ?'mdi-chevron-right' : 'mdi-chevron-left'}}</v-icon>
+                        <v-icon dense>{{ navigationDrawer ? 'mdi-chevron-right' : 'mdi-chevron-left' }}</v-icon>
                     </v-list-item-icon>
                     <v-list-item-title>Zwiń Menu</v-list-item-title>
                 </v-list-item>
@@ -221,113 +464,14 @@ export default {
     name: "TheAppNavigationDrawer",
 
     data() {
-        return {
-            universitySlug: null,
-            companySlug: null,
-            items: [
-                {
-                    text: 'Dashboard',
-                    icon: 'mdi-chart-bubble',
-                    to: {name: 'panel'}
-                },
-                {
-                    text: 'Oferty Praktyk',
-                    icon: 'mdi-newspaper-variant-multiple-outline',
-                    to: {name: 'offers'}
-                },
-                {
-                    text: 'Uczelnia',
-                    icon: 'mdi-school-outline',
-                    children: [
-                        {
-                            text: 'Informacje',
-                            icon: 'mdi-view-dashboard-outline',
-                            to: {name: 'university', params: {slug: '%university_slug%'}}
-                        },
-                        {
-                            text: 'Umowy',
-                            icon: 'mdi-file-document-multiple-outline',
-                            to: {name: 'university-agreements', params: {slug: '%university_slug%'}}
-                        },
-                        {
-                            text: 'Praktyki i Staże',
-                            icon: 'mdi-certificate-outline',
-                            to: {name: 'university-internships', params: {slug: '%university_slug%'}}
-                        },
-                        {
-                            text: 'Studenci',
-                            icon: 'mdi-account-supervisor',
-                            to: {name: 'university-students', params: {slug: '%university_slug%'}}
-                        },
-                        {
-                            text: 'Pracownicy',
-                            icon: 'mdi-account-multiple-outline',
-                            to: {name: 'university-workers', params: {slug: '%university_slug%'}}
-                        },
-                        {
-                            text: 'Ustawienia',
-                            icon: 'mdi-cog',
-                            to: {name: 'university-settings', params: {slug: '%university_slug%'}}
-                        },
-                    ]
-                },
-                {
-                    text: 'Firma',
-                    icon: 'mdi-briefcase-outline',
-                    children: [
-                        {
-                            text: 'Informacje',
-                            icon: 'mdi-view-dashboard-outline',
-                            to: {name: 'company', params: {slug: '%company_slug%'}}
-                        },
-                        {
-                            text: 'Oferty Praktyk',
-                            icon: 'mdi-newspaper-variant-multiple-outline',
-                            to: {name: 'company-offers', params: {slug: '%company_slug%'}}
-                        },
-                        {
-                            text: 'Umowy',
-                            icon: 'mdi-file-document-multiple-outline',
-                            to: {name: 'company-agreements', params: {slug: '%company_slug%'}}
-                        },
-                        {
-                            text: 'Pracownicy',
-                            icon: 'mdi-account-multiple-outline',
-                            to: {name: 'company-workers', params: {slug: '%company_slug%'}}
-                        },
-                        {
-                            text: 'Ustawienia',
-                            icon: 'mdi-cog',
-                            to: {name: 'company-settings', params: {slug: '%company_slug%'}}
-                        },
-                    ]
-                },
-                {
-                    text: 'Panel Administratora',
-                    icon: 'mdi-application-cog',
-                    children: [
-                        {text: 'Dashboard', icon: 'mdi-monitor-dashboard', to: {name: 'admin'}},
-                        {text: 'Statystyki', icon: 'mdi-chart-box-outline', to: {name: 'admin-statistics'}},
-                        {text: 'Użytkownicy', icon: 'mdi-account-group-outline', to: {name: 'admin-users'}},
-                        {
-                            text: 'Oferty Praktyk',
-                            icon: 'mdi-newspaper-variant-multiple-outline',
-                            children: [
-                                {text: 'Do Akceptacji', to: {name: 'admin-offers', query: {categories: ['new']}}},
-                                {text: 'Wszystkie', to: {name: 'admin-offers'}}
-                            ]
-                        },
-                        {text: 'Ustawienia', icon: 'mdi-cogs', to: {name: 'admin-settings'}},
-                    ]
-                }
-            ]
-        }
+        return {}
     },
 
     methods: {
         ...mapActions({
             setSelectedUniversity: 'helpers/setSelectedUniversity',
-            setSelectedCompany: 'helpers/setSelectedCompany'
+            setSelectedCompany: 'helpers/setSelectedCompany',
+            toggleNavigationDrawer: 'helpers/toggleNavigationDrawer'
         })
     },
 
@@ -375,8 +519,5 @@ export default {
 
 .navigation-logo {
     height: 64px;
-    display: flex;
-    justify-content: left;
-    align-items: center;
 }
 </style>
