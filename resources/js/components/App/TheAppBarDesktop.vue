@@ -8,6 +8,7 @@
         <v-spacer></v-spacer>
         <user-company-selector v-if="$route.name.match(/company-*[a-z]*/g)"></user-company-selector>
         <user-university-selector v-if="$route.name.match(/university-*[a-z]*/g)"></user-university-selector>
+        <the-notification-menu></the-notification-menu>
         <v-divider vertical inset></v-divider>
         <v-menu left bottom offset-y nudge-bottom="3" tile>
             <template v-slot:activator="{ on, attrs }">
@@ -92,10 +93,11 @@
 import {mapActions, mapGetters} from "vuex";
 import UserCompanySelector from "./UserCompanySelector";
 import UserUniversitySelector from "./UserUniversitySelector";
+import TheNotificationMenu from "./TheNotificationMenu";
 
 export default {
     name: "TheAppBarDesktop",
-    components: {UserUniversitySelector, UserCompanySelector},
+    components: {TheNotificationMenu, UserUniversitySelector, UserCompanySelector},
     computed: {
         ...mapGetters({
             user: 'auth/user',

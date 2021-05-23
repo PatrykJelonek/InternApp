@@ -8,6 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\BroadcastMessage;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\Str;
 
 class MessageSentNotification extends Notification implements ShouldQueue, ShouldBroadcast
 {
@@ -60,7 +61,8 @@ class MessageSentNotification extends Notification implements ShouldQueue, Shoul
     public function toArray($notifiable)
     {
         return [
-            'test' => 'test',
+            'text' => 'Nowa wiadomość od Piotr Kwaśniewski '.Str::random(2),
+            'content' => 'Witam serdecznie, czy moglibyśmy się zdzwonić i doprecyzować warunku praktyk studenckich w naszej firmie?'
         ];
     }
 
@@ -68,7 +70,10 @@ class MessageSentNotification extends Notification implements ShouldQueue, Shoul
     {
         return new BroadcastMessage(
             [
-                'test' => 'test'
+                'data' => [
+                    'text' => 'Nowa wiadomość od Piotr Kwaśniewski '.Str::random(2),
+                    'content' => 'Witam serdecznie, czy moglibyśmy się zdzwonić i doprecyzować warunku praktyk studenckich w naszej firmie?'
+                ]
             ]
         );
     }

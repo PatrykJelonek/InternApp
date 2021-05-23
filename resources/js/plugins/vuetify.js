@@ -13,7 +13,7 @@ export default new Vuetify({
         themes: {
             light: {
                 //primary: '#2757FF',
-                primary: '#00E676',
+                primary: '#00C853',
                 secondary: '#9DA0A5',
                 //background: '#f7f7fa',
                 navigationDrawerExpanded: '#efeff5',

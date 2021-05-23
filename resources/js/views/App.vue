@@ -8,7 +8,7 @@
 
         <!-- Website Main Content -->
         <v-main>
-            <v-container fluid>
+            <v-container fluid class="px-15 py-10">
                 <router-view></router-view>
             </v-container>
         </v-main>

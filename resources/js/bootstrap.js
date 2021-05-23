@@ -8,9 +8,6 @@ window._ = require('lodash');
 
 window.axios = require('axios');
 
-import moment from "moment";
-window.moment = moment;
-
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
 /**
@@ -30,4 +27,10 @@ window.Echo = new Echo({
     wsPort: 6001,
     forceTLS: false,
     disableStats: true,
+    encrypted: true,
+    auth: {
+        headers: {
+            Authorization: 'Bearer ' + localStorage.getItem('token'),
+        },
+    },
 });

@@ -146,6 +146,8 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::get('/me/universities', 'Api\UserUniversityController@index');
     Route::get('/me/companies', 'Api\UserCompanyController@index');
     Route::get('/me/notifications', 'Api\NotificationController@index');
+    Route::get('/me/notifications/unread', 'Api\NotificationController@getUnreadNotifications');
+    Route::put('/me/notifications/{uuid}', 'Api\NotificationController@markAsRead');
     Route::get('/me/offers','Api\StudentController@getAvailableInternshipOffers');
     Route::get('/me/messages', 'Api\UserMessageController@index');
     Route::get('/me/chats', 'Api\ChatController@getUserChats');

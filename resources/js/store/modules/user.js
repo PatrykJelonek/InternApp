@@ -1,5 +1,6 @@
 import vue from "vue";
 import router from "../../router/routers";
+import moment from "moment";
 
 export default {
     namespaced: true,
@@ -24,6 +25,10 @@ export default {
         userMessagesLoading: true,
         user: null,
         userLoading: true,
+        userNotifications: [],
+        userNotificationsLoading: true,
+        userUnreadNotifications: [],
+        userUnreadNotificationsLoading: true,
     },
 
     getters: {
@@ -93,6 +98,22 @@ export default {
 
         userLoading(state) {
             return state.userLoading;
+        },
+
+        userNotifications(state) {
+            return state.userNotifications;
+        },
+
+        userNotificationsLoading(state) {
+            return state.userNotificationsLoading;
+        },
+
+        userUnreadNotifications(state) {
+            return state.userUnreadNotifications;
+        },
+
+        userUnreadNotificationsLoading(state) {
+            return state.userUnreadNotificationsLoading;
         },
     },
 
@@ -174,6 +195,44 @@ export default {
         SET_USER_LOADING(state, data) {
             state.userLoading = data;
         },
+
+        SET_USER_NOTIFICATIONS(state, data) {
+            state.userNotifications = data;
+        },
+
+        SET_USER_NOTIFICATIONS_LOADING(state, data) {
+            state.userNotificationsLoading = data;
+        },
+
+        SET_USER_UNREAD_NOTIFICATIONS(state, data) {
+            state.userUnreadNotifications = data;
+        },
+
+        SET_USER_UNREAD_NOTIFICATIONS_LOADING(state, data) {
+            state.userUnreadNotificationsLoading = data;
+        },
+
+        UNSHIFT_USER_NOTIFICATION(state, data) {
+            state.userNotifications.unshift(data);
+        },
+
+        UNSHIFT_USER_UNREAD_NOTIFICATION(state, data) {
+            state.userUnreadNotifications.unshift(data);
+        },
+
+        MARK_AS_READ(state, id) {
+            state.userUnreadNotifications.forEach((notification, index) => {
+                if(notification.id === id) {
+                    state.userUnreadNotifications.splice(index, 1);
+                }
+            });
+
+            state.userNotifications.forEach((notification, index) => {
+               if(notification.id === id) {
+                   state.userNotifications[index].read_at = moment();
+               }
+            });
+        }
     },
 
     actions: {
@@ -192,7 +251,7 @@ export default {
             }).then(res => {
                 commit('CREATE_USER_ACCOUNT', res.data);
             }).catch(err => {
-                if (err.response.status == 422){
+                if (err.response.status === 422){
                     commit('ACCOUNT_VALIDATION', err.response.data.errors)
                 }
             });
@@ -314,6 +373,42 @@ export default {
             return axios.post(`/api/chats/`, {
                secondUserId: id
             });
+        },
+
+        async fetchUserNotifications({commit}) {
+            commit('SET_USER_NOTIFICATIONS_LOADING', true);
+            try {
+                let response = await axios.get(`/api/me/notifications`);
+                commit('SET_USER_NOTIFICATIONS', response.data);
+                commit('SET_USER_NOTIFICATIONS_LOADING', false);
+            } catch (e) {
+                commit('SET_USER_NOTIFICATIONS', []);
+                commit('SET_USER_NOTIFICATIONS_LOADING', false);
+            }
+        },
+
+        async unshiftUserNotification({commit}, notification) {
+            commit('UNSHIFT_USER_NOTIFICATION', notification);
+        },
+
+        async fetchUserUnreadNotifications({commit}) {
+            commit('SET_USER_UNREAD_NOTIFICATIONS_LOADING', true);
+            try {
+                let response = await axios.get(`/api/me/notifications/unread`);
+                commit('SET_USER_UNREAD_NOTIFICATIONS', response.data);
+                commit('SET_USER_UNREAD_NOTIFICATIONS_LOADING', false);
+            } catch (e) {
+                commit('SET_USER_UNREAD_NOTIFICATIONS', []);
+                commit('SET_USER_UNREAD_NOTIFICATIONS_LOADING', false);
+            }
+        },
+
+        async unshiftUserUnreadNotification({commit}, notification) {
+            commit('UNSHIFT_USER_UNREAD_NOTIFICATION', notification);
+        },
+
+        markNotificationAsRead({commit}, id) {
+            return axios.put(`/api/me/notifications/${id}`);
         }
     }
 };

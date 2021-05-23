@@ -8,6 +8,7 @@ import Vue from 'vue';
 import * as Sentry from "@sentry/vue";
 import {Integrations} from "@sentry/tracing";
 import {CaptureConsole} from "@sentry/integrations";
+import moment from "moment";
 
 require('./bootstrap');
 require('./store/subscriber');
@@ -34,13 +35,16 @@ var dateMethods = {
     methods: {}
 };
 
+moment.locale('pl');
+Vue.prototype.moment = moment;
+
 store.dispatch('auth/attempt', localStorage.getItem('token')).then(() => {
     new Vue({
         el: '#app',
         router: Routes,
         mixin: [''],
         store,
-        vuetify
+        vuetify,
     });
 });
 

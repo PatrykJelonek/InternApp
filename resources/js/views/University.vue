@@ -1,5 +1,5 @@
 <template>
-    <v-container fluid class="px-15 py-10">
+    <v-container fluid>
         <div v-if="!universityLoading && !university.length > 0">
             <page-title :breadcrumbs="breadcrumbs">{{ university.name }}</page-title>
             <v-row>

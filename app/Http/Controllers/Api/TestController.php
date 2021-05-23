@@ -5,6 +5,7 @@ namespace App\Http\Controllers\api;
 use App\Events\MessageSent;
 use App\Events\Test;
 use App\Models\User;
+use App\Notifications\MessageSentNotification;
 use Illuminate\Http\Request;
 use App\Repositories\StudentRepository;
 use Illuminate\Support\Facades\Auth;
@@ -22,7 +23,7 @@ class TestController extends Controller
     }
 
     public function test() {
-        broadcast(new MessageSent());
+        Auth::user()->notify(new MessageSentNotification());
     }
 
     public function testPost(Request $request) {
