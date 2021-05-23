@@ -29,11 +29,6 @@
                 <v-progress-linear color="primary" indeterminate></v-progress-linear>
             </template>
 
-            <v-card-title class="text-subtitle-1 font-weight-bold pa-2">Powiadomienia</v-card-title>
-
-
-            <v-divider class="text--disabled"></v-divider>
-
             <v-list
                 nav
                 dense
@@ -52,6 +47,8 @@
                             :id="item.id"
                             :text="item.data.text"
                             :content="item.data.content"
+                            :chat_uuid="item.data.chat_uuid"
+                            :author="item.data.author"
                             v-if="item.type === MESSAGE_NOTIFICATION"
                         ></message-notification>
                     </template>

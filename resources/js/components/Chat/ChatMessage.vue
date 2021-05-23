@@ -27,7 +27,7 @@
                                 <v-row no-gutters :class="messageGroupStart ? 'mt-5' : ''">
                                     <v-col :order="self ? 2 : 1" cols="auto">
                                         <v-avatar
-                                            :color="messageGroupStart ? (self ? 'primary' : 'grey lighten-2') : 'transparent'"
+                                            :color="messageGroupStart ? (self ? 'message-self' : 'message') : 'transparent'"
                                             class="mx-3 cursor-pointer"
                                             @click="$router.push({name: 'user', params: {id: userId}})"
                                         >
@@ -39,7 +39,7 @@
                                     <v-col :order="self ? 1 : 2">
                                         <v-card
                                             elevation="0"
-                                            :color="self ? 'primary' : 'grey lighten-2'"
+                                            :color="self ? 'message-self' : 'message'"
                                             class="px-2 rounded-lg"
                                             v-bind:class="self ? 'text-right' : 'text-left'"
                                         >

@@ -1,23 +1,29 @@
 <template>
     <v-container fluid>
-        <v-card rounded :loading="userNotificationsLoading" color="component-background">
+        <v-card rounded :loading="userNotificationsLoading" color="component-background" elevation="0">
             <template v-slot:progress>
                 <v-progress-linear color="primary" indeterminate></v-progress-linear>
             </template>
 
-            <v-card-actions class="d-flex justify-end pa-2">
-                <v-btn-toggle dense background-color="transparent" active-class="primary--text">
-                    <v-btn small class="text--disabled" :value="true" outlined>Wszystkie</v-btn>
-                    <v-btn small class="text--disabled" outlined>Nieprzeczytane</v-btn>
-                    <v-btn small class="text--disabled" outlined>Przeczytane</v-btn>
-                </v-btn-toggle>
-            </v-card-actions>
+            <v-card-title class="d-flex justify-lg-space-between px-5 py-2">
+                <span class="text-h6 font-weight-medium">Powiadomienia</span>
+                <v-card-actions class="d-flex justify-end pa-2">
+                    <v-btn-toggle dense background-color="transparent" active-class="primary--text" mandatory>
+                        <v-btn small class="text--disabled" :value="true" outlined>Wszystkie</v-btn>
+                        <v-btn small class="text--disabled" outlined>Nieprzeczytane</v-btn>
+                        <v-btn small class="text--disabled" outlined>Przeczytane</v-btn>
+                    </v-btn-toggle>
+                </v-card-actions>
+            </v-card-title>
+
+            <v-divider></v-divider>
 
             <v-list
                 nav
                 dense
                 two-line
                 color="component-background"
+                class="px-3 py-2"
                 v-if="!userNotificationsLoading && userNotifications.length > 0"
             >
                 <v-virtual-scroll

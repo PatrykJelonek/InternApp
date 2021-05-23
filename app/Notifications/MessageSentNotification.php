@@ -14,14 +14,16 @@ class MessageSentNotification extends Notification implements ShouldQueue, Shoul
 {
     use Queueable;
 
+    private $message;
+
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($message)
     {
-        //
+        $this->message = $message;
     }
 
     /**
@@ -61,8 +63,10 @@ class MessageSentNotification extends Notification implements ShouldQueue, Shoul
     public function toArray($notifiable)
     {
         return [
-            'text' => 'Nowa wiadomość od Piotr Kwaśniewski '.Str::random(2),
-            'content' => 'Witam serdecznie, czy moglibyśmy się zdzwonić i doprecyzować warunku praktyk studenckich w naszej firmie?'
+            'text' => 'Nowa wiadomość od ' . $this->message->user->first_name . ' ' . $this->message->user->last_name,
+            'author' => $this->message->user->first_name . ' ' . $this->message->user->last_name,
+            'content' => $this->message->content,
+            'chat_uuid' => $this->message->chat_uuid,
         ];
     }
 
@@ -71,8 +75,10 @@ class MessageSentNotification extends Notification implements ShouldQueue, Shoul
         return new BroadcastMessage(
             [
                 'data' => [
-                    'text' => 'Nowa wiadomość od Piotr Kwaśniewski '.Str::random(2),
-                    'content' => 'Witam serdecznie, czy moglibyśmy się zdzwonić i doprecyzować warunku praktyk studenckich w naszej firmie?'
+                    'text' => 'Nowa wiadomość od ' . $this->message->user->first_name . ' ' . $this->message->user->last_name,
+                    'author' => $this->message->user->first_name . ' ' . $this->message->user->last_name,
+                    'content' => $this->message->content,
+                    'chat_uuid' => $this->message->chat_uuid,
                 ]
             ]
         );

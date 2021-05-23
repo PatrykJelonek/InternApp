@@ -53,8 +53,8 @@ import TheCompanySettings from "../components/Company/Settings/TheCompanySetting
 import TheAdminSettings from "../components/Admin/Settings/TheAdminSettings";
 import OffersLists from "../components/Offers/OffersLists";
 import TheAdminTest from "../components/Admin/Test/TheAdminTest";
-import Chats from "../views/Chats";
-import Chat from "../views/Chat";
+import Chats from "../components/Messages/Chats";
+import Chat from "../components/Messages/Chat";
 import TestApp from "../views/TestApp";
 
 Vue.use(VueRouter);
@@ -327,15 +327,18 @@ const router = new VueRouter({
                 {
                     path: '/panel/messages',
                     name: 'chats',
-                    component: Chats,
+                    component: Messages,
                     meta: {title: 'Wiadomości'},
+                    children: [
+                        {
+                            path: '/panel/messages/:uuid',
+                            name: 'chat',
+                            component: Chat,
+                            meta: {title: 'Wiadomości'},
+                        },
+                    ]
                 },
-                {
-                    path: '/panel/messages/:uuid',
-                    name: 'chat',
-                    component: Chat,
-                    meta: {title: 'Wiadomości'},
-                },
+
                 {
                     path: '/panel/internships',
                     name: 'internships',
@@ -409,7 +412,9 @@ const router = new VueRouter({
 });
 
 router.afterEach((to, from) => {
-    store.commit('helpers/SET_BREADCRUMBS', []);
+    if (to.name !== 'chat' && from.name !== 'chats') {
+        store.commit('helpers/SET_BREADCRUMBS', []);
+    }
 });
 
 router.beforeEach((to, from, next) => {

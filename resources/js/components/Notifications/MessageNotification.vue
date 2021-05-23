@@ -1,7 +1,7 @@
 <template>
-    <v-list-item link >
+    <v-list-item link @click="click">
         <v-list-item-content>
-            <v-list-item-title>{{ text }}</v-list-item-title>
+            <v-list-item-title>Nowa wiadomość od <strong>{{ author }}</strong></v-list-item-title>
             <v-list-item-subtitle>{{ content }}</v-list-item-subtitle>
         </v-list-item-content>
         <v-list-item-icon @click="markAsRead">
@@ -15,7 +15,7 @@ import {mapActions} from "vuex";
 
 export default {
     name: "MessageNotification",
-    props: ['text', 'content', 'id'],
+    props: ['text','author', 'content', 'id', 'chat_uuid'],
 
     methods: {
         ...mapActions({
@@ -30,6 +30,11 @@ export default {
             }).catch((e) => {
                 this.setSnackbar({message: 'Coś poszło nie tak!', color: 'error'});
            });
+        },
+
+        click() {
+            this.$store.commit('user/MARK_AS_READ', this.id);
+            this.$router.push({name: 'chat', params: {uuid: this.chat_uuid}});
         }
     }
 }

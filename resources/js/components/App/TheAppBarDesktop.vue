@@ -1,10 +1,10 @@
 <template>
     <v-app-bar app flat color="component-background">
         <!-- Nav Icon -->
-<!--        <v-app-bar-nav-icon @click="toggleNavigationDrawer(!navigationDrawer)"></v-app-bar-nav-icon>-->
-<!--        <v-toolbar-title class="text-body-2 text-no-wrap">{{ $route.meta.title ?  $route.meta.title : '' }}</v-toolbar-title >-->
+        <!--        <v-app-bar-nav-icon @click="toggleNavigationDrawer(!navigationDrawer)"></v-app-bar-nav-icon>-->
+        <!--        <v-toolbar-title class="text-body-2 text-no-wrap">{{ $route.meta.title ?  $route.meta.title : '' }}</v-toolbar-title >-->
         <v-breadcrumbs :items="breadcrumbs ? breadcrumbs : []"></v-breadcrumbs>
-<!--        <v-divider vertical></v-divider>-->
+        <!--        <v-divider vertical></v-divider>-->
         <v-spacer></v-spacer>
         <user-company-selector v-if="$route.name.match(/company-*[a-z]*/g)"></user-company-selector>
         <user-university-selector v-if="$route.name.match(/university-*[a-z]*/g)"></user-university-selector>
@@ -29,7 +29,7 @@
                 </v-list>
             </template>
 
-            <v-list dense>
+            <v-list dense color="component-background">
                 <v-list-item :to="{name: 'user', params: {id: user.id}}">
                     <v-list-item-icon>
                         <v-icon>mdi-account-outline</v-icon>
@@ -74,6 +74,7 @@
                             dense
                             persistent-hint
                             hide-details
+                            @change="toggleTheme"
                         ></v-switch>
                     </v-list-item-action>
                 </v-list-item>
@@ -110,6 +111,11 @@ export default {
         ...mapActions({
             toggleNavigationDrawer: 'helpers/toggleNavigationDrawer'
         }),
+
+        toggleTheme() {
+            let theme = localStorage.getItem('THEME') === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('THEME', theme);
+        }
     },
 
     watch: {},

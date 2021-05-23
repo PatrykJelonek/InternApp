@@ -9,6 +9,7 @@
 namespace App\Services;
 
 use App\Events\MessageSent;
+use App\Models\Chat;
 use App\Notifications\MessageSentNotification;
 use App\Repositories\ChatRepository;
 use Illuminate\Support\Facades\Auth;
@@ -39,7 +40,16 @@ class ChatService
         if ($result !== null) {
             DB::commit();
             broadcast(new MessageSent($result));
-            Auth::user()->notify(new MessageSentNotification());
+
+            $chat = Chat::with(['users'])->where(['uuid' => $result->chat_uuid])->first();
+
+            if ($chat !== null) {
+                foreach ($chat->users as $user) {
+                    if ($user->id !== Auth::id()) {
+                        $user->notify(new MessageSentNotification($result));
+                    }
+                }
+            }
 
             return $result;
         }

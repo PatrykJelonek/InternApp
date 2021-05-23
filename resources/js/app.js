@@ -38,6 +38,11 @@ var dateMethods = {
 moment.locale('pl');
 Vue.prototype.moment = moment;
 
+// Set default theme in localStorage
+if (localStorage.getItem('THEME') === undefined) {
+    localStorage.setItem('THEME', 'light');
+}
+
 store.dispatch('auth/attempt', localStorage.getItem('token')).then(() => {
     new Vue({
         el: '#app',

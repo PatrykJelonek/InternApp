@@ -50,7 +50,7 @@ export default {
     },
 
     created() {
-
+        this.$vuetify.theme.dark = localStorage.getItem('THEME') === 'dark';
     },
 
     watch: {

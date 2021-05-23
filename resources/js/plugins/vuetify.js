@@ -4,9 +4,11 @@ import 'vuetify/dist/vuetify.min.css';
 
 Vue.use(Vuetify);
 
+let theme = localStorage.getItem('THEME');
+
 export default new Vuetify({
     theme: {
-        dark: true,
+        dark: theme === 'dark',
         options: {
             customProperties: true,
         },
@@ -21,7 +23,9 @@ export default new Vuetify({
                 background: '#E5E6E8',
                 'component-background': '#FFF',
                 'tooltip-background': '#181A20',
-                'card-background': '#fff'
+                'card-background': '#fff',
+                'message-self': '#00C853',
+                'message': '#E5E6E8',
             },
             dark: {
                 //primary: '#1976D2',
@@ -39,6 +43,8 @@ export default new Vuetify({
                 'component-background': '#181A20',
                 'tooltip-background': '#181A20',
                 'card-background': '#181A20',
+                'message-self': '#00C853',
+                'message': '#616161',
             }
         },
     },
