@@ -3,8 +3,24 @@
 </template>
 
 <script>
+import {mapActions} from "vuex";
+
 export default {
-    name: "TheAdminUsers"
+    name: "TheAdminUsers",
+
+    methods: {
+        ...mapActions({
+            setBreadcrumbs: 'helpers/setBreadcrumbs'
+        }),
+    },
+
+    created() {
+        this.setBreadcrumbs([
+            {text: 'Panel', to: {name: 'panel'}, exact: true},
+            {text: 'Panel Administratora', to: {name: 'admin'}, exact: true},
+            {text: 'Użytkownicy', disabled: true}
+        ]);
+    }
 }
 </script>
 

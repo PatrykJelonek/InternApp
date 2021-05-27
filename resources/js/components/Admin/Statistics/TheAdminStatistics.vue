@@ -108,6 +108,7 @@ export default {
 
     methods: {
         ...mapActions({
+            setBreadcrumbs: 'helpers/setBreadcrumbs',
             fetchNumberOfOffers: 'statistic/fetchNumberOfOffers',
             fetchNumberOfAgreements: 'statistic/fetchNumberOfAgreements',
             fetchNumberOfUsers: 'statistic/fetchNumberOfUsers',
@@ -129,6 +130,12 @@ export default {
     },
 
     created() {
+        this.setBreadcrumbs([
+            {text: 'Panel', to: {name: 'panel'}, exact: true},
+            {text: 'Panel Administratora', to: {name: 'admin'}, exact: true},
+            {text: 'Statystyki', to: {name: 'admin-statistics'}},
+        ]);
+
         this.fetchNumberOfOffers();
         this.fetchNumberOfAgreements();
         this.fetchNumberOfUsers();

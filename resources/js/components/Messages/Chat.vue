@@ -174,8 +174,10 @@ export default {
             this.firstLoading = this.chatMessagesLoading;
             this.messages.reverse();
 
-            let virtualScroll = document.getElementById('virtualScroll');
-            virtualScroll.scrollTop = virtualScroll.scrollHeight;
+            setTimeout(() => {
+                let virtualScroll = document.getElementById('virtualScroll');
+                virtualScroll.scrollTop = virtualScroll.scrollHeight;
+            }, 100);
         }).catch((e) => {
             this.firstLoading = this.chatMessagesLoading;
         });

@@ -1,25 +1,5 @@
 <template>
-    <v-container v-has="['admin']">
-        <v-row>
-            <v-col cols="12">
-                <page-title>Panel Administratora</page-title>
-            </v-col>
-        </v-row>
-        <v-row>
-            <v-col cols="12">
-                <v-card elevation="0" color="card-background">
-                    <v-tabs background-color="card-background">
-                        <v-tab :to="{name: 'admin'}">Statystyki</v-tab>
-                        <v-tab :to="{name: 'admin-offers'}">
-                            <v-badge dot color="red darken-1" :value="numberOfNewOffers">Oferty</v-badge>
-                        </v-tab>
-                        <v-tab :to="{name: 'admin-users'}">Użytkownicy</v-tab>
-                        <v-tab :to="{name: 'admin-settings'}">Ustawienia</v-tab>
-                        <v-tab :to="{name: 'admin-test'}">Test</v-tab>
-                    </v-tabs>
-                </v-card>
-            </v-col>
-        </v-row>
+    <v-container fluid v-has="['admin']">
         <v-row>
             <v-col cols="12">
                 <router-view></router-view>

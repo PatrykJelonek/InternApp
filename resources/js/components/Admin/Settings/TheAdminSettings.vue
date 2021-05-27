@@ -12,9 +12,24 @@
 <script>
 import TheAdminSettingsOfferStatuses from "./TheAdminSettingsOfferStatuses";
 import TheAdminSettingsOfferCategories from "./TheAdminSettingsOfferCategories";
+import {mapActions} from "vuex";
 export default {
     name: "TheAdminSettings",
-    components: {TheAdminSettingsOfferCategories, TheAdminSettingsOfferStatuses}
+    components: {TheAdminSettingsOfferCategories, TheAdminSettingsOfferStatuses},
+
+    methods: {
+        ...mapActions({
+            setBreadcrumbs: 'helpers/setBreadcrumbs'
+        }),
+    },
+
+    created() {
+        this.setBreadcrumbs([
+            {text: 'Panel', to: {name: 'panel'}, exact: true},
+            {text: 'Panel Administratora', to: {name: 'admin'}, exact: true},
+            {text: 'Ustawienia', disabled: true}
+        ]);
+    }
 }
 </script>
 

@@ -410,25 +410,12 @@
                     </v-list-item-icon>
                     <v-list-item-title>Użytkownicy</v-list-item-title>
                 </v-list-item>
-                <v-list-group sub-group no-action>
-                    <template v-slot:activator>
-                        <v-list-item-content exact>
-                            <v-list-item-title>Oferty Praktyk</v-list-item-title>
-                        </v-list-item-content>
-                    </template>
-                    <template v-slot:prependIcon class="mr-2">
-                        <v-icon dense class="mr-0">mdi-newspaper-variant-multiple-outline</v-icon>
-                    </template>
-                    <template v-slot:appendIcon>
-                        <v-icon>mdi-chevron-down</v-icon>
-                    </template>
-                    <v-list-item link :to="{name: 'admin-offers', query: {categories: ['new']}}" exact>
-                        <v-list-item-title>Do Akceptacji</v-list-item-title>
-                    </v-list-item>
-                    <v-list-item link :to="{name: 'admin-offers'}" exact>
-                        <v-list-item-title>Wszystkie</v-list-item-title>
-                    </v-list-item>
-                </v-list-group>
+                <v-list-item link :to="{name: 'admin-offers'}" exact>
+                    <v-list-item-icon class="mr-2">
+                        <v-icon dense>mdi-newspaper-variant-multiple-outline</v-icon>
+                    </v-list-item-icon>
+                    <v-list-item-title>Oferty</v-list-item-title>
+                </v-list-item>
                 <v-list-item link :to="{name: 'admin-settings'}" exact>
                     <v-list-item-icon class="mr-2">
                         <v-icon dense>mdi-cogs</v-icon>

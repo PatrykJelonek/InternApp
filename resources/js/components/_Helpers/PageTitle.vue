@@ -1,7 +1,7 @@
 <template>
-    <v-row>
+    <v-row class="mb-2">
         <v-col>
-            <h2 class="text--welcome text-h3 font-weight-black">
+            <h2 class="text--welcome text-h4 font-weight-medium">
                 <slot></slot>
             </h2>
         </v-col>

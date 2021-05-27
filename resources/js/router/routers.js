@@ -56,6 +56,7 @@ import TheAdminTest from "../components/Admin/Test/TheAdminTest";
 import Chats from "../components/Messages/Chats";
 import Chat from "../components/Messages/Chat";
 import TestApp from "../views/TestApp";
+import TheAdminDashboard from "../components/Admin/Dashboard/TheAdminDashboard";
 
 Vue.use(VueRouter);
 
@@ -366,7 +367,7 @@ const router = new VueRouter({
                         {
                             path: '',
                             name: 'admin',
-                            component: TheAdminStatistics,
+                            component: TheAdminDashboard,
                             meta: {have: ['admin']},
                         },
                         {

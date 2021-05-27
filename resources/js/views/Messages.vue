@@ -1,10 +1,10 @@
 <template>
     <v-container fluid>
         <v-row>
-            <v-col cols="4">
+            <v-col cols="12" lg="4">
                 <chats></chats>
             </v-col>
-            <v-col cols="8">
+            <v-col cols="12" lg="8">
                 <router-view :key="$route.params.uuid"></router-view>
             </v-col>
         </v-row>

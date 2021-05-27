@@ -27,6 +27,7 @@
                     :items="offers"
                     :loading="offersLoading"
                     :headers="headers"
+                    class="component-background"
                 >
                     <template v-slot:item.supervisor="{ item }">
                         <router-link
@@ -137,7 +138,8 @@ export default {
             rejectOffer: 'offer/rejectOffer',
             toggleAcceptOfferDialog: 'helpers/toggleAcceptOfferDialog',
             toggleRejectOfferDialog: 'helpers/toggleRejectOfferDialog',
-            fetchNumberOfNewOffers: 'statistic/fetchNumberOfNewOffers'
+            fetchNumberOfNewOffers: 'statistic/fetchNumberOfNewOffers',
+            setBreadcrumbs: 'helpers/setBreadcrumbs'
         }),
 
         formatDate(date) {
@@ -171,6 +173,12 @@ export default {
     },
 
     created() {
+        this.setBreadcrumbs([
+            {text: 'Panel', to: {name: 'panel'}, exact: true},
+            {text: 'Panel Administratora', to: {name: 'admin'}, exact: true},
+            {text: 'Oferty Praktyk i Staży', disabled: true}
+        ]);
+
         this.updateView();
     }
 }
