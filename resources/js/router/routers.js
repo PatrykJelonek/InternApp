@@ -360,7 +360,7 @@ const router = new VueRouter({
                     ]
                 },
                 {
-                    path: '/admin-panel',
+                    path: '/panel/admin',
                     component: Admin,
                     meta: {have: ['admin']},
                     children: [
