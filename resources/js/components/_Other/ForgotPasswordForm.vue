@@ -24,7 +24,7 @@
             </v-row>
             <v-row>
                 <v-col cols="12" class="d-flex justify-center">
-                    <v-btn color="primary" outlined dark @click="submit">Przypomij hasło</v-btn>
+                    <v-btn color="primary" outlined dark @click="submit">Wyślij link</v-btn>
                 </v-col>
             </v-row>
         </v-form>
