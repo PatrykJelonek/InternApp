@@ -4,13 +4,14 @@ namespace App\Models;
 
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
+use Illuminate\Contracts\Auth\CanResetPassword;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
 use Laratrust\Traits\LaratrustUserTrait;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class User extends Model implements AuthenticatableContract, JWTSubject
+class User extends Model implements AuthenticatableContract, JWTSubject, CanResetPassword
 {
     use LaratrustUserTrait;
     use Authenticatable;
@@ -88,5 +89,15 @@ class User extends Model implements AuthenticatableContract, JWTSubject
     public function getJWTCustomClaims()
     {
         return [];
+    }
+
+    public function getEmailForPasswordReset()
+    {
+        // TODO: Implement getEmailForPasswordReset() method.
+    }
+
+    public function sendPasswordResetNotification($token)
+    {
+        // TODO: Implement sendPasswordResetNotification() method.
     }
 }

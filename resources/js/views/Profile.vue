@@ -18,8 +18,10 @@
                         <v-card-title class="pa-0">
                             <v-avatar size="200px" class="d-flex justify-center"
                                       style="top: 100px; border: 8px solid white;">
-                                <v-img src="https://randomuser.me/api/portraits/men/43.jpg"
-                                       :alt="user.first_name + ' ' + user.last_name + ' avatar'"></v-img>
+                                <v-img
+                                    :src="'/'+user.avatar_url"
+                                       :alt="user.first_name + ' ' + user.last_name + ' avatar'"
+                                ></v-img>
                             </v-avatar>
                         </v-card-title>
                     </v-img>

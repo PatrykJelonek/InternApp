@@ -29,6 +29,16 @@ export default {
 
         SET_USER (state, data) {
             state.user = data;
+        },
+
+        CHANGE_USER_DATA (state, data) {
+            state.user.first_name = data.firstName;
+            state.user.last_name = data.lastName;
+            state.user.phone = data.phone;
+        },
+
+        CHANGE_USER_AVATAR(state, path) {
+            state.user.avatar_url = path;
         }
     },
 
@@ -42,11 +52,11 @@ export default {
                     email: credentials.email,
                     password: credentials.password
                 }
-            }).catch((error) => {
-                console.log(error);
-            })
+            });
 
             dispatch('attempt', response.data.token);
+
+            return response;
         },
 
         async attempt ({ commit, state }, token) {
@@ -72,5 +82,31 @@ export default {
                 commit('SET_USER', null);
             });
         },
+
+        updateUserData({commit}, data) {
+            return axios.put(`/api/me/personal-data`, data);
+        },
+
+        updateUserPassword({commit}, data) {
+            return axios.put(`/api/me/password`, data);
+        },
+
+        updateUserAvatar({commit}, data) {
+            return axios.post(`/api/me/avatar`, data, {
+                headers: {
+                    'content-type': 'multipart/form-data'
+                }
+            });
+        },
+
+        forgotPassword({commit}, email) {
+            return axios.post(`/api/forgot-password`, {
+                email: email,
+            });
+        },
+
+        resetPassword({commit}, data) {
+            return axios.post(`/api/reset-password`, data);
+        }
     }
 };

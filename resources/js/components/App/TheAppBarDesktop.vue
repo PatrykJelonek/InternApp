@@ -14,9 +14,11 @@
             <template v-slot:activator="{ on, attrs }">
                 <v-list flat class="py-1" color="transparent">
                     <v-list-item v-bind="attrs" v-on="on" dense link :ripple="false">
-                        <v-list-item-avatar color="primary" rounded size="35">
-                            <v-img src="https://randomuser.me/api/portraits/men/43.jpg"
-                                   :alt="user.first_name + ' ' + user.last_name + ' avatar'"></v-img>
+                        <v-list-item-avatar :color="user.avatar_url ? '' : 'primary'" rounded size="35">
+                            <v-img
+                                :src="'/'+user.avatar_url"
+                                :alt="user.first_name + ' ' + user.last_name + ' avatar'"
+                            ></v-img>
                         </v-list-item-avatar>
                         <v-list-item-content>
                             <v-list-item-title class="">{{ user.first_name + ' ' + user.last_name }}</v-list-item-title>

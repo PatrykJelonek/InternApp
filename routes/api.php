@@ -151,6 +151,9 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::get('/me/offers','Api\StudentController@getAvailableInternshipOffers');
     Route::get('/me/messages', 'Api\UserMessageController@index');
     Route::get('/me/chats', 'Api\ChatController@getUserChats');
+    Route::put('/me/personal-data', 'Api\UserController@updatePersonalData');
+    Route::put('/me/password', 'Api\UserController@updatePassword');
+    Route::post('/me/avatar', 'Api\UserController@updateAvatar');
 
     # Statistics
     Route::get('/statistics/offers/count','Api\StatisticController@getNumberOfOffers');
@@ -171,6 +174,9 @@ Route::group(['middleware' => ['jwt.verify']], function() {
         'uses' => 'Api\Auth\AuthController@me'
     ]);
 });
+
+Route::post('/forgot-password', 'Api\Auth\AuthController@forgotPassword');
+Route::post('/reset-password', 'Api\UserController@resetPassword');
 
 //For not logged in users
 Route::get('/universities', 'Api\UniversityController@index');

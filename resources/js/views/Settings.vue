@@ -1,72 +1,22 @@
 <template>
-    <v-container>
+    <v-container fluid>
         <v-row>
-            <v-col>
+            <v-col cols="12" md="4" lg="2">
                 <custom-card>
-                    <v-card-title>
-                        <span class="text-h6 font-weight-medium">Ustawienia</span>
-                    </v-card-title>
-
-                    <v-divider></v-divider>
-
-                    <div class="pa-5">
-
-                        <v-row>
-                            <v-col cols="12">
-                                <v-subheader>Dane personalne</v-subheader>
-                            </v-col>
-                        </v-row>
-                        <v-row>
-                            <v-col cols="12">
-                                <v-form>
-                                    <v-row>
-                                        <v-col cols="12">
-                                            <v-text-field
-                                                v-model="userData.firstName"
-                                                label="Imię"
-                                                outlined
-                                                color="primary"
-                                                hide-details
-                                                background-color="component-background"
-                                            ></v-text-field>
-                                        </v-col>
-                                        <v-col cols="12">
-                                            <v-text-field
-                                                v-model="userData.lastName"
-                                                label="Nazwisko"
-                                                outlined
-                                                color="primary"
-                                                hide-details
-                                                background-color="component-background"
-                                            ></v-text-field>
-                                        </v-col>
-                                        <v-col cols="12">
-                                            <v-text-field
-                                                v-model="userData.email"
-                                                label="Email"
-                                                readonly
-                                                disabled
-                                                outlined
-                                                color="primary"
-                                                hide-details
-                                                background-color="component-background"
-                                            ></v-text-field>
-                                        </v-col>
-                                        <v-col cols="12">
-                                            <v-text-field
-                                                v-model="userData.phone"
-                                                label="Numer kontaktowy"
-                                                outlined
-                                                color="primary"
-                                                hide-details
-                                                background-color="component-background"
-                                            ></v-text-field>
-                                        </v-col>
-                                    </v-row>
-                                </v-form>
-                            </v-col>
-                        </v-row>
-                    </div>
+                    <v-card-header title="Awatar"></v-card-header>
+                    <change-user-avatar-form></change-user-avatar-form>
+                </custom-card>
+            </v-col>
+            <v-col cols="12" md="8" lg="6" xl="4">
+                <custom-card>
+                    <v-card-header title="Konto"></v-card-header>
+                    <change-user-personal-data-form></change-user-personal-data-form>
+                </custom-card>
+            </v-col>
+            <v-col cols="12" md="12" lg="4" xl="3">
+                <custom-card>
+                    <v-card-header title="Hasło"></v-card-header>
+                    <change-user-password-form></change-user-password-form>
                 </custom-card>
             </v-col>
         </v-row>
@@ -76,20 +26,20 @@
 <script>
 import {mapActions, mapGetters} from "vuex";
 import CustomCard from "../components/_General/CustomCard";
+import PageTitle from "../components/_Helpers/PageTitle";
+import VCardHeader from "../components/_Helpers/VCardHeader";
+import ChangeUserPersonalDataForm from "../components/Account/Settings/ChangeUserPersonalDataForm";
+import ChangeUserPasswordForm from "../components/Account/Settings/ChangeUserPasswordForm";
+import ChangeUserAvatarForm from "../components/Account/Settings/ChangeUserAvatarForm";
 
 export default {
     name: "Settings",
-    components: {CustomCard},
+    components: {
+        ChangeUserAvatarForm,
+        ChangeUserPasswordForm, ChangeUserPersonalDataForm, VCardHeader, PageTitle, CustomCard},
 
     data() {
-        return {
-            userData: {
-                firstName: '',
-                lastName: '',
-                email: '',
-                phone: '',
-            }
-        }
+        return {}
     },
 
     computed: {
@@ -111,12 +61,7 @@ export default {
             {text: 'Ustawienia', disabled: true}
         ]);
 
-        this.userData = {
-            firstName: this.user.first_name,
-            lastName: this.user.last_name,
-            email: this.user.email,
-            phone: this.user.phone,
-        }
+
     }
 }
 </script>

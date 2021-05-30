@@ -21,6 +21,7 @@ class CreateUsersTable extends Migration
             $table->string('first_name', 64);
             $table->string('last_name', 64);
             $table->string('phone', 16);
+            $table->string('avatar_url', 255)->nullable();
             $table->rememberToken();
             $table->foreignId('user_status_id');
             $table->foreign('user_status_id')->references('id')->on('user_statuses');

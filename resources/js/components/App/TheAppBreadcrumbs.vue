@@ -1,7 +1,6 @@
 <template>
     <v-breadcrumbs
         :items="$route.meta.breadcrumbs"
-
         divider="/"
     ></v-breadcrumbs>
 </template>

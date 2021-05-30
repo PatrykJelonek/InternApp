@@ -57,6 +57,8 @@ import Chats from "../components/Messages/Chats";
 import Chat from "../components/Messages/Chat";
 import TestApp from "../views/TestApp";
 import TheAdminDashboard from "../components/Admin/Dashboard/TheAdminDashboard";
+import ForgotPassword from "../views/ForgotPassword";
+import ResetPassword from "../views/ResetPassword";
 
 Vue.use(VueRouter);
 
@@ -79,6 +81,16 @@ const router = new VueRouter({
             path: '/no-permissions',
             name: 'no-permissions',
             component: NoPermissions,
+        },
+        {
+            path: '/forgot-password',
+            name: 'forgot-password',
+            component: ForgotPassword,
+        },
+        {
+            path: '/reset-password/:token',
+            name: 'reset-password',
+            component: ResetPassword,
         },
         {
             path: '/login',

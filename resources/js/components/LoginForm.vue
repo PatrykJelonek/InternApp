@@ -33,11 +33,14 @@
                     </v-col>
                 </v-row>
                 <v-row>
+                    <router-link class="text-caption ml-4" :to="{name: 'forgot-password'}">Nie pamiętam hasła!</router-link>
+                </v-row>
+                <v-row>
                     <v-col cols="6" class="d-flex justify-start">
                         <v-btn color="secondary" text type="submit" dark :to="{name: 'register'}">Rejestracja</v-btn>
                     </v-col>
                     <v-col cols="6" class="d-flex justify-end">
-                        <v-btn color="primary" outlined type="submit" dark @click="submit">Zaloguj Się</v-btn>
+                        <v-btn color="primary" outlined dark @click="submit">Zaloguj Się</v-btn>
                     </v-col>
                 </v-row>
             </v-form>
@@ -75,11 +78,16 @@
             ...mapActions({
                 signIn: 'auth/signIn',
             }),
+
             async submit () {
                 await this.signIn({email: this.loginData.email, password: this.loginData.password}).then(() => {
                     this.$router.go('/dashboard');
-                }).catch(() => {
-                    this.errorMessage = "Email lub hasło jest niepoprawne!";
+                }).catch((e) => {
+                    if (e.response.status === 401) {
+                        this.$refs.observer.setErrors({password: 'Podane dane dostępowe nie są prawidłowe!'})
+                    }
+
+                    this.$refs.observer.setErrors(e.response.data.errors);
                 });
             },
         }

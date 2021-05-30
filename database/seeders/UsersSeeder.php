@@ -23,7 +23,7 @@ class UsersSeeder extends Seeder
         DB::table('users')->insert([
             'email' => 'admin@example.com',
             'password_hash' => Hash::make('password'),
-            'password_reset_token' => Hash::make(Str::random(32)),
+            'password_reset_token' => Str::uuid(),
             'first_name' => 'Patryk',
             'last_name' => 'Jelonek',
             'phone' => '000000000',
