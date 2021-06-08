@@ -232,6 +232,16 @@ export default {
                    state.userNotifications[index].read_at = moment();
                }
             });
+        },
+
+        SET_NOTIFICATION_COUNT(state) {
+            const pattern = /^\(\d+\)/;
+
+            if (state.userUnreadNotifications.length === 0 || pattern.test(document.title)) {
+                document.title = document.title.replace(pattern, state.userUnreadNotifications.length === 0 ? "" : "(" + state.userUnreadNotifications.length + ")");
+            } else {
+                document.title = "(" + state.userUnreadNotifications.length + ") " + document.title;
+            }
         }
     },
 
@@ -397,6 +407,7 @@ export default {
                 let response = await axios.get(`/api/me/notifications/unread`);
                 commit('SET_USER_UNREAD_NOTIFICATIONS', response.data);
                 commit('SET_USER_UNREAD_NOTIFICATIONS_LOADING', false);
+                commit('SET_NOTIFICATION_COUNT');
             } catch (e) {
                 commit('SET_USER_UNREAD_NOTIFICATIONS', []);
                 commit('SET_USER_UNREAD_NOTIFICATIONS_LOADING', false);
@@ -405,6 +416,7 @@ export default {
 
         async unshiftUserUnreadNotification({commit}, notification) {
             commit('UNSHIFT_USER_UNREAD_NOTIFICATION', notification);
+            commit('SET_NOTIFICATION_COUNT');
         },
 
         markNotificationAsRead({commit}, id) {

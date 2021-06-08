@@ -136,7 +136,8 @@ export default {
     methods: {
         ...mapActions({
             fetchUser: 'user/fetchUser',
-            createOneOnOneChat: 'user/createOneOnOneChat'
+            createOneOnOneChat: 'user/createOneOnOneChat',
+            setBreadcrumbs: 'helpers/setBreadcrumbs'
         }),
 
         async createChat(userId) {
@@ -159,6 +160,11 @@ export default {
     created() {
         this.fetchUser(this.$route.params.id).then(() => {
             this.fullName = this.user.first_name + ' ' + this.user.last_name;
+
+            this.setBreadcrumbs([
+                {text: 'Panel', to: {name: 'panel'}, exact: true},
+                {text: this.user.first_name + ' ' + this.user.last_name, to: {name: 'user', params: {slug: this.$route.params.id}}, exact: true},
+            ]);
         }).catch((e) => {
 
         })

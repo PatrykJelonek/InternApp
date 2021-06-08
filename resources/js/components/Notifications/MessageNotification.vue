@@ -27,6 +27,7 @@ export default {
             console.log(this.id);
            await this.markNotificationAsRead(this.id).then(() => {
                 this.$store.commit('user/MARK_AS_READ', this.id);
+                this.$store.commit('user/SET_NOTIFICATION_COUNT');
             }).catch((e) => {
                 this.setSnackbar({message: 'Coś poszło nie tak!', color: 'error'});
            });

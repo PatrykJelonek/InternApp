@@ -88,6 +88,7 @@ export default {
             fetchCompanyAgreements: 'company/fetchCompanyAgreements',
             toggleAcceptAgreementDialog: 'helpers/toggleAcceptAgreementDialog',
             toggleRejectAgreementDialog: 'helpers/toggleRejectAgreementDialog',
+            setBreadcrumbs: 'helpers/setBreadcrumbs',
         }),
 
         formatDate(date) {
@@ -98,14 +99,12 @@ export default {
             return '---';
         },
 
-        accept(item)
-        {
+        accept(item) {
             this.selectedAgreement.slug = item.slug;
             this.toggleAcceptAgreementDialog(true);
         },
 
-        reject(item)
-        {
+        reject(item) {
             this.selectedAgreement.slug = item.slug;
             this.toggleRejectAgreementDialog(true);
         }
@@ -121,6 +120,12 @@ export default {
     },
 
     created() {
+        this.setBreadcrumbs([
+            {text: 'Panel', to: {name: 'panel'}, exact: true},
+            {text: 'Firma', to: {name: 'company', params: {slug: this.$route.params.slug}}, exact: true},
+            {text: 'Umowy', to: {name: 'company-agreements'}, exact: true},
+        ])
+
         this.fetchCompanyAgreements(this.$route.params.slug).then(() => {
 
         }).catch((e) => {

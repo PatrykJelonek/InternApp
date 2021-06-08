@@ -197,6 +197,28 @@
                                 exact
                                 v-on="on"
                                 v-bind="attrs"
+                                :to="{name: 'university-questionnaires', params: {slug: selectedUniversity.slug}}"
+                            >
+                                <v-list-item-icon class="mr-2">
+                                    <v-icon dense>mdi-comment-question-outline</v-icon>
+                                </v-list-item-icon>
+                                <v-list-item-title>Ankiety</v-list-item-title>
+                            </v-list-item>
+                        </template>
+                        <span>Ankiety</span>
+                    </v-tooltip>
+                    <v-tooltip
+                        right
+                        nudge-right="10"
+                        :open-on-hover="navigationDrawer"
+                        content-class="tooltip-background"
+                    >
+                        <template v-slot:activator="{ on, attrs }">
+                            <v-list-item
+                                link
+                                exact
+                                v-on="on"
+                                v-bind="attrs"
                                 :to="{name: 'university-settings', params: {slug: selectedUniversity.slug}}"
                             >
                                 <v-list-item-icon class="mr-2">

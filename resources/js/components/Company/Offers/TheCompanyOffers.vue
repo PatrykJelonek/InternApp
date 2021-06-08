@@ -162,6 +162,7 @@ export default {
         ...mapActions({
             fetchCompanyOffers: 'company/fetchCompanyOffers',
             toggleCreateOfferDialog: 'helpers/toggleCreateOfferDialog',
+            setBreadcrumbs: 'helpers/setBreadcrumbs'
         }),
 
         formatDate(date) {
@@ -226,8 +227,14 @@ export default {
     },
 
     created() {
+        this.setBreadcrumbs([
+            {text: 'Panel', to: {name: 'panel'}, exact: true},
+            {text: 'Firma', to: {name: 'company', params: {slug: this.$route.params.slug}}, exact: true},
+            {text: 'Umowy', to: {name: 'company-offers'}, exact: true},
+        ]);
+
         this.$store.subscribe(mutation => {
-            if(mutation.type === 'company/UNSHIFT_COMPANY_OFFER') {
+            if (mutation.type === 'company/UNSHIFT_COMPANY_OFFER') {
                 this.updateSearchedItems();
             }
         });

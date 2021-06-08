@@ -35,7 +35,7 @@ export default {
     created() {
         this.setBreadcrumbs([
             {text: 'Panel', to: {name: 'panel'}, exact: true},
-            {text: 'Użytkownik', to: {name: 'user', params: {id: this.user.id}}},
+            {text: 'Konto', to: {name: 'user', params: {id: this.user.id}}},
             {text: 'Wiadomości', disabled: true}
         ]);
     }

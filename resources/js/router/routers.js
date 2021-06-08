@@ -59,6 +59,7 @@ import TestApp from "../views/TestApp";
 import TheAdminDashboard from "../components/Admin/Dashboard/TheAdminDashboard";
 import ForgotPassword from "../views/ForgotPassword";
 import ResetPassword from "../views/ResetPassword";
+import TheUniversityQuestionnaires from "../components/University/Questionnaires/TheUniversityQuestionnaires";
 
 Vue.use(VueRouter);
 
@@ -249,6 +250,11 @@ const router = new VueRouter({
                             path: 'internships',
                             name: 'university-internships',
                             component: TheUniversityInternships
+                        },
+                        {
+                            path: 'questionnaires',
+                            name: 'university-questionnaires',
+                            component: TheUniversityQuestionnaires
                         },
                         {
                             path: 'settings',
