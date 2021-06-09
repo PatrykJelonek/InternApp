@@ -60,6 +60,7 @@ import TheAdminDashboard from "../components/Admin/Dashboard/TheAdminDashboard";
 import ForgotPassword from "../views/ForgotPassword";
 import ResetPassword from "../views/ResetPassword";
 import TheUniversityQuestionnaires from "../components/University/Questionnaires/TheUniversityQuestionnaires";
+import TheCompanyQuestionnaires from "../components/Company/Questionnaires/TheCompanyQuestionnaires";
 
 Vue.use(VueRouter);
 
@@ -214,6 +215,11 @@ const router = new VueRouter({
                             path: 'workers',
                             name: 'company-workers',
                             component: TheCompanyWorkers
+                        },
+                        {
+                            path: 'questionnaires',
+                            name: 'company-questionnaires',
+                            component: TheCompanyQuestionnaires
                         },
                         {
                             path: 'settings',

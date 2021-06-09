@@ -1,5 +1,5 @@
 <template>
-    <v-container>
+    <v-container fluid>
         <page-title>{{ $route.meta.title ? $route.meta.title : 'Oferty Praktyk' }}</page-title>
         <v-row v-has="['student']">
             <v-col cols="12">

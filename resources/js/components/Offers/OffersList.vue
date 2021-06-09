@@ -1,19 +1,38 @@
 <template>
-    <v-container>
+    <v-container fluid>
         <v-data-iterator
             :items="offers"
             item-key="id"
-            :items-per-page="2"
+            :items-per-page="10"
             :loading="offersLoading"
-            hide-default-footer
+            locale="pl-PL"
         >
             <template v-slot:default="{ items, isExpanded, expand }">
-                <offer-card
-                    v-for="offer in items"
-                    :key="offer.id"
-                    :title="offer.name"
-                    :company-name="offer.company.name"
-                ></offer-card>
+                <v-row>
+                    <v-col cols="3" v-for="offer in items"
+                           :key="offer.id">
+                        <offer-card
+                            :title="offer.name"
+                            :company-name="offer.company.name"
+                            :created-at="offer.created_at"
+                            :city="offer.company.city.name"
+                            :interview="offer.interview"
+                            :category-name="offer.category.display_name"
+                            :program="offer.program"
+                            :date-from="offer.date_from"
+                            :date-to="offer.date_to"
+                        ></offer-card>
+                    </v-col>
+                </v-row>
+
+            </template>
+
+            <template v-slot:loading>
+                <v-row>
+                    <v-col cols="12" class="text-center">
+                        <v-progress-circular color="primary" size="80" indeterminate></v-progress-circular>
+                    </v-col>
+                </v-row>
             </template>
         </v-data-iterator>
     </v-container>
@@ -62,7 +81,7 @@ export default {
         }),
 
         setSelectedOffer(offer) {
-          this.selectedOffer = offer;
+            this.selectedOffer = offer;
         },
 
         formatDate(date) {

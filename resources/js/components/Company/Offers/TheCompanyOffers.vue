@@ -87,6 +87,7 @@
                             :headers="headers"
                             :items="searchedItems"
                             :loading="companyOffersLoading"
+                            class="component-background"
                         >
                             <template v-slot:item.supervisor="{ item }">
                                 <router-link class="primary--text" link small

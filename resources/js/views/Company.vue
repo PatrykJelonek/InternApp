@@ -1,9 +1,8 @@
 <template>
-    <v-container>
+    <v-container fluid>
        <v-row v-if="!companyLoading">
            <v-col cols="12">
                <page-title>{{ company.name }}</page-title>
-               <page-tabs :tabs="tabs"></page-tabs>
                <router-view></router-view>
            </v-col>
        </v-row>
