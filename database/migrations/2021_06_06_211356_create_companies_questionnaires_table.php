@@ -20,6 +20,7 @@ class CreateCompaniesQuestionnairesTable extends Migration
             $table->foreignId('questionnaire_id');
             $table->foreign('questionnaire_id')->references('id')->on('questionnaires');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

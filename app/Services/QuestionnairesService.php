@@ -92,4 +92,64 @@ class QuestionnairesService
 
         return $questionnaire;
     }
+
+    /**
+     * @param int    $questionnaireId
+     * @param string $name
+     * @param string $description
+     *
+     * @return Questionnaire|null
+     */
+    public function updateQuestionnaire(int $questionnaireId, string $name, string $description): ?Questionnaire
+    {
+        $questionnaire = Questionnaire::find($questionnaireId);
+        $questionnaire->name = $name;
+        $questionnaire->description = $description;
+
+        if ($questionnaire->save()) {
+            return $questionnaire;
+        }
+
+        return null;
+    }
+
+    /**
+     * @param int    $questionId
+     * @param string $content
+     * @param string $description
+     *
+     * @return QuestionnaireQuestion|null
+     */
+    public function updateQuestion(int $questionId, string $content, string $description): ?QuestionnaireQuestion
+    {
+        $question = QuestionnaireQuestion::find($questionId);
+        $question->content = $content;
+        $question->description = $description;
+
+        if ($question->save()) {
+            return $question;
+        }
+
+        return null;
+    }
+
+    /**
+     * @param int $questionnaireId
+     */
+    public function deleteQuestionnaire(int $questionnaireId): void
+    {
+        $questionnaire = Questionnaire::find($questionnaireId);
+
+        $questionnaire->delete();
+    }
+
+    /**
+     * @param int $questionId
+     */
+    public function deleteQuestion(int $questionId): void
+    {
+        $question = QuestionnaireQuestion::find($questionId);
+
+        $question->delete();
+    }
 }

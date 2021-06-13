@@ -7,5 +7,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class QuestionnaireQuestionAnswer extends Model
 {
-    use HasFactory;
+    public $table = 'questionnaire_question_answers';
 }

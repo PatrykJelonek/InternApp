@@ -3,175 +3,198 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Questionnaire;
-use Illuminate\Http\Request;
+use App\Http\Requests\QuestionnaireCreateQuestionnaireRequest as CreateQuestionnaireRequest;
+use App\Http\Requests\QuestionnaireDeleteQuestionnaireQuestionRequest as DeleteQuestionRequest;
+use App\Http\Requests\QuestionnaireDeleteQuestionnaireRequest as DeleteQuestionnaireRequest;
+use App\Http\Requests\QuestionnaireGetAllQuestionnairesRequest as GetAllQuestionnairesRequest;
+use App\Http\Requests\QuestionnaireGetQuestionnaireQuestionAnswersRequest as GetAnswersRequest;
+use App\Http\Requests\QuestionnaireGetQuestionnaireQuestionsRequest as GetQuestionsRequest;
+use App\Http\Requests\QuestionnaireGetQuestionnaireRequest as GetQuestionnaireRequest;
+use App\Http\Requests\QuestionnaireUpdateQuestionnaireQuestionRequest as UpdateQuestionRequest;
+use App\Http\Requests\QuestionnaireUpdateQuestionnaireRequest as UpdateQuestionnaireRequest;
+use App\Repositories\QuestionnairesRepository;
+use App\Services\QuestionnairesService;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Http\Response;
 
 class QuestionnaireController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * @var QuestionnairesRepository
      */
-    public function index()
-    {
-        if(auth()->user()->hasRole(['user']))
-        {
-        $questionnaires = Questionnaire::all();
+    private $questionnairesRepository;
 
-        if (isset($questionnaires))
+    /**
+     * @var QuestionnairesService
+     */
+    private $questionnairesService;
+
+    /**
+     * QuestionnaireController constructor.
+     *
+     * @param QuestionnairesRepository $questionnairesRepository
+     * @param QuestionnairesService    $questionnairesService
+     */
+    public function __construct(
+        QuestionnairesRepository $questionnairesRepository,
+        QuestionnairesService $questionnairesService
+    ) {
+        $this->questionnairesRepository = $questionnairesRepository;
+        $this->questionnairesService = $questionnairesService;
+    }
+
+    /**
+     * @param GetAllQuestionnairesRequest $request
+     *
+     * @return Application|ResponseFactory|Response
+     */
+    public function getAllQuestionnaires(GetAllQuestionnairesRequest $request)
+    {
+        $questionnaires = $this->questionnairesRepository->getAllQuestionnaires();
+
+        if (!empty($questionnaires)) {
             return response($questionnaires, Response::HTTP_OK);
-        else
-            return response("Questionnaires not found!", Response::HTTP_NOT_FOUND);
-        }else
-        {
-            return response([
-                        'status' => 'error',
-                        'data' => null,
-                        'message' => "Nie masz uprawnień!"
-                    ], Response::HTTP_UNAUTHORIZED);
         }
+
+        return response(null, response(Response::HTTP_NO_CONTENT));
     }
 
     /**
-     * Show the form for creating a new resource.
+     * @param GetQuestionnaireRequest $request
+     * @param int                     $questionnaireId
      *
-     * @return \Illuminate\Http\Response
+     * @return Application|ResponseFactory|Response
      */
-    public function create()
+    public function getQuestionnaire(GetQuestionnaireRequest $request, int $questionnaireId)
     {
-        //
-    }
+        $questionnaire = $this->questionnairesRepository->getQuestionnaire($questionnaireId);
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        if(auth()->user()->hasRole(['admin','company-worker', 'university-worker']))
-        {
-        $questionnaire = new Questionnaire;
-
-        if (isset($questionnaire)) {
-            $questionnaire->name = $request->input("name");
-            $questionnaire->display_name = $request->input("display name");
-            $questionnaire->description = $request->input("description");
-            $questionnaire->created_at = date('Y-m-d H:i:s');
-            $questionnaire->updated_at = date('Y-m-d H:i:s');
-
-            if ($questionnaire->save())
-                return response($questionnaire, Response::HTTP_OK);
-        }
-
-        return response("Questionnaire has not been created!", Response::HTTP_INTERNAL_SERVER_ERROR);
-        }else
-        {
-            return response([
-                        'status' => 'error',
-                        'data' => null,
-                        'message' => "Nie masz uprawnień!"
-                    ], Response::HTTP_UNAUTHORIZED);
-        }
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        if(auth()->user()->hasRole(['user']))
-        {
-        $questionnaire = Questionnaire::find($id);
-
-        if (isset($questionnaire))
+        if (!empty($questionnaire)) {
             return response($questionnaire, Response::HTTP_OK);
-        else
-            return response("Questionnaire not found!", Response::HTTP_NOT_FOUND);
-        }else
-        {
-            return response([
-                        'status' => 'error',
-                        'data' => null,
-                        'message' => "Nie masz uprawnień!"
-                    ], Response::HTTP_UNAUTHORIZED);
         }
+
+        return response(null, response(Response::HTTP_NO_CONTENT));
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * @param GetQuestionsRequest $request
+     * @param int                 $questionnaireId
      *
-     * @param  \App\Questionnaire  $questionnaire
-     * @return \Illuminate\Http\Response
+     * @return Application|ResponseFactory|Response
      */
-    public function edit(Questionnaire $questionnaire)
+    public function getQuestionnaireQuestions(GetQuestionsRequest $request, int $questionnaireId)
     {
-        //
+        $questions = $this->questionnairesRepository->getQuestionnaireQuestions($questionnaireId);
+
+        if (!empty($questions)) {
+            return response($questions, Response::HTTP_OK);
+        }
+
+        return response(null, response(Response::HTTP_NO_CONTENT));
     }
 
     /**
-     * Update the specified resource in storage.
+     * @param GetAnswersRequest $request
+     * @param int               $questionId
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Questionnaire  $questionnaire
-     * @return \Illuminate\Http\Response
+     * @return Application|ResponseFactory|Response
      */
-    public function update(Request $request)
+    public function getQuestionnaireQuestionAnswers(GetAnswersRequest $request, int $questionId)
     {
-        if(auth()->user()->hasRole(['user']))
-        {
-        $questionnaire = Questionnaire::find($request->input("id"));
+        $answers = $this->questionnairesRepository->getQuestionAnswers($questionId);
 
-        if (isset($questionnaire)) {
-            $questionnaire->name = $request->input("name");
-            $questionnaire->display_name = $request->input("display name");
-            $questionnaire->description = $request->input("description");
-            $questionnaire->updated_at = date('Y-m-d H:i:s');
-
-            if ($questionnaire->save())
-                return response($questionnaire, Response::HTTP_OK);
+        if (!empty($answers)) {
+            return response($answers, Response::HTTP_OK);
         }
 
-        return response("Questionnaire not found!", Response::HTTP_NOT_FOUND);
-        }else
-        {
-            return response([
-                        'status' => 'error',
-                        'data' => null,
-                        'message' => "Nie masz uprawnień!"
-                    ], Response::HTTP_UNAUTHORIZED);
-        }
+        return response(null, response(Response::HTTP_NO_CONTENT));
     }
 
     /**
-     * Remove the specified resource from storage.
+     * @param CreateQuestionnaireRequest $request
      *
-     * @param  $id
-     * @return \Illuminate\Http\Response
+     * @return Application|ResponseFactory|Response
      */
-    public function destroy($id)
+    public function createQuestionnaire(CreateQuestionnaireRequest $request)
     {
-        if(auth()->user()->hasRole(['user']))
-        {
-        $questionnaire = Questionnaire::find($id);
+        $result = $this->questionnairesService->createQuestionnaire(
+            $request->input('name'),
+            $request->input('description')
+        );
 
-        if ($questionnaire->delete())
-            return response("Questionnaire has been deleted!", Response::HTTP_OK);
-        else
-            return response("Questionnaire has not been deleted!", Response::HTTP_INTERNAL_SERVER_ERROR);
-        }else
-        {
-            return response([
-                        'status' => 'error',
-                        'data' => null,
-                        'message' => "Nie masz uprawnień!"
-                    ], Response::HTTP_UNAUTHORIZED);
+        if ($result !== null) {
+            return response($result, Response::HTTP_CREATED);
         }
+
+        return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+
+    /**
+     * @param UpdateQuestionnaireRequest $request
+     * @param                            $questionnaireId
+     *
+     * @return Application|ResponseFactory|Response
+     */
+    public function updateQuestionnaire(UpdateQuestionnaireRequest $request, $questionnaireId)
+    {
+        $result = $this->questionnairesService->updateQuestionnaire(
+            $questionnaireId,
+            $request->name('name'),
+            $request->name('description')
+        );
+
+        if ($result !== null) {
+            return response($result, Response::HTTP_OK);
+        }
+
+        return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+
+    /**
+     * @param UpdateQuestionRequest $request
+     * @param                       $questionId
+     *
+     * @return Application|ResponseFactory|Response
+     */
+    public function updateQuestionnaireQuestion(UpdateQuestionRequest $request, $questionId)
+    {
+        $result = $this->questionnairesService->updateQuestion(
+            $questionId,
+            $request->name('content'),
+            $request->name('description')
+        );
+
+        if ($result !== null) {
+            return response($result, Response::HTTP_OK);
+        }
+
+        return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+
+    /**
+     * @param DeleteQuestionnaireRequest $request
+     * @param int                        $questionnaireId
+     *
+     * @return Application|ResponseFactory|Response
+     */
+    public function deleteQuestionnaire(DeleteQuestionnaireRequest $request, int $questionnaireId)
+    {
+        $this->questionnairesService->deleteQuestionnaire($questionnaireId);
+
+        return response(null, Response::HTTP_OK);
+    }
+
+    /**
+     * @param DeleteQuestionRequest $request
+     * @param int                   $questionId
+     *
+     * @return Application|ResponseFactory|Response
+     */
+    public function deleteQuestionnaireQuestion(DeleteQuestionRequest $request, int $questionId)
+    {
+        $this->questionnairesService->deleteQuestion($questionId);
+
+        return response(null, Response::HTTP_OK);
     }
 }

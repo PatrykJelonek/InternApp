@@ -2,7 +2,6 @@
     <v-container fluid>
        <v-row v-if="!companyLoading">
            <v-col cols="12">
-               <page-title>{{ company.name }}</page-title>
                <router-view></router-view>
            </v-col>
        </v-row>

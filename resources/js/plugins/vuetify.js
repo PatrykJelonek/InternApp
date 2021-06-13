@@ -26,6 +26,7 @@ export default new Vuetify({
                 'card-background': '#fff',
                 'message-self': '#00C853',
                 'message': '#E5E6E8',
+                'tableExpandBg': '#EEE',
             },
             dark: {
                 //primary: '#1976D2',
@@ -45,6 +46,7 @@ export default new Vuetify({
                 'card-background': '#181A20',
                 'message-self': '#00C853',
                 'message': '#616161',
+                'tableExpandBg': '#181A20',
             }
         },
     },

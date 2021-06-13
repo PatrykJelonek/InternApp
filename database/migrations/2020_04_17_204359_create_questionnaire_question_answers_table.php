@@ -20,7 +20,8 @@ class CreateQuestionnaireQuestionAnswersTable extends Migration
             $table->foreignId('user_id');
             $table->foreign('user_id')->references('id')->on('users');
             $table->string('content', 255);
-            $table->dateTime('created_at', 0);
+            $table->timestamps();
+            $table->softDeletes();
         });
     }
 

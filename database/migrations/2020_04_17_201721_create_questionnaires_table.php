@@ -17,8 +17,8 @@ class CreateQuestionnairesTable extends Migration
             $table->id();
             $table->string('name', 64)->unique();
             $table->longText('description');
-            $table->dateTime('created_at', 0);
-            $table->dateTime('updated_at', 0);
+            $table->timestamps();
+            $table->softDeletes();
         });
     }
 

@@ -16,7 +16,7 @@ class CreateChatsTable extends Migration
         Schema::create('chats', function (Blueprint $table) {
             $table->id();
             $table->uuid('uuid')->unique();
-            $table->boolean('one_one')->default('false');
+            $table->boolean('one_one')->default(false);
             $table->softDeletes();
             $table->timestamps();
         });

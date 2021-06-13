@@ -19,7 +19,8 @@ class CreateQuestionnairesRolesTable extends Migration
             $table->foreign('role_id')->references('id')->on('roles');
             $table->foreignId('questionnaire_id');
             $table->foreign('questionnaire_id')->references('id')->on('questionnaires');
-            $table->dateTime('created_at', 0);
+            $table->timestamps();
+            $table->softDeletes();
         });
     }
 

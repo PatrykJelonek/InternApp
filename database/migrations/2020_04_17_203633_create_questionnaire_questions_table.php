@@ -19,8 +19,8 @@ class CreateQuestionnaireQuestionsTable extends Migration
             $table->foreign('questionnaire_id')->references('id')->on('questionnaires');
             $table->string('content',128);
             $table->string('description',255)->nullable();
-            $table->dateTime('created_at', 0);
-            $table->dateTime('updated_at', 0);
+            $table->timestamps();
+            $table->softDeletes();
         });
     }
 

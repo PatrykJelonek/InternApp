@@ -1,13 +1,16 @@
 <template>
-    <h1>questionnaires</h1>
+    <v-container fluid class="pa-0">
+        <questionnaires-list></questionnaires-list>
+    </v-container>
 </template>
 
 <script>
 import {mapActions, mapGetters} from "vuex";
+import QuestionnairesList from "../../Questionnaires/QuestionnairesList";
 
 export default {
     name: "TheUniversityQuestionnaires",
-
+    components: {QuestionnairesList},
     computed: {
         ...mapGetters({
             university: 'university/university',
