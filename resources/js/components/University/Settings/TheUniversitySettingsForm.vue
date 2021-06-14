@@ -22,7 +22,9 @@
                                     icon
                                     v-bind="attrs"
                                     v-on="on"
-                                    @click="show = !show">
+                                    @click="show = !show"
+                                color="card-background"
+                                >
                                     <v-icon>{{ show ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
                                 </v-btn>
                             </template>
@@ -37,7 +39,7 @@
             <v-row v-show="show" no-gutters>
                 <v-col cols="12">
                     <v-form>
-                        <v-tabs v-model="tabs">
+                        <v-tabs v-model="tabs" background-color="card-background">
                             <v-tab>
                                 Dane Ogólne
                             </v-tab>
@@ -47,7 +49,7 @@
                             <v-tab>
                                 Dane Kontaktowe
                             </v-tab>
-                            <v-tabs-items v-model="tabs" class="ma-1 pa-5">
+                            <v-tabs-items  v-model="tabs" class="ma-1 pa-5 card-background">
                                 <v-tab-item>
                                     <v-row>
                                         <v-col cols="12">

@@ -165,6 +165,15 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::get('/statistics/attachments/count','Api\StatisticController@getNumberOfAttachments');
     Route::get('/statistics/offers/attachments/count','Api\StatisticController@getNumberOfOffersAttachments');
 
+    # Questionnaires
+    Route::get('/questionnaires','Api\QuestionnaireController@getQuestionnaires');
+    Route::get('/questionnaires/{questionnaireId}','Api\QuestionnaireController@getQuestionnaire');
+    Route::get('/questionnaires/{questionnaireId}/questions','Api\QuestionnaireController@getQuestionnaireQuestions');
+    Route::get('/questionnaires/{questionnaireId}/questions/{questionId}','Api\QuestionnaireController@getQuestionnaireQuestion');
+    Route::get('/questionnaires/{questionnaireId}/questions/{questionId}/answers','Api\QuestionnaireController@getQuestionnaireQuestionAnswers');
+    Route::get('/questionnaires/{questionnaireId}/questions/{questionId}/answers/{answerId}','Api\QuestionnaireController@getQuestionnaireQuestionAnswer');
+    Route::get('/questionnaires/{id}/statistics/weeks','Api\QuestionnaireController@getQuestionnaireAnswerStatisticsByWeek');
+
     Route::get('/test', 'Api\TestController@test');
     Route::post('/test', 'Api\TestController@testPost');
 

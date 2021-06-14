@@ -19,4 +19,6 @@ interface QuestionnairesRepositoryInterface
     public function getQuestionnaireQuestions(int $questionnaireId);
 
     public function getQuestionAnswers(int $questionId);
+
+    public function getQuestionnaireAnswerStatisticsByWeek(int $questionnaireId);
 }

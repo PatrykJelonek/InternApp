@@ -7,6 +7,7 @@ use App\Http\Requests\QuestionnaireCreateQuestionnaireRequest as CreateQuestionn
 use App\Http\Requests\QuestionnaireDeleteQuestionnaireQuestionRequest as DeleteQuestionRequest;
 use App\Http\Requests\QuestionnaireDeleteQuestionnaireRequest as DeleteQuestionnaireRequest;
 use App\Http\Requests\QuestionnaireGetAllQuestionnairesRequest as GetAllQuestionnairesRequest;
+use App\Http\Requests\QuestionnaireGetQuestionnaireAnswerStatisticsByWeekRequest;
 use App\Http\Requests\QuestionnaireGetQuestionnaireQuestionAnswersRequest as GetAnswersRequest;
 use App\Http\Requests\QuestionnaireGetQuestionnaireQuestionsRequest as GetQuestionsRequest;
 use App\Http\Requests\QuestionnaireGetQuestionnaireRequest as GetQuestionnaireRequest;
@@ -49,7 +50,7 @@ class QuestionnaireController extends Controller
      *
      * @return Application|ResponseFactory|Response
      */
-    public function getAllQuestionnaires(GetAllQuestionnairesRequest $request)
+    public function getQuestionnaires(GetAllQuestionnairesRequest $request)
     {
         $questionnaires = $this->questionnairesRepository->getAllQuestionnaires();
 
@@ -196,5 +197,16 @@ class QuestionnaireController extends Controller
         $this->questionnairesService->deleteQuestion($questionId);
 
         return response(null, Response::HTTP_OK);
+    }
+
+    public function getQuestionnaireAnswerStatisticsByWeek(QuestionnaireGetQuestionnaireAnswerStatisticsByWeekRequest $request, int $questionnaireId)
+    {
+        $result = $this->questionnairesRepository->getQuestionnaireAnswerStatisticsByWeek($questionnaireId);
+
+        if (!empty($result)) {
+            return response($result, Response::HTTP_OK);
+        }
+
+        return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 }

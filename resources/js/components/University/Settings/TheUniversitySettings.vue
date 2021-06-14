@@ -12,7 +12,6 @@
             <v-col cols="12">
                 <the-university-faculties></the-university-faculties>
             </v-col>
-
         </v-row>
     </div>
 </template>
