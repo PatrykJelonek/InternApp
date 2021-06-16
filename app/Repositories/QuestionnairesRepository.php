@@ -52,12 +52,6 @@ class QuestionnairesRepository implements QuestionnairesRepositoryInterface
             function (Builder $query) use ($questionnaireId) {
                 $query->where(['questionnaire_id' => $questionnaireId]);
             }
-        )->get()->keyBy(function ($val) {
-            return Carbon::parse($val['created_at'])->format('m');
-        })->groupBy(
-            function ($val) {
-                return Carbon::parse($val->created_at)->format('m');
-            }
-        );
+        )->get()->groupBy('questionnaire_question_id');
     }
 }
