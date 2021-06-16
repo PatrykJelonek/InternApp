@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UniversityAgreementsRequest;
+use App\Http\Requests\UniversityGetUniversityQuestionnairesRequest;
 use App\Http\Requests\UniversityInternshipsRequest;
 use App\Http\Requests\UniversityStudentsRequest;
 use App\Http\Requests\UniversityWorkersRequest;
@@ -496,6 +497,16 @@ class UniversityController extends Controller
         return \response(null, Response::HTTP_NOT_FOUND);
     }
 
+    public function getUniversityQuestionnaires(UniversityGetUniversityQuestionnairesRequest $request, string $slug): Response
+    {
+        $questionnaires = $this->universityRepository->getQuestionnaires($slug);
+
+        if (!is_null($questionnaires)) {
+            return \response($questionnaires, Response::HTTP_OK);
+        }
+
+        return \response(null, Response::HTTP_NOT_FOUND);
+    }
 
     /**
      * Generate unique random access code.

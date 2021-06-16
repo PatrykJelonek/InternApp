@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Requests\CompanyGetCompanyQuestionnairesRequest;
 use App\Http\Requests\CompanyOffersRequest;
 use App\Http\Requests\CompanyShowRequest;
 use App\Http\Requests\GetCompanyWorkersRequest;
@@ -378,5 +379,22 @@ class CompanyController extends Controller
         }
 
         return response(null, Response::HTTP_NO_CONTENT);
+    }
+
+    /**
+     * @param CompanyGetCompanyQuestionnairesRequest $request
+     * @param string                                 $slug
+     *
+     * @return Response
+     */
+    public function getCompanyQuestionnaires(CompanyGetCompanyQuestionnairesRequest $request, string $slug): Response
+    {
+        $questionnaires = $this->companyRepository->getCompanyQuestionnaires($slug);
+
+        if (!is_null($questionnaires)) {
+            return \response($questionnaires, Response::HTTP_OK);
+        }
+
+        return \response(null, Response::HTTP_NOT_FOUND);
     }
 }

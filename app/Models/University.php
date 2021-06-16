@@ -37,6 +37,11 @@ class University extends Model
         return $this->hasMany('App\Models\Agreement', 'university_id', 'id');
     }
 
+    public function questionnaires()
+    {
+        return $this->belongsToMany('App\Models\Questionnaire','universities_questionnaires','university_id', 'questionnaire_id');
+    }
+
     public static function messages()
     {
         return [

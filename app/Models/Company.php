@@ -55,6 +55,12 @@ class Company extends Model
         return $this->belongsToMany('App\Models\User', 'users_companies', 'company_id', 'user_id');
     }
 
+    public function questionnaires()
+    {
+        return $this->belongsToMany('App\Models\Questionnaire','companies_questionnaires','company_id', 'questionnaire_id');
+    }
+
+
     public static function messages()
     {
         return [

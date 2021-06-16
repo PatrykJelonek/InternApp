@@ -198,4 +198,11 @@ class UniversityRepository implements UniversityRepositoryInterface
             }
         )->get();
     }
+
+    public function getQuestionnaires(string $slug)
+    {
+        $university = University::where(['slug' => $slug])->with(['questionnaires.questions'])->first();
+
+        return $university->questionnaires;
+    }
 }

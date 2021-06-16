@@ -12,6 +12,7 @@ class Questionnaire extends Model
     use SoftDeletes;
 
     protected $table = 'questionnaires';
+    protected $hidden = ['pivot'];
 
     public function questions(): HasMany
     {

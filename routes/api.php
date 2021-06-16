@@ -97,6 +97,7 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::get('/companies/{slug}/offers','Api\CompanyController@getCompanyOffers');
     Route::get('/companies/{slug}/workers','Api\CompanyController@getCompanyWorkers');
     Route::get('/companies/{slug}/agreements','Api\CompanyController@getAgreements');
+    Route::get('/companies/{slug}/questionnaires','Api\CompanyController@getCompanyQuestionnaires');
 
     # Offers
     Route::get('/offers','Api\OfferController@index');
@@ -128,6 +129,7 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::get('/universities/{slug}/internships','Api\UniversityController@getInternships2');
     Route::get('/universities/{slug}/faculties','Api\UniversityController@getFaculties');
     Route::get('/universities/{slug}/offers','Api\UniversityController@getOffers');
+    Route::get('/universities/{slug}/questionnaires','Api\UniversityController@getUniversityQuestionnaires');
 
     # Student
     Route::post('/students/internships', 'Api\StudentController@createStudentOwnInternship');

@@ -160,7 +160,9 @@ class CompanyRepository implements CompanyRepositoryInterface
 
     public function getCompanyAgreements(string $slug, ?bool $isActive = null)
     {
-        $agreements = Agreement::with(['university', 'supervisor', 'author', 'internships', 'offer','status'])->whereHas(
+        $agreements = Agreement::with(
+            ['university', 'supervisor', 'author', 'internships', 'offer', 'status']
+        )->whereHas(
             'company',
             function (Builder $query) use ($slug) {
                 $query->where(['slug' => $slug]);
@@ -172,5 +174,12 @@ class CompanyRepository implements CompanyRepositoryInterface
         }
 
         return $agreements->get();
+    }
+
+    public function getCompanyQuestionnaires(string $slug)
+    {
+        $company = Company::where(['slug' => $slug])->with(['questionnaires.questions'])->first();
+
+        return $company->questionnaires;
     }
 }

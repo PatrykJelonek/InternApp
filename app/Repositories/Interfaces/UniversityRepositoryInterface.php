@@ -23,4 +23,6 @@ interface UniversityRepositoryInterface
     public function getSpecializations(string $slug);
 
     public function getFaculties(string $slug);
+
+    public function getQuestionnaires(string $slug);
 }

@@ -1,27 +1,32 @@
 <template>
     <v-container fluid class="pa-0">
         <v-row>
-            <v-col cols="12">
-                <v-data-iterator
-                    :items="questionnaires"
-                    item-key="id"
-                    :items-per-page="11"
-                >
-                    <template v-slot:default="{items, isExpanded, expand}">
-                        <v-row>
-                            <v-col
-                                cols="12"
-                                v-for="item in items"
-                                :key="item.id"
-                            >
-                                <questionnaires-list-item
-                                    :name="item.name"
-                                    :description="item.description"
-                                ></questionnaires-list-item>
-                            </v-col>
-                        </v-row>
-                    </template>
-                </v-data-iterator>
+            <v-col cols="12" lg="6">
+                <custom-card>
+                    <v-container fluid>
+                        <v-data-iterator
+                            :items="questionnaires"
+                            item-key="id"
+                            :items-per-page="11"
+                        >
+                            <template v-slot:default="{items, isExpanded, expand}">
+                                <v-row>
+                                    <v-col
+                                        cols="12"
+                                        v-for="item in items"
+                                        :key="item.id"
+                                    >
+                                        <questionnaires-list-item
+                                            :name="item.name"
+                                            :description="item.description"
+                                            :is-expand="isExpanded"
+                                        ></questionnaires-list-item>
+                                    </v-col>
+                                </v-row>
+                            </template>
+                        </v-data-iterator>
+                    </v-container>
+                </custom-card>
             </v-col>
         </v-row>
     </v-container>

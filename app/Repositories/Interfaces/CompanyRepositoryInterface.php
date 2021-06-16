@@ -7,6 +7,8 @@
  */
 namespace App\Repositories\Interfaces;
 
+use App\Models\University;
+
 interface CompanyRepositoryInterface
 {
     public function getOneById(int $id);
@@ -30,4 +32,6 @@ interface CompanyRepositoryInterface
     public function getCompanyWorkers(string $slug, ?array $roles = null, ?array $statuses = null, ?int $limit = null);
 
     public function getCompanyAgreements(string $slug, ?bool $isActive = null);
+
+    public function getCompanyQuestionnaires(string $slug);
 }
