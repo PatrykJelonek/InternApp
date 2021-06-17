@@ -13,13 +13,14 @@
                                 <v-row>
                                     <v-col
                                         cols="12"
-                                        v-for="item in items"
-                                        :key="item.id"
+                                        v-for="questionnaire in items"
+                                        :key="questionnaire.id"
                                     >
                                         <questionnaires-list-item
-                                            :name="item.name"
-                                            :description="item.description"
+                                            :name="questionnaire.name"
+                                            :description="questionnaire.description"
                                             :is-expand="isExpanded"
+                                            :original-questions="questionnaire.questions"
                                         ></questionnaires-list-item>
                                     </v-col>
                                 </v-row>
@@ -36,11 +37,12 @@
 import CustomCard from "../_General/CustomCard";
 import VCardHeader from "../_Helpers/VCardHeader";
 import QuestionnairesListItem from "./QuestionnairesListItem";
+import {mapActions} from "vuex";
 
 export default {
     name: "QuestionnairesList",
     components: {QuestionnairesListItem, VCardHeader, CustomCard},
-    props: ['questionnaires'],
+    props: ['questionnaires', 'loading'],
 
     data() {
         return {
@@ -55,7 +57,7 @@ export default {
                 {text: 'Odpowiedzi', value: 'answers'}
             ]
         }
-    }
+    },
 }
 </script>
 

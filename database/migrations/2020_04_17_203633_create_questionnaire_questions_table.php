@@ -19,6 +19,7 @@ class CreateQuestionnaireQuestionsTable extends Migration
             $table->foreign('questionnaire_id')->references('id')->on('questionnaires');
             $table->string('content',128);
             $table->string('description',255)->nullable();
+            $table->integer('position')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

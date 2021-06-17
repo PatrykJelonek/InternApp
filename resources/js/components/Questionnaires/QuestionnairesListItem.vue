@@ -19,25 +19,27 @@
                     <v-row>
                         <v-col cols="12" v-for="(item, index) in questions" :key="item.id">
                             <v-text-field
+                                v-model="questions[index].content"
                                 :label="'Pytanie nr '+ (index+1)"
                                 dense
                                 outlined
-                                :value="item.val"
+                                :value="item.content"
                                 hide-details
                                 class="d-flex align-center"
+                                :disabled="item.deleted_at !== null"
                             >
                                 <template v-slot:prepend>
                                     <v-btn-toggle dense background-color="transparent">
-                                        <v-btn icon @click="goUp(item.pos, index)">
+                                        <v-btn icon @click="goUp(item.position, index)" :disabled="questions[index-1]=== undefined">
                                             <v-icon>mdi-chevron-up</v-icon>
                                         </v-btn>
-                                        <v-btn icon @click="goDown(item.pos, index)">
+                                        <v-btn icon @click="goDown(item.position, index)" :disabled="questions[index+1] === undefined">
                                             <v-icon>mdi-chevron-down</v-icon>
                                         </v-btn>
                                     </v-btn-toggle>
                                 </template>
                                 <template v-slot:append-outer>
-                                    <v-icon>mdi-delete-outline</v-icon>
+                                    <v-icon @click="item.deleted_at = item.deleted_at === null ? getDate() : null">{{item.deleted_at === null ? 'mdi-delete-outline' : 'mdi-delete-off-outline'}}</v-icon>
                                 </template>
                             </v-text-field>
                         </v-col>
@@ -53,6 +55,7 @@
                                         v-bind="attrs"
                                         v-on="on"
                                         @click="addQuestionInput"
+                                        @change="checkQuestionWasModified"
                                     >
                                         <v-icon>mdi-plus</v-icon>
                                     </v-btn>
@@ -63,7 +66,7 @@
                     </v-row>
                     <v-row>
                         <v-col cols="12" class="text-center">
-                            <v-btn small outlined @click="addQuestionInput">
+                            <v-btn small outlined @click="addQuestionInput" :disabled="!wasQuestionsModified">
                                 Zapisz
                             </v-btn>
                         </v-col>
@@ -75,6 +78,8 @@
 </template>
 
 <script>
+import {isEqual} from "lodash";
+import moment from "moment";
 import CustomCard from "../_General/CustomCard";
 import ExpandCard from "../_Helpers/ExpandCard";
 import VCardHeader from "../_Helpers/VCardHeader";
@@ -82,53 +87,86 @@ import VCardHeader from "../_Helpers/VCardHeader";
 export default {
     name: "QuestionnairesListItem",
     components: {VCardHeader, ExpandCard, CustomCard},
-    props: ['name', 'description', 'isExpand'],
+    props: ['name', 'description', 'isExpand', 'originalQuestions'],
 
     data() {
         return {
-            questions: [
-                {id: 1, val: '1', pos: 1},
-                {id: 2, val: '2', pos: 2},
-                {id: 3, val: '3', pos: 3},
-                {id: 4, val: '4', pos: 4},
-            ],
+            questions: [],
             expand: false,
+            wasQuestionsModified: false,
         }
     },
 
     methods: {
         addQuestionInput() {
-            this.questions.push({id: 5, val: 'daadad', pos: this.questions[this.questions.length - 1].pos + 1});
-            this.sortQuestions();
+            let {lastId, lastPosition} = this.getLastQuestionData(this.questions);
+            this.questions.push({
+                id: lastId + 1,
+                content: '',
+                position: lastPosition + 1
+            });
+            this.questions = this.sortQuestionsByPosition(this.questions);
         },
 
         goUp(pos, key) {
-            [this.questions[key].pos, this.questions[key - 1].pos] = [this.questions[key - 1].pos, this.questions[key].pos];
-            this.sortQuestions();
+            [this.questions[key].position, this.questions[key - 1].position] = [this.questions[key - 1].position, this.questions[key].position];
+            this.questions = this.sortQuestionsByPosition(this.questions);
+            this.checkQuestionWasModified();
         },
 
         goDown(pos, key) {
-            [this.questions[key].pos, this.questions[key + 1].pos] = [this.questions[key + 1].pos, this.questions[key].pos];
-            this.sortQuestions();
+            [this.questions[key].position, this.questions[key + 1].position] = [this.questions[key + 1].position, this.questions[key].position];
+            this.questions = this.sortQuestionsByPosition(this.questions);
+            this.checkQuestionWasModified();
         },
 
-        sortQuestions() {
-            this.questions.sort((a, b) => {
-                if (a.pos > b.pos) {
+        sortQuestionsByPosition(questions) {
+            let tmpQuestions = [...questions];
+
+            tmpQuestions.sort((a, b) => {
+                if (a.position > b.position) {
                     return 1;
                 }
 
-                if (a.pos < b.pos) {
+                if (a.position < b.position) {
                     return -1;
                 }
 
                 return 0;
             })
+
+            return tmpQuestions;
+        },
+
+        getLastQuestionData(questions) {
+           let lastId = questions[0].id;
+           let lastPosition = questions[0].position;
+
+           questions.forEach((question) => {
+               lastId = question.id > lastId ? question.id : lastId;
+               lastPosition = question.position > lastPosition ? question.position : lastPosition;
+           });
+
+            return {lastId, lastPosition};
+        },
+
+        checkQuestionWasModified() {
+            this.wasQuestionsModified = !isEqual(this.sortQuestionsByPosition(this.questions), this.sortQuestionsByPosition(JSON.parse(JSON.stringify(this.originalQuestions))));
+        },
+
+        getDate()
+        {
+            return this.moment().format();
         }
+    },
+
+    created() {
+        this.questions = JSON.parse(JSON.stringify(this.originalQuestions));
+        this.questions = this.sortQuestionsByPosition(this.questions);
     }
 }
 </script>
 
-<style scoped>
+<style lang="scss">
 
 </style>

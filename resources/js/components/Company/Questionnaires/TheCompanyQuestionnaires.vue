@@ -60,7 +60,7 @@
 </template>
 
 <script>
-import {mapActions} from "vuex";
+import {mapActions, mapGetters} from "vuex";
 import QuestionnairesList from "../../Questionnaires/QuestionnairesList";
 import QuestionnairesStatisticCount from "../../Questionnaires/QuestionnairesStatisticCount";
 import CustomCard from "../../_General/CustomCard";
@@ -71,25 +71,20 @@ export default {
     components: {CustomCardTitle, CustomCard, QuestionnairesStatisticCount, QuestionnairesList},
 
     data() {
-        return {
-            questionnaires: [
-                {
-                    id: 1,
-                    name: 'Ankieta na zakończenie praktyki',
-                    description: 'testowy'
-                },
-                {
-                    id: 2,
-                    name: 'Test 2',
-                    description: 'testowy 2'
-                }
-            ]
-        }
+        return {}
+    },
+
+    computed: {
+      ...mapGetters({
+          questionnaires: 'questionnaire/questionnaires',
+          isQuestionnairesLoading: 'questionnaire/isQuestionnairesLoading',
+      }),
     },
 
     methods: {
         ...mapActions({
-            setBreadcrumbs: 'helpers/setBreadcrumbs'
+            setBreadcrumbs: 'helpers/setBreadcrumbs',
+            fetchQuestionnaires: 'questionnaire/fetchCompanyQuestionnaires'
         }),
     },
 
@@ -98,7 +93,13 @@ export default {
             {text: 'Panel', to: {name: 'panel'}, exact: true},
             {text: 'Firma', to: {name: 'company', params: {slug: this.$route.params.slug}}, exact: true},
             {text: 'Ankiety', to: {name: 'company-questionnaires'}, exact: true},
-        ])
+        ]);
+
+        this.fetchQuestionnaires(this.$route.params.slug).then(() => {
+
+        }).catch((error) => {
+
+        })
     }
 }
 </script>
