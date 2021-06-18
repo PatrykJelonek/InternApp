@@ -17,7 +17,7 @@
             <v-row v-if="expand" class="grey lighten-3 mb-1 rounded-0 px-3 pt-3">
                 <v-col cols="12">
                     <v-row>
-                        <v-col cols="12" v-for="(item, index) in questions" :key="item.id">
+                        <v-col v-if="questions.length > 0" cols="12" v-for="(item, index) in questions" :key="item.id">
                             <v-text-field
                                 v-model="questions[index].content"
                                 :label="'Pytanie nr '+ (index+1)"
@@ -26,22 +26,30 @@
                                 :value="item.content"
                                 hide-details
                                 class="d-flex align-center"
-                                :disabled="item.deleted_at !== null"
+                                @change="checkQuestionWasModified"
+                                :readonly="item.deleted_at !== null"
                             >
                                 <template v-slot:prepend>
                                     <v-btn-toggle dense background-color="transparent">
-                                        <v-btn icon @click="goUp(item.position, index)" :disabled="questions[index-1]=== undefined">
+                                        <v-btn icon @click="goUp(item.position, index)"
+                                               :disabled="questions[index-1]=== undefined">
                                             <v-icon>mdi-chevron-up</v-icon>
                                         </v-btn>
-                                        <v-btn icon @click="goDown(item.position, index)" :disabled="questions[index+1] === undefined">
+                                        <v-btn icon @click="goDown(item.position, index)"
+                                               :disabled="questions[index+1] === undefined">
                                             <v-icon>mdi-chevron-down</v-icon>
                                         </v-btn>
                                     </v-btn-toggle>
                                 </template>
                                 <template v-slot:append-outer>
-                                    <v-icon @click="item.deleted_at = item.deleted_at === null ? getDate() : null">{{item.deleted_at === null ? 'mdi-delete-outline' : 'mdi-delete-off-outline'}}</v-icon>
+                                    <v-icon @click="deleteElement(item, index)">
+                                        {{ item.deleted_at === null ? 'mdi-delete-outline' : 'mdi-delete-off-outline' }}
+                                    </v-icon>
                                 </template>
                             </v-text-field>
+                        </v-col>
+                        <v-col cols="12" class="text-centers" v-else>
+                            <p class="text-h6">Ta ankieta nie posiada jeszcze pytań!</p>
                         </v-col>
                     </v-row>
                     <v-row>
@@ -103,9 +111,12 @@ export default {
             this.questions.push({
                 id: lastId + 1,
                 content: '',
-                position: lastPosition + 1
+                position: lastPosition + 1,
+                created_at: null,
+                deleted_at: null,
             });
             this.questions = this.sortQuestionsByPosition(this.questions);
+            this.checkQuestionWasModified();
         },
 
         goUp(pos, key) {
@@ -139,13 +150,13 @@ export default {
         },
 
         getLastQuestionData(questions) {
-           let lastId = questions[0].id;
-           let lastPosition = questions[0].position;
+            let lastId = questions[0].id;
+            let lastPosition = questions[0].position;
 
-           questions.forEach((question) => {
-               lastId = question.id > lastId ? question.id : lastId;
-               lastPosition = question.position > lastPosition ? question.position : lastPosition;
-           });
+            questions.forEach((question) => {
+                lastId = question.id > lastId ? question.id : lastId;
+                lastPosition = question.position > lastPosition ? question.position : lastPosition;
+            });
 
             return {lastId, lastPosition};
         },
@@ -154,8 +165,29 @@ export default {
             this.wasQuestionsModified = !isEqual(this.sortQuestionsByPosition(this.questions), this.sortQuestionsByPosition(JSON.parse(JSON.stringify(this.originalQuestions))));
         },
 
-        getDate()
-        {
+        getQuestionOriginalPosition(question) {
+            this.originalQuestions.forEach((originalQuestion) => {
+                if (question.id === originalQuestion.id) {
+                    return originalQuestion.position;
+                }
+            });
+
+            return question.position;
+        },
+
+        deleteElement(item, index) {
+            if (item.created_at !== null) {
+                item.deleted_at = item.deleted_at === null ? this.getDate() : null;
+            } else {
+                this.questions[index+1].position = this.getQuestionOriginalPosition(this.questions[index+1]);
+                this.questions.splice(index, 1);
+            }
+
+            this.questions = this.sortQuestionsByPosition(this.questions);
+            this.checkQuestionWasModified();
+        },
+
+        getDate() {
             return this.moment().format();
         }
     },
@@ -168,5 +200,8 @@ export default {
 </script>
 
 <style lang="scss">
-
+.v-text-field input[readonly="readonly"] {
+    color: gray !important;
+    transition: color 0.2s ease-in-out;
+}
 </style>

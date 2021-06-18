@@ -46,11 +46,6 @@
                 </custom-card>
             </v-col>
         </v-row>
-        <v-row>
-            <v-col cols="12" class="d-flex justify-start align-center">
-                <h2 class="text-h6 font-weight-bold text-uppercase">Ankiety</h2>
-            </v-col>
-        </v-row>
         <v-row class="mt-7">
             <v-col cols="12">
                 <questionnaires-list :questionnaires="questionnaires"></questionnaires-list>
