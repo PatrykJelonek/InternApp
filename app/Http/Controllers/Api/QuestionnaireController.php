@@ -11,6 +11,7 @@ use App\Http\Requests\QuestionnaireGetQuestionnaireAnswerStatisticsByWeekRequest
 use App\Http\Requests\QuestionnaireGetQuestionnaireQuestionAnswersRequest as GetAnswersRequest;
 use App\Http\Requests\QuestionnaireGetQuestionnaireQuestionsRequest as GetQuestionsRequest;
 use App\Http\Requests\QuestionnaireGetQuestionnaireRequest as GetQuestionnaireRequest;
+use App\Http\Requests\QuestionnaireModifyQuestionnaireQuestionsRequest;
 use App\Http\Requests\QuestionnaireUpdateQuestionnaireQuestionRequest as UpdateQuestionRequest;
 use App\Http\Requests\QuestionnaireUpdateQuestionnaireRequest as UpdateQuestionnaireRequest;
 use App\Repositories\QuestionnairesRepository;
@@ -202,6 +203,17 @@ class QuestionnaireController extends Controller
     public function getQuestionnaireAnswerStatisticsByWeek(QuestionnaireGetQuestionnaireAnswerStatisticsByWeekRequest $request, int $questionnaireId)
     {
         $result = $this->questionnairesRepository->getQuestionnaireAnswerStatisticsByWeek($questionnaireId);
+
+        if (!empty($result)) {
+            return response($result, Response::HTTP_OK);
+        }
+
+        return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+
+    public function modifyQuestionnaireQuestions(QuestionnaireModifyQuestionnaireQuestionsRequest $request, int $questionnaireId)
+    {
+        $result = $this->questionnairesService->modifyQuestionnaireQuestions($questionnaireId, $request->input('questions'));
 
         if (!empty($result)) {
             return response($result, Response::HTTP_OK);

@@ -12,9 +12,7 @@ use App\Models\Questionnaire;
 use App\Models\QuestionnaireQuestion;
 use App\Models\QuestionnaireQuestionAnswer;
 use App\Repositories\Interfaces\QuestionnairesRepositoryInterface;
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\Facades\DB;
 
 class QuestionnairesRepository implements QuestionnairesRepositoryInterface
 {
@@ -23,7 +21,6 @@ class QuestionnairesRepository implements QuestionnairesRepositoryInterface
     {
         return Questionnaire::all();
     }
-
 
     public function getQuestionnaire(int $questionnaireId)
     {
@@ -37,7 +34,13 @@ class QuestionnairesRepository implements QuestionnairesRepositoryInterface
 
     public function getQuestionnaireQuestions(int $questionnaireId)
     {
-        return Questionnaire::find($questionnaireId)->questions;
+        $questions = Questionnaire::with(['questions'])->where(['id' => $questionnaireId])->first()->questions;
+
+        if (count($questions) > 0) {
+            $questions = $questions->sortBy('position');
+        }
+
+        return $questions->values()->all();
     }
 
     public function getQuestionAnswers(int $questionId)

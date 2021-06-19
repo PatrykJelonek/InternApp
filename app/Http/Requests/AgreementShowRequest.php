@@ -18,7 +18,6 @@ class AgreementShowRequest extends FormRequest
 
     public function all($keys = null): array
     {
-        clock()->info('DUMO', ['dump' => (array) $this->route()]);
         $data = parent::all();
         $data['slug'] = $this->route('slug');
 

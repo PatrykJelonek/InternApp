@@ -98,6 +98,7 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::get('/companies/{slug}/workers','Api\CompanyController@getCompanyWorkers');
     Route::get('/companies/{slug}/agreements','Api\CompanyController@getAgreements');
     Route::get('/companies/{slug}/questionnaires','Api\CompanyController@getCompanyQuestionnaires');
+    Route::post('/companies/{slug}/questionnaires','Api\CompanyController@createCompanyQuestionnaire');
 
     # Offers
     Route::get('/offers','Api\OfferController@index');
@@ -130,6 +131,7 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::get('/universities/{slug}/faculties','Api\UniversityController@getFaculties');
     Route::get('/universities/{slug}/offers','Api\UniversityController@getOffers');
     Route::get('/universities/{slug}/questionnaires','Api\UniversityController@getUniversityQuestionnaires');
+    Route::post('/universities/{slug}/questionnaires','Api\UniversityController@createUniversityQuestionnaire');
 
     # Student
     Route::post('/students/internships', 'Api\StudentController@createStudentOwnInternship');
@@ -171,6 +173,7 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::get('/questionnaires','Api\QuestionnaireController@getQuestionnaires');
     Route::get('/questionnaires/{questionnaireId}','Api\QuestionnaireController@getQuestionnaire');
     Route::get('/questionnaires/{questionnaireId}/questions','Api\QuestionnaireController@getQuestionnaireQuestions');
+    Route::post('/questionnaires/{questionnaireId}/questions','Api\QuestionnaireController@modifyQuestionnaireQuestions');
     Route::get('/questionnaires/{questionnaireId}/questions/{questionId}','Api\QuestionnaireController@getQuestionnaireQuestion');
     Route::get('/questionnaires/{questionnaireId}/questions/{questionId}/answers','Api\QuestionnaireController@getQuestionnaireQuestionAnswers');
     Route::get('/questionnaires/{questionnaireId}/questions/{questionId}/answers/{answerId}','Api\QuestionnaireController@getQuestionnaireQuestionAnswer');

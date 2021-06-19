@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UniversityAgreementsRequest;
+use App\Http\Requests\UniversityCreateUniversityQuestionnaireRequest;
 use App\Http\Requests\UniversityGetUniversityQuestionnairesRequest;
 use App\Http\Requests\UniversityInternshipsRequest;
 use App\Http\Requests\UniversityStudentsRequest;
@@ -14,6 +15,7 @@ use App\Models\Role;
 use App\Models\University;
 use App\Models\User;
 use App\Repositories\UniversityRepository;
+use App\Services\QuestionnairesService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Arr;
@@ -29,13 +31,20 @@ class UniversityController extends Controller
     private $universityRepository;
 
     /**
+     * @var QuestionnairesService
+     */
+    private $questionnairesService;
+
+    /**
      * UniversityController constructor.
      *
-     * @param UniversityRepository $universityRepository
+     * @param UniversityRepository  $universityRepository
+     * @param QuestionnairesService $questionnairesService
      */
-    public function __construct(UniversityRepository $universityRepository)
+    public function __construct(UniversityRepository $universityRepository, QuestionnairesService $questionnairesService)
     {
         $this->universityRepository = $universityRepository;
+        $this->questionnairesService = $questionnairesService;
     }
 
     /**
@@ -181,7 +190,7 @@ class UniversityController extends Controller
      */
     public function show($slug): Response
     {
-        $university = $this->universityRepository->one($slug);
+        $university = $this->universityRepository->getUniversityBySlug($slug);
 
         if ($university !== null) {
             return response($university, Response::HTTP_OK);
@@ -506,6 +515,21 @@ class UniversityController extends Controller
         }
 
         return \response(null, Response::HTTP_NOT_FOUND);
+    }
+
+    public function createUniversityQuestionnaire(UniversityCreateUniversityQuestionnaireRequest $request, string $slug): Response
+    {
+        $university = $this->universityRepository->getUniversityBySlug($slug);
+
+        if ($university !== null) {
+            $questionnaire = $this->questionnairesService->createQuestionnaire($request->input('name'), $request->input('description'), null, $university->id);
+
+            if ($questionnaire !== null) {
+                return response($questionnaire, Response::HTTP_CREATED);
+            }
+        }
+
+        return \response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
     /**

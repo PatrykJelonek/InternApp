@@ -2,18 +2,17 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Requests\CompanyCreateCompanyQuestionnaireRequest as CreateQuestionnaireRequest;
 use App\Http\Requests\CompanyGetCompanyQuestionnairesRequest;
 use App\Http\Requests\CompanyOffersRequest;
 use App\Http\Requests\CompanyShowRequest;
 use App\Http\Requests\GetCompanyWorkersRequest;
-use App\Models\Agreement;
 use App\Models\Company;
 use App\Http\Controllers\Controller;
 use App\Models\Internship;
-use App\Models\Offer;
 use App\Models\Student;
-use App\Models\University;
 use App\Repositories\CompanyRepository;
+use App\Services\QuestionnairesService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Arr;
@@ -27,13 +26,20 @@ class CompanyController extends Controller
     private $companyRepository;
 
     /**
+     * @var QuestionnairesService
+     */
+    private $questionnairesService;
+
+    /**
      * CompanyController constructor.
      *
      * @param CompanyRepository $companyRepository
+     * @param QuestionnairesService $questionnairesService
      */
-    public function __construct(CompanyRepository $companyRepository)
+    public function __construct(CompanyRepository $companyRepository, QuestionnairesService $questionnairesService)
     {
         $this->companyRepository = $companyRepository;
+        $this->questionnairesService = $questionnairesService;
     }
 
     /**
@@ -136,7 +142,7 @@ class CompanyController extends Controller
      */
     public function show(CompanyShowRequest $request, $slug)
     {
-        $company = $this->companyRepository->getOneBySlug($slug);
+        $company = $this->companyRepository->getCompanyBySlug($slug);
 
         if ($company !== null) {
             return response($company, Response::HTTP_OK);
@@ -396,5 +402,24 @@ class CompanyController extends Controller
         }
 
         return \response(null, Response::HTTP_NOT_FOUND);
+    }
+
+    public function createCompanyQuestionnaire(CreateQuestionnaireRequest $request, string $slug): Response
+    {
+        $company = $this->companyRepository->getCompanyBySlug($slug);
+
+        if ($company !== null) {
+            $questionnaire = $this->questionnairesService->createQuestionnaire(
+                $request->input('name'),
+                $request->input('description'),
+                $company->id
+            );
+
+            if ($questionnaire !== null) {
+                return response($questionnaire, Response::HTTP_CREATED);
+            }
+        }
+
+        return \response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 }

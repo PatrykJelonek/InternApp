@@ -1,5 +1,7 @@
 <template>
     <v-container fluid class="pa-0">
+        <create-questionnaire-dialog :is-company-questionnaire="true"></create-questionnaire-dialog>
+
         <v-row>
             <v-col cols="12" class="d-flex justify-start align-center">
                 <h2 class="text-h6 font-weight-bold text-uppercase">Statystyki</h2>
@@ -60,10 +62,13 @@ import QuestionnairesList from "../../Questionnaires/QuestionnairesList";
 import QuestionnairesStatisticCount from "../../Questionnaires/QuestionnairesStatisticCount";
 import CustomCard from "../../_General/CustomCard";
 import CustomCardTitle from "../../_General/CustomCardTitle";
+import CreateQuestionnaireDialog from "../../Questionnaires/CreateQuestionnaireDialog";
 
 export default {
     name: "TheCompanyQuestionnaires",
-    components: {CustomCardTitle, CustomCard, QuestionnairesStatisticCount, QuestionnairesList},
+    components: {
+        CreateQuestionnaireDialog,
+        CustomCardTitle, CustomCard, QuestionnairesStatisticCount, QuestionnairesList},
 
     data() {
         return {}

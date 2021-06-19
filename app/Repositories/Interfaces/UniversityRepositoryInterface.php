@@ -10,7 +10,7 @@ namespace App\Repositories\Interfaces;
 
 interface UniversityRepositoryInterface
 {
-    public function one(string $slug);
+    public function getUniversityBySlug(string $slug);
 
     public function getStudents(string $slug);
 

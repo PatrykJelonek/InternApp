@@ -3,8 +3,10 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Questionnaire extends Model
@@ -22,5 +24,15 @@ class Questionnaire extends Model
     public function roles(): BelongsToMany
     {
         return $this->belongsToMany('App\Models\Role', 'questionnaires_roles', 'questionnaire_id','role_id');
+    }
+
+    public function company():  BelongsTo
+    {
+        return $this->belongsTo('App\Models\Company','company_id', 'id');
+    }
+
+    public function university():  BelongsTo
+    {
+        return $this->belongsTo('App\Models\University','university_id', 'id');
     }
 }

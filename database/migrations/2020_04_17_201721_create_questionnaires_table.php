@@ -17,6 +17,10 @@ class CreateQuestionnairesTable extends Migration
             $table->id();
             $table->string('name', 64)->unique();
             $table->longText('description');
+            $table->foreignId('university_id')->nullable();
+            $table->foreign('university_id')->references('id')->on('universities');
+            $table->foreignId('company_id')->nullable();
+            $table->foreign('company_id')->references('id')->on('companies');
             $table->timestamps();
             $table->softDeletes();
         });

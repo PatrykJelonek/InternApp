@@ -12,6 +12,7 @@ use App\Constants\RoleConstants;
 use App\Models\Agreement;
 use App\Models\Faculty;
 use App\Models\Internship;
+use App\Models\Questionnaire;
 use App\Models\University;
 use App\Models\User;
 use App\Repositories\Interfaces\UniversityRepositoryInterface;
@@ -28,7 +29,7 @@ class UniversityRepository implements UniversityRepositoryInterface
      *
      * @return mixed
      */
-    public function one(string $slug)
+    public function getUniversityBySlug(string $slug)
     {
         $university = University::where('slug', $slug)->with(['type', 'city'])->first();
 
@@ -201,8 +202,8 @@ class UniversityRepository implements UniversityRepositoryInterface
 
     public function getQuestionnaires(string $slug)
     {
-        $university = University::where(['slug' => $slug])->with(['questionnaires.questions'])->first();
-
-        return $university->questionnaires;
+        return Questionnaire::with(['questions', 'university'])->whereHas('university', function (Builder $query) use ($slug) {
+            $query->where(['slug' => $slug]);
+        })->get();
     }
 }

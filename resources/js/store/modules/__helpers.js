@@ -14,6 +14,7 @@ export default {
         rejectAgreementDialog: false,
         applyInternshipDialog: false,
         createOwnAgreementDialog: false,
+        createQuestionnaireDialog: false,
         fillHeight: false,
         navigationDrawer: true,
         errorMessage: '',
@@ -57,6 +58,10 @@ export default {
 
         applyInternshipDialog(state) {
             return state.applyInternshipDialog;
+        },
+
+        createQuestionnaireDialog(state) {
+            return state.createQuestionnaireDialog;
         },
 
         errorMessage(state) {
@@ -125,6 +130,10 @@ export default {
             state.applyInternshipDialog = value;
         },
 
+        TOGGLE_CREATE_QUESTIONNAIRE_DIALOG(state, value) {
+            state.createQuestionnaireDialog = value;
+        },
+
         SET_ERROR_MESSAGE(state, value) {
             state.errorMessage = value;
         },
@@ -189,6 +198,10 @@ export default {
 
         toggleNavigationDrawer({commit}, value) {
             commit('TOGGLE_NAVIGATION_DRAWER', value);
+        },
+
+        toggleCreateQuestionnaireDialog({commit}, value) {
+            commit('TOGGLE_CREATE_QUESTIONNAIRE_DIALOG', value);
         },
 
         parseErrorMessage({commit}, status) {

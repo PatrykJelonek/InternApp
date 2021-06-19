@@ -11,6 +11,7 @@ namespace App\Repositories;
 use App\Models\Agreement;
 use App\Models\Company;
 use App\Models\Offer;
+use App\Models\Questionnaire;
 use App\Models\User;
 use App\Repositories\Interfaces\CompanyRepositoryInterface;
 use Carbon\Carbon;
@@ -19,12 +20,12 @@ use Illuminate\Support\Str;
 
 class CompanyRepository implements CompanyRepositoryInterface
 {
-    public function getOneById(int $id)
+    public function getCompanyById(int $id)
     {
         return Company::find($id);
     }
 
-    public function getOneBySlug(string $slug)
+    public function getCompanyBySlug(string $slug)
     {
         return Company::with(['city', 'category'])->where(['slug' => $slug])->first();
     }
@@ -89,7 +90,7 @@ class CompanyRepository implements CompanyRepositoryInterface
         ?array $statuses = null,
         ?int $limit = null
     ) {
-        $company = $this->getOneBySlug($slug);
+        $company = $this->getCompanyBySlug($slug);
 
         if ($company === null) {
             return null;
@@ -178,8 +179,8 @@ class CompanyRepository implements CompanyRepositoryInterface
 
     public function getCompanyQuestionnaires(string $slug)
     {
-        $company = Company::where(['slug' => $slug])->with(['questionnaires.questions'])->first();
-
-        return $company->questionnaires;
+        return Questionnaire::with(['questions', 'company'])->whereHas('company', function (Builder $query) use ($slug) {
+            $query->where(['slug' => $slug]);
+        })->get();
     }
 }

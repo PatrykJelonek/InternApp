@@ -77,7 +77,7 @@ class AgreementService
     {
         DB::beginTransaction();
 
-        $university = $this->universityRepository->one($data['universitySlug']);
+        $university = $this->universityRepository->getUniversityBySlug($data['universitySlug']);
         $agreementStatus = $this->agreementStatusRepository->getStatusByName('new');
 
         $this->offerRepository->updateOffer(

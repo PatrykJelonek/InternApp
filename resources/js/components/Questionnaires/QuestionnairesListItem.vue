@@ -2,8 +2,8 @@
     <v-card color="transparent" flat>
         <v-row no-gutters>
             <v-col>
-                <v-card-title class="text-h6">{{ name }}</v-card-title>
-                <v-card-subtitle class="pb-0">{{ description }}</v-card-subtitle>
+                <v-card-title class="text-h6 pl-1">{{ name }}</v-card-title>
+                <v-card-subtitle class="pb-0  pl-1">{{ description }}</v-card-subtitle>
             </v-col>
             <v-col class="d-flex justify-end align-center">
                 <v-btn-toggle borderless dense>
@@ -17,40 +17,47 @@
             <v-row v-if="expand" class="grey lighten-3 mb-1 rounded-0 px-3 pt-3">
                 <v-col cols="12">
                     <v-row>
-                        <v-col v-if="questions.length > 0" cols="12" v-for="(item, index) in questions" :key="item.id">
-                            <v-text-field
-                                v-model="questions[index].content"
-                                :label="'Pytanie nr '+ (index+1)"
-                                dense
-                                outlined
-                                :value="item.content"
-                                hide-details
-                                class="d-flex align-center"
-                                @change="checkQuestionWasModified"
-                                :readonly="item.deleted_at !== null"
-                            >
-                                <template v-slot:prepend>
-                                    <v-btn-toggle dense background-color="transparent">
-                                        <v-btn icon @click="goUp(item.position, index)"
-                                               :disabled="questions[index-1]=== undefined">
-                                            <v-icon>mdi-chevron-up</v-icon>
-                                        </v-btn>
-                                        <v-btn icon @click="goDown(item.position, index)"
-                                               :disabled="questions[index+1] === undefined">
-                                            <v-icon>mdi-chevron-down</v-icon>
-                                        </v-btn>
-                                    </v-btn-toggle>
-                                </template>
-                                <template v-slot:append-outer>
-                                    <v-icon @click="deleteElement(item, index)">
-                                        {{ item.deleted_at === null ? 'mdi-delete-outline' : 'mdi-delete-off-outline' }}
-                                    </v-icon>
-                                </template>
-                            </v-text-field>
-                        </v-col>
-                        <v-col cols="12" class="text-centers" v-else>
-                            <p class="text-h6">Ta ankieta nie posiada jeszcze pytań!</p>
-                        </v-col>
+                        <validation-observer ref="observer" v-slot="{ validate }">
+                            <v-col v-if="questions.length > 0" cols="12" v-for="(item, index) in questions"
+                                   :key="item.id">
+                                <validation-provider v-slot="{ errors }" :vid="'content'+index" rules="required">
+                                    <v-text-field
+                                        v-model="questions[index].content"
+                                        :label="'Pytanie nr '+ (index+1)"
+                                        dense
+                                        outlined
+                                        :value="item.content"
+                                        hide-details
+                                        class="d-flex align-center"
+                                        @change="checkQuestionWasModified"
+                                        :readonly="item.deleted_at !== null"
+                                    >
+                                        <template v-slot:prepend>
+                                            <v-btn-toggle dense background-color="transparent">
+                                                <v-btn icon @click="goUp(item.position, index)"
+                                                       :disabled="questions[index-1]=== undefined">
+                                                    <v-icon>mdi-chevron-up</v-icon>
+                                                </v-btn>
+                                                <v-btn icon @click="goDown(item.position, index)"
+                                                       :disabled="questions[index+1] === undefined">
+                                                    <v-icon>mdi-chevron-down</v-icon>
+                                                </v-btn>
+                                            </v-btn-toggle>
+                                        </template>
+                                        <template v-slot:append-outer>
+                                            <v-icon @click="deleteElement(item, index)">
+                                                {{
+                                                    item.deleted_at === null ? 'mdi-delete-outline' : 'mdi-delete-off-outline'
+                                                }}
+                                            </v-icon>
+                                        </template>
+                                    </v-text-field>
+                                </validation-provider>
+                            </v-col>
+                            <v-col cols="12" class="text-centers" v-else>
+                                <p class="text-h6">Ta ankieta nie posiada jeszcze pytań!</p>
+                            </v-col>
+                        </validation-observer>
                     </v-row>
                     <v-row>
                         <v-col cols="12" class="text-center">
@@ -74,7 +81,7 @@
                     </v-row>
                     <v-row>
                         <v-col cols="12" class="text-center">
-                            <v-btn small outlined @click="addQuestionInput" :disabled="!wasQuestionsModified">
+                            <v-btn small outlined @click="modifyQuestions" :disabled="!wasQuestionsModified">
                                 Zapisz
                             </v-btn>
                         </v-col>
@@ -87,18 +94,24 @@
 
 <script>
 import {isEqual} from "lodash";
-import moment from "moment";
 import CustomCard from "../_General/CustomCard";
 import ExpandCard from "../_Helpers/ExpandCard";
 import VCardHeader from "../_Helpers/VCardHeader";
+import {mapActions} from "vuex";
+import {extend, setInteractionMode, ValidationProvider, ValidationObserver} from "vee-validate";
+
+setInteractionMode('eager');
+
 
 export default {
     name: "QuestionnairesListItem",
-    components: {VCardHeader, ExpandCard, CustomCard},
-    props: ['name', 'description', 'isExpand', 'originalQuestions'],
+    components: {VCardHeader, ExpandCard, CustomCard, ValidationProvider, ValidationObserver},
+    props: ['name', 'description', 'isExpand', 'originalQuestions', 'questionnaireId'],
 
     data() {
         return {
+            nameToSave: null,
+            descriptionToSave: null,
             questions: [],
             expand: false,
             wasQuestionsModified: false,
@@ -106,6 +119,11 @@ export default {
     },
 
     methods: {
+        ...mapActions({
+            modifyQuestionnaireQuestions: 'questionnaire/modifyQuestionnaireQuestions',
+            setSnackbar: 'snackbar/setSnackbar'
+        }),
+
         addQuestionInput() {
             let {lastId, lastPosition} = this.getLastQuestionData(this.questions);
             this.questions.push({
@@ -150,8 +168,8 @@ export default {
         },
 
         getLastQuestionData(questions) {
-            let lastId = questions[0].id;
-            let lastPosition = questions[0].position;
+            let lastId = questions[0] ? questions[0].id : 0;
+            let lastPosition = questions[0] ? questions[0].position : 1;
 
             questions.forEach((question) => {
                 lastId = question.id > lastId ? question.id : lastId;
@@ -179,7 +197,9 @@ export default {
             if (item.created_at !== null) {
                 item.deleted_at = item.deleted_at === null ? this.getDate() : null;
             } else {
-                this.questions[index+1].position = this.getQuestionOriginalPosition(this.questions[index+1]);
+                if (this.questions[index + 1] !== undefined) {
+                    this.questions[index + 1].position = this.getQuestionOriginalPosition(this.questions[index + 1]);
+                }
                 this.questions.splice(index, 1);
             }
 
@@ -189,6 +209,19 @@ export default {
 
         getDate() {
             return this.moment().format();
+        },
+
+        async modifyQuestions() {
+            await this.modifyQuestionnaireQuestions({
+                id: this.questionnaireId,
+                questions: this.questions
+            }).then((response) => {
+                console.log(response);
+                this.setSnackbar({message: 'Pytania zostały zapisane!', color: 'success'});
+            }).catch((response) => {
+                console.log(response);
+                this.setSnackbar({message: 'Nie udało się zapisać pytań!', color: 'error'});
+            });
         }
     },
 

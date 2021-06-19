@@ -13,15 +13,15 @@ class CreateUniversitiesQuestionnairesTable extends Migration
      */
     public function up()
     {
-        Schema::create('universities_questionnaires', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('university_id');
-            $table->foreign('university_id')->references('id')->on('universities');
-            $table->foreignId('questionnaire_id');
-            $table->foreign('questionnaire_id')->references('id')->on('questionnaires');
-            $table->timestamps();
-            $table->softDeletes();
-        });
+//        Schema::create('universities_questionnaires', function (Blueprint $table) {
+//            $table->id();
+//            $table->foreignId('university_id');
+//            $table->foreign('university_id')->references('id')->on('universities');
+//            $table->foreignId('questionnaire_id');
+//            $table->foreign('questionnaire_id')->references('id')->on('questionnaires');
+//            $table->timestamps();
+//            $table->softDeletes();
+//        });
     }
 
     /**

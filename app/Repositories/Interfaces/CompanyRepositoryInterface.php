@@ -11,9 +11,9 @@ use App\Models\University;
 
 interface CompanyRepositoryInterface
 {
-    public function getOneById(int $id);
+    public function getCompanyById(int $id);
 
-    public function getOneBySlug(string $slug);
+    public function getCompanyBySlug(string $slug);
 
     public function getAll();
 
