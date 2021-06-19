@@ -16,10 +16,9 @@
         <v-expand-transition>
             <v-row v-if="expand" class="grey lighten-3 mb-1 rounded-0 px-3 pt-3">
                 <v-col cols="12">
-                    <v-row>
-                        <validation-observer ref="observer" v-slot="{ validate }">
-                            <v-col v-if="questions.length > 0" cols="12" v-for="(item, index) in questions"
-                                   :key="item.id">
+                    <validation-observer ref="observer" v-slot="{ validate }">
+                        <v-row v-for="(item, index) in questions" :key="item.id">
+                            <v-col v-if="questions.length > 0" cols="12">
                                 <validation-provider v-slot="{ errors }" :vid="'content'+index" rules="required">
                                     <v-text-field
                                         v-model="questions[index].content"
@@ -27,7 +26,8 @@
                                         dense
                                         outlined
                                         :value="item.content"
-                                        hide-details
+                                        hide-details="auto"
+                                        :error-messages="errors"
                                         class="d-flex align-center"
                                         @change="checkQuestionWasModified"
                                         :readonly="item.deleted_at !== null"
@@ -57,8 +57,9 @@
                             <v-col cols="12" class="text-centers" v-else>
                                 <p class="text-h6">Ta ankieta nie posiada jeszcze pytań!</p>
                             </v-col>
-                        </validation-observer>
-                    </v-row>
+
+                        </v-row>
+                    </validation-observer>
                     <v-row>
                         <v-col cols="12" class="text-center">
                             <v-tooltip bottom color="tooltip-background">
@@ -212,15 +213,17 @@ export default {
         },
 
         async modifyQuestions() {
-            await this.modifyQuestionnaireQuestions({
-                id: this.questionnaireId,
-                questions: this.questions
-            }).then((response) => {
-                console.log(response);
-                this.setSnackbar({message: 'Pytania zostały zapisane!', color: 'success'});
-            }).catch((response) => {
-                console.log(response);
-                this.setSnackbar({message: 'Nie udało się zapisać pytań!', color: 'error'});
+            await this.$refs.observer.validate().then((isValid) => {
+                if (isValid) {
+                    this.modifyQuestionnaireQuestions({
+                        id: this.questionnaireId,
+                        questions: this.questions
+                    }).then((response) => {
+                        this.setSnackbar({message: 'Pytania zostały zapisane!', color: 'success'});
+                    }).catch((response) => {
+                        this.setSnackbar({message: 'Nie udało się zapisać pytań!', color: 'error'});
+                    });
+                }
             });
         }
     },
