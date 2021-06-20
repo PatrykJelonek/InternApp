@@ -20,6 +20,7 @@ class CreateQuestionnaireQuestionAnswersTable extends Migration
             $table->foreignId('user_id');
             $table->foreign('user_id')->references('id')->on('users');
             $table->string('content', 255);
+            $table->uuid('session_uuid');
             $table->timestamps();
             $table->softDeletes();
         });

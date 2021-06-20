@@ -17,74 +17,74 @@
             <v-row v-if="expand" class="grey lighten-3 mb-1 rounded-0 px-3 pt-3">
                 <v-col cols="12">
                     <validation-observer ref="observer" v-slot="{ validate }">
-                        <v-row v-for="(item, index) in questions" :key="item.id">
-                            <v-col v-if="questions.length > 0" cols="12">
-                                <validation-provider v-slot="{ errors }" :vid="'content'+index" rules="required">
-                                    <v-text-field
-                                        v-model="questions[index].content"
-                                        :label="'Pytanie nr '+ (index+1)"
-                                        dense
-                                        outlined
-                                        :value="item.content"
-                                        hide-details="auto"
-                                        :error-messages="errors"
-                                        class="d-flex align-center"
-                                        @change="checkQuestionWasModified"
-                                        :readonly="item.deleted_at !== null"
-                                    >
-                                        <template v-slot:prepend>
-                                            <v-btn-toggle dense background-color="transparent">
-                                                <v-btn icon @click="goUp(item.position, index)"
-                                                       :disabled="questions[index-1]=== undefined">
-                                                    <v-icon>mdi-chevron-up</v-icon>
-                                                </v-btn>
-                                                <v-btn icon @click="goDown(item.position, index)"
-                                                       :disabled="questions[index+1] === undefined">
-                                                    <v-icon>mdi-chevron-down</v-icon>
-                                                </v-btn>
-                                            </v-btn-toggle>
-                                        </template>
-                                        <template v-slot:append-outer>
-                                            <v-icon @click="deleteElement(item, index)">
-                                                {{
-                                                    item.deleted_at === null ? 'mdi-delete-outline' : 'mdi-delete-off-outline'
-                                                }}
-                                            </v-icon>
-                                        </template>
-                                    </v-text-field>
-                                </validation-provider>
-                            </v-col>
-                            <v-col cols="12" class="text-centers" v-else>
-                                <p class="text-h6">Ta ankieta nie posiada jeszcze pytań!</p>
-                            </v-col>
-
-                        </v-row>
+                        <template v-if="questions.length > 0">
+                            <v-row v-for="(item, index) in questions" :key="item.id">
+                                <v-col cols="12">
+                                    <validation-provider v-slot="{ errors }" :vid="'content'+index" rules="required">
+                                        <v-text-field
+                                            v-model="questions[index].content"
+                                            :label="'Pytanie nr '+ (index+1)"
+                                            dense
+                                            outlined
+                                            :value="item.content"
+                                            hide-details="auto"
+                                            :error-messages="errors"
+                                            class="d-flex align-center"
+                                            @change="checkQuestionWasModified"
+                                            :readonly="item.deleted_at !== null && item.deleted_at !== undefined"
+                                        >
+                                            <template v-slot:prepend>
+                                                <v-btn-toggle dense background-color="transparent">
+                                                    <v-btn icon @click="goUp(item.position, index)"
+                                                           :disabled="questions[index-1]=== undefined">
+                                                        <v-icon>mdi-chevron-up</v-icon>
+                                                    </v-btn>
+                                                    <v-btn icon @click="goDown(item.position, index)"
+                                                           :disabled="questions[index+1] === undefined">
+                                                        <v-icon>mdi-chevron-down</v-icon>
+                                                    </v-btn>
+                                                </v-btn-toggle>
+                                            </template>
+                                            <template v-slot:append-outer>
+                                                <v-icon @click="deleteElement(item, index)">
+                                                    {{
+                                                        item.deleted_at !== null && item.deleted_at !== undefined ? 'mdi-delete-off-outline' : 'mdi-delete-outline'
+                                                    }}
+                                                </v-icon>
+                                            </template>
+                                        </v-text-field>
+                                    </validation-provider>
+                                </v-col>
+                            </v-row>
+                        </template>
+                        <template v-else>
+                            <v-row>
+                                <v-col cols="12" class="text-center">
+                                    <p class="subtitle-2 text--disabled">Ta ankieta nie posiada jeszcze pytań!</p>
+                                </v-col>
+                            </v-row>
+                        </template>
                     </validation-observer>
                     <v-row>
                         <v-col cols="12" class="text-center">
-                            <v-tooltip bottom color="tooltip-background">
-                                <template v-slot:activator="{ on, attrs }">
-                                    <v-btn
-                                        icon
-                                        dark
-                                        color="secondary"
-                                        v-bind="attrs"
-                                        v-on="on"
-                                        @click="addQuestionInput"
-                                        @change="checkQuestionWasModified"
-                                    >
-                                        <v-icon>mdi-plus</v-icon>
-                                    </v-btn>
-                                </template>
-                                <span>Dodaj pytanie</span>
-                            </v-tooltip>
-                        </v-col>
-                    </v-row>
-                    <v-row>
-                        <v-col cols="12" class="text-center">
-                            <v-btn small outlined @click="modifyQuestions" :disabled="!wasQuestionsModified">
-                                Zapisz
-                            </v-btn>
+                            <v-btn-toggle dense background-color="transparent">
+                                <v-btn
+                                    outlined
+                                    @click="addQuestionInput"
+                                    @change="checkQuestionWasModified"
+                                >
+                                    <v-icon dense class="mr-2">mdi-plus</v-icon>
+                                    Dodaj
+                                </v-btn>
+                                <v-btn
+                                    outlined
+                                    @click="modifyQuestions"
+                                    :disabled="!wasQuestionsModified"
+                                >
+                                    Zapisz
+                                    <v-icon dense class="ml-2">mdi-content-save-outline</v-icon>
+                                </v-btn>
+                            </v-btn-toggle>
                         </v-col>
                     </v-row>
                 </v-col>
@@ -98,7 +98,7 @@ import {isEqual} from "lodash";
 import CustomCard from "../_General/CustomCard";
 import ExpandCard from "../_Helpers/ExpandCard";
 import VCardHeader from "../_Helpers/VCardHeader";
-import {mapActions} from "vuex";
+import {mapActions, mapGetters} from "vuex";
 import {extend, setInteractionMode, ValidationProvider, ValidationObserver} from "vee-validate";
 
 setInteractionMode('eager');
@@ -119,10 +119,17 @@ export default {
         }
     },
 
+    computed: {
+        ...mapGetters({
+            questionnaires: 'questionnaire/questionnaires'
+        })
+    },
+
     methods: {
         ...mapActions({
             modifyQuestionnaireQuestions: 'questionnaire/modifyQuestionnaireQuestions',
-            setSnackbar: 'snackbar/setSnackbar'
+            setQuestionnaireQuestions: 'questionnaire/setQuestionnaireQuestions',
+            setSnackbar: 'snackbar/setSnackbar',
         }),
 
         addQuestionInput() {
@@ -212,20 +219,30 @@ export default {
             return this.moment().format();
         },
 
+        normalizePosition() {
+            let position = 1;
+            this.questions.forEach((question) => {
+                question.position = position++;
+            })
+        },
+
         async modifyQuestions() {
             await this.$refs.observer.validate().then((isValid) => {
                 if (isValid) {
+                    this.normalizePosition();
                     this.modifyQuestionnaireQuestions({
                         id: this.questionnaireId,
                         questions: this.questions
                     }).then((response) => {
+                        this.setQuestionnaireQuestions({id: this.questionnaireId, questions: response.data});
+                        this.questions = JSON.parse(JSON.stringify(this.questionnaires.find(el => el.id === this.questionnaireId).questions));
                         this.setSnackbar({message: 'Pytania zostały zapisane!', color: 'success'});
                     }).catch((response) => {
                         this.setSnackbar({message: 'Nie udało się zapisać pytań!', color: 'error'});
                     });
                 }
             });
-        }
+        },
     },
 
     created() {

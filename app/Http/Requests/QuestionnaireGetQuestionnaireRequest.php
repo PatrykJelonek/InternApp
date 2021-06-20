@@ -15,7 +15,7 @@ class QuestionnaireGetQuestionnaireRequest extends FormRequest
      */
     public function authorize()
     {
-        return Auth::user()->hasRole([RoleConstants::ROLE_ADMIN]);
+        return true;
     }
 
     /**

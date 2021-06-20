@@ -8,7 +8,7 @@
 
         <!-- Website Main Content -->
         <v-main>
-            <v-container fluid class="px-15 py-10">
+            <v-container fluid v-bind:class="this.$vuetify.breakpoint.mdAndDown ? 'px-2 py-5' : 'px-15 py-10'">
                 <router-view></router-view>
             </v-container>
         </v-main>

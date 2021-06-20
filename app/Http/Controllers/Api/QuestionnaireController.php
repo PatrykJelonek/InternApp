@@ -14,6 +14,7 @@ use App\Http\Requests\QuestionnaireGetQuestionnaireRequest as GetQuestionnaireRe
 use App\Http\Requests\QuestionnaireModifyQuestionnaireQuestionsRequest;
 use App\Http\Requests\QuestionnaireUpdateQuestionnaireQuestionRequest as UpdateQuestionRequest;
 use App\Http\Requests\QuestionnaireUpdateQuestionnaireRequest as UpdateQuestionnaireRequest;
+use App\Http\Requests\QuestionnaireAddQuestionnaireAnswersRequest as AddAnswersRequest;
 use App\Repositories\QuestionnairesRepository;
 use App\Services\QuestionnairesService;
 use Illuminate\Contracts\Foundation\Application;
@@ -200,8 +201,16 @@ class QuestionnaireController extends Controller
         return response(null, Response::HTTP_OK);
     }
 
-    public function getQuestionnaireAnswerStatisticsByWeek(QuestionnaireGetQuestionnaireAnswerStatisticsByWeekRequest $request, int $questionnaireId)
-    {
+    /**
+     * @param QuestionnaireGetQuestionnaireAnswerStatisticsByWeekRequest $request
+     * @param int                                                        $questionnaireId
+     *
+     * @return Application|ResponseFactory|Response
+     */
+    public function getQuestionnaireAnswerStatisticsByWeek(
+        QuestionnaireGetQuestionnaireAnswerStatisticsByWeekRequest $request,
+        int $questionnaireId
+    ) {
         $result = $this->questionnairesRepository->getQuestionnaireAnswerStatisticsByWeek($questionnaireId);
 
         if (!empty($result)) {
@@ -211,12 +220,39 @@ class QuestionnaireController extends Controller
         return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
-    public function modifyQuestionnaireQuestions(QuestionnaireModifyQuestionnaireQuestionsRequest $request, int $questionnaireId)
-    {
-        $result = $this->questionnairesService->modifyQuestionnaireQuestions($questionnaireId, $request->input('questions'));
+    /**
+     * @param QuestionnaireModifyQuestionnaireQuestionsRequest $request
+     * @param int                                              $questionnaireId
+     *
+     * @return Application|ResponseFactory|Response
+     */
+    public function modifyQuestionnaireQuestions(
+        QuestionnaireModifyQuestionnaireQuestionsRequest $request,
+        int $questionnaireId
+    ) {
+        $result = $this->questionnairesService->modifyQuestionnaireQuestions(
+            $questionnaireId,
+            $request->input('questions')
+        );
+
+        if (!empty($result['modified']) || !empty($result['deleted'])) {
+            return response($result['modified'], Response::HTTP_OK);
+        }
+
+        return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+
+    /**
+     * @param AddAnswersRequest $request
+     * @param int               $questionnaireId
+     *
+     * @return Application|ResponseFactory|Response
+     */
+    public function addQuestionnaireAnswers(AddAnswersRequest $request, int $questionnaireId) {
+        $result = $this->questionnairesService->addQuestionnaireAnswers($request->input('answers'), $request->input('userId'));
 
         if (!empty($result)) {
-            return response($result, Response::HTTP_OK);
+            return response($result, Response::HTTP_CREATED);
         }
 
         return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);

@@ -13,13 +13,16 @@ use App\Models\Questionnaire;
 use App\Models\QuestionnaireQuestion;
 use App\Models\QuestionnaireQuestionAnswer;
 use App\Repositories\QuestionnairesRepository;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class QuestionnairesService
 {
     /**
      * @var QuestionnairesRepository
      */
-    private $repository;
+    public $repository;
 
     /**
      * QuestionnairesService constructor.
@@ -193,46 +196,50 @@ class QuestionnairesService
     {
         $oldQuestions = $this->repository->getQuestionnaireQuestions($questionnaireId);
         $modifiedQuestions = [];
-        $isQuestionFound = false;
+        $deletedQuestions = [];
+        $isQuestionFound = [];
+        $oldQuestionsLastPosition = $this->getQuestionsLastPosition($oldQuestions);
 
         if (!empty($oldQuestions)) {
             foreach ($oldQuestions as $oldQuestion) {
                 foreach ($newQuestions as $newQuestionKey => $newQuestion) {
                     if ($oldQuestion->id === $newQuestion['id']) {
-                        $isQuestionFound = true;
+                        $isQuestionFound[$newQuestion['id']] = true;
                         if ($newQuestion['deleted_at'] !== null) {
                             $this->deleteQuestion($oldQuestion->id);
+                            $deletedQuestions[] = $newQuestion;
                             unset($newQuestions[$newQuestionKey]);
                         } elseif ($oldQuestion->content !== $newQuestion['content'] || $oldQuestion->description !== $newQuestion['description'] || $oldQuestion->position !== $newQuestion['position']) {
                             $modifiedQuestions[] = $this->updateQuestion(
                                 $oldQuestion->id,
                                 $newQuestion['content'],
                                 $newQuestion['description'] ?? null,
-                                $newQuestion['position']
+                                (int)$newQuestion['position']
                             );
+                            unset($newQuestions[$newQuestionKey]);
+                        } else {
+                            $modifiedQuestions[] = $oldQuestion;
                         }
-
-                        unset($newQuestions[$newQuestionKey]);
                     }
                 }
             }
         }
 
-        if (!$isQuestionFound) {
-            if (count($modifiedQuestions) > 0) {
-                $lastQuestionPosition =  $modifiedQuestions[count($modifiedQuestions) - 1]->position + 1;
-            } elseif (count($oldQuestions) > 0) {
-                $lastQuestionPosition = $oldQuestions[count($oldQuestions) - 1] + 1;
-            } else {
-                $lastQuestionPosition = 1;
-            }
+        if (count($modifiedQuestions) > 0) {
+            $lastQuestionPosition = $modifiedQuestions[count($modifiedQuestions) - 1]->position + 1;
+        } elseif ($oldQuestionsLastPosition > 0) {
+            $lastQuestionPosition = $oldQuestionsLastPosition + 1;
+        } else {
+            $lastQuestionPosition = 1;
+        }
 
-            foreach ($newQuestions as $newQuestion) {
+        foreach ($newQuestions as $newQuestion) {
+            if (!array_key_exists($newQuestion['id'], $isQuestionFound)) {
                 $modifiedQuestions[] = $this->createQuestion(
                     $questionnaireId,
                     $newQuestion['content'],
                     $newQuestion['description'] ?? null,
-                    $lastQuestionPosition++,
+                    (int)$lastQuestionPosition++,
                 );
             }
         }
@@ -241,6 +248,46 @@ class QuestionnairesService
             $modifiedQuestions = $newQuestions;
         }
 
-        return $modifiedQuestions;
+        return [
+            'modified' => $modifiedQuestions,
+            'deleted' => $deletedQuestions,
+        ];
+    }
+
+    public function addQuestionnaireAnswers(array $answers, ?int $userId = null): array
+    {
+        $insertedAnswers = [];
+        $sessionUuid = Str::uuid();
+
+        DB::beginTransaction();
+        foreach ($answers as $answer) {
+            $questionnaireQuestionAnswers = new QuestionnaireQuestionAnswer();
+            $questionnaireQuestionAnswers->questionnaire_question_id = $answer['questionnaireQuestionId'];
+            $questionnaireQuestionAnswers->user_id = $userId ?? Auth::id();
+            $questionnaireQuestionAnswers->content = $answer['content'];
+            $questionnaireQuestionAnswers->session_uuid = $sessionUuid;
+            $questionnaireQuestionAnswers->freshTimestamp();
+
+            if ($questionnaireQuestionAnswers->save()) {
+               $insertedAnswers[] = $questionnaireQuestionAnswers;
+            } else {
+                DB::rollBack();
+                return [];
+            }
+        }
+
+        DB::commit();
+        return $insertedAnswers;
+    }
+
+    private function getQuestionsLastPosition($questions)
+    {
+        $lastPosition = 0;
+
+        foreach ($questions as $question) {
+            $lastPosition = $lastPosition > $question->position ? $lastPosition : $question->position;
+        }
+
+        return $lastPosition;
     }
 }

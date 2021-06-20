@@ -61,6 +61,9 @@ import ForgotPassword from "../views/ForgotPassword";
 import ResetPassword from "../views/ResetPassword";
 import TheUniversityQuestionnaires from "../components/University/Questionnaires/TheUniversityQuestionnaires";
 import TheCompanyQuestionnaires from "../components/Company/Questionnaires/TheCompanyQuestionnaires";
+import Questionnaire from "../views/Questionnaire";
+import Questionnaires from "../views/Questionnaires";
+import TheCompanyQuestionnaire from "../components/Company/Questionnaires/TheCompanyQuestionnaire";
 
 Vue.use(VueRouter);
 
@@ -220,6 +223,11 @@ const router = new VueRouter({
                             path: 'questionnaires',
                             name: 'company-questionnaires',
                             component: TheCompanyQuestionnaires
+                        },
+                        {
+                            path: 'questionnaires/:questionnaireId',
+                            name: 'company-questionnaire',
+                            component: TheCompanyQuestionnaire
                         },
                         {
                             path: 'settings',
@@ -382,6 +390,16 @@ const router = new VueRouter({
                             meta: {have: ['admin','student','company_worker','university_worker']},
                         }
                     ]
+                },
+                {
+                    path: '/panel/questionnaires',
+                    name: 'questionnaires',
+                    component: Questionnaires,
+                },
+                {
+                    path: '/panel/questionnaires/:id',
+                    name: 'questionnaire',
+                    component: Questionnaire,
                 },
                 {
                     path: '/panel/admin',

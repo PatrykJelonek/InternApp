@@ -24,7 +24,7 @@ class QuestionnairesRepository implements QuestionnairesRepositoryInterface
 
     public function getQuestionnaire(int $questionnaireId)
     {
-        return Questionnaire::find($questionnaireId);
+        return Questionnaire::with(['questions'])->find($questionnaireId);
     }
 
     public function getQuestionnaireRoles(int $questionnaireId)
@@ -34,13 +34,13 @@ class QuestionnairesRepository implements QuestionnairesRepositoryInterface
 
     public function getQuestionnaireQuestions(int $questionnaireId)
     {
-        $questions = Questionnaire::with(['questions'])->where(['id' => $questionnaireId])->first()->questions;
+        $questionnaire = Questionnaire::find($questionnaireId);
 
-        if (count($questions) > 0) {
-            $questions = $questions->sortBy('position');
+        if (!empty($questionnaire)) {
+            return $questionnaire->questions()->orderBy('position')->get();
         }
 
-        return $questions->values()->all();
+        return [];
     }
 
     public function getQuestionAnswers(int $questionId)
