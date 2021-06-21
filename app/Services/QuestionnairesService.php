@@ -198,7 +198,7 @@ class QuestionnairesService
         $modifiedQuestions = [];
         $deletedQuestions = [];
         $isQuestionFound = [];
-        $oldQuestionsLastPosition = $this->getQuestionsLastPosition($oldQuestions);
+        $lastPosition = $newQuestions[count($newQuestions) - 1]['position'];
 
         if (!empty($oldQuestions)) {
             foreach ($oldQuestions as $oldQuestion) {
@@ -225,21 +225,13 @@ class QuestionnairesService
             }
         }
 
-        if (count($modifiedQuestions) > 0) {
-            $lastQuestionPosition = $modifiedQuestions[count($modifiedQuestions) - 1]->position + 1;
-        } elseif ($oldQuestionsLastPosition > 0) {
-            $lastQuestionPosition = $oldQuestionsLastPosition + 1;
-        } else {
-            $lastQuestionPosition = 1;
-        }
-
         foreach ($newQuestions as $newQuestion) {
             if (!array_key_exists($newQuestion['id'], $isQuestionFound)) {
                 $modifiedQuestions[] = $this->createQuestion(
                     $questionnaireId,
                     $newQuestion['content'],
                     $newQuestion['description'] ?? null,
-                    (int)$lastQuestionPosition++,
+                    (int)$lastPosition++,
                 );
             }
         }
@@ -269,7 +261,7 @@ class QuestionnairesService
             $questionnaireQuestionAnswers->freshTimestamp();
 
             if ($questionnaireQuestionAnswers->save()) {
-               $insertedAnswers[] = $questionnaireQuestionAnswers;
+                $insertedAnswers[] = $questionnaireQuestionAnswers;
             } else {
                 DB::rollBack();
                 return [];

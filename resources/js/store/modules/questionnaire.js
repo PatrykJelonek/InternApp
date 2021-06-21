@@ -26,6 +26,15 @@ export default {
         isQuestionnairesLoading(state) {
             return state.isQuestionnairesLoading;
         },
+
+        questionnaireQuestions: (state) => (questionnaireId) => {
+            state.questionnaires.forEach((questionnaire) => {
+                console.log(questionnaireId);
+                if (questionnaire.id === questionnaireId) {
+                    return questionnaire.questions;
+                }
+            })
+        }
     },
 
     mutations: {
@@ -122,6 +131,6 @@ export default {
 
         setQuestionnaireQuestions({commit}, {id, questions}) {
             commit('SET_QUESTIONNAIRE_QUESTIONS', {questionnaireId: id, data: questions});
-        }
+        },
     },
 }

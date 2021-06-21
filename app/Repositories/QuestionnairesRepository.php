@@ -48,6 +48,24 @@ class QuestionnairesRepository implements QuestionnairesRepositoryInterface
         return QuestionnaireQuestion::find($questionId)->answers();
     }
 
+    public function getQuestionnaireAnswers(int $questionnaireId): array
+    {
+        $answers = QuestionnaireQuestionAnswer::with('question')->whereHas(
+            'question',
+            function (Builder $query) use ($questionnaireId) {
+                $query->where(['questionnaire_id' => $questionnaireId]);
+            }
+        )->get();
+
+        $answersBySessionUuid = [];
+
+        foreach ($answers as $answer) {
+            $answersBySessionUuid[$answer->session_uuid][] = $answer;
+        }
+
+        return $answersBySessionUuid;
+    }
+
     public function getQuestionnaireAnswerStatisticsByWeek(int $questionnaireId)
     {
         return QuestionnaireQuestionAnswer::whereHas(

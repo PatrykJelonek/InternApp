@@ -11,6 +11,6 @@ class QuestionnaireQuestionAnswer extends Model
 
     public function question()
     {
-        return $this->hasOne('App\Models\QuestionnaireQuestion', 'id', 'questionnaire_question_id');
+        return $this->belongsTo('App\Models\QuestionnaireQuestion', 'questionnaire_question_id', 'id');
     }
 }

@@ -136,6 +136,7 @@ export default {
             let {lastId, lastPosition} = this.getLastQuestionData(this.questions);
             this.questions.push({
                 id: lastId + 1,
+                questionnaire_id: this.questionnaireId,
                 content: '',
                 position: lastPosition + 1,
                 created_at: null,

@@ -7,8 +7,9 @@ use App\Http\Requests\QuestionnaireCreateQuestionnaireRequest as CreateQuestionn
 use App\Http\Requests\QuestionnaireDeleteQuestionnaireQuestionRequest as DeleteQuestionRequest;
 use App\Http\Requests\QuestionnaireDeleteQuestionnaireRequest as DeleteQuestionnaireRequest;
 use App\Http\Requests\QuestionnaireGetAllQuestionnairesRequest as GetAllQuestionnairesRequest;
+use App\Http\Requests\QuestionnaireGetQuestionnaireAnswersRequest as GetAnswersRequest;
 use App\Http\Requests\QuestionnaireGetQuestionnaireAnswerStatisticsByWeekRequest;
-use App\Http\Requests\QuestionnaireGetQuestionnaireQuestionAnswersRequest as GetAnswersRequest;
+use App\Http\Requests\QuestionnaireGetQuestionnaireQuestionAnswersRequest as GetQuestionAnswersRequest;
 use App\Http\Requests\QuestionnaireGetQuestionnaireQuestionsRequest as GetQuestionsRequest;
 use App\Http\Requests\QuestionnaireGetQuestionnaireRequest as GetQuestionnaireRequest;
 use App\Http\Requests\QuestionnaireModifyQuestionnaireQuestionsRequest;
@@ -98,12 +99,12 @@ class QuestionnaireController extends Controller
     }
 
     /**
-     * @param GetAnswersRequest $request
-     * @param int               $questionId
+     * @param GetQuestionAnswersRequest $request
+     * @param int                       $questionId
      *
      * @return Application|ResponseFactory|Response
      */
-    public function getQuestionnaireQuestionAnswers(GetAnswersRequest $request, int $questionId)
+    public function getQuestionnaireQuestionAnswers(GetQuestionAnswersRequest $request, int $questionId)
     {
         $answers = $this->questionnairesRepository->getQuestionAnswers($questionId);
 
@@ -236,7 +237,7 @@ class QuestionnaireController extends Controller
         );
 
         if (!empty($result['modified']) || !empty($result['deleted'])) {
-            return response($result['modified'], Response::HTTP_OK);
+            return response($result['modified'] ?? [], Response::HTTP_OK);
         }
 
         return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
@@ -248,13 +249,24 @@ class QuestionnaireController extends Controller
      *
      * @return Application|ResponseFactory|Response
      */
-    public function addQuestionnaireAnswers(AddAnswersRequest $request, int $questionnaireId) {
-        $result = $this->questionnairesService->addQuestionnaireAnswers($request->input('answers'), $request->input('userId'));
+    public function addQuestionnaireAnswers(AddAnswersRequest $request, int $questionnaireId)
+    {
+        $result = $this->questionnairesService->addQuestionnaireAnswers(
+            $request->input('answers'),
+            $request->input('userId')
+        );
 
         if (!empty($result)) {
             return response($result, Response::HTTP_CREATED);
         }
 
         return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+
+    public function getQuestionnaireAnswers(GetAnswersRequest $request, int $questionnaireId)
+    {
+        $answers = $this->questionnairesRepository->getQuestionnaireAnswers($questionnaireId);
+
+        return response($answers, Response::HTTP_OK);
     }
 }
