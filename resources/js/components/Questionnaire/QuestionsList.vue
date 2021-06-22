@@ -57,7 +57,7 @@
 import ExpandCard from "../_Helpers/ExpandCard";
 import CustomCard from "../_General/CustomCard";
 import {extend, setInteractionMode, ValidationProvider, ValidationObserver} from "vee-validate";
-import {mapActions} from "vuex";
+import {mapActions, mapGetters} from "vuex";
 
 setInteractionMode('eager');
 
@@ -69,7 +69,7 @@ export default {
         ValidationProvider,
         ValidationObserver
     },
-    props: ['questionnaireName', 'questionnaireDescription', 'questionnaireQuestions'],
+    props: ['questionnaireName', 'questionnaireDescription', 'questionnaireId'],
 
     data() {
         return {
@@ -77,8 +77,15 @@ export default {
         }
     },
 
+    computed: {
+        ...mapGetters({
+            questionnaireQuestions: 'questionnaire/questionnaireQuestions'
+        }),
+    },
+
     methods: {
         ...mapActions({
+            fetchQuestionnaireQuestions: 'questionnaire/fetchQuestionnaireQuestions',
             addQuestionnaireAnswers: 'questionnaire/addQuestionnaireAnswers',
             setSnackbar: 'snackbar/setSnackbar'
         }),
@@ -107,15 +114,19 @@ export default {
     },
 
     created() {
-        this.questionnaireQuestions.forEach((question) => {
-            this.answers.push({
-                questionnaireQuestionId: question.id,
-                content: null,
+        this.fetchQuestionnaireQuestions((this.questionnaireId)).then((response) => {
+            this.questionnaireQuestions.forEach((question) => {
+                this.answers.push({
+                    questionnaireQuestionId: question.id,
+                    content: null,
+                });
             });
+            this.answers.filter((answer) => {
+                return answer !== undefined;
+            })
+        }).catch((e) => {
+
         });
-        this.answers.filter((answer) => {
-            return answer !== undefined;
-        })
     }
 }
 </script>

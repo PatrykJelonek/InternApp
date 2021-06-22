@@ -50,7 +50,13 @@
         </v-row>
         <v-row class="mt-7">
             <v-col cols="12">
-                <questionnaires-list :questionnaires="questionnaires"></questionnaires-list>
+                <v-data-table
+                    :headers="headers"
+                    :items="questionnaires"
+                    :item-key="questionnaires.id"
+                    class="component-background"
+                    @click:row="(questionnaire) => this.$router.push({name: 'company-questionnaire', params: {id: questionnaire.id}})"
+                ></v-data-table>
             </v-col>
         </v-row>
     </v-container>
@@ -71,7 +77,11 @@ export default {
         CustomCardTitle, CustomCard, QuestionnairesStatisticCount, QuestionnairesList},
 
     data() {
-        return {}
+        return {
+            headers: [
+                {text: 'Nazwa', value: 'name'}
+            ]
+        }
     },
 
     computed: {

@@ -117,6 +117,7 @@ export default {
             modifyQuestionnaireQuestions: 'questionnaire/modifyQuestionnaireQuestions',
             setQuestionnaireQuestions: 'questionnaire/setQuestionnaireQuestions',
             setSnackbar: 'snackbar/setSnackbar',
+            fetchQuestionnaireQuestions: 'questionnaire/fetchQuestionnaireQuestions',
         }),
 
         addQuestionInput() {
@@ -236,8 +237,12 @@ export default {
     },
 
     created() {
-        this.questions = JSON.parse(JSON.stringify(this.originalQuestions));
-        this.questions = this.sortQuestionsByPosition(this.questions);
+        this.fetchQuestionnaireQuestions(this.$route.params.questionnaireId).then((response) => {
+            this.questions = JSON.parse(JSON.stringify(this.questionnaireQuestions));
+            this.questions = this.sortQuestionsByPosition(this.questions);
+        }).catch((e) => {
+
+        });
     }
 }
 </script>

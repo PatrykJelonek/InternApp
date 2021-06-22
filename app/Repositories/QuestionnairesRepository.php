@@ -50,7 +50,7 @@ class QuestionnairesRepository implements QuestionnairesRepositoryInterface
 
     public function getQuestionnaireAnswers(int $questionnaireId): array
     {
-        $answers = QuestionnaireQuestionAnswer::with('question')->whereHas(
+        $answers = QuestionnaireQuestionAnswer::with(['question', 'user'])->whereHas(
             'question',
             function (Builder $query) use ($questionnaireId) {
                 $query->where(['questionnaire_id' => $questionnaireId]);
@@ -74,5 +74,10 @@ class QuestionnairesRepository implements QuestionnairesRepositoryInterface
                 $query->where(['questionnaire_id' => $questionnaireId]);
             }
         )->get()->groupBy('questionnaire_question_id');
+    }
+
+    public function getQuestionnaireAuthor(int $questionnaireId)
+    {
+        return Questionnaire::with(['user'])->find($questionnaireId)->user;
     }
 }

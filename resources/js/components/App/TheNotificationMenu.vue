@@ -51,6 +51,12 @@
                             :author="item.data.author"
                             v-if="item.type === MESSAGE_NOTIFICATION"
                         ></message-notification>
+                        <questionnaire-answers-added-notification
+                            :id="item.id"
+                            :author="item.data.author"
+                            :questionnaire-name="item.data.questionnaire_name"
+                            v-if="item.type === QUESTIONNAIRE_ANSWERS_ADDED_NOTIFICATION"
+                        ></questionnaire-answers-added-notification>
                     </template>
                 </v-virtual-scroll>
             </v-list>
@@ -73,14 +79,16 @@
 <script>
 import {mapActions, mapGetters} from "vuex";
 import MessageNotification from "../Notifications/MessageNotification";
+import QuestionnaireAnswersAddedNotification from "../Notifications/QuestionnaireAnswersAddedNotification";
 
 export default {
     name: "TheNotificationMenu",
-    components: {MessageNotification},
+    components: {QuestionnaireAnswersAddedNotification, MessageNotification},
     data() {
         return {
             menu: false,
             MESSAGE_NOTIFICATION: 'App\\Notifications\\MessageSentNotification',
+            QUESTIONNAIRE_ANSWERS_ADDED_NOTIFICATION: 'App\\Notifications\\QuestionnaireAnswersAddedNotification',
         }
     },
 

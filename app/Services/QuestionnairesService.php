@@ -12,6 +12,8 @@ namespace App\Services;
 use App\Models\Questionnaire;
 use App\Models\QuestionnaireQuestion;
 use App\Models\QuestionnaireQuestionAnswer;
+use App\Models\User;
+use App\Notifications\QuestionnaireAnswersAddedNotification;
 use App\Repositories\QuestionnairesRepository;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -39,6 +41,7 @@ class QuestionnairesService
      * @param string   $description
      * @param int|null $companyId
      * @param int|null $universityId
+     * @param int|null $userId
      *
      * @return Questionnaire|null
      */
@@ -46,13 +49,15 @@ class QuestionnairesService
         string $name,
         string $description,
         ?int $companyId = null,
-        ?int $universityId = null
+        ?int $universityId = null,
+        ?int $userId = null
     ): ?Questionnaire {
         $questionnaire = new Questionnaire();
         $questionnaire->name = $name;
         $questionnaire->description = $description;
         $questionnaire->company_id = $companyId;
         $questionnaire->university_id = $universityId;
+        $questionnaire->user_id = $userId ?? Auth::id();
         $questionnaire->freshTimestamp();
 
         if ($questionnaire->save()) {
@@ -267,6 +272,14 @@ class QuestionnairesService
                 return [];
             }
         }
+
+        $questionnaireAuthor = $this->repository->getQuestionnaireAuthor($answers[0]['questionnaireQuestionId']);
+        $questionnaireAuthor->notify(
+            new QuestionnaireAnswersAddedNotification(
+                User::find($userId ?? Auth::id()),
+                Questionnaire::find($answers[0]['questionnaireQuestionId'])
+            )
+        );
 
         DB::commit();
         return $insertedAnswers;

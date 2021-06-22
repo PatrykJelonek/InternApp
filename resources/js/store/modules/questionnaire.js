@@ -8,6 +8,10 @@ export default {
         isQuestionnaireLoading: false,
         questionnaires: [],
         isQuestionnairesLoading: false,
+        questionnaireAnswers: [],
+        isQuestionnaireAnswersLoading: false,
+        questionnaireQuestions: [],
+        isQuestionnaireQuestionsLoading: false,
     },
 
     getters: {
@@ -27,14 +31,29 @@ export default {
             return state.isQuestionnairesLoading;
         },
 
-        questionnaireQuestions: (state) => (questionnaireId) => {
-            state.questionnaires.forEach((questionnaire) => {
-                console.log(questionnaireId);
-                if (questionnaire.id === questionnaireId) {
-                    return questionnaire.questions;
-                }
-            })
-        }
+        // questionnaireQuestions: (state) => (questionnaireId) => {
+        //     state.questionnaires.forEach((questionnaire) => {
+        //         if (questionnaire.id === questionnaireId) {
+        //             return questionnaire.questions;
+        //         }
+        //     })
+        // },
+
+        questionnaireAnswers(state) {
+            return state.questionnaireAnswers;
+        },
+
+        isQuestionnaireAnswersLoading(state) {
+            return state.isQuestionnaireAnswersLoading;
+        },
+
+        questionnaireQuestions(state) {
+            return state.questionnaireQuestions;
+        },
+
+        isQuestionnaireQuestionsLoading(state) {
+            return state.isQuestionnaireQuestionsLoading;
+        },
     },
 
     mutations: {
@@ -58,14 +77,30 @@ export default {
             state.questionnaires.push(data);
         },
 
-        SET_QUESTIONNAIRE_QUESTIONS(state, {questionnaireId, data}) {
-            state.questionnaires.forEach((questionnaire) => {
-                if (questionnaire.id === questionnaireId) {
-                    console.log(data);
-                    questionnaire.questions = data;
-                }
-            });
-        }
+        // SET_QUESTIONNAIRE_QUESTIONS(state, {questionnaireId, data}) {
+        //     state.questionnaires.forEach((questionnaire) => {
+        //         if (questionnaire.id === questionnaireId) {
+        //             console.log(data);
+        //             questionnaire.questions = data;
+        //         }
+        //     });
+        // },
+
+        SET_QUESTIONNAIRE_ANSWERS(state, data) {
+            state.questionnaireAnswers = data;
+        },
+
+        SET_QUESTIONNAIRE_ANSWERS_LOADING(state, data) {
+            state.isQuestionnaireAnswersLoading = data;
+        },
+
+        SET_QUESTIONNAIRE_QUESTIONS(state, data) {
+            state.questionnaireQuestions = data;
+        },
+
+        SET_QUESTIONNAIRE_QUESTIONS_LOADING(state, data) {
+            state.isQuestionnaireQuestionsLoading = data;
+        },
     },
 
     actions: {
@@ -102,6 +137,30 @@ export default {
             } catch (e) {
                 commit('SET_QUESTIONNAIRES', []);
                 commit('SET_QUESTIONNAIRES_LOADING', false);
+            }
+        },
+
+        async fetchQuestionnaireAnswers({commit}, id) {
+            commit('SET_QUESTIONNAIRE_ANSWERS_LOADING', true);
+            try {
+                let response = await axios.get(`/api/questionnaires/${id}/answers`);
+                commit('SET_QUESTIONNAIRE_ANSWERS', response.data);
+                commit('SET_QUESTIONNAIRE_ANSWERS_LOADING', false);
+            } catch (e) {
+                commit('SET_QUESTIONNAIRE_ANSWERS', []);
+                commit('SET_QUESTIONNAIRE_ANSWERS_LOADING', false);
+            }
+        },
+
+        async fetchQuestionnaireQuestions({commit}, id) {
+            commit('SET_QUESTIONNAIRE_QUESTIONS_LOADING', true);
+            try {
+                let response = await axios.get(`/api/questionnaires/${id}/questions`);
+                commit('SET_QUESTIONNAIRE_QUESTIONS', response.data);
+                commit('SET_QUESTIONNAIRE_QUESTIONS_LOADING', false);
+            } catch (e) {
+                commit('SET_QUESTIONNAIRE_QUESTIONS', []);
+                commit('SET_QUESTIONNAIRE_QUESTIONS_LOADING', false);
             }
         },
 

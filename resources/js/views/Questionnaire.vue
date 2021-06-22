@@ -3,7 +3,7 @@
         <questions-list
         :questionnaire-name="questionnaire.name"
         :questionnaire-description="questionnaire.description"
-        :questionnaire-questions="questionnaire.questions"
+        :questionnaire-id="questionnaire.id"
         ></questions-list>
     </v-container>
 </template>

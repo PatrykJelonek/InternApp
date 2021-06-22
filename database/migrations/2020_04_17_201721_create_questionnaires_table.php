@@ -21,6 +21,8 @@ class CreateQuestionnairesTable extends Migration
             $table->foreign('university_id')->references('id')->on('universities');
             $table->foreignId('company_id')->nullable();
             $table->foreign('company_id')->references('id')->on('companies');
+            $table->foreignId('user_id');
+            $table->foreign('user_id')->references('id')->on('users');
             $table->timestamps();
             $table->softDeletes();
         });
