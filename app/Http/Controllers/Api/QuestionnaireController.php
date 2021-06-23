@@ -144,8 +144,8 @@ class QuestionnaireController extends Controller
     {
         $result = $this->questionnairesService->updateQuestionnaire(
             $questionnaireId,
-            $request->name('name'),
-            $request->name('description')
+            $request->input('name'),
+            $request->input('description')
         );
 
         if ($result !== null) {
@@ -165,8 +165,8 @@ class QuestionnaireController extends Controller
     {
         $result = $this->questionnairesService->updateQuestion(
             $questionId,
-            $request->name('content'),
-            $request->name('description')
+            $request->input('content'),
+            $request->input('description')
         );
 
         if ($result !== null) {

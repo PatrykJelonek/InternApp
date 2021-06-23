@@ -46,7 +46,7 @@
                     <template v-else>
                         <v-row>
                             <v-col cols="12" class="text-center">
-                                <p class="subtitle-2 text--disabled">Ta ankieta nie posiada jeszcze pytań!</p>
+                                <p class="secondary--text">Ta ankieta nie posiada jeszcze pytań!</p>
                             </v-col>
                         </v-row>
                     </template>

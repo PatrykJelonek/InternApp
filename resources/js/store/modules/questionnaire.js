@@ -191,5 +191,12 @@ export default {
         setQuestionnaireQuestions({commit}, {id, questions}) {
             commit('SET_QUESTIONNAIRE_QUESTIONS', {questionnaireId: id, data: questions});
         },
+
+        updateQuestionnaire({commit}, {id, name, description}) {
+            return axios.put(`/api/questionnaires/${id}`, {
+                name: name,
+                description: description
+            });
+        }
     },
 }

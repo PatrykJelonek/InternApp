@@ -179,7 +179,7 @@ class CompanyRepository implements CompanyRepositoryInterface
 
     public function getCompanyQuestionnaires(string $slug)
     {
-        return Questionnaire::with(['questions', 'company'])->whereHas('company', function (Builder $query) use ($slug) {
+        return Questionnaire::with(['questions', 'company', 'user'])->whereHas('company', function (Builder $query) use ($slug) {
             $query->where(['slug' => $slug]);
         })->get();
     }

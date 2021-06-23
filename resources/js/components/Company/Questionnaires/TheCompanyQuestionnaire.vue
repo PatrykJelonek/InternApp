@@ -1,9 +1,18 @@
 <template>
     <v-container fluid class="pa-0">
         <template v-if="!isQuestionnaireLoading">
+            <create-questionnaire-dialog
+                :original-name="questionnaire.name"
+                :original-description="questionnaire.description"
+                :original-id="questionnaire.id"
+            ></create-questionnaire-dialog>
+
             <page-title>
                 <template v-slot:default> {{ questionnaire.name }}</template>
                 <template v-slot:subheader>{{ questionnaire.description }}</template>
+                <template v-slot:actions>
+                    <v-btn outlined color="primary" @click="toggleCreateQuestionnaireDialog(true)">Edytuj Ankietę</v-btn>
+                </template>
             </page-title>
             <v-row>
                 <v-col cols="12" lg="6">
@@ -42,10 +51,12 @@ import PageTitle from "../../_Helpers/PageTitle";
 import PageDetailsHeader from "../../Page/PageDetailsHeader";
 import CustomCard from "../../_General/CustomCard";
 import QuestionnaireAnswersList from "../../Questionnaire/QuestionnaireAnswersList";
+import CreateQuestionnaireDialog from "../../Questionnaires/CreateQuestionnaireDialog";
 
 export default {
     name: "TheCompanyQuestionnaire",
     components: {
+        CreateQuestionnaireDialog,
         QuestionnaireAnswersList,
         CustomCard,
         PageDetailsHeader,
@@ -61,7 +72,8 @@ export default {
     methods: {
         ...mapActions({
             setBreadcrumbs: 'helpers/setBreadcrumbs',
-            fetchQuestionnaire: 'questionnaire/fetchQuestionnaire'
+            fetchQuestionnaire: 'questionnaire/fetchQuestionnaire',
+            toggleCreateQuestionnaireDialog: 'helpers/toggleCreateQuestionnaireDialog',
         }),
     },
 

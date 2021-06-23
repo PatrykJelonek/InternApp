@@ -21,6 +21,7 @@ class User extends Model implements AuthenticatableContract, JWTSubject, CanRese
     protected $table = 'users';
 
     protected $hidden = ['password_hash', 'remember_token', 'user_status_id', 'password_reset_token'];
+    protected $appends = ['full_name'];
 
     public function getAuthPassword () {
         return $this->password_hash;
@@ -99,5 +100,10 @@ class User extends Model implements AuthenticatableContract, JWTSubject, CanRese
     public function sendPasswordResetNotification($token)
     {
         // TODO: Implement sendPasswordResetNotification() method.
+    }
+
+    public function getFullNameAttribute()
+    {
+        return "{$this->first_name} {$this->last_name}";
     }
 }

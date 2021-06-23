@@ -172,6 +172,7 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     # Questionnaires
     Route::get('/questionnaires','Api\QuestionnaireController@getQuestionnaires');
     Route::get('/questionnaires/{questionnaireId}','Api\QuestionnaireController@getQuestionnaire');
+    Route::put('/questionnaires/{questionnaireId}','Api\QuestionnaireController@updateQuestionnaire');
     Route::get('/questionnaires/{questionnaireId}/questions','Api\QuestionnaireController@getQuestionnaireQuestions');
     Route::post('/questionnaires/{questionnaireId}/questions','Api\QuestionnaireController@modifyQuestionnaireQuestions');
     Route::get('/questionnaires/{questionnaireId}/answers','Api\QuestionnaireController@getQuestionnaireAnswers');

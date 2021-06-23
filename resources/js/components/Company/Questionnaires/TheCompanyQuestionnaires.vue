@@ -2,61 +2,35 @@
     <v-container fluid class="pa-0">
         <create-questionnaire-dialog :is-company-questionnaire="true"></create-questionnaire-dialog>
 
-        <v-row>
-            <v-col cols="12" class="d-flex justify-start align-center">
-                <h2 class="text-h6 font-weight-bold text-uppercase">Statystyki</h2>
-            </v-col>
-        </v-row>
-        <v-row>
-            <v-col cols="4">
-                <v-row>
-                    <v-col cols="6">
-                        <questionnaires-statistic-count
-                            :number-of-questionnaires="5"
-                        ></questionnaires-statistic-count>
-                    </v-col>
-                    <v-col cols="6">
-                        <questionnaires-statistic-count
-                            :number-of-questionnaires="5"
-                        ></questionnaires-statistic-count>
-                    </v-col>
-                </v-row>
-                <v-row>
-                    <v-col cols="6">
-                        <questionnaires-statistic-count
-                            :number-of-questionnaires="5"
-                        ></questionnaires-statistic-count>
-                    </v-col>
-                    <v-col cols="6">
-                        <questionnaires-statistic-count
-                            :number-of-questionnaires="5"
-                        ></questionnaires-statistic-count>
-                    </v-col>
-                </v-row>
-            </v-col>
-            <v-col cols="4">
-                <custom-card>
-                    <v-container fluid>
-                        <v-sparkline
-                            color="primary"
-                            :line-width="2"
-                            :labels="['a','b','c','d','e','z']"
-                            smooth
-                            :value="[2,5,1,2,10,4]"
-                        ></v-sparkline>
-                    </v-container>
-                </custom-card>
-            </v-col>
-        </v-row>
+        <page-title>
+            Ankiety
+            <template v-slot:actions>
+                <v-btn color="primary" outlined @click="toggleCreateQuestionnaireDialog(true)">Dodaj Ankietę</v-btn>
+            </template>
+        </page-title>
+
         <v-row class="mt-7">
             <v-col cols="12">
                 <v-data-table
                     :headers="headers"
                     :items="questionnaires"
                     :item-key="questionnaires.id"
-                    class="component-background"
-                    @click:row="(questionnaire) => this.$router.push({name: 'company-questionnaire', params: {id: questionnaire.id}})"
-                ></v-data-table>
+                    class="component-background cursor-pointer"
+                    @click:row="(questionnaire) => this.$router.push({name: 'company-questionnaire', params: {slug: this.$route.params.slug, questionnaireId: questionnaire.id}})"
+                >
+                    <template v-slot:item.user="{item}">
+                        <v-avatar :size="30" class="mr-2" :color="item.user.avatar_url ? '' : 'primary'">
+                            <v-img :src="item.user.avatar_url ? '/'+item.user.avatar_url : ''" :alt="'Awatar użytkownika ' + item.user.full_name"></v-img>
+                        </v-avatar>
+                        {{ item.user.full_name }}
+                    </template>
+                    <template v-slot:item.questions="{item}">
+                        {{ item.questions.length }}
+                    </template>
+                    <template v-slot:item.created_at="{item}">
+                        {{ formatDate(item.created_at) }}
+                    </template>
+                </v-data-table>
             </v-col>
         </v-row>
     </v-container>
@@ -69,33 +43,48 @@ import QuestionnairesStatisticCount from "../../Questionnaires/QuestionnairesSta
 import CustomCard from "../../_General/CustomCard";
 import CustomCardTitle from "../../_General/CustomCardTitle";
 import CreateQuestionnaireDialog from "../../Questionnaires/CreateQuestionnaireDialog";
+import PageTitle from "../../_Helpers/PageTitle";
+import moment from "moment";
 
 export default {
     name: "TheCompanyQuestionnaires",
     components: {
+        PageTitle,
         CreateQuestionnaireDialog,
-        CustomCardTitle, CustomCard, QuestionnairesStatisticCount, QuestionnairesList},
+        CustomCardTitle,
+        CustomCard,
+        QuestionnairesStatisticCount,
+        QuestionnairesList
+    },
 
     data() {
         return {
             headers: [
-                {text: 'Nazwa', value: 'name'}
+                {text: 'Nazwa', value: 'name'},
+                {text: 'Autor', value: 'user'},
+                {text: 'Liczba pytań', value: 'questions'},
+                {text: 'Data utworzenia', value: 'created_at'}
             ]
         }
     },
 
     computed: {
-      ...mapGetters({
-          questionnaires: 'questionnaire/questionnaires',
-          isQuestionnairesLoading: 'questionnaire/isQuestionnairesLoading',
-      }),
+        ...mapGetters({
+            questionnaires: 'questionnaire/questionnaires',
+            isQuestionnairesLoading: 'questionnaire/isQuestionnairesLoading',
+        }),
     },
 
     methods: {
         ...mapActions({
             setBreadcrumbs: 'helpers/setBreadcrumbs',
-            fetchQuestionnaires: 'questionnaire/fetchCompanyQuestionnaires'
+            fetchQuestionnaires: 'questionnaire/fetchCompanyQuestionnaires',
+            toggleCreateQuestionnaireDialog: 'helpers/toggleCreateQuestionnaireDialog'
         }),
+
+        formatDate(date) {
+            return moment(date).format('DD.MM.YYYY - HH:mm');
+        }
     },
 
     created() {

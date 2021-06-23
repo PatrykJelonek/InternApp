@@ -13,7 +13,15 @@ class QuestionnaireUpdateQuestionnaireRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
+    }
+
+    public function all($keys = null)
+    {
+        $data = parent::all();
+        $data['questionnaireId'] = $this->route('questionnaireId');
+
+        return $data;
     }
 
     /**
@@ -24,7 +32,20 @@ class QuestionnaireUpdateQuestionnaireRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'questionnaireId' => 'required|exists:App\Models\Questionnaire,id',
+            'name' => 'required|max:64',
+            'description' => 'sometimes|string',
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'questionnaireId.required' => 'Id ankiety jest wymagane!',
+            'questionnaireId.exists' => 'Podana ankieta nie istnieje!',
+            'name.required' => 'Nazwa ankiety jest wymagana!',
+            'name.max' => 'Nazwa ankiety nie może przekraczać 64 znaków!',
+            'description.string' => 'Opis musi być tekstem!',
         ];
     }
 }

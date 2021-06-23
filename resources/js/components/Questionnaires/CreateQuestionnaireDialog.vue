@@ -9,7 +9,7 @@
             :expand="false"
         >
             <template v-slot:buttons>
-                <v-btn icon small @click="toggleCreateQuestionnaireDialog(false)">
+                <v-btn icon small @click="close">
                     <v-icon>mdi-close</v-icon>
                 </v-btn>
             </template>
@@ -44,8 +44,19 @@
                     </v-row>
                     <v-row class="pa-5 pt-0">
                         <v-col cols="12" class="text-right">
-                            <v-btn outlined color="primary"
-                                   @click="createQuestionnaire">Dodaj
+                            <v-btn
+                                v-if="originalId || originalName"
+                                outlined color="primary"
+                                @click="update"
+                            >
+                                Zapisz
+                            </v-btn>
+                            <v-btn
+                                v-else
+                                outlined color="primary"
+                                @click="createQuestionnaire"
+                            >
+                                Dodaj
                             </v-btn>
                         </v-col>
                     </v-row>
@@ -64,7 +75,7 @@ setInteractionMode('eager');
 
 export default {
     name: "CreateQuestionnaireDialog",
-    props: ['isCompanyQuestionnaire', 'isUniversityQuestionnaire'],
+    props: ['isCompanyQuestionnaire', 'isUniversityQuestionnaire', 'originalName', 'originalDescription', 'originalId'],
     components: {
         ExpandCard,
         ValidationProvider,
@@ -86,7 +97,8 @@ export default {
             setSnackbar: 'snackbar/setSnackbar',
             createCompanyQuestionnaire: 'questionnaire/createCompanyQuestionnaire',
             createUniversityQuestionnaire: 'questionnaire/createUniversityQuestionnaire',
-            addQuestionnaire: 'questionnaire/addQuestionnaire'
+            addQuestionnaire: 'questionnaire/addQuestionnaire',
+            updateQuestionnaire: 'questionnaire/updateQuestionnaire',
         }),
 
         async createQuestionnaire() {
@@ -98,7 +110,7 @@ export default {
                             questionnaire: this.questionnaire
                         }).then((response) => {
                             this.addQuestionnaire(response.data);
-                            this.toggleCreateQuestionnaireDialog(false);
+                            this.close();
                             this.setSnackbar({message: 'Ankieta została dodana!', color: 'success'});
                         }).catch((e) => {
                             if (e.response.status === 422) {
@@ -114,7 +126,7 @@ export default {
                             questionnaire: this.questionnaire
                         }).then((response) => {
                             this.addQuestionnaire(response.data);
-                            this.toggleCreateQuestionnaireDialog(false);
+                            this.close();
                             this.setSnackbar({message: 'Ankieta została dodana!', color: 'success'});
                         }).catch((e) => {
                             if (e.response.status === 422) {
@@ -127,6 +139,30 @@ export default {
                     }
                 }
             });
+        },
+
+        async update() {
+            await this.$refs.observer.validate().then((isValid) => {
+                if (isValid) {
+                    this.updateQuestionnaire({
+                        id: this.originalId,
+                        name: this.questionnaire.name,
+                        description: this.questionnaire.description
+                    }).then((response) => {
+                        this.$store.commit('questionnaire/SET_QUESTIONNAIRE', response.data);
+                        this.close();
+                        this.setSnackbar({message: 'Ankieta została uaktualniona!', color: 'success'});
+                    }).catch((e) => {
+                        this.setSnackbar({message: 'Wystąpił problem z edycją ankiety!', color: 'error'});
+                    });
+                }
+            });
+        },
+
+        close() {
+            this.questionnaire.name = null;
+            this.questionnaire.description = null;
+            this.toggleCreateQuestionnaireDialog(false);
         }
     },
 
@@ -134,6 +170,16 @@ export default {
         ...mapGetters({
             createQuestionnaireDialog: 'helpers/createQuestionnaireDialog',
         }),
+    },
+
+    created() {
+        if (this.originalName) {
+            this.questionnaire.name = this.originalName;
+        }
+
+        if (this.originalDescription) {
+            this.questionnaire.description = this.originalDescription;
+        }
     },
 }
 </script>
