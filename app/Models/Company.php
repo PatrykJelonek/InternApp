@@ -60,7 +60,6 @@ class Company extends Model
         return $this->belongsToMany('App\Models\Questionnaire','companies_questionnaires','company_id', 'questionnaire_id');
     }
 
-
     public static function messages()
     {
         return [

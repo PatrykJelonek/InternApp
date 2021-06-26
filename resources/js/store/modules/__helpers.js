@@ -15,6 +15,7 @@ export default {
         applyInternshipDialog: false,
         createOwnAgreementDialog: false,
         createQuestionnaireDialog: false,
+        deleteCompanyWorkerDialog: false,
         fillHeight: false,
         navigationDrawer: true,
         errorMessage: '',
@@ -86,6 +87,10 @@ export default {
 
         breadcrumbs(state) {
             return state.breadcrumbs;
+        },
+
+        deleteCompanyWorkerDialog(state) {
+            return state.deleteCompanyWorkerDialog;
         }
     },
 
@@ -156,7 +161,11 @@ export default {
 
         SET_BREADCRUMBS(state, data) {
             state.breadcrumbs = data;
-        }
+        },
+
+        TOGGLE_DELETE_COMPANY_WORKER_DIALOG(state, value) {
+            state.deleteCompanyWorkerDialog = value;
+        },
     },
 
     actions: {
@@ -202,6 +211,10 @@ export default {
 
         toggleCreateQuestionnaireDialog({commit}, value) {
             commit('TOGGLE_CREATE_QUESTIONNAIRE_DIALOG', value);
+        },
+
+        toggleDeleteCompanyWorkerDialog({commit}, value) {
+            commit('TOGGLE_DELETE_COMPANY_WORKER_DIALOG', value);
         },
 
         parseErrorMessage({commit}, status) {
