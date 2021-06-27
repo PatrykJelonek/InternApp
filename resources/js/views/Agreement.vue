@@ -1,24 +1,22 @@
 <template>
-    <v-container>
+    <v-container fluid>
         <apply-internship-dialog :agreement="agreement" v-if="!agreementLoading"></apply-internship-dialog>
+
+        <page-title v-if="!agreementLoading">
+            <template v-slot:default>{{ agreement.name }}</template>
+            <template v-slot:actions v-if="agreement.places_number > 0">
+                <v-btn color="primary" outlined @click="toggleApplyInternshipDialog(true)">Aplikuj</v-btn>
+            </template>
+        </page-title>
+
         <v-row v-if="!agreementLoading">
-            <v-col cols="12">
-                <page-title>{{ agreement.name }}</page-title>
-            </v-col>
-            <v-col cols="12" v-has="['student']" v-if="agreement.places_number > 0">
-                <v-card color="card-background" elevation="0">
-                    <v-card-actions class="d-flex justify-end">
-                        <v-btn color="primary" outlined @click="toggleApplyInternshipDialog(true)">Aplikuj</v-btn>
-                    </v-card-actions>
-                </v-card>
-            </v-col>
             <v-col cols="12" lg="4">
                 <expand-card
                     title="Miejsce praktyk"
                     description="Informacje na temat miejsca odbywania praktyki."
                     :expand="false"
                 >
-                    <v-list>
+                    <v-list class="component-background">
                         <v-row>
                             <v-col cols="6">
                                 <v-list-item two-line>
@@ -60,7 +58,7 @@
                     description="Podstawowe informacje na temat praktyki"
                     :expand="false"
                 >
-                    <v-list>
+                    <v-list class="component-background">
                         <v-row>
                             <v-col cols="4">
                                 <v-list-item two-line>

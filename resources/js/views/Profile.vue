@@ -1,9 +1,13 @@
 <template>
-    <v-container fluid>
+    <v-container fluid class="pa-0">
+        <page-title v-if="!userLoading">
+            <template v-slot:default>{{ user.full_name }}</template>
+            <template v-slot:subheader>{{ user.email }}</template>
+            <template v-slot:actions>
+                <v-btn-toggle></v-btn-toggle>
+            </template>
+        </page-title>
         <v-row v-if="!userLoading">
-            <v-col cols="12">
-                <page-title></page-title>
-            </v-col>
             <v-col
                 cols="12"
                 sm="10" offset-sm="1"
@@ -12,7 +16,7 @@
                 xl="6" :offset-xl="user.universities.length > 0 || user.companies.length > 0 ? '0' : '3'"
                 class="text-center"
             >
-                <v-card elevation="0" class="overflow-hidden">
+                <v-card elevation="0" class="overflow-hidden component-background">
                     <v-img src="../../img/pattern.png" height="200px" class="primary overflow-visible pa-0"
                            content-class="d-flex justify-center">
                         <v-card-title class="pa-0">
@@ -26,7 +30,7 @@
                         </v-card-title>
                     </v-img>
                     <v-card-text style="margin-top: 100px">
-                        <v-list>
+                        <v-list class="component-background">
                             <v-list-item>
                                 <v-list-item-content>
                                     <v-list-item-title class="text-overline">Imię i Nazwisko</v-list-item-title>
@@ -73,7 +77,7 @@
                             :expand="false"
                             :actions="false"
                         >
-                            <v-list>
+                            <v-list class="component-background">
                                 <v-list-item v-for="university in user.universities" :key="university.id"
                                              class="cursor-pointer">
                                     <v-list-item-content
@@ -95,7 +99,7 @@
                             :expand="false"
                             :actions="false"
                         >
-                            <v-list>
+                            <v-list class="component-background">
                                 <v-list-item v-for="company in user.companies" :key="company.id" class="cursor-pointer">
                                     <v-list-item-content
                                         @click="$router.push({name: 'university', params: {slug: company.slug}})">

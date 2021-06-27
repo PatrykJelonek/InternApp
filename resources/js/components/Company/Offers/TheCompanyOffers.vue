@@ -1,122 +1,130 @@
 <template>
-    <v-row no-gutters>
+    <v-container fluid class="pa-0">
         <create-offer-dialog></create-offer-dialog>
-        <v-col cols="12">
-            <expand-card title="Lista Ofert" :description="`Lista ofert przypisanych do ${company.name}`" class="mt-10">
-                <template slot="buttons">
-                    <v-tooltip top>
-                        <template v-slot:activator="{ on, attrs }">
-                            <v-btn
-                                small
-                                icon
-                                v-bind="attrs"
-                                v-on="on"
-                                @click="toggleCreateOfferDialog(true)"
-                            >
-                                <v-icon>mdi-plus</v-icon>
-                            </v-btn>
-                        </template>
-                        <span>Dodaj Ofertę</span>
-                    </v-tooltip>
-                </template>
-                <v-row no-gutters class="px-5 pt-5 pb-2">
-                    <v-col
-                        cols="12"
-                        md="12"
-                        lg="5"
-                        xl="3"
-                        class="mr-5"
-                        v-bind:class="$vuetify.breakpoint.mdAndDown ? 'mb-5' : ''"
-                    >
-                        <v-text-field
-                            v-model="search.name"
-                            label="Nazwa"
-                            outlined
-                            dense
-                            hide-details
-                            clearable
-                            @input="searchByName"
-                        ></v-text-field>
-                    </v-col>
-                    <v-col
-                        cols="12"
-                        md="12"
-                        lg="3"
-                        xl="3"
-                        class="mr-5"
-                        v-bind:class="$vuetify.breakpoint.mdAndDown ? 'mb-5' : ''"
-                    >
-                        <v-combobox
-                            v-if="comboboxElements.categories.length > 1"
-                            v-model="search.categories"
-                            label="Kategorie"
-                            :items="comboboxElements.categories"
-                            :item-value="(category) => category.name"
-                            :item-text="(category) => category.display_name"
-                            outlined
-                            dense
-                            hide-details
-                            small-chips
-                            clearable
-                            multiple
-                            @input="searchByCategories"
-                        ></v-combobox>
-                    </v-col>
-                    <v-col cols="12" md="12" lg="3" xl="3">
-                        <v-combobox
-                            v-if="comboboxElements.statuses.length > 1"
-                            v-model="search.statuses"
-                            label="Statusy"
-                            :items="comboboxElements.statuses"
-                            :item-value="(status) => status.name"
-                            :item-text="(status) => status.display_name"
-                            outlined
-                            clearable
-                            dense
-                            hide-details
-                            small-chips
-                            multiple
-                            @input="searchByStatuses"
-                        ></v-combobox>
-                    </v-col>
-                </v-row>
-                <v-row no-gutters>
-                    <v-col cols="12">
-                        <v-data-table
-                            :no-data-text="`Niestety, ale ${company.name} nie posiada jeszcze ofert w systemie`"
-                            :headers="headers"
-                            :items="searchedItems"
-                            :loading="companyOffersLoading"
-                            class="component-background"
+
+        <page-title>
+            <template v-slot:default>Oferty praktyk i staży</template>
+            <template v-slot:subheader>Lista ofert przypisanych do {{company.name}}</template>
+        </page-title>
+
+        <v-row no-gutters>
+            <v-col cols="12">
+                <expand-card title="Lista Ofert">
+                    <template slot="buttons">
+                        <v-tooltip top>
+                            <template v-slot:activator="{ on, attrs }">
+                                <v-btn
+                                    small
+                                    icon
+                                    v-bind="attrs"
+                                    v-on="on"
+                                    @click="toggleCreateOfferDialog(true)"
+                                >
+                                    <v-icon>mdi-plus</v-icon>
+                                </v-btn>
+                            </template>
+                            <span>Dodaj Ofertę</span>
+                        </v-tooltip>
+                    </template>
+                    <v-row no-gutters class="px-5 pt-5 pb-2">
+                        <v-col
+                            cols="12"
+                            md="12"
+                            lg="5"
+                            xl="3"
+                            class="mr-5"
+                            v-bind:class="$vuetify.breakpoint.mdAndDown ? 'mb-5' : ''"
                         >
-                            <template v-slot:item.supervisor="{ item }">
-                                <router-link class="primary--text" link small
-                                             :to="{name: 'user', params: {id: item.supervisor.id}}">
-                                    {{ item.supervisor.first_name + ' ' + item.supervisor.last_name }}
-                                </router-link>
-                            </template>
-                            <template v-slot:item.status="{ item }">
-                                <v-chip small :color="item.status.hex_color">
-                                    {{ item.status.display_name }}
-                                </v-chip>
-                            </template>
-                            <template v-slot:item.interview="{ item }">
-                                <v-chip small :color="item.interview ? '#00E676' : ''">
-                                    {{ item.interview ? 'Tak' : 'Nie' }}
-                                </v-chip>
-                            </template>
-                            <template v-slot:item.date_from="{ item }">
-                                {{ formatDate(item.date_from) }}
-                            </template>
-                            <template v-slot:item.date_to="{ item }">
-                                {{ formatDate(item.date_to) }}
-                            </template>
-                        </v-data-table>
-                    </v-col>
-                </v-row>
-            </expand-card>
-        </v-col>
-    </v-row>
+                            <v-text-field
+                                v-model="search.name"
+                                label="Nazwa"
+                                outlined
+                                dense
+                                hide-details
+                                clearable
+                                @input="searchByName"
+                            ></v-text-field>
+                        </v-col>
+                        <v-col
+                            cols="12"
+                            md="12"
+                            lg="3"
+                            xl="3"
+                            class="mr-5"
+                            v-bind:class="$vuetify.breakpoint.mdAndDown ? 'mb-5' : ''"
+                        >
+                            <v-combobox
+                                v-if="comboboxElements.categories.length > 1"
+                                v-model="search.categories"
+                                label="Kategorie"
+                                :items="comboboxElements.categories"
+                                :item-value="(category) => category.name"
+                                :item-text="(category) => category.display_name"
+                                outlined
+                                dense
+                                hide-details
+                                small-chips
+                                clearable
+                                multiple
+                                @input="searchByCategories"
+                            ></v-combobox>
+                        </v-col>
+                        <v-col cols="12" md="12" lg="3" xl="3">
+                            <v-combobox
+                                v-if="comboboxElements.statuses.length > 1"
+                                v-model="search.statuses"
+                                label="Statusy"
+                                :items="comboboxElements.statuses"
+                                :item-value="(status) => status.name"
+                                :item-text="(status) => status.display_name"
+                                outlined
+                                clearable
+                                dense
+                                hide-details
+                                small-chips
+                                multiple
+                                @input="searchByStatuses"
+                            ></v-combobox>
+                        </v-col>
+                    </v-row>
+                    <v-row no-gutters>
+                        <v-col cols="12">
+                            <v-data-table
+                                :no-data-text="`Niestety, ale ${company.name} nie posiada jeszcze ofert w systemie`"
+                                :headers="headers"
+                                :items="searchedItems"
+                                :loading="companyOffersLoading"
+                                class="component-background"
+                            >
+                                <template v-slot:item.supervisor="{ item }">
+                                    <router-link class="primary--text" link small
+                                                 :to="{name: 'user', params: {id: item.supervisor.id}}">
+                                        {{ item.supervisor.first_name + ' ' + item.supervisor.last_name }}
+                                    </router-link>
+                                </template>
+                                <template v-slot:item.status="{ item }">
+                                    <v-chip small :color="item.status.hex_color">
+                                        {{ item.status.display_name }}
+                                    </v-chip>
+                                </template>
+                                <template v-slot:item.interview="{ item }">
+                                    <v-chip small :color="item.interview ? '#00E676' : ''">
+                                        {{ item.interview ? 'Tak' : 'Nie' }}
+                                    </v-chip>
+                                </template>
+                                <template v-slot:item.date_from="{ item }">
+                                    {{ formatDate(item.date_from) }}
+                                </template>
+                                <template v-slot:item.date_to="{ item }">
+                                    {{ formatDate(item.date_to) }}
+                                </template>
+                            </v-data-table>
+                        </v-col>
+                    </v-row>
+                </expand-card>
+            </v-col>
+        </v-row>
+    </v-container>
 </template>
 
 <script>
@@ -125,10 +133,11 @@ import {mapActions, mapGetters, mapState} from "vuex";
 import moment from "moment";
 import FormDialog from "../../_General/FormDialog";
 import CreateOfferDialog from "./CreateOfferDialog";
+import PageTitle from "../../_Helpers/PageTitle";
 
 export default {
     name: "TheCompanyOffers",
-    components: {CreateOfferDialog, FormDialog, ExpandCard},
+    components: {PageTitle, CreateOfferDialog, FormDialog, ExpandCard},
 
     data() {
         return {

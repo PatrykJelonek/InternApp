@@ -6,7 +6,7 @@
                     <slot></slot>
                 </h2>
                 <p class="text-body-2 secondary--text pa-0 ma-0" v-if="$slots['subheader']">
-                    <slot name="subheader"></slot>
+                    <slot name="subheader"> </slot>&#32;
                 </p>
             </v-col>
             <v-col class="d-flex justify-end">

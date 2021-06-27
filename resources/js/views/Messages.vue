@@ -1,5 +1,13 @@
 <template>
-    <v-container fluid>
+    <v-container fluid class="pa-0">
+        <page-title>
+            <template v-slot:default>Wiadomości</template>
+            <template v-slot:subheader>Lista wiadomości użytkownika {{ user.full_name }}</template>
+            <template v-slot:actions>
+                <v-btn-toggle></v-btn-toggle>
+            </template>
+        </page-title>
+
         <v-row>
             <v-col cols="12" lg="4">
                 <chats></chats>
@@ -15,10 +23,11 @@
 import {mapActions, mapGetters} from "vuex";
 import Chats from "../components/Messages/Chats";
 import Chat from "../components/Messages/Chat";
+import PageTitle from "../components/_Helpers/PageTitle";
 
 export default {
     name: "Messages",
-    components: {Chat, Chats},
+    components: {PageTitle, Chat, Chats},
 
     computed: {
         ...mapGetters({

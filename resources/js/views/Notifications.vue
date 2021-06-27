@@ -1,12 +1,19 @@
 <template>
-    <v-container fluid>
+    <v-container fluid class="pa-0">
+        <page-title>
+            <template v-slot:default>Powiadomienia</template>
+            <template v-slot:subheader>Lista powiadomień użytkownika {{ user.full_name }}</template>
+            <template v-slot:actions>
+                <v-btn-toggle></v-btn-toggle>
+            </template>
+        </page-title>
+
         <v-card rounded :loading="userNotificationsLoading" color="component-background" elevation="0">
             <template v-slot:progress>
                 <v-progress-linear color="primary" indeterminate></v-progress-linear>
             </template>
 
-            <v-card-title class="d-flex justify-lg-space-between px-5 py-2">
-                <span class="text-h6 font-weight-medium">Powiadomienia</span>
+            <v-card-title class="d-flex justify-end px-5 py-2">
                 <v-card-actions class="d-flex justify-end pa-2">
                     <v-btn-toggle dense background-color="transparent" active-class="primary--text" mandatory>
                         <v-btn small class="text--disabled" :value="true" outlined>Wszystkie</v-btn>
@@ -72,10 +79,11 @@
 import {debounce} from 'lodash';
 import {mapActions, mapGetters} from "vuex";
 import MessageNotification from "../components/Notifications/MessageNotification";
+import PageTitle from "../components/_Helpers/PageTitle";
 
 export default {
     name: "Notifications",
-    components: {MessageNotification},
+    components: {PageTitle, MessageNotification},
 
     data() {
         return {

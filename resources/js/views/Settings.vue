@@ -1,5 +1,13 @@
 <template>
     <v-container fluid>
+        <page-title>
+            <template v-slot:default>Ustawienia</template>
+            <template v-slot:subheader>Ustawienia konta użytkownika {{ user.full_name }}</template>
+            <template v-slot:actions>
+                <v-btn-toggle></v-btn-toggle>
+            </template>
+        </page-title>
+
         <v-row>
             <v-col cols="12" md="4" lg="2">
                 <custom-card>

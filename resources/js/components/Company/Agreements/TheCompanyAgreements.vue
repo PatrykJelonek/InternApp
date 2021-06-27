@@ -1,59 +1,62 @@
 <template>
-    <v-row no-gutters>
+    <v-container fluid class="pa-0">
         <accept-agreement-dialog :slug="selectedAgreement.slug"></accept-agreement-dialog>
         <reject-agreement-dialog :slug="selectedAgreement.slug"></reject-agreement-dialog>
-        <v-col cols="12">
-            <expand-card
-                title="Lista umów"
-                description="Poniżej znajduje się lista umów firmy z uczelniami."
-                class="mt-10"
+
+        <page-title>
+            <template v-slot:default>Umowy</template>
+            <template v-slot:subheader>Lista umów przypisanych do {{
+                    !companyLoading ? company.name : 'tej firmy'
+                }}
+            </template>
+        </page-title>
+
+        <expand-card title="Lista umów">
+            <v-data-table
+                :items="companyAgreements"
+                :loading="companyAgreementsLoading"
+                :headers="headers"
+                class="table-cursor component-background"
+                @click:row="(item) => {this.$router.push({name: 'agreement', params: {slug: item.slug}})}"
             >
-                <v-data-table
-                    :items="companyAgreements"
-                    :loading="companyAgreementsLoading"
-                    :headers="headers"
-                    class="table-cursor"
-                    @click:row="(item) => {this.$router.push({name: 'agreement', params: {slug: item.slug}})}"
-                >
-                    <template v-slot:item.status="{ item }">
-                        <v-chip small :color="item.status.hex_color">
-                            {{ item.status.display_name }}
-                        </v-chip>
-                    </template>
-                    <template v-slot:item.actions="{ item }">
-                        <v-menu offset-y>
-                            <template v-slot:activator="{ on, attrs }">
-                                <v-btn
-                                    icon
-                                    v-bind="attrs"
-                                    v-on="on"
+                <template v-slot:item.status="{ item }">
+                    <v-chip small :color="item.status.hex_color">
+                        {{ item.status.display_name }}
+                    </v-chip>
+                </template>
+                <template v-slot:item.actions="{ item }">
+                    <v-menu offset-y>
+                        <template v-slot:activator="{ on, attrs }">
+                            <v-btn
+                                icon
+                                v-bind="attrs"
+                                v-on="on"
+                            >
+                                <v-icon>mdi-dots-vertical</v-icon>
+                            </v-btn>
+                        </template>
+                        <v-list dense>
+                            <v-list-item>
+                                <v-list-item-title
+                                    class="cursor-pointer"
+                                    :to="{name: 'offer', params: {slug: item.offer.slug}}"
                                 >
-                                    <v-icon>mdi-dots-vertical</v-icon>
-                                </v-btn>
-                            </template>
-                            <v-list dense>
-                                <v-list-item>
-                                    <v-list-item-title
-                                        class="cursor-pointer"
-                                        :to="{name: 'offer', params: {slug: item.offer.slug}}"
-                                    >
-                                        Wyświetl ofertę
-                                    </v-list-item-title>
-                                </v-list-item>
-                                <v-divider v-if="item.status.group === 'new'"></v-divider>
-                                <v-list-item v-if="item.status.group === 'new'" @click="accept(item)">
-                                    <v-list-item-title class="cursor-pointer">Akceptuj</v-list-item-title>
-                                </v-list-item>
-                                <v-list-item v-if="item.status.group === 'new'" @click="reject(item)">
-                                    <v-list-item-title class="cursor-pointer">Odrzuć</v-list-item-title>
-                                </v-list-item>
-                            </v-list>
-                        </v-menu>
-                    </template>
-                </v-data-table>
-            </expand-card>
-        </v-col>
-    </v-row>
+                                    Wyświetl ofertę
+                                </v-list-item-title>
+                            </v-list-item>
+                            <v-divider v-if="item.status.group === 'new'"></v-divider>
+                            <v-list-item v-if="item.status.group === 'new'" @click="accept(item)">
+                                <v-list-item-title class="cursor-pointer">Akceptuj</v-list-item-title>
+                            </v-list-item>
+                            <v-list-item v-if="item.status.group === 'new'" @click="reject(item)">
+                                <v-list-item-title class="cursor-pointer">Odrzuć</v-list-item-title>
+                            </v-list-item>
+                        </v-list>
+                    </v-menu>
+                </template>
+            </v-data-table>
+        </expand-card>
+    </v-container>
 </template>
 
 <script>
@@ -62,10 +65,11 @@ import {mapActions, mapGetters} from "vuex";
 import moment from "moment";
 import AcceptAgreementDialog from "../../Agreements/AcceptAgreementDialog";
 import RejectAgreementDialog from "../../Agreements/RejectAgreementDialog";
+import PageTitle from "../../_Helpers/PageTitle";
 
 export default {
     name: "TheCompanyAgreements",
-    components: {RejectAgreementDialog, AcceptAgreementDialog, ExpandCard},
+    components: {PageTitle, RejectAgreementDialog, AcceptAgreementDialog, ExpandCard},
 
     data() {
         return {

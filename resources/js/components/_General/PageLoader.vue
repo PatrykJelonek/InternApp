@@ -1,6 +1,6 @@
 <template>
-    <v-overlay>
-        <v-progress-circular color="primary" size="150" width="8" indeterminate class=""></v-progress-circular>
+    <v-overlay color="component-background darken-1" opacity=".2">
+        <v-progress-circular color="primary" size="150" width="8" indeterminate></v-progress-circular>
     </v-overlay>
 </template>
 

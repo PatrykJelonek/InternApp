@@ -13,10 +13,13 @@ use App\Models\Company;
 use App\Models\Offer;
 use App\Models\Questionnaire;
 use App\Models\User;
+use App\Models\UserCompanyRole;
 use App\Repositories\Interfaces\CompanyRepositoryInterface;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
+
+use function Clue\StreamFilter\fun;
 
 class CompanyRepository implements CompanyRepositoryInterface
 {
@@ -127,36 +130,22 @@ class CompanyRepository implements CompanyRepositoryInterface
 
     public function getCompanyWorkers(string $slug, ?array $roles = null, ?array $statuses = null, ?int $limit = null)
     {
-        $companyWorkers = User::with(['status'])->whereHas(
-            'companies',
-            function (Builder $query) use ($slug) {
-                $query->where(['slug' => $slug]);
+        $company = Company::with(['users','users.status'])->where(['slug' => $slug])->first()->toArray();
+        $users = [];
+
+        foreach ($company['users'] as $user) {
+            $pivotId = $user['pivot']['id'];
+            $userCompanyRoles = UserCompanyRole::with(['role'])->where(['user_company_id'=> $pivotId])->get();
+            $user['company_roles'] = [];
+
+            foreach ($userCompanyRoles as $userCompanyRole) {
+                $user['company_roles'][] = $userCompanyRole->role;
             }
-        );
 
-        if (!empty($roles)) {
-            $companyWorkers->whereHas(
-                'roles',
-                function (Builder $query) use ($roles) {
-                    $query->where(['name' => $roles]);
-                }
-            );
+            $users[] = $user;
         }
 
-        if (!empty($statuses)) {
-            $companyWorkers->whereHas(
-                'status',
-                function (Builder $query) use ($statuses) {
-                    $query->where(['name' => $statuses]);
-                }
-            );
-        }
-
-        if ($limit !== null) {
-            $companyWorkers->limit($limit);
-        }
-
-        return $companyWorkers->get();
+        return $users;
     }
 
     public function getCompanyAgreements(string $slug, ?bool $isActive = null)

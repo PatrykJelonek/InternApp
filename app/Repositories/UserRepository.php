@@ -107,4 +107,20 @@ class UserRepository implements UserRepositoryInterface
     {
         return User::with(['universities','companies'])->find($userId);
     }
+
+    public function getUserCompanyRoles(int $userId, $companySlug)
+    {
+        $userCompany = User::with(['companies'])->find($userId)->companies()->where(['slug' => $companySlug])->first();
+        $pivotId = $userCompany->pivot->id;
+
+        # TODO: Do dokończenia
+    }
+
+    public function getUserUniversityRoles(int $userId, $universitySlug)
+    {
+        $userUniversity = User::with(['universities'])->find($userId)->universities()->where(['slug' => $universitySlug])->first();
+        $pivotId = $userUniversity->pivot->id;
+
+        # TODO: Do dokończenia
+    }
 }

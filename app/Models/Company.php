@@ -33,7 +33,7 @@ class Company extends Model
 
     protected $table = "companies";
 
-    protected $hidden = ['pivot', 'city_id', 'company_category_id'];
+    protected $hidden = ['city_id', 'company_category_id'];
 
     public function category()
     {
@@ -52,7 +52,7 @@ class Company extends Model
 
     public function users()
     {
-        return $this->belongsToMany('App\Models\User', 'users_companies', 'company_id', 'user_id');
+        return $this->belongsToMany('App\Models\User', 'users_companies', 'company_id', 'user_id')->withPivot(['id']);
     }
 
     public function questionnaires()

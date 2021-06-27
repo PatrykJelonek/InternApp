@@ -18,6 +18,7 @@
                         :items="companyWorkers"
                         :headers="headers"
                         class="component-background"
+                        :loading="companyWorkersLoading"
                     >
                         <template v-slot:item.full_name="{item}">
                             <v-avatar :size="30" rounded class="mr-2" :color="item.avatar_url ? '' : 'primary'">
@@ -27,6 +28,14 @@
                         </template>
                         <template v-slot:item.status="{item}">
                             <v-chip outlined small :color="item.status.name === 'active' ? 'primary' : ''">{{item.status.description}}</v-chip>
+                        </template>
+                        <template v-slot:item.roles="{item}">
+                            <v-chip-group v-if="item.roles">
+                                <v-chip outlined small v-for="role in item.company_roles">{{ role.display_name }}</v-chip>
+                            </v-chip-group>
+                            <template v-else>
+                                <span class="secondary--text">---</span>
+                            </template>
                         </template>
                         <template v-slot:item.actions="{item}">
                             <v-menu offset-y>
@@ -84,6 +93,7 @@ export default {
                 {text: "Imie i nazwisko", value: 'full_name', align: 'left'},
                 {text: "Numer telefonu", value: 'phone', align: 'left'},
                 {text: "Email", value: 'email', align: 'left'},
+                {text: "Role", value: 'roles', align: 'left'},
                 {text: "Status konta", value: 'status', align: 'center'},
                 {text: "Akcje", value: 'actions', sortable: false}
             ],

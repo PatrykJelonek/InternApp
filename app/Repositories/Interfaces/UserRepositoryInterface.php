@@ -19,4 +19,8 @@ interface UserRepositoryInterface
     public function getMessages(int $userId);
 
     public function getUserById(int $userId);
+
+    public function getUserCompanyRoles(int $userId, $companySlug);
+
+    public function getUserUniversityRoles(int $userId, $universitySlug);
 }

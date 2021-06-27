@@ -1,12 +1,32 @@
 <template>
-    <h1>Settings</h1>
+    <v-container fluid class="pa-0">
+        <template v-if="!companyLoading">
+            <page-title>
+                <template v-slot:default>Ustawienia</template>
+                <template v-slot:subheader>Ustawienia firmy {{ company.name }}</template>
+            </page-title>
+        </template>
+        <template v-else>
+            <page-loader></page-loader>
+        </template>
+    </v-container>
 </template>
 
 <script>
-import {mapActions} from "vuex";
+import {mapActions, mapGetters} from "vuex";
+import PageTitle from "../../_Helpers/PageTitle";
+import PageLoader from "../../_General/PageLoader";
 
 export default {
     name: "TheCompanySettings",
+    components: {PageLoader, PageTitle},
+
+    computed: {
+        ...mapGetters({
+            company: 'company/company',
+            companyLoading: 'company/companyLoading'
+        }),
+    },
 
     methods: {
         ...mapActions({
