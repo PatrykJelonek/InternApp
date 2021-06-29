@@ -5,6 +5,15 @@
                 <template v-slot:default>Ustawienia</template>
                 <template v-slot:subheader>Ustawienia firmy {{ company.name }}</template>
             </page-title>
+
+            <v-row>
+                <v-col cols="12" md="2">
+                   <the-company-settings-logo></the-company-settings-logo>
+                </v-col>
+                <v-col cols="12" md="6">
+                    <the-company-settings-data></the-company-settings-data>
+                </v-col>
+            </v-row>
         </template>
         <template v-else>
             <page-loader></page-loader>
@@ -16,10 +25,12 @@
 import {mapActions, mapGetters} from "vuex";
 import PageTitle from "../../_Helpers/PageTitle";
 import PageLoader from "../../_General/PageLoader";
+import TheCompanySettingsLogo from "./TheCompanySettingsLogo";
+import TheCompanySettingsData from "./TheCompanySettingsData";
 
 export default {
     name: "TheCompanySettings",
-    components: {PageLoader, PageTitle},
+    components: {TheCompanySettingsData, TheCompanySettingsLogo, PageLoader, PageTitle},
 
     computed: {
         ...mapGetters({

@@ -8,6 +8,7 @@ use App\Http\Requests\UniversityCreateUniversityQuestionnaireRequest;
 use App\Http\Requests\UniversityGetUniversityQuestionnairesRequest;
 use App\Http\Requests\UniversityInternshipsRequest;
 use App\Http\Requests\UniversityStudentsRequest;
+use App\Http\Requests\UniversityUpdateUniversityLogoRequest as UpdateLogoRequest;
 use App\Http\Requests\UniversityWorkersRequest;
 use App\Models\Agreement;
 use App\Models\Internship;
@@ -20,6 +21,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Tymon\JWTAuth\Exceptions\UserNotDefinedException;
 
@@ -530,6 +532,33 @@ class UniversityController extends Controller
         }
 
         return \response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+
+    /**
+     * @param UpdateLogoRequest $request
+     * @param string            $slug
+     *
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\ResponseFactory|Response
+     */
+    public function updateUniversityLogo(UpdateLogoRequest $request, string $slug)
+    {
+        $path = $request->file('logo')->store('logos');
+
+        if (!empty($path)) {
+            $university = $this->universityRepository->getUniversityBySlug($slug);
+            if ($university !== null) {
+                $oldAvatarPath = $university->logo_url;
+
+                $university->logo_url = $path;
+
+                if ($university->update()) {
+                    Storage::delete($oldAvatarPath);
+                    return response($path, Response::HTTP_OK);
+                }
+            }
+        }
+
+        return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
     /**

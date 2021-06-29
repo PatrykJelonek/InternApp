@@ -5,27 +5,20 @@
         <page-title>
             <template v-slot:default>Oferty praktyk i staży</template>
             <template v-slot:subheader>Lista ofert przypisanych do {{company.name}}</template>
+            <template v-slot:actions>
+                <v-btn
+                outlined
+                color="primary"
+                @click="toggleCreateOfferDialog(true)"
+                >
+                    Dodaj ofertę
+                </v-btn>
+            </template>
         </page-title>
 
         <v-row no-gutters>
             <v-col cols="12">
                 <expand-card title="Lista Ofert">
-                    <template slot="buttons">
-                        <v-tooltip top>
-                            <template v-slot:activator="{ on, attrs }">
-                                <v-btn
-                                    small
-                                    icon
-                                    v-bind="attrs"
-                                    v-on="on"
-                                    @click="toggleCreateOfferDialog(true)"
-                                >
-                                    <v-icon>mdi-plus</v-icon>
-                                </v-btn>
-                            </template>
-                            <span>Dodaj Ofertę</span>
-                        </v-tooltip>
-                    </template>
                     <v-row no-gutters class="px-5 pt-5 pb-2">
                         <v-col
                             cols="12"

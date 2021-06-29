@@ -279,5 +279,13 @@ export default {
                 accessCode: code
             });
         },
+
+        updateCompanyLogo({commit}, {slug, data}) {
+            return axios.post(`/api/companies/${slug}/settings/logo`, data, {
+                headers: {
+                    'content-type': 'multipart/form-data'
+                }
+            });
+        }
     },
 }

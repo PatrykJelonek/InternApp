@@ -26,6 +26,7 @@ class CreateCompaniesTable extends Migration
             $table->string('description', 255);
             $table->string('slug', 255)->unique();
             $table->string('access_code', 8)->nullable()->unique();
+            $table->string('logo_url', 255)->nullable();
             $table->foreignId('company_category_id');
             $table->foreign('company_category_id')->references('id')->on('company_categories');
             $table->dateTime('created_at', 0);

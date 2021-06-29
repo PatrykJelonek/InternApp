@@ -353,5 +353,13 @@ export default {
                 commit('SET_AVAILABLE_OFFERS_LOADING', false);
             }
         },
+
+        updateUniversityLogo({commit}, {slug, data}) {
+            return axios.post(`/api/university/${slug}/settings/logo`, data, {
+                headers: {
+                    'content-type': 'multipart/form-data'
+                }
+            });
+        }
     },
 };

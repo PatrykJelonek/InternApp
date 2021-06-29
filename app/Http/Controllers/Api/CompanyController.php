@@ -6,6 +6,7 @@ use App\Http\Requests\CompanyCreateCompanyQuestionnaireRequest as CreateQuestion
 use App\Http\Requests\CompanyGetCompanyQuestionnairesRequest;
 use App\Http\Requests\CompanyOffersRequest;
 use App\Http\Requests\CompanyShowRequest;
+use App\Http\Requests\CompanyUpdateCompanyLogoRequest as UpdateLogoRequest;
 use App\Http\Requests\GetCompanyWorkersRequest;
 use App\Models\Company;
 use App\Http\Controllers\Controller;
@@ -16,6 +17,7 @@ use App\Services\QuestionnairesService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class CompanyController extends Controller
@@ -421,5 +423,26 @@ class CompanyController extends Controller
         }
 
         return \response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+
+    public function updateCompanyLogo(UpdateLogoRequest $request, string $slug)
+    {
+        $path = $request->file('logo')->store('logos');
+
+        if (!empty($path)) {
+            $company = $this->companyRepository->getCompanyBySlug($slug);
+            if ($company !== null) {
+                $oldAvatarPath = $company->logo_url;
+
+                $company->logo_url = $path;
+
+                if ($company->update()) {
+                    Storage::delete($oldAvatarPath);
+                    return response($path, Response::HTTP_OK);
+                }
+            }
+        }
+
+        return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 }
