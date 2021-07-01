@@ -94,8 +94,11 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::get('/companies', 'Api\CompanyController@index');
     Route::get('/companies/categories', 'Api\CompanyCategoryController@index');
     Route::get('/companies/{slug}', 'Api\CompanyController@show');
+    Route::put('/companies/{slug}', 'Api\CompanyController@updateCompanyData');
     Route::get('/companies/{slug}/offers','Api\CompanyController@getCompanyOffers');
     Route::get('/companies/{slug}/workers','Api\CompanyController@getCompanyWorkers');
+    Route::delete('/companies/{slug}/workers/{userId}','Api\CompanyController@deleteCompanyWorker');
+    Route::put('/companies/{slug}/workers/{userId}/accept','Api\CompanyController@acceptCompanyWorker');
     Route::get('/companies/{slug}/agreements','Api\CompanyController@getAgreements');
     Route::get('/companies/{slug}/questionnaires','Api\CompanyController@getCompanyQuestionnaires');
     Route::post('/companies/{slug}/questionnaires','Api\CompanyController@createCompanyQuestionnaire');

@@ -18,7 +18,7 @@
                         <v-btn outlined color="secondary" @click="toggleFunction(false)">Anuluj</v-btn>
                     </v-col>
                     <v-col cols="6" class="text-right">
-                        <v-btn outlined color="primary" @click="confirmFunction">Potwierdź</v-btn>
+                        <v-btn outlined color="primary" @click="confirmFunction(...confirmFunctionArgs)">Potwierdź</v-btn>
                     </v-col>
                 </v-row>
             </v-card-actions>
@@ -35,6 +35,7 @@ export default {
     props: {
         toggleFunction: Function,
         confirmFunction: Function,
+        confirmFunctionArgs: Array,
         discardFunction: Function,
         dialogState: Boolean,
         title: String,

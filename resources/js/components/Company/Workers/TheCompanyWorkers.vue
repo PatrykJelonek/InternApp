@@ -8,8 +8,17 @@
             :dialog-state="deleteCompanyWorkerDialog"
             :toggle-function="toggleDeleteCompanyWorkerDialog"
             :confirm-function="deleteWorker"
+            :confirm-function-args="[selectedWorkerId]"
             title="Usuń pracownika"
-            :description="selectedWorker ? 'Czy na pewno chcesz usunąć ' + selectedWorker + ' z firmy?' : 'Czy chcesz usunąć tego pracownika z firmy'"
+            :description="selectedWorkerFullName ? 'Czy na pewno chcesz usunąć ' + selectedWorkerFullName + ' z firmy?' : 'Czy chcesz usunąć tego pracownika z firmy'"
+        ></custom-confirm-dialog>
+        <custom-confirm-dialog
+            :dialog-state="acceptCompanyWorkerDialog"
+            :toggle-function="toggleAcceptCompanyWorkerDialog"
+            :confirm-function="acceptWorker"
+            :confirm-function-args="[selectedWorkerId]"
+            title="Akceptuj pracownika"
+            :description="selectedWorkerFullName ? 'Czy na pewno chcesz zaakceptować ' + selectedWorkerFullName + ' jako pracownika firmy?' : 'Czy chcesz zaakceptować tego pracownika jako pracownika firmy?'"
         ></custom-confirm-dialog>
         <v-row>
             <v-col cols="12">
@@ -22,16 +31,27 @@
                     >
                         <template v-slot:item.full_name="{item}">
                             <v-avatar :size="30" rounded class="mr-2" :color="item.avatar_url ? '' : 'primary'">
-                                <v-img :src="item.avatar_url ? '/'+item.avatar_url : ''" :alt="'Awatar użytkownika ' + item.full_name"></v-img>
+                                <v-img :src="item.avatar_url ? '/'+item.avatar_url : ''"
+                                       :alt="'Awatar użytkownika ' + item.full_name"></v-img>
                             </v-avatar>
                             {{ item.full_name }}
                         </template>
                         <template v-slot:item.status="{item}">
-                            <v-chip outlined small :color="item.status.name === 'active' ? 'primary' : ''">{{item.status.description}}</v-chip>
+                            <v-chip outlined small :color="item.status.name === 'active' ? 'primary' : ''">
+                                {{ item.status.description }}
+                            </v-chip>
+                        </template>
+                        <template v-slot:item.status_company="{item}">
+                            <v-chip outlined small :color="item.pivot.active ? 'primary' : ''">
+                                {{ item.pivot.active ? 'Aktywne' : 'Nieaktywne' }}
+                            </v-chip>
                         </template>
                         <template v-slot:item.roles="{item}">
                             <v-chip-group v-if="item.roles">
-                                <v-chip outlined small v-for="role in item.company_roles">{{ role.display_name }}</v-chip>
+                                <v-chip outlined small v-for="role in item.company_roles">{{
+                                        role.display_name
+                                    }}
+                                </v-chip>
                             </v-chip-group>
                             <template v-else>
                                 <span class="secondary--text">---</span>
@@ -50,7 +70,8 @@
                                     </v-btn>
                                 </template>
                                 <v-list dense class="component-background lighten-1">
-                                    <v-list-item class="cursor-pointer" v-if="item.status.name !== 'active'" @click="toggleDeleteCompanyWorkerDialog(true)">
+                                    <v-list-item class="cursor-pointer" @mouseup="selectedWorkerFullName = item.full_name; selectedWorkerId = item.id" v-if="!item.pivot.active"
+                                                 @click="toggleAcceptCompanyWorkerDialog(true)">
                                         <v-list-item-icon>
                                             <v-icon>mdi-account-check-outline</v-icon>
                                         </v-list-item-icon>
@@ -58,7 +79,8 @@
                                             <v-list-item-title>Akceptuj pracownika</v-list-item-title>
                                         </v-list-item-content>
                                     </v-list-item>
-                                    <v-list-item class="cursor-pointer" @mouseup="selectedWorker = item.full_name" @click="toggleDeleteCompanyWorkerDialog(true)">
+                                    <v-list-item class="cursor-pointer" @mouseup="selectedWorkerFullName = item.full_name; selectedWorkerId = item.id"
+                                                 @click="toggleDeleteCompanyWorkerDialog(true)">
                                         <v-list-item-icon>
                                             <v-icon>mdi-delete-outline</v-icon>
                                         </v-list-item-icon>
@@ -94,7 +116,7 @@ export default {
                 {text: "Numer telefonu", value: 'phone', align: 'left'},
                 {text: "Email", value: 'email', align: 'left'},
                 {text: "Role", value: 'roles', align: 'left'},
-                {text: "Status konta", value: 'status', align: 'center'},
+                {text: "Status", value: 'status_company', align: 'center'},
                 {text: "Akcje", value: 'actions', sortable: false}
             ],
         }
@@ -105,7 +127,8 @@ export default {
             company: 'company/company',
             companyWorkers: 'company/companyWorkers',
             companyWorkersLoading: 'company/companyWorkersLoading',
-            deleteCompanyWorkerDialog: 'helpers/deleteCompanyWorkerDialog'
+            deleteCompanyWorkerDialog: 'helpers/deleteCompanyWorkerDialog',
+            acceptCompanyWorkerDialog: 'helpers/acceptCompanyWorkerDialog',
         })
     },
 
@@ -114,10 +137,40 @@ export default {
             setBreadcrumbs: 'helpers/setBreadcrumbs',
             fetchCompanyWorkers: 'company/fetchCompanyWorkers',
             toggleDeleteCompanyWorkerDialog: 'helpers/toggleDeleteCompanyWorkerDialog',
+            toggleAcceptCompanyWorkerDialog: 'helpers/toggleAcceptCompanyWorkerDialog',
+            acceptCompanyWorker: 'company/acceptCompanyWorker',
+            deleteCompanyWorker: 'company/deleteCompanyWorker',
+            setSnackbar: 'snackbar/setSnackbar'
         }),
 
-        deleteWorker() {
-            console.log("TEST");
+        deleteWorker(userId) {
+            this.deleteCompanyWorker({slug: this.$route.params.slug, userId: userId}).then((response) => {
+                this.toggleDeleteCompanyWorkerDialog(false);
+                this.setSnackbar({message: 'Użytkownik został usunięty z listy pracowników!', color: 'success'});
+            }).catch((e) => {
+                this.toggleDeleteCompanyWorkerDialog(false);
+                this.setSnackbar({
+                    message: 'Wystąpił problem z usunięciem użytkownika z listy pracowników!',
+                    color: 'error'
+                });
+            });
+
+        },
+
+        acceptWorker(userId) {
+            this.acceptCompanyWorker({slug: this.$route.params.slug, userId: userId}).then((response) => {
+                this.setSnackbar({
+                    message: 'Użytkownik został zaakceptowany jako pracownik tej firmy!',
+                    color: 'success'
+                });
+                this.toggleAcceptCompanyWorkerDialog(false);
+            }).catch((e) => {
+                this.setSnackbar({
+                    message: 'Wystąpił problem podczas akceptacji użytkownika jako pracownika tej firmy',
+                    color: 'error'
+                });
+                this.toggleAcceptCompanyWorkerDialog(false);
+            });
         }
     },
 

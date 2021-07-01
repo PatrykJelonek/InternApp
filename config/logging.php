@@ -104,7 +104,13 @@ return [
             'driver' => 'single',
             'path' => storage_path('logs/api.log'),
             'level' => 'debug'
-        ]
+        ],
+
+        'user' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/user.log'),
+            'level' => 'debug'
+        ],
     ],
 
 ];

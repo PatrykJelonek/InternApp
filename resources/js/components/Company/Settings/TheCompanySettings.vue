@@ -7,10 +7,10 @@
             </page-title>
 
             <v-row>
-                <v-col cols="12" md="2">
+                <v-col cols="12" md="4" lg="3" xl="2">
                    <the-company-settings-logo></the-company-settings-logo>
                 </v-col>
-                <v-col cols="12" md="6">
+                <v-col cols="12" md="8" lg="9" xl="6">
                     <the-company-settings-data></the-company-settings-data>
                 </v-col>
             </v-row>

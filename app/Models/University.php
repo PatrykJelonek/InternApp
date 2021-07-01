@@ -24,7 +24,7 @@ class University extends Model
 
     public function users()
     {
-        return $this->belongsToMany('App\Models\User', 'users_universities', 'university_id', 'user_id');
+        return $this->belongsToMany('App\Models\User', 'users_universities', 'university_id', 'user_id')->withPivot(['id','active']);
     }
 
     public function faculties()

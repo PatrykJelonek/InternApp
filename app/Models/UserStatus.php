@@ -15,8 +15,8 @@ class UserStatus extends Model
     ];
 
     const USER_STATUS_DESCRIPTIONS = [
-        self::USER_STATUS_ACTIVE => 'Konto aktywne',
-        self::USER_STATUS_INACTIVE => 'Konto nieaktywne',
+        self::USER_STATUS_ACTIVE => 'Aktywne',
+        self::USER_STATUS_INACTIVE => 'Nieaktywne',
     ];
 
     protected $table = 'user_statuses';

@@ -19,7 +19,8 @@ class CreateUsersCompaniesTable extends Migration
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreignId('company_id');
             $table->foreign('company_id')->references('id')->on('companies');
-            $table->dateTime('created_at', 0);
+            $table->boolean('active')->default(false);
+            $table->timestamps();
         });
     }
 

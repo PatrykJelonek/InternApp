@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Requests\CompanyAcceptCompanyWorkerRequest;
 use App\Http\Requests\CompanyCreateCompanyQuestionnaireRequest as CreateQuestionnaireRequest;
+use App\Http\Requests\CompanyDeleteCompanyWorkerRequest;
 use App\Http\Requests\CompanyGetCompanyQuestionnairesRequest;
 use App\Http\Requests\CompanyOffersRequest;
 use App\Http\Requests\CompanyShowRequest;
+use App\Http\Requests\CompanyUpdateCompanyDataRequest as UpdateDataRequest;
 use App\Http\Requests\CompanyUpdateCompanyLogoRequest as UpdateLogoRequest;
 use App\Http\Requests\GetCompanyWorkersRequest;
 use App\Models\Company;
@@ -13,6 +16,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Internship;
 use App\Models\Student;
 use App\Repositories\CompanyRepository;
+use App\Services\CompanyService;
 use App\Services\QuestionnairesService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -33,15 +37,25 @@ class CompanyController extends Controller
     private $questionnairesService;
 
     /**
+     * @var CompanyService
+     */
+    private $companyService;
+
+    /**
      * CompanyController constructor.
      *
-     * @param CompanyRepository $companyRepository
+     * @param CompanyRepository     $companyRepository
      * @param QuestionnairesService $questionnairesService
+     * @param CompanyService        $companyService
      */
-    public function __construct(CompanyRepository $companyRepository, QuestionnairesService $questionnairesService)
-    {
+    public function __construct(
+        CompanyRepository $companyRepository,
+        QuestionnairesService $questionnairesService,
+        CompanyService $companyService
+    ) {
         $this->companyRepository = $companyRepository;
         $this->questionnairesService = $questionnairesService;
+        $this->companyService = $companyService;
     }
 
     /**
@@ -444,5 +458,40 @@ class CompanyController extends Controller
         }
 
         return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+
+    public function updateCompanyData(UpdateDataRequest $request, string $slug)
+    {
+        $result = $this->companyService->updateCompanyData(
+            $slug,
+            $request->input('email'),
+            $request->input('phone'),
+            $request->input('website'),
+            $request->input('description')
+        );
+
+        if ($result !== null) {
+            return response($result, Response::HTTP_OK);
+        }
+
+        return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+
+    public function deleteCompanyWorker(CompanyDeleteCompanyWorkerRequest $request, string $slug, string $userId)
+    {
+        if ($this->companyService->deleteCompanyWokrer($slug, $userId)) {
+            return \response(null, Response::HTTP_OK);
+        }
+
+        return \response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+
+    public function acceptCompanyWorker(CompanyAcceptCompanyWorkerRequest $request, string $slug, string $userId)
+    {
+        if ($this->companyService->acceptCompanyWorker($slug, $userId)) {
+            return \response(null, Response::HTTP_OK);
+        }
+
+        return \response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 }

@@ -52,7 +52,7 @@ class Company extends Model
 
     public function users()
     {
-        return $this->belongsToMany('App\Models\User', 'users_companies', 'company_id', 'user_id')->withPivot(['id']);
+        return $this->belongsToMany('App\Models\User', 'users_companies', 'company_id', 'user_id')->withPivot(['id','active','created_at']);
     }
 
     public function questionnaires()

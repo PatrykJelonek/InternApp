@@ -35,7 +35,7 @@
                                 :id="university.id"
                                 :name="university.name"
                                 :address="university.street + ' ' + university.street_number"
-                                :liked="university.pivot.liked"
+                                :liked="university"
                                 :slug="university.slug"
                             ></universities-list-item>
                         </v-list>

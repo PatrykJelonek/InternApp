@@ -286,6 +286,18 @@ export default {
                     'content-type': 'multipart/form-data'
                 }
             });
+        },
+
+        updateCompanyData({commit}, {slug, data}) {
+            return axios.put(`/api/companies/${slug}`, data);
+        },
+
+        acceptCompanyWorker({commit}, {slug, userId}) {
+            return axios.put(`/api/companies/${slug}/workers/${userId}/accept`);
+        },
+
+        deleteCompanyWorker({commit}, {slug, userId}) {
+            return axios.delete(`/api/companies/${slug}/workers/${userId}`);
         }
     },
 }

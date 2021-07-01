@@ -16,6 +16,7 @@ export default {
         createOwnAgreementDialog: false,
         createQuestionnaireDialog: false,
         deleteCompanyWorkerDialog: false,
+        acceptCompanyWorkerDialog: false,
         fillHeight: false,
         navigationDrawer: true,
         errorMessage: '',
@@ -91,6 +92,10 @@ export default {
 
         deleteCompanyWorkerDialog(state) {
             return state.deleteCompanyWorkerDialog;
+        },
+
+        acceptCompanyWorkerDialog(state) {
+            return state.acceptCompanyWorkerDialog;
         }
     },
 
@@ -166,6 +171,10 @@ export default {
         TOGGLE_DELETE_COMPANY_WORKER_DIALOG(state, value) {
             state.deleteCompanyWorkerDialog = value;
         },
+
+        TOGGLE_ACCEPT_COMPANY_WORKER_DIALOG(state, value) {
+            state.acceptCompanyWorkerDialog = value;
+        },
     },
 
     actions: {
@@ -215,6 +224,10 @@ export default {
 
         toggleDeleteCompanyWorkerDialog({commit}, value) {
             commit('TOGGLE_DELETE_COMPANY_WORKER_DIALOG', value);
+        },
+
+        toggleAcceptCompanyWorkerDialog({commit}, value) {
+            commit('TOGGLE_ACCEPT_COMPANY_WORKER_DIALOG', value);
         },
 
         parseErrorMessage({commit}, status) {
