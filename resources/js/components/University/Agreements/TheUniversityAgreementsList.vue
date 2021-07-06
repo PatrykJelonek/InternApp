@@ -1,12 +1,19 @@
 <template>
-    <div>
+    <v-container fluid class="pa-0">
+        <page-title>
+            <template v-slot:default>Umowy</template>
+            <template v-slot:subheader>Lista umów przypisanych do {{
+                    !universityLoading ? university.name : 'tej uczelni'
+                }}
+            </template>
+        </page-title>
         <v-row>
             <create-own-agreement-dialog></create-own-agreement-dialog>
             <v-col cols="12">
-                <expand-card
-                    title="Umowy"
-                    :description="`Lista umów należących do ${university.name}.`"
-                >
+                <custom-card>
+                    <custom-card-title>
+                        <template v-slot:default>Lista umów</template>
+                    </custom-card-title>
                     <template v-slot:buttons>
                         <v-tooltip top v-has="['deanery_worker']">
                             <template v-slot:activator="{ on, attrs }">
@@ -28,7 +35,7 @@
                         :items="agreements"
                         :items-per-page="5"
                         :loading="agreementsLoading"
-                        class="elevation-1"
+                        class="elevation-1 component-background"
                     >
                         <template v-slot:item.company="{ item }">
                             <router-link :to="{name: 'company', params: {slug: item.company.slug}}">{{
@@ -76,10 +83,10 @@
                             </v-menu>
                         </template>
                     </v-data-table>
-                </expand-card>
+                </custom-card>
             </v-col>
         </v-row>
-    </div>
+    </v-container>
 </template>
 
 <script>
@@ -87,10 +94,13 @@ import moment from "moment";
 import {mapActions, mapGetters} from "vuex";
 import ExpandCard from "../../_Helpers/ExpandCard";
 import CreateOwnAgreementDialog from "./CreateOwnAgreementDialog";
+import PageTitle from "../../_Helpers/PageTitle";
+import CustomCard from "../../_General/CustomCard";
+import CustomCardTitle from "../../_General/CustomCardTitle";
 
 export default {
     name: "TheUniversityAgreementsList",
-    components: {CreateOwnAgreementDialog, ExpandCard},
+    components: {CustomCardTitle, CustomCard, PageTitle, CreateOwnAgreementDialog, ExpandCard},
     data() {
         return {
             show: true,
@@ -109,6 +119,7 @@ export default {
     computed: {
         ...mapGetters({
             university: 'university/university',
+            universityLoading: 'university/universityLoading',
             agreements: 'university/agreements',
             agreementsLoading: 'university/agreementsLoading',
         }),

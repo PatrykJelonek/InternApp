@@ -23,6 +23,9 @@
         <v-row>
             <v-col cols="12">
                 <custom-card>
+                    <custom-card-title>
+                        <template v-slot:default>Lista pracowników</template>
+                    </custom-card-title>
                     <v-data-table
                         :items="companyWorkers"
                         :headers="headers"
@@ -70,7 +73,9 @@
                                     </v-btn>
                                 </template>
                                 <v-list dense class="component-background lighten-1">
-                                    <v-list-item class="cursor-pointer" @mouseup="selectedWorkerFullName = item.full_name; selectedWorkerId = item.id" v-if="!item.pivot.active"
+                                    <v-list-item class="cursor-pointer"
+                                                 @mouseup="selectedWorkerFullName = item.full_name; selectedWorkerId = item.id"
+                                                 v-if="!item.pivot.active"
                                                  @click="toggleAcceptCompanyWorkerDialog(true)">
                                         <v-list-item-icon>
                                             <v-icon>mdi-account-check-outline</v-icon>
@@ -79,7 +84,8 @@
                                             <v-list-item-title>Akceptuj pracownika</v-list-item-title>
                                         </v-list-item-content>
                                     </v-list-item>
-                                    <v-list-item class="cursor-pointer" @mouseup="selectedWorkerFullName = item.full_name; selectedWorkerId = item.id"
+                                    <v-list-item class="cursor-pointer"
+                                                 @mouseup="selectedWorkerFullName = item.full_name; selectedWorkerId = item.id"
                                                  @click="toggleDeleteCompanyWorkerDialog(true)">
                                         <v-list-item-icon>
                                             <v-icon>mdi-delete-outline</v-icon>
@@ -103,10 +109,11 @@ import {mapActions, mapGetters} from "vuex";
 import PageTitle from "../../_Helpers/PageTitle";
 import CustomCard from "../../_General/CustomCard";
 import CustomConfirmDialog from "../../_General/CustomConfirmDialog";
+import CustomCardTitle from "../../_General/CustomCardTitle";
 
 export default {
     name: "TheCompanyWorkers",
-    components: {CustomConfirmDialog, CustomCard, PageTitle},
+    components: {CustomCardTitle, CustomConfirmDialog, CustomCard, PageTitle},
 
     data() {
         return {
@@ -177,7 +184,11 @@ export default {
     created() {
         this.setBreadcrumbs([
             {text: 'Panel', to: {name: 'panel'}, exact: true},
-            {text: 'Firma', to: {name: 'company', params: {slug: this.$route.params.slug}}, exact: true},
+            {
+                text: this.company.name ?? 'Firma',
+                to: {name: 'company', params: {slug: this.$route.params.slug}},
+                exact: true
+            },
             {text: 'Pracownicy', to: {name: 'company-workers'}, exact: true},
         ]);
 

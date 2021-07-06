@@ -15,7 +15,7 @@ class InternController extends Controller
      */
     public function index()
     {
-        //
+
     }
 
     /**

@@ -1,5 +1,5 @@
 <template>
-    <v-row no-gutters class="mb-2">
+    <v-row no-gutters>
         <v-col cols="12" class="pa-3">
             <h2 class="text--welcome text-subtitle-1 font-weight-bold mb-0">
                 <slot></slot>

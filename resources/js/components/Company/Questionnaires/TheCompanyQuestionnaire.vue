@@ -11,7 +11,8 @@
                 <template v-slot:default> {{ questionnaire.name }}</template>
                 <template v-slot:subheader>{{ questionnaire.description }}</template>
                 <template v-slot:actions>
-                    <v-btn outlined color="primary" @click="toggleCreateQuestionnaireDialog(true)">Edytuj Ankietę</v-btn>
+                    <v-btn outlined color="primary" @click="toggleCreateQuestionnaireDialog(true)">Edytuj Ankietę
+                    </v-btn>
                 </template>
             </page-title>
             <v-row>
@@ -81,9 +82,14 @@ export default {
         this.fetchQuestionnaire(this.$route.params.questionnaireId).then(() => {
             this.setBreadcrumbs([
                 {text: 'Panel', to: {name: 'panel'}, exact: true},
-                {text: 'Firma', to: {name: 'company', params: {slug: this.$route.params.slug}}, exact: true},
+                {
+                    text: this.company.name ?? 'Firma',
+                    to: {name: 'company', params: {slug: this.$route.params.slug}},
+                    exact: true
+                },
                 {text: 'Ankiety', to: {name: 'company-questionnaires'}, exact: true},
-                {text: this.questionnaire.name,
+                {
+                    text: this.questionnaire.name,
                     to: {
                         name: 'company-questionnaire',
                         params: {slug: this.$route.params.slug, questionnaireId: this.$route.params.questionnaireId}

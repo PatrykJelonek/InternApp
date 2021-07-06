@@ -4,12 +4,12 @@
 
         <page-title>
             <template v-slot:default>Oferty praktyk i staży</template>
-            <template v-slot:subheader>Lista ofert przypisanych do {{company.name}}</template>
+            <template v-slot:subheader>Lista ofert przypisanych do {{ company.name }}</template>
             <template v-slot:actions>
                 <v-btn
-                outlined
-                color="primary"
-                @click="toggleCreateOfferDialog(true)"
+                    outlined
+                    color="primary"
+                    @click="toggleCreateOfferDialog(true)"
                 >
                     Dodaj ofertę
                 </v-btn>
@@ -17,9 +17,12 @@
         </page-title>
 
         <v-row no-gutters>
-            <v-col cols="12">
-                <expand-card title="Lista Ofert">
-                    <v-row no-gutters class="px-5 pt-5 pb-2">
+            <v-col cols="12" class="mb-5">
+                <custom-card>
+                    <custom-card-title>
+                        <template v-slot:default>Filtry</template>
+                    </custom-card-title>
+                    <v-row no-gutters class="pa-5">
                         <v-col
                             cols="12"
                             md="12"
@@ -80,6 +83,13 @@
                             ></v-combobox>
                         </v-col>
                     </v-row>
+                </custom-card>
+            </v-col>
+            <v-col cols="12">
+                <custom-card>
+                    <custom-card-title>
+                        <template v-slot:default>Lista ofert</template>
+                    </custom-card-title>
                     <v-row no-gutters>
                         <v-col cols="12">
                             <v-data-table
@@ -114,7 +124,7 @@
                             </v-data-table>
                         </v-col>
                     </v-row>
-                </expand-card>
+                </custom-card>
             </v-col>
         </v-row>
     </v-container>
@@ -127,10 +137,12 @@ import moment from "moment";
 import FormDialog from "../../_General/FormDialog";
 import CreateOfferDialog from "./CreateOfferDialog";
 import PageTitle from "../../_Helpers/PageTitle";
+import CustomCard from "../../_General/CustomCard";
+import CustomCardTitle from "../../_General/CustomCardTitle";
 
 export default {
     name: "TheCompanyOffers",
-    components: {PageTitle, CreateOfferDialog, FormDialog, ExpandCard},
+    components: {CustomCardTitle, CustomCard, PageTitle, CreateOfferDialog, FormDialog, ExpandCard},
 
     data() {
         return {
@@ -232,7 +244,11 @@ export default {
     created() {
         this.setBreadcrumbs([
             {text: 'Panel', to: {name: 'panel'}, exact: true},
-            {text: 'Firma', to: {name: 'company', params: {slug: this.$route.params.slug}}, exact: true},
+            {
+                text: this.company.name ?? 'Firma',
+                to: {name: 'company', params: {slug: this.$route.params.slug}},
+                exact: true
+            },
             {text: 'Umowy', to: {name: 'company-offers'}, exact: true},
         ]);
 

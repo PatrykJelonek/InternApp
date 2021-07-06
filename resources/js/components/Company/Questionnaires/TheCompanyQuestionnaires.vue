@@ -13,26 +13,33 @@
 
             <v-row class="mt-7">
                 <v-col cols="12">
-                    <v-data-table
-                        :headers="headers"
-                        :items="questionnaires"
-                        :item-key="questionnaires.id"
-                        class="component-background cursor-pointer"
-                        @click:row="(questionnaire) => this.$router.push({name: 'company-questionnaire', params: {slug: this.$route.params.slug, questionnaireId: questionnaire.id}})"
-                    >
-                        <template v-slot:item.user="{item}">
-                            <v-avatar :size="30" class="mr-2" :color="item.user.avatar_url ? '' : 'primary'">
-                                <v-img :src="item.user.avatar_url ? '/'+item.user.avatar_url : ''" :alt="'Awatar użytkownika ' + item.user.full_name"></v-img>
-                            </v-avatar>
-                            {{ item.user.full_name }}
-                        </template>
-                        <template v-slot:item.questions="{item}">
-                            {{ item.questions.length }}
-                        </template>
-                        <template v-slot:item.created_at="{item}">
-                            {{ formatDate(item.created_at) }}
-                        </template>
-                    </v-data-table>
+                    <custom-card>
+                        <custom-card-title>
+                            <template v-slot:default>Lista ankiet</template>
+                        </custom-card-title>
+                        <v-data-table
+                            :headers="headers"
+                            :items="questionnaires"
+                            :item-key="questionnaires.id"
+                            class="component-background cursor-pointer"
+                            no-data-text="Niestety, ale aktualnie nie mu tu żadnych ankiet!"
+                            @click:row="(questionnaire) => this.$router.push({name: 'company-questionnaire', params: {slug: this.$route.params.slug, questionnaireId: questionnaire.id}})"
+                        >
+                            <template v-slot:item.user="{item}">
+                                <v-avatar :size="30" class="mr-2" :color="item.user.avatar_url ? '' : 'primary'">
+                                    <v-img :src="item.user.avatar_url ? '/'+item.user.avatar_url : ''"
+                                           :alt="'Awatar użytkownika ' + item.user.full_name"></v-img>
+                                </v-avatar>
+                                {{ item.user.full_name }}
+                            </template>
+                            <template v-slot:item.questions="{item}">
+                                {{ item.questions.length }}
+                            </template>
+                            <template v-slot:item.created_at="{item}">
+                                {{ formatDate(item.created_at) }}
+                            </template>
+                        </v-data-table>
+                    </custom-card>
                 </v-col>
             </v-row>
         </template>
@@ -101,7 +108,11 @@ export default {
     created() {
         this.setBreadcrumbs([
             {text: 'Panel', to: {name: 'panel'}, exact: true},
-            {text: 'Firma', to: {name: 'company', params: {slug: this.$route.params.slug}}, exact: true},
+            {
+                text: this.company.name ?? 'Firma',
+                to: {name: 'company', params: {slug: this.$route.params.slug}},
+                exact: true
+            },
             {text: 'Ankiety', to: {name: 'company-questionnaires'}, exact: true},
         ]);
 

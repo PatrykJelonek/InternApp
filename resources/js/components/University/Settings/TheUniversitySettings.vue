@@ -1,5 +1,9 @@
 <template>
-    <div>
+    <v-container fluid class="pa-0">
+        <page-title>
+            <template v-slot:default>Ustawienia</template>
+            <template v-slot:subheader>Ustawienia uczelni {{ university.name }}</template>
+        </page-title>
         <v-row>
             <v-col cols="12" md="8" lg="8">
                 <the-university-settings-form></the-university-settings-form>
@@ -13,17 +17,24 @@
                 <the-university-faculties></the-university-faculties>
             </v-col>
         </v-row>
-    </div>
+    </v-container>
 </template>
 
 <script>
 import TheUniversityFaculties from "./TheUniversityFaculties";
 import TheUniversitySettingsForm from "./TheUniversitySettingsForm";
 import TheUniversityAccessCode from "./TheUniversityAccessCode";
-import {mapActions} from "vuex";
+import {mapActions, mapGetters} from "vuex";
+import PageTitle from "../../_Helpers/PageTitle";
 export default {
     name: "TheUniversitySettings",
-    components: {TheUniversityAccessCode, TheUniversitySettingsForm, TheUniversityFaculties},
+    components: {PageTitle, TheUniversityAccessCode, TheUniversitySettingsForm, TheUniversityFaculties},
+
+    computed: {
+        ...mapGetters({
+            university: 'university/university',
+        }),
+    },
 
     methods: {
         ...mapActions({

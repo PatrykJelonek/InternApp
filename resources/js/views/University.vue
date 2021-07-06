@@ -1,7 +1,6 @@
 <template>
     <v-container fluid>
         <div v-if="!universityLoading && !university.length > 0">
-            <page-title :breadcrumbs="breadcrumbs">{{ university.name }}</page-title>
             <v-row>
                 <v-container fluid>
                     <router-view></router-view>

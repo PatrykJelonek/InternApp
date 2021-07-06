@@ -6,9 +6,9 @@
                 <template v-slot:subheader>Ustawienia firmy {{ company.name }}</template>
             </page-title>
 
-            <v-row>
+            <v-row align="start">
                 <v-col cols="12" md="4" lg="3" xl="2">
-                   <the-company-settings-logo></the-company-settings-logo>
+                    <the-company-settings-logo></the-company-settings-logo>
                 </v-col>
                 <v-col cols="12" md="8" lg="9" xl="6">
                     <the-company-settings-data></the-company-settings-data>
@@ -48,7 +48,11 @@ export default {
     created() {
         this.setBreadcrumbs([
             {text: 'Panel', to: {name: 'panel'}, exact: true},
-            {text: 'Firma', to: {name: 'company', params: {slug: this.$route.params.slug}}, exact: true},
+            {
+                text: this.company.name ?? 'Firma',
+                to: {name: 'company', params: {slug: this.$route.params.slug}},
+                exact: true
+            },
             {text: 'Ustawienia', to: {name: 'company-settings'}, exact: true},
         ])
     }

@@ -28,7 +28,7 @@
                                 dense
                                 hide-details="auto"
                                 :error-messages="errors"
-                                label="Awatar"
+                                label="Logo"
                                 accept="image/jpeg,image/png"
                                 @change="setLogoPreview"
                                 prepend-icon=""

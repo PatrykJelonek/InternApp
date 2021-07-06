@@ -11,7 +11,10 @@
             </template>
         </page-title>
 
-        <expand-card title="Lista umów">
+        <custom-card>
+            <custom-card-title>
+                <template v-slot:default>Lista umów</template>
+            </custom-card-title>
             <v-data-table
                 :items="companyAgreements"
                 :loading="companyAgreementsLoading"
@@ -55,7 +58,7 @@
                     </v-menu>
                 </template>
             </v-data-table>
-        </expand-card>
+        </custom-card>
     </v-container>
 </template>
 
@@ -66,10 +69,12 @@ import moment from "moment";
 import AcceptAgreementDialog from "../../Agreements/AcceptAgreementDialog";
 import RejectAgreementDialog from "../../Agreements/RejectAgreementDialog";
 import PageTitle from "../../_Helpers/PageTitle";
+import CustomCard from "../../_General/CustomCard";
+import CustomCardTitle from "../../_General/CustomCardTitle";
 
 export default {
     name: "TheCompanyAgreements",
-    components: {PageTitle, RejectAgreementDialog, AcceptAgreementDialog, ExpandCard},
+    components: {CustomCardTitle, CustomCard, PageTitle, RejectAgreementDialog, AcceptAgreementDialog, ExpandCard},
 
     data() {
         return {
@@ -126,7 +131,7 @@ export default {
     created() {
         this.setBreadcrumbs([
             {text: 'Panel', to: {name: 'panel'}, exact: true},
-            {text: 'Firma', to: {name: 'company', params: {slug: this.$route.params.slug}}, exact: true},
+            {text: this.company.name ?? 'Firma', to: {name: 'company', params: {slug: this.$route.params.slug}}, exact: true},
             {text: 'Umowy', to: {name: 'company-agreements'}, exact: true},
         ])
 

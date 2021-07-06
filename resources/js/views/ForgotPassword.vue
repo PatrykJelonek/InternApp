@@ -4,7 +4,7 @@
             <v-toolbar-title class="font-weight-bold">InternApp</v-toolbar-title>
         </v-app-bar>
         <v-main>
-            <v-content class="fill-height">
+            <v-content class="fill-height component-background">
                 <v-row class="fill-height justify-center align-center">
                     <v-col
                         cols="12" sm="9" md="6" lg="5" xl="3"
