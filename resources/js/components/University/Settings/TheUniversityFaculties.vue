@@ -1,10 +1,27 @@
 <template>
     <custom-card :loading="facultiesLoading && dataLoading">
+        <the-university-faculty-dialog></the-university-faculty-dialog>
         <custom-card-title>
             <template v-slot:default>Wydziały, kierunki i specjalności</template>
+            <template v-slot:actions>
+                <v-tooltip left color="tooltip-background">
+                    <template v-slot:activator="{ on, attrs }">
+                        <v-btn
+                            icon
+                            small
+                            v-bind="attrs"
+                            v-on="on"
+                            @click="toggleUniversityFacultyDialog(true)"
+                        >
+                            <v-icon>mdi-plus</v-icon>
+                        </v-btn>
+                    </template>
+                    <span>Dodaj wydział</span>
+                </v-tooltip>
+            </template>
         </custom-card-title>
 
-        <v-row no-gutters>
+        <v-row no-gutters class="pa-1">
             <v-col cols="12">
                 <v-treeview :items="data">
                     <template v-slot:append="{ item, open }">
@@ -33,10 +50,11 @@ import {mapActions, mapGetters} from "vuex";
 import moment from "moment";
 import CustomCard from "../../_General/CustomCard";
 import CustomCardTitle from "../../_General/CustomCardTitle";
+import TheUniversityFacultyDialog from "./TheUniversityFacultyDialog";
 
 export default {
     name: "TheUniversityFaculties",
-    components: {CustomCardTitle, CustomCard},
+    components: {TheUniversityFacultyDialog, CustomCardTitle, CustomCard},
     data() {
         return {
             show: true,
@@ -56,6 +74,7 @@ export default {
     methods: {
         ...mapActions({
             fetchFaculties: 'university/fetchFaculties',
+            toggleUniversityFacultyDialog: 'helpers/toggleUniversityFacultyDialog'
         }),
 
         formatDate(date) {

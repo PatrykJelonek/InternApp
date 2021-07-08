@@ -4,48 +4,73 @@ namespace App\Http\Controllers\Api;
 
 use App\Models\Faculty;
 use App\Http\Controllers\Controller;
+use App\Repositories\FacultyRepository;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
 class FacultyController extends Controller
 {
     /**
+     * @var FacultyRepository
+     */
+    private $facultyRepositories;
+
+    /**
+     * FacultyController constructor.
+     *
+     * @param FacultyRepository $facultyRepositories
+     */
+    public function __construct(FacultyRepository $facultyRepositories)
+    {
+        $this->facultyRepositories = $facultyRepositories;
+    }
+
+    /**
      * Display a listing of the resource.
      *
      * @return Response
      */
-    public function index()
+    public function getFaculties()
     {
-        $faculties = Faculty::all();
+        $faculties = $this->facultyRepositories->getFaculties();
 
-        if (isset($faculties))
+        if (isset($faculties)) {
             return response($faculties, Response::HTTP_OK);
-        else
-            return response("Facullties not found!", Response::HTTP_NOT_FOUND);
+        }
+
+        return response(null, Response::HTTP_NOT_FOUND);
     }
 
     /**
      * Get fields of specific faculty
      *
      * @param $id
+     *
      * @return Response
      */
     public function facultyFields($id)
     {
         $faculties = Faculty::find($id);
 
-        if (isset($faculties->fields))
-            return response([
-                'status' => 'success',
-                'data' => $faculties->fields,
-                'message' => null
-            ], Response::HTTP_OK);
-        else
-            return response([
-                'status' => 'error',
-                'data' => null,
-                'message' => 'Nie znaleziono!'
-            ], Response::HTTP_NOT_FOUND);
+        if (isset($faculties->fields)) {
+            return response(
+                [
+                    'status' => 'success',
+                    'data' => $faculties->fields,
+                    'message' => null,
+                ],
+                Response::HTTP_OK
+            );
+        } else {
+            return response(
+                [
+                    'status' => 'error',
+                    'data' => null,
+                    'message' => 'Nie znaleziono!',
+                ],
+                Response::HTTP_NOT_FOUND
+            );
+        }
     }
 
     /**
@@ -62,6 +87,7 @@ class FacultyController extends Controller
      * Store a newly created resource in storage.
      *
      * @param Request $request
+     *
      * @return Response
      */
     public function store(Request $request)
@@ -72,32 +98,36 @@ class FacultyController extends Controller
         $faculty->created_at = date('Y-m-d H:i:s');
         $faculty->updated_at = date('Y-m-d H:i:s');
 
-        if ($faculty->save())
+        if ($faculty->save()) {
             return response($faculty, Response::HTTP_CREATED);
-        else
+        } else {
             return response("Faculty has not been created!", Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 
     /**
      * Display the specified resource.
      *
      * @param Faculty $faculty
+     *
      * @return Response
      */
     public function show(Faculty $faculty)
     {
         $faculty = Faculty::find($id);
 
-        if (isset($faculty))
+        if (isset($faculty)) {
             return response($faculty, Response::HTTP_OK);
-        else
+        } else {
             return response("Faculty not found!", Response::HTTP_NOT_FOUND);
+        }
     }
 
     /**
      * Show the form for editing the specified resource.
      *
      * @param Faculty $faculty
+     *
      * @return Response
      */
     public function edit(Faculty $faculty)
@@ -110,6 +140,7 @@ class FacultyController extends Controller
      *
      * @param Request $request
      * @param Faculty $faculty
+     *
      * @return Response
      */
     public function update(Request $request)
@@ -120,8 +151,9 @@ class FacultyController extends Controller
             $faculty->name = $request->input("name");
             $faculty->updated_at = date('Y-m-d H:i:s');
 
-            if ($faculty->save())
+            if ($faculty->save()) {
                 return response($faculty, Response::HTTP_OK);
+            }
         }
 
         return response("The faculty has not been updated!", Response::HTTP_NOT_MODIFIED);
@@ -131,15 +163,17 @@ class FacultyController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  $id
+     *
      * @return Response
      */
     public function destroy($id)
     {
         $faculty = Faculty::find($id);
 
-        if ($faculty->delete())
+        if ($faculty->delete()) {
             return response("The faculty has been deleted!", Response::HTTP_OK);
-        else
+        } else {
             return response("The faculty has not been deleted!", Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 }

@@ -7,11 +7,13 @@ use App\Repositories\AgreementStatusRepository;
 use App\Repositories\AttachmentRepository;
 use App\Repositories\ChatRepository;
 use App\Repositories\CityRepository;
+use App\Repositories\FacultyRepository;
 use App\Repositories\Interfaces\AgreementRepositoryInterface;
 use App\Repositories\Interfaces\AgreementStatusRepositoryInterface;
 use App\Repositories\Interfaces\AttachmentRepositoryInterface;
 use App\Repositories\Interfaces\ChatRepositoryInterface;
 use App\Repositories\Interfaces\CityRepositoryInterface;
+use App\Repositories\Interfaces\FacultyRepositoryInterface;
 use App\Repositories\Interfaces\InternshipRepositoryInterface;
 use App\Repositories\Interfaces\OfferCategoryRepositoryInterface;
 use App\Repositories\Interfaces\OfferRepositoryInterface;
@@ -52,6 +54,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(AgreementStatusRepositoryInterface::class, AgreementStatusRepository::class);
         $this->app->bind(ChatRepositoryInterface::class, ChatRepository::class);
         $this->app->bind(QuestionnairesRepositoryInterface::class, QuestionnairesRepository::class);
+        $this->app->bind(FacultyRepositoryInterface::class, FacultyRepository::class);
     }
 
     /**

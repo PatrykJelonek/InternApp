@@ -50,8 +50,8 @@
                             </v-chip>
                         </template>
                         <template v-slot:item.roles="{item}">
-                            <v-chip-group v-if="item.roles">
-                                <v-chip outlined small v-for="role in item.company_roles">{{
+                            <v-chip-group v-if="item.company_roles">
+                                <v-chip outlined small v-for="role in item.company_roles" :key="role.id">{{
                                         role.display_name
                                     }}
                                 </v-chip>

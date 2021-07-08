@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UniversityAgreementsRequest;
+use App\Http\Requests\UniversityCreateUniversityFacultyFieldRequest as CreateFieldRequest;
+use App\Http\Requests\UniversityCreateUniversityFacultyFieldSpecializationRequest as CreateSpecializationRequest;
+use App\Http\Requests\UniversityCreateUniversityFacultyRequest as CreateFacultyRequest;
 use App\Http\Requests\UniversityCreateUniversityQuestionnaireRequest;
 use App\Http\Requests\UniversityGetUniversityQuestionnairesRequest;
 use App\Http\Requests\UniversityInternshipsRequest;
@@ -12,18 +15,15 @@ use App\Http\Requests\UniversityUpdateUniversityLogoRequest as UpdateLogoRequest
 use App\Http\Requests\UniversityWorkersRequest;
 use App\Models\Agreement;
 use App\Models\Internship;
-use App\Models\Role;
 use App\Models\University;
-use App\Models\User;
 use App\Repositories\UniversityRepository;
+use App\Services\FacultyService;
 use App\Services\QuestionnairesService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use Tymon\JWTAuth\Exceptions\UserNotDefinedException;
 
 class UniversityController extends Controller
 {
@@ -38,15 +38,25 @@ class UniversityController extends Controller
     private $questionnairesService;
 
     /**
+     * @var FacultyService
+     */
+    private $facultyService;
+
+    /**
      * UniversityController constructor.
      *
      * @param UniversityRepository  $universityRepository
      * @param QuestionnairesService $questionnairesService
+     * @param FacultyService        $facultyService
      */
-    public function __construct(UniversityRepository $universityRepository, QuestionnairesService $questionnairesService)
-    {
+    public function __construct(
+        UniversityRepository $universityRepository,
+        QuestionnairesService $questionnairesService,
+        FacultyService $facultyService
+    ) {
         $this->universityRepository = $universityRepository;
         $this->questionnairesService = $questionnairesService;
+        $this->facultyService = $facultyService;
     }
 
     /**
@@ -508,8 +518,10 @@ class UniversityController extends Controller
         return \response(null, Response::HTTP_NOT_FOUND);
     }
 
-    public function getUniversityQuestionnaires(UniversityGetUniversityQuestionnairesRequest $request, string $slug): Response
-    {
+    public function getUniversityQuestionnaires(
+        UniversityGetUniversityQuestionnairesRequest $request,
+        string $slug
+    ): Response {
         $questionnaires = $this->universityRepository->getQuestionnaires($slug);
 
         if (!is_null($questionnaires)) {
@@ -519,12 +531,19 @@ class UniversityController extends Controller
         return \response(null, Response::HTTP_NOT_FOUND);
     }
 
-    public function createUniversityQuestionnaire(UniversityCreateUniversityQuestionnaireRequest $request, string $slug): Response
-    {
+    public function createUniversityQuestionnaire(
+        UniversityCreateUniversityQuestionnaireRequest $request,
+        string $slug
+    ): Response {
         $university = $this->universityRepository->getUniversityBySlug($slug);
 
         if ($university !== null) {
-            $questionnaire = $this->questionnairesService->createQuestionnaire($request->input('name'), $request->input('description'), null, $university->id);
+            $questionnaire = $this->questionnairesService->createQuestionnaire(
+                $request->input('name'),
+                $request->input('description'),
+                null,
+                $university->id
+            );
 
             if ($questionnaire !== null) {
                 return response($questionnaire, Response::HTTP_CREATED);
@@ -559,6 +578,35 @@ class UniversityController extends Controller
         }
 
         return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+
+    public function createUniversityFaculty(CreateFacultyRequest $request, string $slug)
+    {
+        $university = $this->universityRepository->getUniversityBySlug($slug);
+        $faculty = $this->facultyService->createFaculty($request->input('name'));
+
+        if ($faculty !== null) {
+            try {
+                $university->faculties()->attach($faculty->id);
+            } catch (\Exception $e) {
+                return response($faculty, Response::HTTP_CREATED);
+            }
+        }
+
+        return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+
+    public function createUniversityFacultyField(CreateFieldRequest $request, string $slug, int $facultyId)
+    {
+
+    }
+
+    public function createUniversityFacultyFieldSpecialization(
+        CreateSpecializationRequest $request,
+        string $slug,
+        int $facultyId,
+        int $fieldId
+    ) {
     }
 
     /**

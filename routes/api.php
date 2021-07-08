@@ -133,6 +133,9 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::get('/universities/{slug}/agreements','Api\UniversityController@getAgreements');
     Route::get('/universities/{slug}/internships','Api\UniversityController@getInternships2');
     Route::get('/universities/{slug}/faculties','Api\UniversityController@getFaculties');
+    Route::post('/universities/{slug}/faculties','Api\UniversityController@createUniversityFaculty');
+    Route::post('/universities/{slug}/faculties/{facultyId}/fields','Api\UniversityController@createUniversityFacultyField');
+    Route::post('/universities/{slug}/faculties/{facultyId}/fields/{fieldId}/specializations','Api\UniversityController@createUniversityFacultyFieldSpecialization');
     Route::get('/universities/{slug}/offers','Api\UniversityController@getOffers');
     Route::get('/universities/{slug}/questionnaires','Api\UniversityController@getUniversityQuestionnaires');
     Route::post('/universities/{slug}/questionnaires','Api\UniversityController@createUniversityQuestionnaire');
@@ -187,6 +190,8 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::get('/questionnaires/{questionnaireId}/questions/{questionId}/answers','Api\QuestionnaireController@getQuestionnaireQuestionAnswers');
     Route::get('/questionnaires/{questionnaireId}/questions/{questionId}/answers/{answerId}','Api\QuestionnaireController@getQuestionnaireQuestionAnswer');
     Route::get('/questionnaires/{id}/statistics/weeks','Api\QuestionnaireController@getQuestionnaireAnswerStatisticsByWeek');
+
+    Route::get('/faculties', 'Api\FacultyController@getFaculties');
 
     Route::get('/test', 'Api\TestController@test');
     Route::post('/test', 'Api\TestController@testPost');

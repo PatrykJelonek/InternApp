@@ -17,6 +17,9 @@ export default {
         createQuestionnaireDialog: false,
         deleteCompanyWorkerDialog: false,
         acceptCompanyWorkerDialog: false,
+        universityFacultyDialog: false,
+        universityFieldDialog: false,
+        universitySpecializationDialog: false,
         fillHeight: false,
         navigationDrawer: true,
         errorMessage: '',
@@ -96,7 +99,19 @@ export default {
 
         acceptCompanyWorkerDialog(state) {
             return state.acceptCompanyWorkerDialog;
-        }
+        },
+
+        universityFacultyDialog(state) {
+            return state.universityFacultyDialog;
+        },
+
+        universityFieldDialog(state) {
+            return state.universityFieldDialog;
+        },
+
+        universitySpecializationDialog(state) {
+            return state.universitySpecializationDialog;
+        },
     },
 
     mutations: {
@@ -175,6 +190,18 @@ export default {
         TOGGLE_ACCEPT_COMPANY_WORKER_DIALOG(state, value) {
             state.acceptCompanyWorkerDialog = value;
         },
+
+        TOGGLE_UNIVERSITY_FACULTY_DIALOG(state, value) {
+            state.universityFacultyDialog = value;
+        },
+
+        TOGGLE_UNIVERSITY_FIELD_DIALOG(state, value) {
+            state.universityFieldDialog = value;
+        },
+
+        TOGGLE_UNIVERSITY_SPECIALIZATION_DIALOG(state, value) {
+            state.universitySpecializationDialog = value;
+        },
     },
 
     actions: {
@@ -229,6 +256,19 @@ export default {
         toggleAcceptCompanyWorkerDialog({commit}, value) {
             commit('TOGGLE_ACCEPT_COMPANY_WORKER_DIALOG', value);
         },
+
+        toggleUniversityFacultyDialog({commit}, value) {
+            commit('TOGGLE_UNIVERSITY_FACULTY_DIALOG', value);
+        },
+
+        toggleUniversityFieldDialog({commit}, value) {
+            commit('TOGGLE_UNIVERSITY_FIELD_DIALOG', value);
+        },
+
+        toggleUniversitySpecializationDialog({commit}, value) {
+            commit('TOGGLE_UNIVERSITY_SPECIALIZATION_DIALOG', value);
+        },
+
 
         parseErrorMessage({commit}, status) {
             switch (status) {

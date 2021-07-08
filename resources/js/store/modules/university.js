@@ -203,12 +203,12 @@ export default {
 
     actions: {
         async fetchUniversities({commit}) {
-             try {
-                 let response = await axios.get('/api/universities');
-                 commit('SET_UNIVERSITIES', response.data.data);
-             } catch(e) {
-                 commit('SET_UNIVERSITIES', []);
-             }
+            try {
+                let response = await axios.get('/api/universities');
+                commit('SET_UNIVERSITIES', response.data.data);
+            } catch (e) {
+                commit('SET_UNIVERSITIES', []);
+            }
         },
 
         async fetchUniversityTypes({commit}) {
@@ -355,11 +355,23 @@ export default {
         },
 
         updateUniversityLogo({commit}, {slug, data}) {
-            return axios.post(`/api/university/${slug}/settings/logo`, data, {
+            return axios.post(`/api/universities/${slug}/settings/logo`, data, {
                 headers: {
                     'content-type': 'multipart/form-data'
                 }
             });
-        }
+        },
+
+        createUniversityFaculty({commit}, {slug, data}) {
+            return axios.post(`/api/universities/${slug}/faculties`, data);
+        },
+
+        createUniversityFacultyField({commit}, {slug, facultyId, data}) {
+            return axios.post(`/api/universities/${slug}/faculties/${facultyId}/field`, data);
+        },
+
+        createUniversityFacultyFieldSpecialization({commit}, {slug, facultyId, fieldId, data}) {
+            return axios.post(`/api/universities/${slug}/faculties/${facultyId}/field/${fieldId}/specializations`, data);
+        },
     },
 };
