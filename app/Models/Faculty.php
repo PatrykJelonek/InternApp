@@ -13,11 +13,11 @@ class Faculty extends Model
 
     public function fields()
     {
-        return $this->belongsToMany('App\Models\Field', 'faculties_fields', 'faculty_id', 'field_id');
+        return $this->hasMany(Field::class, 'faculty_id', 'id');
     }
 
     public function universities()
     {
-        return $this->belongsToMany('App\Models\University', 'universities_faculties', 'faculty_id', 'university_id');
+        return $this->belongsTo(University::class, 'university_id');
     }
 }

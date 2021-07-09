@@ -23,6 +23,7 @@ export default {
         codeLoading: false,
         availableStudentOffers: [],
         availableStudentOffersLoading: true,
+        facultiesTreeView: [],
     },
 
     getters: {
@@ -108,6 +109,10 @@ export default {
 
         availableOffersLoading(state) {
             return state.availableStudentOffersLoading;
+        },
+
+        facultiesTreeView(state) {
+            return state.facultiesTreeView;
         }
     },
 
@@ -199,6 +204,41 @@ export default {
         SET_AVAILABLE_OFFERS_LOADING(state, data) {
             state.availableStudentOffersLoading = data;
         },
+
+        SET_FACULTIES_TREE_VIEW(state, data) {
+            state.facultiesTreeView = [];
+
+            data.forEach((faculty) => {
+                let fields = [];
+                faculty.fields.forEach((field) => {
+                    let specializations = [];
+                    field.specializations.forEach((specialization) => {
+                        specializations.push({
+                            id: specialization.id,
+                            name: specialization.name,
+                            facultyId: faculty.id,
+                            fieldId: field.id,
+                            fieldName: field.name,
+                            type: 'specialization'
+                        })
+                    });
+                    fields.push({
+                        id: field.id,
+                        name: field.name,
+                        facultyId: faculty.id,
+                        facultyName: faculty.name,
+                        children: specializations,
+                        type: 'field'
+                    });
+                });
+                state.facultiesTreeView.push({
+                    id: faculty.id,
+                    name: faculty.name,
+                    type: 'faculty',
+                    children: fields,
+                });
+            });
+        }
     },
 
     actions: {
@@ -255,6 +295,7 @@ export default {
             try {
                 let response = await axios.get(`/api/universities/${slug}/faculties`);
                 commit('SET_FACULTIES', response.data);
+                commit('SET_FACULTIES_TREE_VIEW', response.data);
                 commit('SET_FACULTIES_LOADING', false);
             } catch (e) {
                 commit('SET_FACULTIES', []);
@@ -367,11 +408,23 @@ export default {
         },
 
         createUniversityFacultyField({commit}, {slug, facultyId, data}) {
-            return axios.post(`/api/universities/${slug}/faculties/${facultyId}/field`, data);
+            return axios.post(`/api/universities/${slug}/faculties/${facultyId}/fields`, data);
         },
 
         createUniversityFacultyFieldSpecialization({commit}, {slug, facultyId, fieldId, data}) {
-            return axios.post(`/api/universities/${slug}/faculties/${facultyId}/field/${fieldId}/specializations`, data);
+            return axios.post(`/api/universities/${slug}/faculties/${facultyId}/fields/${fieldId}/specializations`, data);
+        },
+
+        updateUniversityFaculty({commit}, {slug, facultyId, data}) {
+            return axios.put(`/api/universities/${slug}/faculties/${facultyId}`, data);
+        },
+
+        updateUniversityFacultyField({commit}, {slug, facultyId, fieldId, data}) {
+            return axios.put(`/api/universities/${slug}/faculties/${facultyId}/fields/${fieldId}`, data);
+        },
+
+        updateUniversityFacultyFieldSpecialization({commit}, {slug, facultyId, fieldId, specializationId, data}) {
+            return axios.put(`/api/universities/${slug}/faculties/${facultyId}/fields/${fieldId}/specializations/${specializationId}`, data);
         },
     },
 };

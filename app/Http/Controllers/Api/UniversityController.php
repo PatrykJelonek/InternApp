@@ -11,11 +11,15 @@ use App\Http\Requests\UniversityCreateUniversityQuestionnaireRequest;
 use App\Http\Requests\UniversityGetUniversityQuestionnairesRequest;
 use App\Http\Requests\UniversityInternshipsRequest;
 use App\Http\Requests\UniversityStudentsRequest;
+use App\Http\Requests\UniversityUpdateUniversityFacultyFieldRequest;
+use App\Http\Requests\UniversityUpdateUniversityFacultyFieldSpecializationRequest;
+use App\Http\Requests\UniversityUpdateUniversityFacultyRequest;
 use App\Http\Requests\UniversityUpdateUniversityLogoRequest as UpdateLogoRequest;
 use App\Http\Requests\UniversityWorkersRequest;
 use App\Models\Agreement;
 use App\Models\Internship;
 use App\Models\University;
+use App\Repositories\FacultyRepository;
 use App\Repositories\UniversityRepository;
 use App\Services\FacultyService;
 use App\Services\QuestionnairesService;
@@ -43,20 +47,28 @@ class UniversityController extends Controller
     private $facultyService;
 
     /**
+     * @var FacultyRepository
+     */
+    private $facultyRepository;
+
+    /**
      * UniversityController constructor.
      *
      * @param UniversityRepository  $universityRepository
      * @param QuestionnairesService $questionnairesService
      * @param FacultyService        $facultyService
+     * @param FacultyRepository     $facultyRepository
      */
     public function __construct(
         UniversityRepository $universityRepository,
         QuestionnairesService $questionnairesService,
-        FacultyService $facultyService
+        FacultyService $facultyService,
+        FacultyRepository $facultyRepository
     ) {
         $this->universityRepository = $universityRepository;
         $this->questionnairesService = $questionnairesService;
         $this->facultyService = $facultyService;
+        $this->facultyRepository = $facultyRepository;
     }
 
     /**
@@ -583,14 +595,10 @@ class UniversityController extends Controller
     public function createUniversityFaculty(CreateFacultyRequest $request, string $slug)
     {
         $university = $this->universityRepository->getUniversityBySlug($slug);
-        $faculty = $this->facultyService->createFaculty($request->input('name'));
+        $faculty = $this->facultyService->createFaculty($request->input('name'), $university->id);
 
         if ($faculty !== null) {
-            try {
-                $university->faculties()->attach($faculty->id);
-            } catch (\Exception $e) {
-                return response($faculty, Response::HTTP_CREATED);
-            }
+            return response($faculty, Response::HTTP_CREATED);
         }
 
         return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
@@ -598,7 +606,13 @@ class UniversityController extends Controller
 
     public function createUniversityFacultyField(CreateFieldRequest $request, string $slug, int $facultyId)
     {
+        $field = $this->facultyService->createFacultyField($request->input('name'), $facultyId);
 
+        if ($field !== null) {
+            return response($field, Response::HTTP_CREATED);
+        }
+
+        return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
     public function createUniversityFacultyFieldSpecialization(
@@ -607,7 +621,53 @@ class UniversityController extends Controller
         int $facultyId,
         int $fieldId
     ) {
+        $specialization = $this->facultyService->createFieldSpecialization($request->input('name'), $fieldId);
+
+        if ($specialization !== null) {
+            return response($specialization, Response::HTTP_CREATED);
+        }
+
+        return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
     }
+
+    public function updateUniversityFaculty(UniversityUpdateUniversityFacultyRequest $request, string $slug, int $facultyId)
+    {
+        $faculty = $this->facultyService->updateFaculty($request->input('name'), $facultyId);
+
+        if ($faculty !== null) {
+            return response($faculty, Response::HTTP_CREATED);
+        }
+
+        return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+
+    public function updateUniversityFacultyField(UniversityUpdateUniversityFacultyFieldRequest $request, string $slug, int $facultyId, int $fieldId)
+    {
+        $field = $this->facultyService->updateFacultyField($request->input('name'), $fieldId);
+
+        if ($field !== null) {
+            return response($field, Response::HTTP_CREATED);
+        }
+
+        return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+
+    public function updateUniversityFacultyFieldSpecialization(
+        UniversityUpdateUniversityFacultyFieldSpecializationRequest $request,
+        string $slug,
+        int $facultyId,
+        int $fieldId,
+        int $specializationId
+    ) {
+        $specialization = $this->facultyService->updateFieldSpecialization($request->input('name'), $specializationId);
+
+        if ($specialization !== null) {
+            return response($specialization, Response::HTTP_CREATED);
+        }
+
+        return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+
 
     /**
      * Generate unique random access code.

@@ -26,17 +26,14 @@
                                 vid="name"
                                 rules="required"
                             >
-                                <v-combobox
+                                <v-text-field
                                     v-model="faculty"
-                                    :items="faculties"
-                                    item-text="name"
-                                    item-value="id"
                                     label="Nazwa wydziału"
                                     outlined
                                     dense
                                     hide-details="auto"
                                     :error-messages="errors"
-                                ></v-combobox>
+                                ></v-text-field>
                             </validation-provider>
                         </v-col>
                     </v-row>
@@ -81,43 +78,77 @@ export default {
         ...mapGetters({
             university: 'university/university',
             universityFacultyDialog: 'helpers/universityFacultyDialog',
+            universityFacultyDialogArgs: 'helpers/universityFacultyDialogArgs',
             faculties: 'faculty/faculties',
-            facultiesLoading: 'faculty/facultiesLoading'
+            facultiesLoading: 'faculty/facultiesLoading',
         }),
     },
 
     methods: {
         ...mapActions({
+            setSnackbar: 'snackbar/setSnackbar',
             toggleUniversityFacultyDialog: 'helpers/toggleUniversityFacultyDialog',
-            fetchFaculties: 'faculty/fetchFaculties',
-            createUniversityFaculty: 'university/createUniversityFaculty'
+            fetchFaculties: 'university/fetchFaculties',
+            createUniversityFaculty: 'university/createUniversityFaculty',
+            updateUniversityFaculty: 'university/updateUniversityFaculty',
+            clearUniversityFacultyDialogArgs: 'helpers/clearUniversityFacultyDialogArgs'
         }),
 
-        async submit() {
-            if (this.faculty.id !== null) {
-                await this.createUniversityFaculty({
-                    slug: this.$route.params.slug, data: {
-                        id: this.faculty.id,
-                        name: this.faculty.name,
-                    }
-                });
-            } else {
-                await this.createUniversityFaculty({
-                    slug: this.$route.params.slug, data: {
-                        id: null,
-                        name: this.faculty,
-                    }
-                });
-            }
+        async create() {
+            await this.createUniversityFaculty({
+                slug: this.$route.params.slug, data: {
+                    id: null,
+                    name: this.faculty,
+                }
+            }).then(() => {
+                this.fetchFaculties(this.$route.params.slug);
+                this.setSnackbar({message: 'Instytut został dodany!', color: 'success'});
+                this.toggleUniversityFacultyDialog(false);
+            }).catch((e) => {
+                this.setSnackbar({message: 'Nie udało się dodać instytutu!', color: 'error'});
+                this.toggleUniversityFacultyDialog(false);
+            });;
         },
+
+        async update() {
+            await this.updateUniversityFaculty({
+                slug: this.$route.params.slug,
+                facultyId: this.universityFacultyDialogArgs.id,
+                data: {
+                    id: null,
+                    name: this.faculty,
+                }
+            }).then(() => {
+                this.fetchFaculties(this.$route.params.slug);
+                this.setSnackbar({message: 'Instytut został zaktualizowany!', color: 'success'});
+                this.toggleUniversityFacultyDialog(false);
+            }).catch((e) => {
+                this.setSnackbar({message: 'Nie udało się zaktualizować instytutu!', color: 'error'});
+                this.toggleUniversityFacultyDialog(false);
+            });
+        },
+
+        async submit() {
+            if (!this.universityFacultyDialogArgs) {
+                await this.create();
+            }
+
+            if (this.universityFacultyDialogArgs.action === 'edit') {
+                await this.update();
+            }
+
+            this.clearUniversityFacultyDialogArgs();
+        }
     },
 
-    created() {
-        this.fetchFaculties().then((response) => {
+    created() {},
 
-        }).catch((e) => {
-
-        });
+    watch: {
+        universityFacultyDialogArgs(newVal, oldVal) {
+            if (newVal !== oldVal && newVal.action === 'edit') {
+                this.faculty = newVal.name;
+            }
+        }
     }
 }
 </script>

@@ -13,7 +13,12 @@ class UniversityCreateUniversityFacultyFieldRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
+    }
+
+    public function all($keys = null)
+    {
+        return array_merge(parent::all(), $this->route()->parameters());
     }
 
     /**
@@ -24,7 +29,21 @@ class UniversityCreateUniversityFacultyFieldRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'slug' => 'required|exists:App\Models\University,slug',
+            'facultyId' => 'required|exists:App\Models\Faculty,id',
+            'name' => 'required|max:128',
+        ];
+    }
+
+    public function messages()
+    {
+        return [
+            'slug.required' => 'Slug uczelni jest wymagany!',
+            'slug.exists' => 'Podana uczelnia nie istnieje!',
+            'facultyId.exists' => 'Podany wydział nie istnieje!',
+            'facultyId.required' => 'Id wydziału jest wymagane!',
+            'name.required' => 'Nazwa wydziału jest wymagana!',
+            'name.max' => 'Nazwa nie może mieć więcej niż 128 znaków!',
         ];
     }
 }

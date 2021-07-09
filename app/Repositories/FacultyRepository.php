@@ -10,6 +10,7 @@ namespace App\Repositories;
 
 use App\Models\Faculty;
 use App\Models\Field;
+use App\Models\Specialization;
 use App\Repositories\Interfaces\FacultyRepositoryInterface;
 
 class FacultyRepository implements FacultyRepositoryInterface
@@ -35,5 +36,10 @@ class FacultyRepository implements FacultyRepositoryInterface
 
     public function getField(int $id) {
         return Field::find($id);
+    }
+
+    public function getSpecialization(int $id)
+    {
+        return Specialization::find($id);
     }
 }

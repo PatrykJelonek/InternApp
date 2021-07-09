@@ -15,7 +15,9 @@ class CreateFacultiesTable extends Migration
     {
         Schema::create('faculties', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 128)->unique();
+            $table->string('name', 128);
+            $table->foreignId('university_id');
+            $table->foreign('university_id')->references('id')->on('universities');
             $table->dateTime('created_at', 0);
             $table->dateTime('updated_at', 0);
         });

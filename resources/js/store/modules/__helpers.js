@@ -20,6 +20,9 @@ export default {
         universityFacultyDialog: false,
         universityFieldDialog: false,
         universitySpecializationDialog: false,
+        universityFacultyDialogArgs: null,
+        universityFieldDialogArgs: null,
+        universitySpecializationDialogArgs: null,
         fillHeight: false,
         navigationDrawer: true,
         errorMessage: '',
@@ -112,6 +115,18 @@ export default {
         universitySpecializationDialog(state) {
             return state.universitySpecializationDialog;
         },
+
+        universityFacultyDialogArgs(state) {
+            return state.universityFacultyDialogArgs;
+        },
+
+        universityFieldDialogArgs(state) {
+            return state.universityFieldDialogArgs;
+        },
+
+        universitySpecializationDialogArgs(state) {
+            return state.universitySpecializationDialogArgs;
+        },
     },
 
     mutations: {
@@ -202,6 +217,30 @@ export default {
         TOGGLE_UNIVERSITY_SPECIALIZATION_DIALOG(state, value) {
             state.universitySpecializationDialog = value;
         },
+
+        SET_UNIVERSITY_FACULTY_DIALOG_ARGS(state, value) {
+            state.universityFacultyDialogArgs = value;
+        },
+
+        SET_UNIVERSITY_FIELD_DIALOG_ARGS(state, value) {
+            state.universityFieldDialogArgs = value;
+        },
+
+        SET_UNIVERSITY_SPECIALIZATION_DIALOG_ARGS(state, value) {
+            state.universitySpecializationDialogArgs = value;
+        },
+
+        CLEAR_UNIVERSITY_FACULTY_DIALOG_ARGS(state) {
+            state.universityFacultyDialogArgs = null;
+        },
+
+        CLEAR_UNIVERSITY_FIELD_DIALOG_ARGS(state) {
+            state.universityFieldDialogArgs = null;
+        },
+
+        CLEAR_UNIVERSITY_SPECIALIZATION_DIALOG_ARGS(state) {
+            state.universitySpecializationDialogArgs = null;
+        },
     },
 
     actions: {
@@ -267,6 +306,30 @@ export default {
 
         toggleUniversitySpecializationDialog({commit}, value) {
             commit('TOGGLE_UNIVERSITY_SPECIALIZATION_DIALOG', value);
+        },
+
+        setUniversityFacultyDialogArgs({commit}, value) {
+            commit('SET_UNIVERSITY_FACULTY_DIALOG_ARGS', value);
+        },
+
+        setUniversityFieldDialogArgs({commit}, value) {
+            commit('SET_UNIVERSITY_FIELD_DIALOG_ARGS', value);
+        },
+
+        setUniversitySpecializationDialogArgs({commit}, value) {
+            commit('SET_UNIVERSITY_SPECIALIZATION_DIALOG_ARGS', value);
+        },
+
+        clearUniversityFacultyDialogArgs({commit}) {
+            commit('CLEAR_UNIVERSITY_FACULTY_DIALOG_ARGS');
+        },
+
+        clearUniversityFieldDialogArgs({commit}) {
+            commit('CLEAR_UNIVERSITY_FIELD_DIALOG_ARGS');
+        },
+
+        clearUniversitySpecializationDialogArgs({commit}) {
+            commit('CLEAR_UNIVERSITY_SPECIALIZATION_DIALOG_ARGS');
         },
 
 

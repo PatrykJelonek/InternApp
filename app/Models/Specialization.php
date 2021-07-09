@@ -10,4 +10,8 @@ class Specialization extends Model
     use HasFactory;
 
     protected $table = 'specializations';
+
+    public function field() {
+        return $this->belongsTo(Field::class, 'field_id');
+    }
 }

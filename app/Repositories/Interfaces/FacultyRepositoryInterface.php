@@ -19,4 +19,6 @@ interface FacultyRepositoryInterface
     public function getFacultyFields(int $id);
 
     public function getField(int $id);
+
+    public function getSpecialization(int $id);
 }

@@ -13,7 +13,7 @@ export default {
 
         facultiesLoading(state) {
             return state.facultiesLoading;
-        }
+        },
     },
 
     mutations: {
@@ -23,7 +23,7 @@ export default {
 
         SET_FACULTIES_LOADING(state, data) {
             state.facultiesLoading = data;
-        }
+        },
     },
 
     actions: {

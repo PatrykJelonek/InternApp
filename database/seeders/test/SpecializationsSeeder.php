@@ -18,31 +18,31 @@ class SpecializationsSeeder extends Seeder
             [
                 [
                     'name' => 'Projektowanie Baz Danych i Oprogramowania Użytkowego',
-                    'description' => 'Projektowanie Baz Danych i Oprogramowania Użytkowego',
+                    'field_id' => 1,
                     'created_at' => date('Y-m-d H:i:s'),
                     'updated_at' => date('Y-m-d H:i:s')
                 ],
                 [
                     'name' => 'Ekonomika Menedżerska',
-                    'description' => 'Ekonomika Menedżerska',
+                    'field_id' => 2,
                     'created_at' => date('Y-m-d H:i:s'),
                     'updated_at' => date('Y-m-d H:i:s')
                 ],
                 [
                     'name' => 'Administracja Systemów i Sieci Komputerowych',
-                    'description' => 'Administracja Systemów i Sieci Komputerowych',
+                    'field_id' => 1,
                     'created_at' => date('Y-m-d H:i:s'),
                     'updated_at' => date('Y-m-d H:i:s')
                 ],
                 [
                     'name' => 'Grafika Komputerowa i Multimedia',
-                    'description' => 'Grafika Komputerowa i Multimedia',
+                    'field_id' => 1,
                     'created_at' => date('Y-m-d H:i:s'),
                     'updated_at' => date('Y-m-d H:i:s')
                 ],
                 [
                     'name' => 'Przedsiębiorczość Gospodarcza',
-                    'description' => 'Przedsiębiorczość Gospodarcza',
+                    'field_id' => 2,
                     'created_at' => date('Y-m-d H:i:s'),
                     'updated_at' => date('Y-m-d H:i:s')
                 ]
