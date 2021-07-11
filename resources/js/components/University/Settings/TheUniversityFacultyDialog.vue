@@ -136,8 +136,6 @@ export default {
             if (this.universityFacultyDialogArgs.action === 'edit') {
                 await this.update();
             }
-
-            this.clearUniversityFacultyDialogArgs();
         }
     },
 
@@ -145,6 +143,10 @@ export default {
 
     watch: {
         universityFacultyDialogArgs(newVal, oldVal) {
+            if (newVal !== oldVal && newVal.action === 'create') {
+                this.field = null;
+            }
+
             if (newVal !== oldVal && newVal.action === 'edit') {
                 this.faculty = newVal.name;
             }

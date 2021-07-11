@@ -4,7 +4,7 @@
         class="component-background"
         persistent
         max-width="600"
-        v-if="universitySpecializationDialogArgs.action"
+        v-if="universitySpecializationDialogArgs"
     >
         <custom-card>
             <custom-card-title>
@@ -157,6 +157,10 @@ export default {
 
     watch: {
         universitySpecializationDialogArgs(newVal, oldVal) {
+            if (newVal !== oldVal && newVal.action === 'create') {
+                this.field = null;
+            }
+
             if (newVal !== oldVal && newVal.action === 'edit') {
                 this.specialization = newVal.name;
             }

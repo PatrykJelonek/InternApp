@@ -4,6 +4,7 @@
         class="component-background"
         persistent
         max-width="600"
+        v-if="universityFieldDialogArgs"
     >
         <custom-card>
             <custom-card-title>
@@ -11,7 +12,7 @@
                 <template v-slot:subheader>
                     {{ universityFieldDialogArgs.action === 'create' ? 'Dodaj' : 'Edytuj' }} kierunek
                     {{ universityFieldDialogArgs.action === 'create' ? 'do' : '' }}
-                    {{ universityFieldDialogArgs.action === 'create' ? universityFieldDialogArgs.fieldName : universityFieldDialogArgs.name }}
+                    {{ universityFieldDialogArgs.action === 'create' ? universityFieldDialogArgs.facultyName : universityFieldDialogArgs.name }}
                 </template>
                 <template v-slot:actions>
                     <v-btn icon small @click="toggleUniversityFieldDialog(false)">
@@ -95,6 +96,7 @@ export default {
             clearUniversityFieldDialogArgs: 'helpers/clearUniversityFieldDialogArgs',
             createUniversityFacultyField: 'university/createUniversityFacultyField',
             updateUniversityFacultyField: 'university/updateUniversityFacultyField',
+            setUniversityFieldDialogArgs: 'helpers/setUniversityFieldDialogArgs',
         }),
 
         async create() {
@@ -140,17 +142,19 @@ export default {
             if (this.universityFieldDialogArgs.action === 'edit') {
                 await this.update();
             }
-
-            this.clearUniversityFieldDialogArgs();
         }
     },
 
     watch: {
         universityFieldDialogArgs(newVal, oldVal) {
+            if (newVal !== oldVal && newVal.action === 'create') {
+                this.field = null;
+            }
+
             if (newVal !== oldVal && newVal.action === 'edit') {
                 this.field = newVal.name;
             }
-        }
+        },
     }
 }
 </script>
