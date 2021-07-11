@@ -64,7 +64,6 @@ import {ValidationObserver, ValidationProvider} from "vee-validate";
 
 export default {
     name: "TheUniversitySpecializationDialog",
-    props: ['facultyId', 'fieldId', 'fieldName'],
 
     components: {
         CustomCardTitle,
@@ -94,7 +93,6 @@ export default {
             toggleUniversitySpecializationDialog: 'helpers/toggleUniversitySpecializationDialog',
             createUniversityFacultyFieldSpecialization: 'university/createUniversityFacultyFieldSpecialization',
             updateUniversityFacultyFieldSpecialization: 'university/updateUniversityFacultyFieldSpecialization',
-            clearUniversitySpecializationDialogArgs: 'helpers/clearUniversitySpecializationDialogArgs'
         }),
 
         clear() {
@@ -150,18 +148,16 @@ export default {
             if (this.universitySpecializationDialogArgs.action === 'edit') {
                 await this.update();
             }
-
-            this.clearUniversitySpecializationDialogArgs();
         }
     },
 
     watch: {
         universitySpecializationDialogArgs(newVal, oldVal) {
-            if (newVal !== oldVal && newVal.action === 'create') {
+            if (newVal.action === 'create') {
                 this.field = null;
             }
 
-            if (newVal !== oldVal && newVal.action === 'edit') {
+            if (newVal.action === 'edit') {
                 this.specialization = newVal.name;
             }
         }

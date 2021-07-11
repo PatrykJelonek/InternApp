@@ -20,6 +20,7 @@ export default {
         universityFacultyDialog: false,
         universityFieldDialog: false,
         universitySpecializationDialog: false,
+        deleteUniversityFacultyDialog: false,
         universityFacultyDialogArgs: null,
         universityFieldDialogArgs: null,
         universitySpecializationDialogArgs: null,
@@ -127,6 +128,10 @@ export default {
         universitySpecializationDialogArgs(state) {
             return state.universitySpecializationDialogArgs;
         },
+
+        deleteUniversityFacultyDialog(state) {
+            return state.deleteUniversityFacultyDialog;
+        }
     },
 
     mutations: {
@@ -218,6 +223,10 @@ export default {
             state.universitySpecializationDialog = value;
         },
 
+        TOGGLE_DELETE_UNIVERSITY_FACULTY_DIALOG(state, value) {
+            state.deleteUniversityFacultyDialog = value;
+        },
+
         SET_UNIVERSITY_FACULTY_DIALOG_ARGS(state, value) {
             state.universityFacultyDialogArgs = value;
         },
@@ -306,6 +315,10 @@ export default {
 
         toggleUniversitySpecializationDialog({commit}, value) {
             commit('TOGGLE_UNIVERSITY_SPECIALIZATION_DIALOG', value);
+        },
+
+        toggleDeleteUniversityFacultyDialog({commit}, value) {
+            commit('TOGGLE_DELETE_UNIVERSITY_FACULTY_DIALOG', value);
         },
 
         setUniversityFacultyDialogArgs({commit}, value) {

@@ -153,4 +153,52 @@ class FacultyService
 
         return null;
     }
+
+    /**
+     * @param int $facultyId
+     *
+     * @return bool
+     */
+    public function deleteFaculty( int $facultyId): bool
+    {
+        $faculty = $this->repository->getFaculty($facultyId);
+
+        if ($faculty->delete()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param int $fieldId
+     *
+     * @return bool
+     */
+    public function deleteFacultyField(int $fieldId): bool
+    {
+        $field = $this->repository->getField($fieldId);
+
+        if ($field->delete()) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param int $specializationId
+     *
+     * @return bool
+     */
+    public function deleteFieldSpecialization(int $specializationId): bool
+    {
+        $specialization = $this->repository->getSpecialization($specializationId);
+
+        if ($specialization->delete()) {
+            return true;
+        }
+
+        return false;
+    }
 }

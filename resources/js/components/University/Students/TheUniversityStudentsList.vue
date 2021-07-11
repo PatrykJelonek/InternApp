@@ -20,6 +20,19 @@
                             <v-icon>mdi-dots-vertical</v-icon>
                         </v-btn>
                     </template>
+                    <template v-slot:item.specialization="{ item }">
+
+                        <v-tooltip right color="tooltip-background" v-if="item.student.specialization.deleted_at">
+                            <template v-slot:activator="{ on, attrs }">
+                                 <span
+                                     v-bind="attrs"
+                                     v-on="on"
+                                     :class="item.student.specialization.deleted_at ? 'text--disabled' : ''"
+                                 >{{ item.student.specialization.name }}</span>
+                            </template>
+                            <span class="text-caption">{{ `Usunięty ${formatDate(item.student.specialization.deleted_at)}` }}</span>
+                        </v-tooltip>
+                    </template>
                 </v-data-table>
             </v-col>
         </v-row>
@@ -30,6 +43,7 @@
 import {mapActions, mapGetters} from "vuex";
 import CustomCard from "../../_General/CustomCard";
 import CustomCardTitle from "../../_General/CustomCardTitle";
+import moment from "moment";
 
 export default {
     name: "TheUniversityStudentsList",
@@ -41,7 +55,7 @@ export default {
                 {text: 'Imię i nazwisko', value: 'fullname'},
                 {text: 'Indeks', value: 'student.student_index'},
                 {text: 'Semestr', value: 'student.semester'},
-                {text: 'Specjalizacja', value: 'student.specialization.name', groupable: true},
+                {text: 'Specjalizacja', value: 'specialization'},
                 {text: 'Akcje', value: 'actions', sortable: false, align: 'center'},
             ],
         }
@@ -59,6 +73,10 @@ export default {
         ...mapActions({
             fetchStudents: 'university/fetchStudents',
         }),
+
+        formatDate(date) {
+            return moment(date).format('DD.MM.YYYY');
+        }
     },
 
     created() {

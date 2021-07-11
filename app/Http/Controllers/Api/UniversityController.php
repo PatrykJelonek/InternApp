@@ -630,8 +630,11 @@ class UniversityController extends Controller
         return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
-    public function updateUniversityFaculty(UniversityUpdateUniversityFacultyRequest $request, string $slug, int $facultyId)
-    {
+    public function updateUniversityFaculty(
+        UniversityUpdateUniversityFacultyRequest $request,
+        string $slug,
+        int $facultyId
+    ) {
         $faculty = $this->facultyService->updateFaculty($request->input('name'), $facultyId);
 
         if ($faculty !== null) {
@@ -641,8 +644,12 @@ class UniversityController extends Controller
         return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
-    public function updateUniversityFacultyField(UniversityUpdateUniversityFacultyFieldRequest $request, string $slug, int $facultyId, int $fieldId)
-    {
+    public function updateUniversityFacultyField(
+        UniversityUpdateUniversityFacultyFieldRequest $request,
+        string $slug,
+        int $facultyId,
+        int $fieldId
+    ) {
         $field = $this->facultyService->updateFacultyField($request->input('name'), $fieldId);
 
         if ($field !== null) {
@@ -668,6 +675,50 @@ class UniversityController extends Controller
         return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
+    public function deleteUniversityFaculty(
+        UniversityUpdateUniversityFacultyRequest $request,
+        string $slug,
+        int $facultyId
+    ) {
+        $isFacultyDeleted = $this->facultyService->deleteFaculty($facultyId);
+
+        if ($isFacultyDeleted) {
+            return response(null, Response::HTTP_CREATED);
+        }
+
+        return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+
+    public function deleteUniversityFacultyField(
+        UniversityUpdateUniversityFacultyFieldRequest $request,
+        string $slug,
+        int $facultyId,
+        int $fieldId
+    ) {
+        $isFieldDeleted = $this->facultyService->deleteFacultyField($fieldId);
+
+        if ($isFieldDeleted) {
+            return response(null, Response::HTTP_CREATED);
+        }
+
+        return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+
+    public function deleteUniversityFacultyFieldSpecialization(
+        UniversityUpdateUniversityFacultyFieldSpecializationRequest $request,
+        string $slug,
+        int $facultyId,
+        int $fieldId,
+        int $specializationId
+    ) {
+        $isSpecializationDeleted = $this->facultyService->deleteFieldSpecialization($specializationId);
+
+        if ($isSpecializationDeleted) {
+            return response(null, Response::HTTP_CREATED);
+        }
+
+        return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
 
     /**
      * Generate unique random access code.

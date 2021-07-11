@@ -4,15 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 
-class UserUniversityRole extends Model
+class UserUniversityRole extends Pivot
 {
-    use HasFactory;
-
     protected $table = 'users_university_roles';
 
-    public function role()
+    public function roles()
     {
-        return $this->belongsTo(Role::class, 'role_id', 'id');
+        return $this->belongsToMany(Role::class, 'users_universities_roles', 'user_universities_id', 'id', 'role_id', 'id');
     }
 }

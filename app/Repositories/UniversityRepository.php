@@ -31,7 +31,7 @@ class UniversityRepository implements UniversityRepositoryInterface
      */
     public function getUniversityBySlug(string $slug)
     {
-        $university = University::where('slug', $slug)->with(['type', 'city','faculties'])->first();
+        $university = University::where('slug', $slug)->with(['type', 'city', 'faculties'])->first();
 
         if (!empty($university)) {
             return $university;
@@ -202,8 +202,11 @@ class UniversityRepository implements UniversityRepositoryInterface
 
     public function getQuestionnaires(string $slug)
     {
-        return Questionnaire::with(['questions', 'university'])->whereHas('university', function (Builder $query) use ($slug) {
-            $query->where(['slug' => $slug]);
-        })->get();
+        return Questionnaire::with(['questions', 'university'])->whereHas(
+            'university',
+            function (Builder $query) use ($slug) {
+                $query->where(['slug' => $slug]);
+            }
+        )->get();
     }
 }

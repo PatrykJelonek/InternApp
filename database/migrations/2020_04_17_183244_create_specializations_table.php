@@ -18,8 +18,8 @@ class CreateSpecializationsTable extends Migration
             $table->string('name', 128);
             $table->foreignId('field_id');
             $table->foreign('field_id')->references('id')->on('fields');
-            $table->dateTime('created_at', 0);
-            $table->dateTime('updated_at', 0);
+            $table->timestamps();
+            $table->softDeletes();
         });
     }
 

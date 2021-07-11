@@ -18,8 +18,8 @@ class CreateFacultiesTable extends Migration
             $table->string('name', 128);
             $table->foreignId('university_id');
             $table->foreign('university_id')->references('id')->on('universities');
-            $table->dateTime('created_at', 0);
-            $table->dateTime('updated_at', 0);
+            $table->timestamps();
+            $table->softDeletes();
         });
     }
 

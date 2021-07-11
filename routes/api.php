@@ -139,6 +139,9 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::put('/universities/{slug}/faculties/{facultyId}','Api\UniversityController@updateUniversityFaculty');
     Route::put('/universities/{slug}/faculties/{facultyId}/fields/{fieldId}','Api\UniversityController@updateUniversityFacultyField');
     Route::put('/universities/{slug}/faculties/{facultyId}/fields/{fieldId}/specializations/{specializationId}','Api\UniversityController@updateUniversityFacultyFieldSpecialization');
+    Route::delete('/universities/{slug}/faculties/{facultyId}','Api\UniversityController@deleteUniversityFaculty');
+    Route::delete('/universities/{slug}/faculties/{facultyId}/fields/{fieldId}','Api\UniversityController@deleteUniversityFacultyField');
+    Route::delete('/universities/{slug}/faculties/{facultyId}/fields/{fieldId}/specializations/{specializationId}','Api\UniversityController@deleteUniversityFacultyFieldSpecialization');
     Route::get('/universities/{slug}/offers','Api\UniversityController@getOffers');
     Route::get('/universities/{slug}/questionnaires','Api\UniversityController@getUniversityQuestionnaires');
     Route::post('/universities/{slug}/questionnaires','Api\UniversityController@createUniversityQuestionnaire');

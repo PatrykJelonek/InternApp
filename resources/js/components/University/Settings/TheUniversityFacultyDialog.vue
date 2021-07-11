@@ -143,11 +143,11 @@ export default {
 
     watch: {
         universityFacultyDialogArgs(newVal, oldVal) {
-            if (newVal !== oldVal && newVal.action === 'create') {
+            if (newVal.action === 'create') {
                 this.field = null;
             }
 
-            if (newVal !== oldVal && newVal.action === 'edit') {
+            if (newVal.action === 'edit') {
                 this.faculty = newVal.name;
             }
         }

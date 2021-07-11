@@ -18,8 +18,8 @@ class CreateFieldsTable extends Migration
             $table->string('name', 128);
             $table->foreignId('faculty_id');
             $table->foreign('faculty_id')->references('id')->on('faculties');
-            $table->dateTime('created_at', 0);
-            $table->dateTime('updated_at', 0);
+            $table->timestamps();
+            $table->softDeletes();
         });
     }
 

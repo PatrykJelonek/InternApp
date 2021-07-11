@@ -426,5 +426,17 @@ export default {
         updateUniversityFacultyFieldSpecialization({commit}, {slug, facultyId, fieldId, specializationId, data}) {
             return axios.put(`/api/universities/${slug}/faculties/${facultyId}/fields/${fieldId}/specializations/${specializationId}`, data);
         },
+
+        deleteUniversityFaculty({commit}, {slug, facultyId}) {
+            return axios.delete(`/api/universities/${slug}/faculties/${facultyId}`);
+        },
+
+        deleteUniversityFacultyField({commit}, {slug, facultyId, fieldId}) {
+            return axios.delete(`/api/universities/${slug}/faculties/${facultyId}/fields/${fieldId}`);
+        },
+
+        deleteUniversityFacultyFieldSpecialization({commit}, {slug, facultyId, fieldId, specializationId}) {
+            return axios.delete(`/api/universities/${slug}/faculties/${facultyId}/fields/${fieldId}/specializations/${specializationId}`);
+        },
     },
 };

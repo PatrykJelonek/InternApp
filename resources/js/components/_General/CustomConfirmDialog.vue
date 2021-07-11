@@ -3,11 +3,11 @@
         v-model="dialogState"
         class="component-background"
         persistent
-        max-width="500"
+        max-width="600"
     >
         <expand-card :title="title" :description="subheader" :expand="false">
             <v-row no-gutters>
-                <v-col cols="12" class="pa-5 text-body-1">
+                <v-col cols="12" class="pa-5 text-body-1 hyphens-auto">
                     {{ description }}
                 </v-col>
             </v-row>
@@ -36,7 +36,6 @@ export default {
         toggleFunction: Function,
         confirmFunction: Function,
         confirmFunctionArgs: Array,
-        discardFunction: Function,
         dialogState: Boolean,
         title: String,
         subheader: String,
@@ -46,5 +45,7 @@ export default {
 </script>
 
 <style scoped>
-
+    .hyphens-auto {
+        hyphens: auto;
+    }
 </style>

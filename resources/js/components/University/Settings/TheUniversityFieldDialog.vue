@@ -65,8 +65,6 @@ setInteractionMode('eager');
 export default {
     name: "TheUniversityFieldDialog",
 
-    props: ['facultyId', 'facultyName'],
-
     components: {
         CustomCardTitle,
         CustomCard,
@@ -147,11 +145,11 @@ export default {
 
     watch: {
         universityFieldDialogArgs(newVal, oldVal) {
-            if (newVal !== oldVal && newVal.action === 'create') {
+            if (newVal.action === 'create') {
                 this.field = null;
             }
 
-            if (newVal !== oldVal && newVal.action === 'edit') {
+            if (newVal.action === 'edit') {
                 this.field = newVal.name;
             }
         },
