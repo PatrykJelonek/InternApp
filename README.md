@@ -44,7 +44,7 @@
 10. Change `.env` files by data to connect with database
 11. Initialize the database
     ```
-    php artisan init:databse [--test]
+    php artisan init:db [--test]
     ```
 12. Run a server & queues
     ```
