@@ -120,4 +120,31 @@ class AgreementService
 
         return $agreement ?? null;
     }
+
+    /**
+     * @param $slug
+     * @param $isActive
+     *
+     * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Model|object|null
+     */
+    public function setAgreementActiveStatus($slug, $isActive)
+    {
+        $agreement = $this->agreementRepository->getAgreementBySlug($slug);
+
+        if ($agreement !== null) {
+            $agreement->is_active = $isActive;
+            if ($agreement->save()) {
+                return $agreement;
+            }
+        }
+
+        return null;
+    }
+
+    public function deleteAgreement($slug): bool
+    {
+        $agreement = $this->agreementRepository->getAgreementBySlug($slug);
+
+        return $agreement !== null && $agreement->delete();
+    }
 }

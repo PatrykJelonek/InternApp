@@ -37,8 +37,8 @@ class CreateAgreementsTable extends Migration
             $table->foreignId('agreement_status_id');
             $table->foreign('agreement_status_id')->references('id')->on('agreement_statuses');
             $table->boolean('is_active')->default(false);
-            $table->dateTime('created_at', 0);
-            $table->dateTime('updated_at', 0);
+            $table->timestamps();
+            $table->softDeletes();
         });
     }
 

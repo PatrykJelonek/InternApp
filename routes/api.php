@@ -118,6 +118,9 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::get('/agreements/{slug}', 'Api\AgreementController@show');
     Route::get('/agreements/{slug}/accept','Api\agreementController@accept');
     Route::get('/agreements/{slug}/reject','Api\agreementController@reject');
+    Route::put('/agreements/{slug}/activate', 'Api\agreementController@activateAgreement');
+    Route::put('/agreements/{slug}/deactivate', 'Api\agreementController@deactivateAgreement');
+    Route::delete('/agreements/{slug}', 'Api\agreementController@deleteAgreement');
 
     # Internship Tasks
     Route::post('/internships', 'Api\InternshipController@store');

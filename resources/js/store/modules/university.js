@@ -1,3 +1,5 @@
+import agreement from "./agreement";
+
 export default {
     namespaced: true,
 
@@ -205,6 +207,16 @@ export default {
             state.availableStudentOffersLoading = data;
         },
 
+        SET_UNIVERSITY_AGREEMENT_ACTIVE_STATUS(state, {slug, data}) {
+            state.agreements.map((agreement) => {
+                if (agreement.slug === slug) {
+                    agreement.is_active = data;
+                }
+
+                return agreement;
+            });
+        },
+
         SET_FACULTIES_TREE_VIEW(state, data) {
             state.facultiesTreeView = [];
 
@@ -238,6 +250,12 @@ export default {
                     children: fields,
                 });
             });
+        },
+
+        DELETE_UNIVERSITY_AGREEMENT(state, {slug}) {
+            state.agreements = state.agreements.filter((agreement) => {
+                return agreement.slug !== slug;
+            })
         }
     },
 
@@ -438,5 +456,13 @@ export default {
         deleteUniversityFacultyFieldSpecialization({commit}, {slug, facultyId, fieldId, specializationId}) {
             return axios.delete(`/api/universities/${slug}/faculties/${facultyId}/fields/${fieldId}/specializations/${specializationId}`);
         },
+
+        setUniversityAgreementActiveStatus({commit}, {slug, data}) {
+            commit('SET_UNIVERSITY_AGREEMENT_ACTIVE_STATUS', {slug: slug, data: data});
+        },
+
+        deleteUniversityAgreement({commit}, {slug}) {
+            commit('DELETE_UNIVERSITY_AGREEMENT', {slug: slug});
+        }
     },
 };

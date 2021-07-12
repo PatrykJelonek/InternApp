@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Requests\AgreementActivateAgreementRequest;
 use App\Http\Requests\AgreementChangeStatusRequest;
+use App\Http\Requests\AgreementDeactivateAgreementRequest;
+use App\Http\Requests\AgreementDeleteAgreementRequest;
 use App\Http\Requests\AgreementShowRequest;
 use App\Http\Requests\AgreementStoreRequest;
 use App\Models\Agreement;
@@ -210,5 +213,38 @@ class AgreementController extends Controller
         } else {
             return response("Agreement has not been deleted!", Response::HTTP_INTERNAL_SERVER_ERROR);
         }
+    }
+
+    public function activateAgreement(AgreementActivateAgreementRequest $request, string $slug)
+    {
+        $result = $this->agreementService->setAgreementActiveStatus($slug, true);
+
+        if ($result !== null) {
+            return response($result, Response::HTTP_OK);
+        }
+
+        return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+
+    public function deactivateAgreement(AgreementDeactivateAgreementRequest $request, string $slug)
+    {
+        $result = $this->agreementService->setAgreementActiveStatus($slug, false);
+
+        if ($result !== null) {
+            return response($result, Response::HTTP_OK);
+        }
+
+        return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+
+    public function deleteAgreement(AgreementDeleteAgreementRequest $request, string $slug)
+    {
+        $result = $this->agreementService->deleteAgreement($slug);
+
+        if ($result) {
+            return response(null, Response::HTTP_OK);
+        }
+
+        return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 }

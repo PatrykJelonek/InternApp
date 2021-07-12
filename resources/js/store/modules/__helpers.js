@@ -5,6 +5,11 @@ export default {
     namespaced: true,
 
     state: {
+        dialogs: {
+            DIALOG_FIELD_ACTIVATE_AGREEMENT: false,
+            DIALOG_FIELD_DEACTIVATE_AGREEMENT: false,
+            DIALOG_FIELD_DELETE_AGREEMENT: false,
+        },
         createInternshipDialog: false,
         createOfferDialog: false,
         acceptOfferDialog: false,
@@ -131,6 +136,10 @@ export default {
 
         deleteUniversityFacultyDialog(state) {
             return state.deleteUniversityFacultyDialog;
+        },
+
+        dialogs(state) {
+            return state.dialogs;
         }
     },
 
@@ -250,6 +259,10 @@ export default {
         CLEAR_UNIVERSITY_SPECIALIZATION_DIALOG_ARGS(state) {
             state.universitySpecializationDialogArgs = null;
         },
+
+        TOGGLE_DIALOG(state, {key, val}) {
+            state.dialogs[key] = val;
+        }
     },
 
     actions: {
@@ -345,6 +358,9 @@ export default {
             commit('CLEAR_UNIVERSITY_SPECIALIZATION_DIALOG_ARGS');
         },
 
+        toggleDialog({commit}, {key, val}) {
+            commit('TOGGLE_DIALOG', {key: key, val: val});
+        },
 
         parseErrorMessage({commit}, status) {
             switch (status) {

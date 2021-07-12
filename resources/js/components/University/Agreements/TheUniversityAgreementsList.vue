@@ -1,14 +1,30 @@
 <template>
     <v-container fluid class="pa-0">
-        <page-title>
-            <template v-slot:default>Umowy</template>
-            <template v-slot:subheader>Lista umów przypisanych do {{
-                    !universityLoading ? university.name : 'tej uczelni'
-                }}
-            </template>
-        </page-title>
+        <custom-confirm-dialog
+            title="Dezaktywuj umowę"
+            description="Czy na pewno chcesz dezaktywować tą umowę?"
+            :dialog-state="dialogs['DIALOG_FIELD_DEACTIVATE_AGREEMENT']"
+            :toggle-function="toggleDialog"
+            :confirm-function="deactivate"
+            dialog-key="DIALOG_FIELD_DEACTIVATE_AGREEMENT"
+        ></custom-confirm-dialog>
+        <custom-confirm-dialog
+            title="Aktywuj umowę"
+            description="Czy na pewno chcesz aktywować tą umowę?"
+            :dialog-state="dialogs['DIALOG_FIELD_ACTIVATE_AGREEMENT']"
+            :toggle-function="toggleDialog"
+            :confirm-function="activate"
+            dialog-key="DIALOG_FIELD_ACTIVATE_AGREEMENT"
+        ></custom-confirm-dialog>
+        <custom-confirm-dialog
+            title="Usuń umowę"
+            description="Czy na pewno chcesz usunąć tą umowę?"
+            :dialog-state="dialogs['DIALOG_FIELD_DELETE_AGREEMENT']"
+            :toggle-function="toggleDialog"
+            :confirm-function="deleteA"
+            dialog-key="DIALOG_FIELD_DELETE_AGREEMENT"
+        ></custom-confirm-dialog>
         <v-row>
-            <create-own-agreement-dialog></create-own-agreement-dialog>
             <v-col cols="12">
                 <custom-card>
                     <custom-card-title>
@@ -36,6 +52,7 @@
                         :items-per-page="5"
                         :loading="agreementsLoading"
                         class="elevation-1 component-background"
+                        no-data-text="Niestety, ta uczelnia nie posiada jeszcze umów!"
                     >
                         <template v-slot:item.company="{ item }">
                             <router-link :to="{name: 'company', params: {slug: item.company.slug}}">{{
@@ -59,13 +76,14 @@
                         <template v-slot:item.is_active="{ item }">
                             <v-chip
                                 small
-                                :color="item.is_active  ? '#C8E6C9' : 'grey lighten-3'"
+                                outlined
+                                :color="item.is_active  ? 'primary' : 'grey lighten-3'"
                             >
                                 {{ item.is_active ? 'Aktywna' : 'Nieaktywna' }}
                             </v-chip>
                         </template>
                         <template v-slot:item.actions="{ item }">
-                            <v-menu offset-y>
+                            <v-menu offset-y class="component-background">
                                 <template v-slot:activator="{ on, attrs }">
                                     <v-btn
                                         icon
@@ -75,9 +93,30 @@
                                         <v-icon>mdi-dots-vertical</v-icon>
                                     </v-btn>
                                 </template>
-                                <v-list dense>
-                                    <v-list-item>
-                                        <v-list-item-title class="link">Odrzuć</v-list-item-title>
+                                <v-list dense color="component-background">
+                                    <v-list-item v-if="item.is_active">
+                                        <v-list-item-title
+                                            class="link"
+                                            @click="toggle('DIALOG_FIELD_DEACTIVATE_AGREEMENT', true, item)"
+                                        >
+                                            Dezaktywuj umowę
+                                        </v-list-item-title>
+                                    </v-list-item>
+                                    <v-list-item v-if="!item.is_active">
+                                        <v-list-item-title
+                                            class="link"
+                                            @click="toggle('DIALOG_FIELD_ACTIVATE_AGREEMENT', true, item)"
+                                        >
+                                            Aktywuj umowę
+                                        </v-list-item-title>
+                                    </v-list-item>
+                                    <v-list-item v-if="!item.deleted_at">
+                                        <v-list-item-title
+                                            class="link"
+                                            @click="toggle('DIALOG_FIELD_DELETE_AGREEMENT', true, item)"
+                                        >
+                                            Usuń umowę
+                                        </v-list-item-title>
                                     </v-list-item>
                                 </v-list>
                             </v-menu>
@@ -97,10 +136,11 @@ import CreateOwnAgreementDialog from "./CreateOwnAgreementDialog";
 import PageTitle from "../../_Helpers/PageTitle";
 import CustomCard from "../../_General/CustomCard";
 import CustomCardTitle from "../../_General/CustomCardTitle";
+import CustomConfirmDialog from "../../_General/CustomConfirmDialog";
 
 export default {
     name: "TheUniversityAgreementsList",
-    components: {CustomCardTitle, CustomCard, PageTitle, CreateOwnAgreementDialog, ExpandCard},
+    components: {CustomConfirmDialog, CustomCardTitle, CustomCard, PageTitle, CreateOwnAgreementDialog, ExpandCard},
     data() {
         return {
             show: true,
@@ -113,6 +153,7 @@ export default {
                 {text: 'Status', value: 'is_active'},
                 {text: 'Akcje', value: 'actions', sortable: false, align: 'center'},
             ],
+            dialogArgs: [],
         }
     },
 
@@ -122,17 +163,67 @@ export default {
             universityLoading: 'university/universityLoading',
             agreements: 'university/agreements',
             agreementsLoading: 'university/agreementsLoading',
+            dialogs: 'helpers/dialogs'
         }),
     },
 
     methods: {
         ...mapActions({
+            setSnackbar: 'snackbar/setSnackbar',
             fetchAgreements: 'university/fetchAgreements',
             toggleCreateOwnAgreementDialog: 'helpers/toggleCreateOwnAgreementDialog',
+            toggleDialog: 'helpers/toggleDialog',
+            activateAgreement: 'agreement/activateAgreement',
+            deactivateAgreement: 'agreement/deactivateAgreement',
+            setUniversityAgreementActiveStatus: 'university/setUniversityAgreementActiveStatus',
+            deleteUniversityAgreement: 'university/deleteUniversityAgreement',
+            deleteAgreement: 'agreement/deleteAgreement'
         }),
 
         formatDate(date) {
             return moment(date).format('DD.MM.YYYY');
+        },
+
+        toggle(key, val, args) {
+            this.toggleDialog({
+                key: key,
+                val: val,
+            });
+            this.dialogArgs = args;
+        },
+
+        activate() {
+            this.activateAgreement({slug: this.dialogArgs.slug}).then((res) => {
+                this.setUniversityAgreementActiveStatus({slug: this.dialogArgs.slug, data: true});
+                this.toggle('DIALOG_FIELD_ACTIVATE_AGREEMENT', false, null);
+                this.setSnackbar({message: 'Umowa została aktywowana!', color: 'success'});
+            }).catch((e) => {
+                console.log(e);
+                this.toggle('DIALOG_FIELD_ACTIVATE_AGREEMENT', false, null);
+                this.setSnackbar({message: 'Nie udało się aktywować umowy!', color: 'error'});
+            });
+        },
+
+        deactivate() {
+            this.deactivateAgreement({slug: this.dialogArgs.slug}).then((res) => {
+                this.setUniversityAgreementActiveStatus({slug: this.dialogArgs.slug, data: false});
+                this.toggle('DIALOG_FIELD_DEACTIVATE_AGREEMENT', false, null);
+                this.setSnackbar({message: 'Umowa została dezaktywowana!', color: 'success'});
+            }).catch((e) => {
+                this.toggle('DIALOG_FIELD_DEACTIVATE_AGREEMENT', false, null);
+                this.setSnackbar({message: 'Nie udało się dezaktywować umowy!', color: 'error'});
+            });
+        },
+
+        deleteA() {
+            this.deleteAgreement({slug: this.dialogArgs.slug}).then((res) => {
+                this.deleteUniversityAgreement({slug: this.dialogArgs.slug});
+                this.toggle('DIALOG_FIELD_DELETE_AGREEMENT', false, null);
+                this.setSnackbar({message: 'Umowa została usunięta!', color: 'success'});
+            }).catch((e) => {
+                this.toggle('DIALOG_FIELD_DELETE_AGREEMENT', false, null);
+                this.setSnackbar({message: 'Nie udało się usunąć umowy!', color: 'error'});
+            });
         }
     },
 

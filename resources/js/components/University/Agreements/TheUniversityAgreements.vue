@@ -1,12 +1,13 @@
 <template>
     <v-container fluid class="pa-0">
+        <create-own-agreement-dialog></create-own-agreement-dialog>
         <page-title>
             <template v-slot:default>Umowy</template>
             <template v-slot:subheader>
                 Lista umów przypisanych do {{ university.name }}.
             </template>
             <template v-slot:actions>
-                <v-btn color="primary" outlined>Dodaj umowę</v-btn>
+                <v-btn color="primary" outlined @click="toggleCreateOwnAgreementDialog(true)">Dodaj umowę</v-btn>
             </template>
         </page-title>
         <v-row>
@@ -20,10 +21,12 @@
 <script>
 import TheUniversityAgreementsList from "./TheUniversityAgreementsList";
 import {mapActions, mapGetters} from "vuex";
+import PageTitle from "../../_Helpers/PageTitle";
+import CreateOwnAgreementDialog from "./CreateOwnAgreementDialog";
 
 export default {
     name: "TheUniversityAgreements",
-    components: {TheUniversityAgreementsList},
+    components: {CreateOwnAgreementDialog, PageTitle, TheUniversityAgreementsList},
 
     computed: {
         ...mapGetters({
@@ -33,7 +36,8 @@ export default {
 
     methods: {
         ...mapActions({
-            setBreadcrumbs: 'helpers/setBreadcrumbs'
+            setBreadcrumbs: 'helpers/setBreadcrumbs',
+            toggleCreateOwnAgreementDialog: 'helpers/toggleCreateOwnAgreementDialog',
         }),
     },
 

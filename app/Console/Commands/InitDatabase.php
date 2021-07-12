@@ -12,7 +12,7 @@ class InitDatabase extends Command
      *
      * @var string
      */
-    protected $signature = 'init:database {--T|test}';
+    protected $signature = 'init:db {--T|test}';
 
     /**
      * The console command description.

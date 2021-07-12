@@ -23,7 +23,7 @@ export default {
 
         SET_AGREEMENT_LOADING(state, data) {
             state.agreementLoading = data;
-        }
+        },
     },
 
     actions: {
@@ -63,6 +63,18 @@ export default {
 
         activeAgreement({commit}, id) {
             return axios.post(`/api/agreements/${id}/active`);
+        },
+
+        activateAgreement({commit}, {slug}) {
+            return axios.put(`/api/agreements/${slug}/activate`);
+        },
+
+        deactivateAgreement({commit}, {slug}) {
+            return axios.put(`/api/agreements/${slug}/deactivate`);
+        },
+
+        deleteAgreement({commit}, {slug}) {
+            return axios.delete(`/api/agreements/${slug}`);
         }
     },
 }

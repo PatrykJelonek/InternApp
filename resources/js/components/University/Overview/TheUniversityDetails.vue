@@ -1,8 +1,9 @@
 <template>
-    <expand-card
-        title="Informacje podstawowe"
-        description="Ponieżej znajdują się podstawowe informacje na temat tego uniwersytetu."
-    >
+    <custom-card>
+        <custom-card-title>
+            <template v-slot:default>Informacje podstawowe</template>
+            <template v-slot:subheader>Poniżej znajdują się podstawowe informacje na temat tego uniwersytetu</template>
+        </custom-card-title>
         <v-row no-gutters>
             <v-col cols="12" sm="12" md="6" lg="6">
                 <v-list nav color="card-background">
@@ -49,15 +50,17 @@
                 </v-list>
             </v-col>
         </v-row>
-    </expand-card>
+    </custom-card>
 </template>
 
 <script>
 import ExpandCard from "../../_Helpers/ExpandCard";
+import CustomCard from "../../_General/CustomCard";
+import CustomCardTitle from "../../_General/CustomCardTitle";
 
 export default {
     name: "TheUniversityDetails",
-    components: {ExpandCard},
+    components: {CustomCardTitle, CustomCard, ExpandCard},
     props: ['name', 'type', 'address', 'email', 'phone', 'website'],
 
     data() {
