@@ -1,5 +1,6 @@
 <template>
     <custom-card>
+        <the-university-internship-change-status-dialog></the-university-internship-change-status-dialog>
         <custom-card-title>
             <template v-slot:default>Lista praktyk i staży</template>
         </custom-card-title>
@@ -23,9 +24,24 @@
                         </router-link>
                     </template>
                     <template v-slot:item.actions="{ item }">
-                        <v-btn icon x-small>
-                            <v-icon>mdi-dots-vertical</v-icon>
-                        </v-btn>
+                        <v-menu offset-y class="component-background">
+                            <template v-slot:activator="{ on, attrs }">
+                                <v-btn
+                                    icon
+                                    v-bind="attrs"
+                                    v-on="on"
+                                >
+                                    <v-icon>mdi-dots-vertical</v-icon>
+                                </v-btn>
+                            </template>
+                            <v-list dense color="component-background">
+                                <v-list-item>
+                                    <v-list-item-title @click="openChangeStatusDialog(item)">
+                                        Zmień status
+                                    </v-list-item-title>
+                                </v-list-item>
+                            </v-list>
+                        </v-menu>
                     </template>
                 </v-data-table>
             </v-col>
@@ -38,10 +54,11 @@ import {mapActions, mapGetters} from "vuex";
 import moment from "moment";
 import CustomCard from "../../_General/CustomCard";
 import CustomCardTitle from "../../_General/CustomCardTitle";
+import TheUniversityInternshipChangeStatusDialog from "./TheUniversityInternshipChangeStatusDialog";
 
 export default {
     name: "TheUniversityInternshipsList",
-    components: {CustomCardTitle, CustomCard},
+    components: {TheUniversityInternshipChangeStatusDialog, CustomCardTitle, CustomCard},
     data() {
         return {
             show: true,
@@ -66,10 +83,22 @@ export default {
     methods: {
         ...mapActions({
             fetchInternships: 'university/fetchInternships',
+            toggleDialog: 'helpers/toggleDialog',
+            setDialogArgs: 'helpers/setDialogArgs',
         }),
 
         formatDate(date) {
             return moment(date).format('DD.MM.YYYY');
+        },
+
+        openChangeStatusDialog(item) {
+            this.setDialogArgs({
+                key: 'DIALOG_FIELD_CHANGE_INTERNSHIP_STATUS', val: {
+                    name: item.offer.name,
+                    id: item.id,
+                }
+            })
+            this.toggleDialog({key: 'DIALOG_FIELD_CHANGE_INTERNSHIP_STATUS', val: true});
         }
     },
 

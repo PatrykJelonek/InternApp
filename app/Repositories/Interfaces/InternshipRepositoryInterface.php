@@ -9,12 +9,12 @@ interface InternshipRepositoryInterface
      *
      * @return mixed
      */
-    public function one($id);
+    public function getInternship($id);
 
     /**
      * @return mixed
      */
-    public function all();
+    public function getInternships();
 
     /**
      * @param $id
@@ -33,4 +33,6 @@ interface InternshipRepositoryInterface
      * @return mixed
      */
     public function create(int $userId, int $offerId, int $agreementId, int $companySupervisorId, int $universitySupervisorId);
+
+    public function getInternshipStatuses();
 }

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\InternshipChangeInternshipStatusRequest;
+use App\Http\Requests\InternshipStatusesRequest;
 use App\Http\Requests\InternshipStoreRequest;
 use App\Http\Resources\InternshipResource;
 use App\Models\Agreement;
@@ -18,6 +20,8 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
+
+use function Symfony\Component\String\s;
 
 class InternshipController extends Controller
 {
@@ -111,7 +115,7 @@ class InternshipController extends Controller
      */
     public function show($id)
     {
-        $internship = $this->internshipRepository->one($id);
+        $internship = $this->internshipRepository->getInternship($id);
 
         if (!empty($internship)) {
             return response(new InternshipResource($internship), Response::HTTP_OK);
@@ -189,5 +193,22 @@ class InternshipController extends Controller
         } else {
             return response("Internship has not been deleted!", Response::HTTP_INTERNAL_SERVER_ERROR);
         }
+    }
+
+    public function getInternshipStatuses(InternshipStatusesRequest $request)
+    {
+        $statuses = $this->internshipRepository->getInternshipStatuses();
+        return response($statuses, Response::HTTP_OK);
+    }
+
+    public function changeInternshipStatus(InternshipChangeInternshipStatusRequest $request, int $id)
+    {
+        $result = $this->internshipService->changeInternshipStatus($id, $request->input('statusId'));
+
+        if ($result !== null) {
+            return response($result, Response::HTTP_OK);
+        }
+
+        return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 }

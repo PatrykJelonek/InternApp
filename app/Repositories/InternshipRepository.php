@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Constants\InternshipStatusConstants;
 use App\Constants\RoleConstants;
+use App\Http\Requests\InternshipStatusesRequest;
 use App\Models\Internship;
 use App\Models\InternshipStatus;
 use App\Models\Offer;
@@ -23,7 +24,7 @@ class InternshipRepository implements InternshipRepositoryInterface
      *
      * @return mixed // Return specific internship
      */
-    public function one($id)
+    public function getInternship($id)
     {
         $internship = null;
 
@@ -42,14 +43,14 @@ class InternshipRepository implements InternshipRepositoryInterface
         return $internship;
     }
 
-    public function all()
+    public function getInternships()
     {
         // TODO: Implement all() method.
     }
 
     public function getInternshipStudents($id)
     {
-        return $this->one($id)->students;
+        return $this->getInternship($id)->students;
     }
 
     public function create(
@@ -77,5 +78,10 @@ class InternshipRepository implements InternshipRepositoryInterface
         }
 
         return null;
+    }
+
+    public function getInternshipStatuses()
+    {
+        return InternshipStatus::all();
     }
 }

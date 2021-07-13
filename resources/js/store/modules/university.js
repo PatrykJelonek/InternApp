@@ -256,6 +256,16 @@ export default {
             state.agreements = state.agreements.filter((agreement) => {
                 return agreement.slug !== slug;
             })
+        },
+
+        CHANGE_UNIVERSITY_INTERNSHIP_STATUS(state, {id, status}) {
+            state.internships.map((internship) => {
+                if (internship.id === id) {
+                    internship.status.displayed_name = status;
+                }
+
+                return internship;
+            });
         }
     },
 

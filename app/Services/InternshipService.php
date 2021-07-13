@@ -83,4 +83,16 @@ class InternshipService
 
         return null;
     }
+
+    public function changeInternshipStatus(int $internshipId, int $statusId)
+    {
+        $internship = $this->internshipRepository->getInternship($internshipId);
+        $internship->internship_status_id = $statusId;
+
+        if ($internship->save()) {
+            return $internship;
+        }
+
+        return null;
+    }
 }

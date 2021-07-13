@@ -8,6 +8,8 @@ export default {
         preview: null,
         internshipLoading: true,
         internshipStudentsLoading: true,
+        internshipStatuses: [],
+        internshipStatusesLoading: false,
     },
 
     getters: {
@@ -28,11 +30,19 @@ export default {
         },
 
         internshipLoading(state) {
-            return state.internshipLoading
+            return state.internshipLoading;
         },
 
         internshipStudentsLoading(state) {
-            return state.internshipStudentsLoading
+            return state.internshipStudentsLoading;
+        },
+
+        internshipStatuses(state) {
+            return state.internshipStatuses;
+        },
+
+        internshipStatusesLoading(state) {
+            return state.internshipStatusesLoading;
         },
     },
 
@@ -59,6 +69,14 @@ export default {
 
         SET_INTERNSHIP_STUDENTS_LOADING(state, data) {
             state.internshipStudentsLoading = data;
+        },
+
+        SET_INTERNSHIP_STATUSES(state, data) {
+            state.internshipStatuses = data;
+        },
+
+        SET_INTERNSHIP_STATUSES_LOADING(state, data) {
+            state.internshipStatusesLoading = data;
         },
     },
 
@@ -96,6 +114,18 @@ export default {
             }
         },
 
+        async fetchInternshipStatuses({commit}) {
+            commit('SET_INTERNSHIP_STATUSES_LOADING', true);
+            try {
+                let response = await axios.get(`/api/internships/statuses`);
+                commit('SET_INTERNSHIP_STATUSES', response.data);
+                commit('SET_INTERNSHIP_STATUSES_LOADING', false);
+            } catch (e) {
+                commit('SET_INTERNSHIP_STATUSES', []);
+                commit('SET_INTERNSHIP_STATUSES_LOADING', false);
+            }
+        },
+
         apply({commit}, data) {
             return axios.post(`/api/internships`, data);
         },
@@ -115,5 +145,11 @@ export default {
         createTask({commit}, {internshipId, studentIndex, task}) {
             return axios.post(`/api/internships/${internshipId}/students/${studentIndex}/tasks`, task);
         },
+
+        changeInternshipStatus({commit}, {internshipId, statusId}) {
+            return axios.put(`/api/internships/${internshipId}/change-status`, {
+                statusId: statusId,
+            })
+        }
     },
 }

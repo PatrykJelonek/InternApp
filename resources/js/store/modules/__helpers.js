@@ -9,6 +9,13 @@ export default {
             DIALOG_FIELD_ACTIVATE_AGREEMENT: false,
             DIALOG_FIELD_DEACTIVATE_AGREEMENT: false,
             DIALOG_FIELD_DELETE_AGREEMENT: false,
+            DIALOG_FIELD_CHANGE_INTERNSHIP_STATUS: false,
+        },
+        dialogsArgs: {
+            DIALOG_FIELD_ACTIVATE_AGREEMENT: null,
+            DIALOG_FIELD_DEACTIVATE_AGREEMENT: null,
+            DIALOG_FIELD_DELETE_AGREEMENT: null,
+            DIALOG_FIELD_CHANGE_INTERNSHIP_STATUS: null,
         },
         createInternshipDialog: false,
         createOfferDialog: false,
@@ -140,6 +147,10 @@ export default {
 
         dialogs(state) {
             return state.dialogs;
+        },
+
+        dialogsArgs(state) {
+            return state.dialogsArgs;
         }
     },
 
@@ -262,6 +273,10 @@ export default {
 
         TOGGLE_DIALOG(state, {key, val}) {
             state.dialogs[key] = val;
+        },
+
+        SET_DIALOG_ARGS(state, {key, val}) {
+            state.dialogsArgs[key] = val;
         }
     },
 
@@ -360,6 +375,10 @@ export default {
 
         toggleDialog({commit}, {key, val}) {
             commit('TOGGLE_DIALOG', {key: key, val: val});
+        },
+
+        setDialogArgs({commit}, {key, val}) {
+            commit('SET_DIALOG_ARGS', {key: key, val: val});
         },
 
         parseErrorMessage({commit}, status) {

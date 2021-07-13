@@ -52,7 +52,7 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::resource('/offers/categories', 'Api\OfferCategoryController');
 //    Route::resource('/offers', 'Api\OfferController');
     //Route::resource('/agreements', 'Api\AgreementController');
-    Route::resource('/internships', 'Api\InternshipController');
+    //Route::resource('/internships', 'Api\InternshipController');
     Route::resource('/journals', 'Api\JournalController');
     Route::post('/university/generate-code', 'Api\UniversityController@setNewAccessCode');
     Route::post('/university/use-code', 'Api\UniversityController@useCode');
@@ -76,7 +76,9 @@ Route::group(['middleware' => ['jwt.verify']], function() {
 
     //NEW ENDPOINTS
     //Route::get('/internships','Api\InternshipController@index');
+    Route::get('/internships/statuses', 'Api\InternshipController@getInternshipStatuses');
     Route::get('/internships/{internship}','Api\InternshipController@show');
+    Route::put('/internships/{id}/change-status','Api\InternshipController@changeInternshipStatus');
     Route::get('/internships/{internship}/students','Api\InternshipStudentController@index');
     Route::get('/internships/{internship}/students/{student}/journal-entries', 'Api\StudentJournalEntryController@index');
     Route::post('/internships/{internship}/students/{student}/journal-entries', 'Api\StudentJournalEntryController@store');
