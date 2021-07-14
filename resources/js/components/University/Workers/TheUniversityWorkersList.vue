@@ -13,7 +13,7 @@
                     class="elevation-1 component-background"
                 >
                     <template v-slot:item.fullname="{ item }">
-                        {{ item.first_name + ' ' + item.last_name }}
+                        {{ item.full_name }}
                     </template>
                     <template v-slot:item.rolesChips="{ item }">
                         <v-chip-group>
@@ -24,6 +24,10 @@
                             >{{ role.display_name }}
                             </v-chip>
                         </v-chip-group>
+                    </template>
+                    <template v-slot:item.verified="{ item }">
+                        <v-icon color="primary" v-if="item.universities[0].pivot.verified">mdi-check-decagram-outline</v-icon>
+                        <v-icon color="secondary" v-else>mdi-alert-decagram-outline</v-icon>
                     </template>
                     <template v-slot:item.actions="{ item }">
                         <v-btn icon x-small>
@@ -51,6 +55,7 @@ export default {
             headers: [
                 {text: 'Imię i nazwisko', value: 'fullname'},
                 {text: 'Role', value: 'rolesChips'},
+                {text: 'Zweryfikowany', value: 'verified', sortable: false, align: 'center'},
                 {text: 'Akcje', value: 'actions', sortable: false, align: 'center'},
             ],
         }
