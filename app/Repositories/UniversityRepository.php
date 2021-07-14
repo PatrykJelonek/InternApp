@@ -110,7 +110,7 @@ class UniversityRepository implements UniversityRepositoryInterface
 
     public function getWorkers(string $slug)
     {
-        return User::with('roles')->whereHas(
+        return User::with('roles','universities')->whereHas(
             'universities',
             function (Builder $query) use ($slug) {
                 $query->where('slug', $slug);

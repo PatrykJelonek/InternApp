@@ -11,7 +11,9 @@
                     </p>
                 </v-col>
                 <v-col class="d-flex justify-end">
+                    <v-btn-toggle borderless class="component-background" dense>
                     <slot name="actions"></slot>
+                    </v-btn-toggle>
                 </v-col>
             </v-row>
         </v-col>

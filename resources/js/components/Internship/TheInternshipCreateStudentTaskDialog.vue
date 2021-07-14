@@ -12,17 +12,16 @@
 
         </template>
 
-        <v-card>
-            <v-list color="card-background">
-                <v-list-item>
-                    <v-list-item-content>
-                        <v-list-item-title class="text-h5">Nowe zadanie</v-list-item-title>
-                        <v-list-item-subtitle>Formularz dodawania zadania do dziennika praktyk.</v-list-item-subtitle>
-                    </v-list-item-content>
-                </v-list-item>
-            </v-list>
-
-            <v-divider></v-divider>
+        <custom-card>
+            <custom-card-title>
+                <template v-slot:default>Nowe zadanie</template>
+                <template v-slot:subheader>Formularz dodawania zadania do dziennika praktyk.</template>
+                <template v-slot:actions>
+                    <v-btn icon @click="dialog = false">
+                        <v-icon>mdi-close</v-icon>
+                    </v-btn>
+                </template>
+            </custom-card-title>
 
             <validation-observer ref="observer" v-slot="{ validate }">
                 <v-form class="pa-5">
@@ -34,7 +33,7 @@
                                     label="Nazwa zadania"
                                     placeholder="Szkolenie BHP..."
                                     outlined
-                                    hide-details
+                                    hide-details="auto"
                                     dense
                                     :error-messages="errors"
                                 ></v-text-field>
@@ -50,13 +49,13 @@
                                     rows="5"
                                     dense
                                     outlined
-                                    hide-details
+                                    hide-details="auto"
                                     :error-messages="errors"
                                 ></v-textarea>
                             </validation-provider>
                         </v-col>
                     </v-row>
-                    <v-row v-has="['admin','company_supervisor','university_supervisor']">
+                    <v-row v-has="['admin','company_supervisor','university_supervisor']" no-gutters>
                         <v-col cols="12">
                             <validation-provider v-slot="{ errors }" vid="done" rules="required">
                                 <v-switch
@@ -65,7 +64,7 @@
                                     :ripple="false"
                                     flat
                                     inset
-                                    hide-details
+                                    hide-details="auto"
                                     :error-messages="errors"
                                 ></v-switch>
                             </validation-provider>
@@ -87,6 +86,7 @@
                                     chips
                                     hint="Wybierz studentów dla których ma zostać dodany ten wpis..."
                                     persistent-hint
+                                    hide-details="auto"
                                     :error-messages="errors"
                                 ></v-select>
                             </validation-provider>
@@ -95,23 +95,21 @@
                 </v-form>
             </validation-observer>
 
-            <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn
-                    color="primary"
-                    text
-                    @click="submit"
-                >
-                    Dodaj zadanie
-                </v-btn>
-            </v-card-actions>
-        </v-card>
+            <custom-card-footer>
+                <template v-slot:right>
+                    <v-btn color="primary" outlined @click="submit">Dodaj zadanie</v-btn>
+                </template>
+            </custom-card-footer>
+        </custom-card>
     </v-dialog>
 </template>
 
 <script>
 import {setInteractionMode, ValidationProvider, ValidationObserver} from "vee-validate";
 import {mapActions, mapGetters} from "vuex";
+import CustomCard from "../_General/CustomCard";
+import CustomCardTitle from "../_General/CustomCardTitle";
+import CustomCardFooter from "../_General/CustomCardFooter";
 
 setInteractionMode('eager');
 
@@ -119,6 +117,9 @@ export default {
     name: "TheInternshipCreateStudentTaskDialog",
 
     components: {
+        CustomCardFooter,
+        CustomCardTitle,
+        CustomCard,
         ValidationProvider,
         ValidationObserver
     },

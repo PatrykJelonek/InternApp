@@ -20,6 +20,7 @@ class CreateUsersUniversitiesTable extends Migration
             $table->foreignId('university_id');
             $table->foreign('university_id')->references('id')->on('universities');
             $table->boolean('active')->default(false);
+            $table->boolean('verified')->default(false);
             $table->timestamps();
         });
     }

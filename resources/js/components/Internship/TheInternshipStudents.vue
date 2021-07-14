@@ -1,13 +1,11 @@
 <template>
-    <v-card elevation="0" color="card-background" :loading="internshipStudentsLoading">
-        <template slot="progress">
-            <v-progress-linear color="primary" indeterminate></v-progress-linear>
-        </template>
-        <v-card-title>Lista studentów</v-card-title>
-        <v-card-subtitle>Wybierz jednego ze studentów z poniższej listy by zobaczyć jego wpisy i zadania w dzienniku praktyk.</v-card-subtitle>
-        <v-divider></v-divider>
-        <v-row v-if="!internshipStudentsLoading && internshipStudents.length > 0">
-            <v-col cols="12" class="px-3 pt-8 pb-5">
+    <custom-card :loading="internshipStudentsLoading">
+        <custom-card-title>
+            <template v-slot:default>Lista studentów</template>
+            <template v-slot:subheader>Wybierz jednego ze studentów z poniższej listy by zobaczyć jego wpisy i zadania w dzienniku praktyk.</template>
+        </custom-card-title>
+        <v-row v-if="!internshipStudentsLoading && internshipStudents.length > 0" no-gutters>
+            <v-col cols="12" class="px-1 pt-3 pb-3">
                 <v-slide-group center-active>
                     <internship-student
                         v-for="student in internshipStudents"
@@ -23,17 +21,19 @@
                 <p class="text--secondary">Niestety do tej praktyki nie ma jeszcze przypisanych studentów.</p>
             </v-col>
         </v-row>
-    </v-card>
+    </custom-card>
 </template>
 
 <script>
 import {mapGetters} from "vuex";
 import InternshipStudentListItem from "./InternshipStudentListItem";
 import InternshipStudent from "./InternshipStudent";
+import CustomCard from "../_General/CustomCard";
+import CustomCardTitle from "../_General/CustomCardTitle";
 
 export default {
     name: "TheInternshipStudents",
-    components: {InternshipStudent, InternshipStudentListItem},
+    components: {CustomCardTitle, CustomCard, InternshipStudent, InternshipStudentListItem},
     data() {
         return {
             show: true,
@@ -43,10 +43,15 @@ export default {
 
     computed: {
         ...mapGetters({
+            internship: 'internship/internship',
             internshipStudents: 'internship/internshipStudents',
             internshipStudentsLoading: 'internship/internshipStudentsLoading',
         })
     },
+
+    created() {
+
+    }
 }
 </script>
 

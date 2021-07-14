@@ -1,29 +1,20 @@
 <template>
-    <v-card elevation="0" color="card-background" :loading="loadingStudentTasks">
-        <template slot="progress">
-            <v-progress-linear color="primary" indeterminate></v-progress-linear>
-        </template>
-        <v-list color="card-background">
-            <v-list-item>
-                <v-list-item-content>
-                    <v-list-item-title class="text-h5 font-weight-medium">Zadania</v-list-item-title>
-                    <v-list-item-subtitle>Lista zadań przypisanych do wybranego studenta.</v-list-item-subtitle>
-                </v-list-item-content>
-                <v-list-item-action>
-                    <v-btn-toggle dense borderless color="card-background">
-                        <the-internship-create-student-task-dialog></the-internship-create-student-task-dialog>
-                        <v-btn
-                            icon
-                            @click="show = !show"
-                            v-if="this.$route.params.studentIndex && !loadingStudentTasks && studentTasks.length > 0"
-                        >
-                            <v-icon>{{ show ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
-                        </v-btn>
-                    </v-btn-toggle>
-                </v-list-item-action>
-            </v-list-item>
-        </v-list>
-        <v-divider></v-divider>
+    <custom-card :loading="loadingStudentTasks">
+        <custom-card-title>
+            <template v-slot:default>Zadania</template>
+            <template v-slot:subheader>Lista zadań przypisanych do wybranego studenta.</template>
+            <template v-slot:actions>
+                <the-internship-create-student-task-dialog></the-internship-create-student-task-dialog>
+                <v-btn
+                    icon
+                    @click="show = !show"
+                    v-if="$route.params.studentIndex && !loadingStudentTasks && studentTasks.length > 0"
+                >
+                    <v-icon>{{ show ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
+                </v-btn>
+            </template>
+        </custom-card-title>
+
         <v-expand-transition v-if="this.$route.params.studentIndex && !loadingStudentTasks && studentTasks.length > 0">
             <v-row v-show="show">
                 <v-col cols="12">
@@ -56,17 +47,19 @@
                 <p class="text--secondary">Nie wybrano studenta.</p>
             </v-col>
         </v-row>
-    </v-card>
+    </custom-card>
 </template>
 
 <script>
 import {mapActions, mapGetters} from "vuex";
 import InternshipStudentTask from "./InternshipStudentTask";
 import TheInternshipCreateStudentTaskDialog from "./TheInternshipCreateStudentTaskDialog";
+import CustomCard from "../_General/CustomCard";
+import CustomCardTitle from "../_General/CustomCardTitle";
 
 export default {
     name: "TheInternshipStudentTasks",
-    components: {TheInternshipCreateStudentTaskDialog, InternshipStudentTask},
+    components: {CustomCardTitle, CustomCard, TheInternshipCreateStudentTaskDialog, InternshipStudentTask},
     data() {
         return {
             show: true,

@@ -12,6 +12,7 @@
                     :items-per-page="5"
                     :loading="internshipsLoading"
                     class="elevation-1 component-background"
+                    @click:row="(item) => {$router.push({name: 'internship', params: {internshipId: item.id}})}"
                 >
                     <template v-slot:item.universitySupervisor="{ item }">
                         <router-link :to="{name: 'user', params: {id: item.university_supervisor.id}}">
@@ -22,6 +23,12 @@
                         <router-link :to="{name: 'user', params: {id: item.company_supervisor.id}}">
                             {{ item.company_supervisor.first_name + ' ' + item.company_supervisor.last_name }}
                         </router-link>
+                    </template>
+                    <template v-slot:item.startDate="{ item }">
+                        {{ formatDate(item.agreement.date_from) }}
+                    </template>
+                    <template v-slot:item.endDate="{ item }">
+                        {{ formatDate(item.agreement.date_to) }}
                     </template>
                     <template v-slot:item.actions="{ item }">
                         <v-menu offset-y class="component-background">
@@ -66,6 +73,8 @@ export default {
                 {text: 'Nazwa', value: 'offer.name'},
                 {text: 'Opiekun z uczelni', value: 'universitySupervisor'},
                 {text: 'Opiekun z firmy', value: 'companySupervisor'},
+                {text: 'Data rozpoczęcia', value:'startDate'},
+                {text: 'Data zakończenia', value:'endDate'},
                 {text: 'Status', value: 'status.displayed_name'},
                 {text: 'Akcje', value: 'actions', sortable: false, align: 'center'},
             ],

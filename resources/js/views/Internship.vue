@@ -1,17 +1,19 @@
 <template>
-    <v-container fluid>
+    <v-container fluid class="pa-0">
         <div v-if="!internshipLoading">
             <!--        <the-internship-students-drawer v-if="!$vuetify.breakpoint.mobile"></the-internship-students-drawer>-->
-            <page-title>{{ internship.offer.name }}</page-title>
+            <page-title>
+                <template v-slot:default>{{ internship.offer.name }}</template>
+            </page-title>
             <v-row>
                 <v-col cols="12" md="12" lg="12">
                     <the-internship-info-card
                         :internship-name="internship.offer.name"
                         :internship-start-date="internship.agreement.date_from"
                         :internship-end-date="internship.agreement.date_to"
-                        :university-id="internship.agreement.university.id"
+                        :university-slug="internship.agreement.university.slug"
                         :university-name="internship.agreement.university.name"
-                        :company-id="internship.agreement.company.id"
+                        :company-slug="internship.agreement.company.slug"
                         :company-name="internship.agreement.company.name"
                     ></the-internship-info-card>
                 </v-col>
@@ -117,13 +119,24 @@ export default {
         ...mapActions({
             fetchInternship: 'internship/fetchInternship',
             fetchInternshipStudents: 'internship/fetchInternshipStudents',
+            setBreadcrumbs: 'helpers/setBreadcrumbs',
         }),
     },
 
     created() {
         this.fetchInternship(this.$route.params.internshipId).then(() => {
+            this.setBreadcrumbs([
+                {text: 'Panel', to: {name: 'panel'}, exact: true},
+                {text: 'Praktyki i Staże', to: {name: 'admin'}, exact: true},
+                {
+                    text: this.internship.offer.name ?? '',
+                    to: {name: 'internship', params: {internshipId: this.internship.id}},
+                    exact: true
+                },
+            ]);
 
             this.fetchInternshipStudents(this.$route.params.internshipId).then(() => {
+
             }).catch((e) => {
                 console.error(e);
             });

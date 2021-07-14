@@ -25,23 +25,45 @@
 
 <script>
 import router from "../../router/routers";
-import {mapActions} from "vuex";
+import {mapActions, mapGetters} from "vuex";
 
 export default {
     name: "InternshipStudent",
     props: ['fullname', 'index'],
 
+    computed: {
+        ...mapGetters({
+            internship: 'internship/internship'
+        }),
+    },
+
     methods: {
         ...mapActions({
             fetchStudentJournalEntries: 'student/fetchStudentJournalEntries',
             fetchStudentTasks: 'student/fetchStudentTasks',
+            setBreadcrumbs: 'helpers/setBreadcrumbs',
         }),
 
         cardOnClick() {
             if (this.$route.params.studentIndex !== this.index) {
                 router.push({name: 'internship-student', params: {studentIndex: this.index}});
-                this.fetchStudentJournalEntries({internshipId: 1, studentIndex: this.index});
-                this.fetchStudentTasks({internshipId: 1, studentIndex: this.index});
+                this.fetchStudentJournalEntries({internshipId: this.$route.params.internshipId, studentIndex: this.index});
+                this.fetchStudentTasks({internshipId: this.$route.params.internshipId, studentIndex: this.index});
+
+                this.setBreadcrumbs([
+                    {text: 'Panel', to: {name: 'panel'}, exact: true},
+                    {text: 'Praktyki i Staże', to: {name: 'admin'}, exact: true},
+                    {
+                        text:  this.internship.offer.name ?? ' ',
+                        to: {name: 'internship', params: {internshipId: this.$route.params.internshipId}},
+                        exact: true
+                    },
+                    {
+                        text: this.fullname,
+                        to: {name: 'internship-student', params: {internshipId: this.$route.params.internshipId, studentIndex: this.index}},
+                        exact: true
+                    },
+                ]);
             }
         },
     }

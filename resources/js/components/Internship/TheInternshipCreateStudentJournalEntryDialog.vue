@@ -11,17 +11,16 @@
             </v-btn>
         </template>
 
-        <v-card>
-            <v-list color="card-background">
-                <v-list-item>
-                    <v-list-item-content>
-                        <v-list-item-title class="text-h5">Nowy wpis</v-list-item-title>
-                        <v-list-item-subtitle>Formularz dodawania wpisu do dziennika praktyk.</v-list-item-subtitle>
-                    </v-list-item-content>
-                </v-list-item>
-            </v-list>
-
-            <v-divider></v-divider>
+        <custom-card>
+            <custom-card-title>
+                <template v-slot:default>Nowy wpis</template>
+                <template v-slot:subheader>Formularz dodawania wpisu do dziennika praktyk.</template>
+                <template v-slot:actions>
+                    <v-btn icon @click="dialog = false">
+                        <v-icon>mdi-close</v-icon>
+                    </v-btn>
+                </template>
+            </custom-card-title>
 
             <v-form class="pa-5">
                 <v-row>
@@ -40,11 +39,9 @@
                                     label="Data wpisu"
                                     readonly
                                     outlined
-                                    full-width
-                                    hide-details
+                                    hide-details="auto"
                                     v-bind="attrs"
                                     v-on="on"
-                                    hint="YYYY-MM-DD format"
                                     dense
                                     persistent-hint
                                 ></v-text-field>
@@ -69,8 +66,7 @@
                             placeholder="Przykładowa treść wpisy do dziennika praktyk..."
                             dense
                             rows="5"
-                            full-width
-                            hide-details
+                            hide-details="auto"
                             persistent-hint
                         ></v-textarea>
                     </v-col>
@@ -88,6 +84,7 @@
                             dense
                             small-chips
                             chips
+                            hide-details="auto"
                             hint="Wybierz studentów dla których ma zostać dodany ten wpis..."
                             persistent-hint
                         ></v-select>
@@ -95,26 +92,25 @@
                 </v-row>
             </v-form>
 
-            <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn
-                    color="primary"
-                    text
-                    @click="submit"
-                >
-                    Dodaj wpis
-                </v-btn>
-            </v-card-actions>
-        </v-card>
+            <custom-card-footer>
+                <template v-slot:right>
+                    <v-btn color="primary" outlined @click="submit">Dodaj wpis</v-btn>
+                </template>
+            </custom-card-footer>
+        </custom-card>
     </v-dialog>
 </template>
 
 <script>
 import {mapActions, mapGetters} from "vuex";
 import moment from "moment";
+import CustomCard from "../_General/CustomCard";
+import CustomCardTitle from "../_General/CustomCardTitle";
+import CustomCardFooter from "../_General/CustomCardFooter";
 
 export default {
     name: "TheInternshipCreateStudentJournalEntryDialog",
+    components: {CustomCardFooter, CustomCardTitle, CustomCard},
     props: ['internshipEndDate'],
 
     data() {

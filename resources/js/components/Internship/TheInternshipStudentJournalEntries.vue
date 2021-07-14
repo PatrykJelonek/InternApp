@@ -1,29 +1,21 @@
 <template>
-    <v-card elevation="0" color="card-background" :loading="loadingStudentJournalEntries">
-        <template slot="progress">
-            <v-progress-linear color="primary" indeterminate></v-progress-linear>
-        </template>
-        <v-list color="card-background">
-            <v-list-item>
-                <v-list-item-content>
-                    <v-list-item-title class="text-h5 font-weight-medium">Wpisy</v-list-item-title>
-                    <v-list-item-subtitle>Lista wpisów wybranego studenta.</v-list-item-subtitle>
-                </v-list-item-content>
-                <v-list-item-action>
-                    <v-btn-toggle dense borderless>
-                        <the-internship-create-student-journal-entry-dialog></the-internship-create-student-journal-entry-dialog>
-                        <v-btn
-                            icon
-                            @click="show = !show"
-                            v-if="this.$route.params.studentIndex && !loadingStudentJournalEntries && studentJournalEntries.length > 0"
-                        >
-                            <v-icon>{{ show ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
-                        </v-btn>
-                    </v-btn-toggle>
-                </v-list-item-action>
-            </v-list-item>
-        </v-list>
-        <v-divider></v-divider>
+    <custom-card :loading="loadingStudentJournalEntries">
+
+        <custom-card-title>
+            <template v-slot:default>Wpisy</template>
+            <template v-slot:subheader>Lista wpisów wybranego studenta.</template>
+            <template v-slot:actions>
+                <the-internship-create-student-journal-entry-dialog></the-internship-create-student-journal-entry-dialog>
+                <v-btn
+                    icon
+                    @click="show = !show"
+                    v-if="$route.params.studentIndex && !loadingStudentJournalEntries && studentJournalEntries.length > 0"
+                >
+                    <v-icon>{{ show ? 'mdi-chevron-up' : 'mdi-chevron-down' }}</v-icon>
+                </v-btn>
+            </template>
+        </custom-card-title>
+
         <v-expand-transition
             v-if="this.$route.params.studentIndex && !loadingStudentJournalEntries && studentJournalEntries.length > 0">
             <v-row v-show="show">
@@ -58,17 +50,22 @@
                 <p class="text--secondary">Nie wybrano studenta.</p>
             </v-col>
         </v-row>
-    </v-card>
+    </custom-card>
 </template>
 
 <script>
 import {mapActions, mapGetters} from "vuex";
 import InternshipStudentJournalEntry from "./InternshipStudentJournalEntry";
 import TheInternshipCreateStudentJournalEntryDialog from "./TheInternshipCreateStudentJournalEntryDialog";
+import CustomCard from "../_General/CustomCard";
+import CustomCardTitle from "../_General/CustomCardTitle";
 
 export default {
     name: "TheInternshipStudentJournalEntries",
-    components: {TheInternshipCreateStudentJournalEntryDialog, InternshipStudentJournalEntry},
+    components: {
+        CustomCardTitle,
+        CustomCard, TheInternshipCreateStudentJournalEntryDialog, InternshipStudentJournalEntry
+    },
     props: ['internshipStartDate'],
 
     data() {
