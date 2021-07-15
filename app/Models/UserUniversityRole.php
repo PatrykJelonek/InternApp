@@ -8,10 +8,10 @@ use Illuminate\Database\Eloquent\Relations\Pivot;
 
 class UserUniversityRole extends Pivot
 {
-    protected $table = 'users_university_roles';
+    protected $table = 'users_universities_roles';
 
     public function roles()
     {
-        return $this->belongsToMany(Role::class, 'users_universities_roles', 'user_universities_id', 'id', 'role_id', 'id');
+        return $this->belongsToMany(Role::class, 'users_universities_roles', 'role_id', 'id', 'user_university_id', 'id');
     }
 }

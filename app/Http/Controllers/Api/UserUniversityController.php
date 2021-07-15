@@ -31,7 +31,7 @@ class UserUniversityController extends Controller
      */
     public function index()
     {
-        $universities = $this->userRepository->getUniversities();
+        $universities = $this->userRepository->getUniversitiesWithRoles();
 
         if($universities !== null) {
             return response($universities, Response::HTTP_OK);

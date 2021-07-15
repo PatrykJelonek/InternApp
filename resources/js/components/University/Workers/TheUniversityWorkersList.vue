@@ -16,23 +16,55 @@
                         {{ item.full_name }}
                     </template>
                     <template v-slot:item.rolesChips="{ item }">
-                        <v-chip-group>
-                            <v-chip
-                                label small outlined
-                                v-for="role in item.roles"
-                                :key="role.id"
-                            >{{ role.display_name }}
-                            </v-chip>
-                        </v-chip-group>
+                        <template v-if="item.universities_with_roles[0].roles.length > 0">
+                            <v-chip-group>
+                                <v-chip
+                                    small
+                                    outlined
+                                    v-for="role in item.universities_with_roles[0].roles"
+                                    :key="role.id"
+                                >{{ role.display_name }}
+                                </v-chip>
+                            </v-chip-group>
+                        </template>
+                        <template v-else>
+                            <span class="text-caption secondary--text">Brak</span>
+                        </template>
                     </template>
                     <template v-slot:item.verified="{ item }">
-                        <v-icon color="primary" v-if="item.universities[0].pivot.verified">mdi-check-decagram-outline</v-icon>
-                        <v-icon color="secondary" v-else>mdi-alert-decagram-outline</v-icon>
+                        <template v-if="item.universities_with_roles[0].verified">
+                            <v-icon color="primary" small class="mr-2">mdi-check-decagram-outline</v-icon>
+                            Tak
+                        </template>
+                        <template v-else>
+                            <v-icon color="secondary" small class="mr-2">mdi-alert-decagram-outline</v-icon>
+                            Nie
+                        </template>
                     </template>
                     <template v-slot:item.actions="{ item }">
-                        <v-btn icon x-small>
-                            <v-icon>mdi-dots-vertical</v-icon>
-                        </v-btn>
+                        <v-menu offset-y class="component-background">
+                            <template v-slot:activator="{ on, attrs }">
+                                <v-btn
+                                    icon
+                                    v-bind="attrs"
+                                    v-on="on"
+                                >
+                                    <v-icon>mdi-dots-vertical</v-icon>
+                                </v-btn>
+                            </template>
+                            <v-list dense color="component-background">
+                                <v-list-item class="cursor-pointer">
+                                    <v-list-item-title>
+                                        Zweryfikuj
+                                    </v-list-item-title>
+                                </v-list-item>
+                                <v-list-item class="cursor-pointer">
+                                    <v-list-item-title>
+                                        Zmień role
+                                    </v-list-item-title>
+                                </v-list-item>
+                            </v-list>
+                        </v-menu>
                     </template>
                 </v-data-table>
             </v-col>

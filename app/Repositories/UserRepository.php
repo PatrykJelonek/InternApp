@@ -73,6 +73,17 @@ class UserRepository implements UserRepositoryInterface
         return null;
     }
 
+    public function getUniversitiesWithRoles()
+    {
+        $universities = auth()->user()->universitiesWithRoles;
+
+        if (!empty($universities)) {
+            return $universities;
+        }
+
+        return null;
+    }
+
     public function getCompanies()
     {
         $companies = auth()->user()->companies;

@@ -67,6 +67,11 @@ class User extends Model implements AuthenticatableContract, JWTSubject, CanRese
           return $this->belongsToMany('App\Models\University', 'users_universities', 'user_id', 'university_id')->with(['city','type'])->withPivot(['active', 'verified']);
     }
 
+    public function universitiesWithRoles()
+    {
+        return $this->hasMany(UserUniversity::class)->with(['university','roles']);
+    }
+
     public function companies()
     {
         return $this->belongsToMany('App\Models\Company', 'users_companies', 'user_id', 'company_id')->with(['city', 'category']);

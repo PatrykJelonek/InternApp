@@ -42,6 +42,10 @@ class University extends Model
         return $this->belongsToMany('App\Models\Questionnaire','universities_questionnaires','university_id', 'questionnaire_id');
     }
 
+    public function roles() {
+        return $this->hasMany(UserUniversity::class);
+    }
+
     public static function messages()
     {
         return [

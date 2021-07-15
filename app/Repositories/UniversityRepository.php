@@ -112,9 +112,10 @@ class UniversityRepository implements UniversityRepositoryInterface
     {
         return User::with(
             [
-                'roles',
-                'universities' => function ($q) use ($slug) {
-                    $q->where(['slug' => $slug]);
+                'universitiesWithRoles' => function ($query) use ($slug) {
+                $query->whereHas('university', function ($query) use ($slug) {
+                    $query->where(['slug' => $slug]);
+                });
                 },
             ]
         )->whereHas(
