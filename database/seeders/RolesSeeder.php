@@ -20,6 +20,7 @@ class RolesSeeder extends Seeder
                 'name' => $ROLE,
                 'display_name' => RoleConstants::BASIC_ROLE_DISPLAY_NAMES[$ROLE],
                 'description' => RoleConstants::BASIC_ROLE_DESCRIPTIONS[$ROLE],
+                'group' => RoleConstants::BASIC_ROLE_GROUP[$ROLE],
             ]);
         }
     }

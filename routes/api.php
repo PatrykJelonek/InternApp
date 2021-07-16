@@ -134,6 +134,8 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     # Universities
     Route::get('/universities/{slug}', 'Api\UniversityController@show');
     Route::get('/universities/{slug}/workers','Api\UniversityController@getWorkers');
+    Route::put('/universities/{slug}/workers/{userId}/change-roles','Api\UniversityController@changeUniversityWorkerRoles');
+    Route::put('/universities/{slug}/workers/{userId}/verify','Api\UniversityController@verifyUniversityWorker');
     Route::get('/universities/{slug}/students','Api\UniversityController@getStudents');
     Route::get('/universities/{slug}/agreements','Api\UniversityController@getAgreements');
     Route::get('/universities/{slug}/internships','Api\UniversityController@getInternships2');
@@ -203,6 +205,8 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::get('/questionnaires/{id}/statistics/weeks','Api\QuestionnaireController@getQuestionnaireAnswerStatisticsByWeek');
 
     Route::get('/faculties', 'Api\FacultyController@getFaculties');
+
+    Route::get('/roles', 'Api\RoleController@getAvailableRolesByGroups');
 
     Route::get('/test', 'Api\TestController@test');
     Route::post('/test', 'Api\TestController@testPost');

@@ -473,6 +473,19 @@ export default {
 
         deleteUniversityAgreement({commit}, {slug}) {
             commit('DELETE_UNIVERSITY_AGREEMENT', {slug: slug});
+        },
+
+        changeUniversityWorkerRoles({commit}, {slug, userId, userUniversityId, rolesIds}) {
+            return axios.put(`/api/universities/${slug}/workers/${userId}/change-roles`, {
+                userUniversityId: userUniversityId,
+                rolesIds: rolesIds
+            });
+        },
+
+        verifyUniversityWorker({commit}, {slug, userId, userUniversityId}) {
+            return axios.put(`/api/universities/${slug}/workers/${userId}/verify`, {
+                userUniversityId: userUniversityId,
+            });
         }
     },
 };

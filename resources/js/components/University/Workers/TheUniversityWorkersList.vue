@@ -1,5 +1,16 @@
 <template>
     <custom-card>
+        <custom-confirm-dialog
+            title="Zweryfikuj"
+            description="Czy na pewno chcesz zweryfikować tego pracownika?"
+            :confirm-function="verifyWorker"
+            :confirm-function-args="[]"
+            dialog-key="DIALOG_FIELD_VERIFY_UNIVERSITY_WORKER"
+            :dialog-state="dialogs['DIALOG_FIELD_VERIFY_UNIVERSITY_WORKER']"
+            :toggle-function="toggleDialog"
+        ></custom-confirm-dialog>
+        <select-roles-dialog :groups="['university']" :submit-function="changeRoles"
+                             :existent-roles-id="selectedWorkerRolesIds"></select-roles-dialog>
         <custom-card-title>
             <template v-slot:default>Lista pracowników</template>
         </custom-card-title>
@@ -54,12 +65,12 @@
                             </template>
                             <v-list dense color="component-background">
                                 <v-list-item class="cursor-pointer">
-                                    <v-list-item-title>
+                                    <v-list-item-title @click="openVerifyWorkerDialog(item)">
                                         Zweryfikuj
                                     </v-list-item-title>
                                 </v-list-item>
                                 <v-list-item class="cursor-pointer">
-                                    <v-list-item-title>
+                                    <v-list-item-title @click="openChangeRoleDialog(item)">
                                         Zmień role
                                     </v-list-item-title>
                                 </v-list-item>
@@ -77,12 +88,16 @@
 import {mapActions, mapGetters} from "vuex";
 import CustomCard from "../../_General/CustomCard";
 import CustomCardTitle from "../../_General/CustomCardTitle";
+import SelectRolesDialog from "../../Roles/SelectRolesDialog";
+import CustomConfirmDialog from "../../_General/CustomConfirmDialog";
 
 export default {
     name: "TheUniversityWorkersList",
-    components: {CustomCardTitle, CustomCard},
+    components: {CustomConfirmDialog, SelectRolesDialog, CustomCardTitle, CustomCard},
     data() {
         return {
+            selectedItem: null,
+            selectedWorkerRolesIds: '',
             show: true,
             headers: [
                 {text: 'Imię i nazwisko', value: 'fullname'},
@@ -98,13 +113,63 @@ export default {
             university: 'university/university',
             workers: 'university/workers',
             workersLoading: 'university/workersLoading',
+            dialogs: 'helpers/dialogs',
         }),
     },
 
     methods: {
         ...mapActions({
+            setSnackbar: 'snackbar/setSnackbar',
             fetchWorkers: 'university/fetchWorkers',
+            toggleDialog: 'helpers/toggleDialog',
+            changeUniversityWorkerRoles: 'university/changeUniversityWorkerRoles',
+            verifyUniversityWorker: 'university/verifyUniversityWorker'
         }),
+
+        openChangeRoleDialog(item) {
+            this.selectedItem = item;
+            this.selectedWorkerRolesIds = item.universities_with_roles[0].roles.map((role) => {
+                return role.id;
+            });
+            this.toggleDialog({key: 'DIALOG_FIELD_SELECT_ROLES', val: true});
+        },
+
+        openVerifyWorkerDialog(item) {
+            this.selectedItem = item;
+            this.toggleDialog({key: 'DIALOG_FIELD_VERIFY_UNIVERSITY_WORKER', val: true});
+        },
+
+        changeRoles(rolesIds) {
+            console.log(this.selectedItem);
+            this.changeUniversityWorkerRoles({
+                slug: this.$route.params.slug,
+                userId: this.selectedItem.id,
+                userUniversityId: this.selectedItem.universities_with_roles[0].id,
+                rolesIds: rolesIds
+            }).then((response) => {
+                this.setSnackbar({message: 'Role zostały zmienione!', color: 'success'});
+                this.toggleDialog({key: 'DIALOG_FIELD_SELECT_ROLES', val: false});
+                this.fetchWorkers(this.$route.params.slug);
+            }).catch((e) => {
+                this.setSnackbar({message: 'Nie udało się zmienić ról!', color: 'error'});
+                this.toggleDialog({key: 'DIALOG_FIELD_SELECT_ROLES', val: false});
+            });
+        },
+
+        verifyWorker() {
+            this.verifyUniversityWorker({
+                slug: this.$route.params.slug,
+                userId: this.selectedItem.id,
+                userUniversityId: this.selectedItem.universities_with_roles[0].id
+            }).then((response) => {
+                this.setSnackbar({message: 'Pracownik został zweryfikowany!', color: 'success'});
+                this.toggleDialog({key: 'DIALOG_FIELD_VERIFY_UNIVERSITY_WORKER', val: false});
+                this.fetchWorkers(this.$route.params.slug);
+            }).catch((e) => {
+                this.setSnackbar({message: 'Nie udało się zweryfikować pracownika!', color: 'error'});
+                this.toggleDialog({key: 'DIALOG_FIELD_VERIFY_UNIVERSITY_WORKER', val: false});
+            });
+        }
     },
 
     created() {

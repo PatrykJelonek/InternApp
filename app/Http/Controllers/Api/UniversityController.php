@@ -4,10 +4,12 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UniversityAgreementsRequest;
+use App\Http\Requests\UniversityChangeUniversityWorkerRolesRequest;
 use App\Http\Requests\UniversityCreateUniversityFacultyFieldRequest as CreateFieldRequest;
 use App\Http\Requests\UniversityCreateUniversityFacultyFieldSpecializationRequest as CreateSpecializationRequest;
 use App\Http\Requests\UniversityCreateUniversityFacultyRequest as CreateFacultyRequest;
 use App\Http\Requests\UniversityCreateUniversityQuestionnaireRequest;
+use App\Http\Requests\RoleGetAvailableRolesByGroupRequest;
 use App\Http\Requests\UniversityGetUniversityQuestionnairesRequest;
 use App\Http\Requests\UniversityInternshipsRequest;
 use App\Http\Requests\UniversityStudentsRequest;
@@ -15,6 +17,7 @@ use App\Http\Requests\UniversityUpdateUniversityFacultyFieldRequest;
 use App\Http\Requests\UniversityUpdateUniversityFacultyFieldSpecializationRequest;
 use App\Http\Requests\UniversityUpdateUniversityFacultyRequest;
 use App\Http\Requests\UniversityUpdateUniversityLogoRequest as UpdateLogoRequest;
+use App\Http\Requests\UniversityVerifyUniversityWorkerRequest;
 use App\Http\Requests\UniversityWorkersRequest;
 use App\Models\Agreement;
 use App\Models\Internship;
@@ -23,6 +26,7 @@ use App\Repositories\FacultyRepository;
 use App\Repositories\UniversityRepository;
 use App\Services\FacultyService;
 use App\Services\QuestionnairesService;
+use App\Services\UniversityService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Arr;
@@ -52,23 +56,31 @@ class UniversityController extends Controller
     private $facultyRepository;
 
     /**
+     * @var UniversityService
+     */
+    private $universityService;
+
+    /**
      * UniversityController constructor.
      *
      * @param UniversityRepository  $universityRepository
      * @param QuestionnairesService $questionnairesService
      * @param FacultyService        $facultyService
      * @param FacultyRepository     $facultyRepository
+     * @param UniversityService     $universityService
      */
     public function __construct(
         UniversityRepository $universityRepository,
         QuestionnairesService $questionnairesService,
         FacultyService $facultyService,
-        FacultyRepository $facultyRepository
+        FacultyRepository $facultyRepository,
+        UniversityService $universityService
     ) {
         $this->universityRepository = $universityRepository;
         $this->questionnairesService = $questionnairesService;
         $this->facultyService = $facultyService;
         $this->facultyRepository = $facultyRepository;
+        $this->universityService = $universityService;
     }
 
     /**
@@ -718,6 +730,33 @@ class UniversityController extends Controller
         }
 
         return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+
+    public function changeUniversityWorkerRoles(
+        UniversityChangeUniversityWorkerRolesRequest $request,
+        string $slug,
+        int $userId
+    ) {
+        try {
+            $this->universityService->changeUniversityWorkerRoles(
+                $request->input('userUniversityId'),
+                $request->input('rolesIds')
+            );
+
+            return response(null, Response::HTTP_OK);
+        } catch (\Exception $e) {
+            return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public function verifyUniversityWorker(UniversityVerifyUniversityWorkerRequest $request)
+    {
+        try {
+            $this->universityService->verifyUniversityWorker($request->input('userUniversityId'));
+            return response(null, Response::HTTP_OK);
+        } catch (\Exception $e) {
+            return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 
     /**
