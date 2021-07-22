@@ -43,7 +43,7 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     //Route::resource('/users', 'Api\UserController');
 //    Route::resource('/cities', 'Api\CityController');
     Route::resource('/university-types', 'Api\UniversityTypeController');
-    Route::resource('/universities', 'Api\UniversityController');
+    //Route::resource('/universities', 'Api\UniversityController');
     //Route::resource('/companies', 'Api\CompanyController');
     Route::resource('/specializations', 'Api\SpecializationController');
     Route::resource('/students', 'Api\StudentController');
@@ -132,6 +132,7 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::get('/internships/{internship}/students/{student}/tasks/{task}', 'Api\TaskController@show');
 
     # Universities
+    Route::post('/universities', 'Api\UniversityController@createUniversity');
     Route::get('/universities/{slug}', 'Api\UniversityController@show');
     Route::get('/universities/{slug}/workers','Api\UniversityController@getWorkers');
     Route::put('/universities/{slug}/workers/{userId}/change-roles','Api\UniversityController@changeUniversityWorkerRoles');
@@ -198,7 +199,6 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::post('/questionnaires/{questionnaireId}/questions','Api\QuestionnaireController@modifyQuestionnaireQuestions');
     Route::get('/questionnaires/{questionnaireId}/answers','Api\QuestionnaireController@getQuestionnaireAnswers');
     Route::post('/questionnaires/{questionnaireId}/answers','Api\QuestionnaireController@addQuestionnaireAnswers');
-
     Route::get('/questionnaires/{questionnaireId}/questions/{questionId}','Api\QuestionnaireController@getQuestionnaireQuestion');
     Route::get('/questionnaires/{questionnaireId}/questions/{questionId}/answers','Api\QuestionnaireController@getQuestionnaireQuestionAnswers');
     Route::get('/questionnaires/{questionnaireId}/questions/{questionId}/answers/{answerId}','Api\QuestionnaireController@getQuestionnaireQuestionAnswer');

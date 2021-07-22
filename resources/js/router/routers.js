@@ -64,6 +64,7 @@ import TheCompanyQuestionnaires from "../components/Company/Questionnaires/TheCo
 import Questionnaire from "../views/Questionnaire";
 import Questionnaires from "../views/Questionnaires";
 import TheCompanyQuestionnaire from "../components/Company/Questionnaires/TheCompanyQuestionnaire";
+import TheUniversityQuestionnaire from "../components/University/Questionnaires/TheUniversityQuestionnaire";
 
 Vue.use(VueRouter);
 
@@ -269,6 +270,11 @@ const router = new VueRouter({
                             path: 'questionnaires',
                             name: 'university-questionnaires',
                             component: TheUniversityQuestionnaires
+                        },
+                        {
+                            path: 'questionnaires/:questionnaireId',
+                            name: 'university-questionnaire',
+                            component: TheUniversityQuestionnaire
                         },
                         {
                             path: 'settings',

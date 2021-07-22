@@ -13,7 +13,7 @@
 
             <v-row class="mt-7">
                 <v-col cols="12">
-                    <custom-card>
+                    <custom-card :loading="isQuestionnairesLoading">
                         <custom-card-title>
                             <template v-slot:default>Lista ankiet</template>
                         </custom-card-title>
@@ -116,11 +116,7 @@ export default {
             {text: 'Ankiety', to: {name: 'company-questionnaires'}, exact: true},
         ]);
 
-        this.fetchQuestionnaires(this.$route.params.slug).then(() => {
-
-        }).catch((error) => {
-
-        })
+        this.fetchQuestionnaires(this.$route.params.slug).then(() => {}).catch((error) => {});
     }
 }
 </script>

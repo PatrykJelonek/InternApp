@@ -28,7 +28,7 @@
                     <template v-slot:activator="{ on }">
                         <v-btn color="blue accent-4" dark v-on="on" class="ml-10" to="create-university">Dodaj Uczelnie</v-btn>
                     </template>
-                    <span>Dodaj nową uczelnie do swerwisu</span>
+                    <span>Dodaj nową uczelnie do serwisu</span>
                 </v-tooltip>
             </v-col>
         </v-row>

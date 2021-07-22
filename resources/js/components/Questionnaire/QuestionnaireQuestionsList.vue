@@ -225,10 +225,11 @@ export default {
                         questions: this.questions
                     }).then((response) => {
                         this.setSnackbar({message: 'Pytania zostały zapisane!', color: 'success'});
-                        this.setQuestionnaireQuestions({id: this.questionnaireId, questions: response.data});
-                        this.questions = JSON.parse(JSON.stringify(this.questionnaire.questions));
+                        this.fetchQuestionnaireQuestions(this.$route.params.questionnaireId).then((response) => {
+                            this.questions = JSON.parse(JSON.stringify(this.questionnaireQuestions));
+                            this.questions = this.sortQuestionsByPosition(this.questions);
+                        }).catch((e) => {});
                     }).catch((e) => {
-                        console.log(e);
                         this.setSnackbar({message: 'Nie udało się zapisać pytań!', color: 'error'});
                     });
                 }

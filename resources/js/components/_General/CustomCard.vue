@@ -24,7 +24,7 @@ export default {
     },
 
     created() {
-        this.windowHeight = window.innerHeight - 168;
+
     }
 }
 </script>

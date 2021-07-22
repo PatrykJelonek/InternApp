@@ -140,7 +140,7 @@
             </v-row>
             <v-row>
                 <v-col class="d-flex justify-end">
-                    <v-btn color="blue accent-4" large @click="submit" :disabled="invalid" class="white--text">Dodaj firmę</v-btn>
+                    <v-btn color="primary" outlined large @click="submit" :disabled="invalid" class="white--text">Dodaj firmę</v-btn>
                 </v-col>
             </v-row>
         </v-form>

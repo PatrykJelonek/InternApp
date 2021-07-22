@@ -1,22 +1,28 @@
 <template>
-    <v-container fluid class="pa-0 ma-0">
-        <page-details-header header="Nowa firma" subheader="Wypełnij formularz by dodać firmę i zarządzać praktykami w naszym serwisie!"></page-details-header>
-        <v-container class="mt-5">
-            <v-row class="d-flex justify-center">
-                <v-col cols="12" lg="8" md="12" class="pa-0 form-width">
+    <v-container fluid class="pa-0">
+        <page-title>
+            <template v-slot:default>Nowa firma</template>
+            <template v-slot:subheader>Wypełnij formularz by dodać firmę i zarządzać praktykami w naszym serwisie!</template>
+        </page-title>
+
+        <custom-card>
+            <v-row class="pa-5">
+                <v-col cols="12">
                     <company-create-form></company-create-form>
                 </v-col>
             </v-row>
-        </v-container>
+        </custom-card>
     </v-container>
 </template>
 
 <script>
     import CompanyCreateForm from "../components/Companies/CompanyCreateForm";
     import PageDetailsHeader from "../components/Page/PageDetailsHeader";
+    import PageTitle from "../components/_Helpers/PageTitle";
+    import CustomCard from "../components/_General/CustomCard";
     export default {
         name: "CompanyCreate",
-        components: {PageDetailsHeader, CompanyCreateForm}
+        components: {CustomCard, PageTitle, PageDetailsHeader, CompanyCreateForm}
     }
 </script>
 

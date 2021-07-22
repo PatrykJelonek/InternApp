@@ -243,7 +243,7 @@
                                 exact
                                 v-on="on"
                                 v-bind="attrs"
-                                :to="{name: 'university-create'}"
+                                :to="{name: 'create-university'}"
                             >
                                 <v-list-item-icon class="mr-2">
                                     <v-icon dense>mdi-plus</v-icon>
@@ -413,7 +413,7 @@
                                 exact
                                 v-on="on"
                                 v-bind="attrs"
-                                :to="{name: 'company-create'}"
+                                :to="{name: 'create-company'}"
                             >
                                 <v-list-item-icon class="mr-2">
                                     <v-icon dense>mdi-plus</v-icon>

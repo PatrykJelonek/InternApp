@@ -95,7 +95,7 @@ class QuestionnaireController extends Controller
             return response($questions, Response::HTTP_OK);
         }
 
-        return response(null, response(Response::HTTP_NO_CONTENT));
+        return response(null, Response::HTTP_NO_CONTENT);
     }
 
     /**

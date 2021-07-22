@@ -210,7 +210,7 @@ class UniversityRepository implements UniversityRepositoryInterface
 
     public function getQuestionnaires(string $slug)
     {
-        return Questionnaire::with(['questions', 'university'])->whereHas(
+        return Questionnaire::with(['questions', 'university',  'user'])->whereHas(
             'university',
             function (Builder $query) use ($slug) {
                 $query->where(['slug' => $slug]);

@@ -32,7 +32,7 @@ class UniversityCreateUniversityQuestionnaireRequest extends FormRequest
     public function rules()
     {
         return [
-            'slug' => 'required|exists:App\Models\Company,slug',
+            'slug' => 'required|exists:App\Models\University,slug',
             'name' => 'required|max:64',
             'description' => 'required',
         ];
@@ -41,7 +41,7 @@ class UniversityCreateUniversityQuestionnaireRequest extends FormRequest
     public function messages()
     {
         return [
-            'slug.required' => 'Slug firmy jest wymagany!',
+            'slug.required' => 'Slug uczelni jest wymagany!',
             'name.required' => 'Nazwa ankiety jest wymagana!',
             'name.max' => 'Długość nazwy nie może przekraczać 64 znaków!',
             'description' => 'Opis ankiety jest wymagany!',

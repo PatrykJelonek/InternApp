@@ -1,7 +1,7 @@
 <template>
     <validation-observer ref="observer" v-slot="{ validate, invalid }">
         <v-form>
-            <v-row>
+            <v-row cols="12">
                 <v-col>
                     <validation-provider v-slot="{ errors }"  vid="name" rules="required|max:64">
                         <v-text-field
@@ -15,9 +15,7 @@
                         ></v-text-field>
                     </validation-provider>
                 </v-col>
-            </v-row>
-            <v-row>
-                <v-col>
+                <v-col cols="12">
                     <validation-provider v-slot="{ errors }" vid="universityTypeId" rules="required">
                         <v-select
                             label="Typ uczelni"
@@ -34,8 +32,6 @@
                         ></v-select>
                     </validation-provider>
                 </v-col>
-            </v-row>
-            <v-row>
                 <v-col cols="8">
                     <validation-provider v-slot="{ errors }" vid="street" rules="required|max:64">
                         <v-text-field
@@ -62,8 +58,6 @@
                         ></v-text-field>
                     </validation-provider>
                 </v-col>
-            </v-row>
-            <v-row>
                 <v-col cols="12">
                     <validation-provider v-slot="{ errors }" vid="cityId" rules="required">
                         <v-autocomplete
@@ -80,8 +74,6 @@
                         ></v-autocomplete>
                     </validation-provider>
                 </v-col>
-            </v-row>
-            <v-row>
                 <v-col>
                     <validation-provider v-slot="{ errors }" vid="email" rules="required|email|max:64">
                         <v-text-field
@@ -108,8 +100,7 @@
                         ></v-text-field>
                     </validation-provider>
                 </v-col>
-            </v-row>
-            <v-row>
+
                 <v-col>
                     <validation-provider v-slot="{ errors }" vid="website" rules="required|max:64">
                         <v-text-field
@@ -126,7 +117,7 @@
             </v-row>
             <v-row>
                 <v-col class="d-flex justify-end">
-                    <v-btn color="blue accent-4" large @click="submit" :disabled="invalid" class="white--text">Dodaj uczelnie</v-btn>
+                    <v-btn color="primary" outlined large @click="submit" :disabled="invalid" class="white--text">Dodaj uczelnie</v-btn>
                 </v-col>
             </v-row>
         </v-form>
@@ -180,8 +171,8 @@
             async submit(e) {
                 this.$refs.observer.validate();
 
-                await this.createUniversity(this.university).then(() => {
-                    this.$router.replace('universities');
+                await this.createUniversity(this.university).then((response) => {
+                    this.$router.push({name: 'university', params: {slug: response.slug}});
                 }).catch((e) => {
                     if(e.response.status == 422) {
                         this.$refs.observer.setErrors(e.response.data.errors);

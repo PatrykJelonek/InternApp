@@ -10,6 +10,7 @@ use App\Http\Requests\UniversityCreateUniversityFacultyFieldSpecializationReques
 use App\Http\Requests\UniversityCreateUniversityFacultyRequest as CreateFacultyRequest;
 use App\Http\Requests\UniversityCreateUniversityQuestionnaireRequest;
 use App\Http\Requests\RoleGetAvailableRolesByGroupRequest;
+use App\Http\Requests\UniversityCreateUniversityRequest;
 use App\Http\Requests\UniversityGetUniversityQuestionnairesRequest;
 use App\Http\Requests\UniversityInternshipsRequest;
 use App\Http\Requests\UniversityStudentsRequest;
@@ -215,6 +216,11 @@ class UniversityController extends Controller
                 Response::HTTP_INTERNAL_SERVER_ERROR
             );
         }
+    }
+
+    public function createUniversity(UniversityCreateUniversityRequest $request)
+    {
+
     }
 
     /**
@@ -549,10 +555,10 @@ class UniversityController extends Controller
         $questionnaires = $this->universityRepository->getQuestionnaires($slug);
 
         if (!is_null($questionnaires)) {
-            return \response($questionnaires, Response::HTTP_OK);
+            return response($questionnaires, Response::HTTP_OK);
         }
 
-        return \response(null, Response::HTTP_NOT_FOUND);
+        return response(null, Response::HTTP_NOT_FOUND);
     }
 
     public function createUniversityQuestionnaire(

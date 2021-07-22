@@ -173,7 +173,7 @@ export default {
         },
 
         createUniversityQuestionnaire({commit}, {slug, questionnaire}) {
-            return axios.post(`/api/companies/${slug}/questionnaires`, questionnaire);
+            return axios.post(`/api/universities/${slug}/questionnaires`, questionnaire);
         },
 
         modifyQuestionnaireQuestions({commit}, {id, questions}) {

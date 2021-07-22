@@ -21,6 +21,7 @@
                     :items="workers"
                     :items-per-page="5"
                     :loading="workersLoading"
+                    @click:row="(item) => {$router.push({name: 'user', params: {id: item.id}})}"
                     class="elevation-1 component-background"
                 >
                     <template v-slot:item.fullname="{ item }">
@@ -64,7 +65,7 @@
                                 </v-btn>
                             </template>
                             <v-list dense color="component-background">
-                                <v-list-item class="cursor-pointer">
+                                <v-list-item class="cursor-pointer" v-if="item.universities_with_roles.verified">
                                     <v-list-item-title @click="openVerifyWorkerDialog(item)">
                                         Zweryfikuj
                                     </v-list-item-title>

@@ -1,9 +1,14 @@
 <template>
-    <expand-card
+    <custom-card
         title="Odpowiedzi"
         :description="'Lista odpowiedzi na pytania z ankiety ' + questionnaire.name"
     >
-        <v-row class="pa-5" v-if="questionnaireAnswers">
+        <custom-card-title>
+            <template v-slot:default>Odpowiedzi</template>
+            <template v-slot:subheader>Lista odpowiedzi na pytania z ankiety {{ questionnaire.name }}</template>
+        </custom-card-title>
+
+        <v-row class="pa-5" v-if="questionnaireAnswers.length > 0">
             <v-col cols="12" v-for="(questionnaireAnswersGroup, session_uuid) in questionnaireAnswers"
                    :key="session_uuid">
                 <v-row class="d-flex align-center">
@@ -51,22 +56,24 @@
                 </v-expand-transition>
             </v-col>
         </v-row>
-        <v-row v-else>
-            <v-col cols="12" class="text-center">
-                <p class="pt-5 pb-3 secondary--text">Jeszcze nikt nie wypełnił tej ankiety!</p>
+        <v-row class="d-flex justify-center align-center" v-else>
+            <v-col cols="12">
+                <p class="pt-5 pb-3 secondary--text text-center">Jeszcze nikt nie wypełnił tej ankiety!</p>
             </v-col>
         </v-row>
-    </expand-card>
+    </custom-card>
 </template>
 
 <script>
 import ExpandCard from "../_Helpers/ExpandCard";
 import {mapActions, mapGetters} from "vuex";
 import moment from "moment";
+import CustomCard from "../_General/CustomCard";
+import CustomCardTitle from "../_General/CustomCardTitle";
 
 export default {
     name: "QuestionnaireAnswersList",
-    components: {ExpandCard},
+    components: {CustomCardTitle, CustomCard, ExpandCard},
 
     data() {
         return {
