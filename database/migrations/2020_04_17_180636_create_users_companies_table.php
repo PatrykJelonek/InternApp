@@ -20,6 +20,7 @@ class CreateUsersCompaniesTable extends Migration
             $table->foreignId('company_id');
             $table->foreign('company_id')->references('id')->on('companies');
             $table->boolean('active')->default(false);
+            $table->boolean('verified')->default(false);
             $table->timestamps();
         });
     }

@@ -18,4 +18,6 @@ interface RoleRepositoryInterface
      * @return mixed
      */
     public function getAvailableRolesByGroups(?array $groups = []);
+
+    public function getRoleByName(string $name);
 }

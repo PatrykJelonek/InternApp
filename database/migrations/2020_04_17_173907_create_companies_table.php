@@ -23,14 +23,16 @@ class CreateCompaniesTable extends Migration
             $table->string('email', 64)->unique();
             $table->string('phone', 16)->nullable();
             $table->string('website', 64)->nullable();
-            $table->string('description', 255);
+            $table->string('description', 255)->nullable();
             $table->string('slug', 255)->unique();
             $table->string('access_code', 8)->nullable()->unique();
             $table->string('logo_url', 255)->nullable();
             $table->foreignId('company_category_id');
             $table->foreign('company_category_id')->references('id')->on('company_categories');
-            $table->dateTime('created_at', 0);
-            $table->dateTime('updated_at', 0);
+            $table->foreignId('user_id');
+            $table->foreign('user_id')->references('id')->on('users');
+            $table->timestamps();
+            $table->softDeletes();
         });
     }
 

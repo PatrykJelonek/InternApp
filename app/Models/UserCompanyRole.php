@@ -6,12 +6,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
-class UserCompanyRole extends Model
+class UserCompanyRole extends Pivot
 {
     protected $table = 'users_companies_roles';
 
-    public function role()
+    public function roles()
     {
-        return $this->belongsTo(Role::class, 'role_id', 'id');
+        return $this->belongsToMany(Role::class, 'users_companies_roles', 'role_id', 'id', 'user_company_id', 'id');
     }
 }

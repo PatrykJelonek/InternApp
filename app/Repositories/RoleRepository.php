@@ -29,4 +29,9 @@ class RoleRepository implements RoleRepositoryInterface
 
         return $roles ?? [];
     }
+
+    public function getRoleByName(string $name)
+    {
+        return Role::where(['name' => $name])->first();
+    }
 }

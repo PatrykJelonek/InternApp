@@ -44,14 +44,19 @@
                                 {{ item.status.description }}
                             </v-chip>
                         </template>
-                        <template v-slot:item.status_company="{item}">
-                            <v-chip outlined small :color="item.pivot.active ? 'primary' : ''">
-                                {{ item.pivot.active ? 'Aktywne' : 'Nieaktywne' }}
-                            </v-chip>
+                        <template v-slot:item.verified="{ item }">
+                            <template v-if="item.companies_with_roles[0].verified">
+                                <v-icon color="primary" small class="mr-2">mdi-check-decagram-outline</v-icon>
+                                Tak
+                            </template>
+                            <template v-else>
+                                <v-icon color="secondary" small class="mr-2">mdi-alert-decagram-outline</v-icon>
+                                Nie
+                            </template>
                         </template>
                         <template v-slot:item.roles="{item}">
-                            <v-chip-group v-if="item.company_roles">
-                                <v-chip outlined small v-for="role in item.company_roles" :key="role.id">{{
+                            <v-chip-group v-if="item.companies_with_roles[0].roles.length > 0">
+                                <v-chip outlined small v-for="role in item.companies_with_roles[0].roles" :key="role.id">{{
                                         role.display_name
                                     }}
                                 </v-chip>
@@ -75,7 +80,7 @@
                                 <v-list dense class="component-background lighten-1">
                                     <v-list-item class="cursor-pointer"
                                                  @mouseup="selectedWorkerFullName = item.full_name; selectedWorkerId = item.id"
-                                                 v-if="!item.pivot.active"
+                                                 v-if="!item.companies_with_roles[0].verified"
                                                  @click="toggleAcceptCompanyWorkerDialog(true)">
                                         <v-list-item-icon>
                                             <v-icon>mdi-account-check-outline</v-icon>
@@ -120,10 +125,8 @@ export default {
             selectedWorker: null,
             headers: [
                 {text: "Imie i nazwisko", value: 'full_name', align: 'left'},
-                {text: "Numer telefonu", value: 'phone', align: 'left'},
-                {text: "Email", value: 'email', align: 'left'},
                 {text: "Role", value: 'roles', align: 'left'},
-                {text: "Status", value: 'status_company', align: 'center'},
+                {text: 'Zweryfikowany', value: 'verified', sortable: false, align: 'center'},
                 {text: "Akcje", value: 'actions', sortable: false}
             ],
         }

@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Constants\RoleConstants;
 use App\Http\Requests\CompanyAcceptCompanyWorkerRequest;
 use App\Http\Requests\CompanyCreateCompanyQuestionnaireRequest as CreateQuestionnaireRequest;
+use App\Http\Requests\CompanyCreateCompanyRequest;
 use App\Http\Requests\CompanyDeleteCompanyWorkerRequest;
 use App\Http\Requests\CompanyGetCompanyQuestionnairesRequest;
 use App\Http\Requests\CompanyOffersRequest;
@@ -15,12 +17,15 @@ use App\Models\Company;
 use App\Http\Controllers\Controller;
 use App\Models\Internship;
 use App\Models\Student;
+use App\Models\UserCompany;
 use App\Repositories\CompanyRepository;
+use App\Repositories\RoleRepository;
 use App\Services\CompanyService;
 use App\Services\QuestionnairesService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -42,20 +47,28 @@ class CompanyController extends Controller
     private $companyService;
 
     /**
+     * @var RoleRepository
+     */
+    private $roleRepository;
+
+    /**
      * CompanyController constructor.
      *
      * @param CompanyRepository     $companyRepository
      * @param QuestionnairesService $questionnairesService
      * @param CompanyService        $companyService
+     * @param RoleRepository        $roleRepository
      */
     public function __construct(
         CompanyRepository $companyRepository,
         QuestionnairesService $questionnairesService,
-        CompanyService $companyService
+        CompanyService $companyService,
+        RoleRepository $roleRepository
     ) {
         $this->companyRepository = $companyRepository;
         $this->questionnairesService = $questionnairesService;
         $this->companyService = $companyService;
+        $this->roleRepository = $roleRepository;
     }
 
     /**
@@ -146,6 +159,33 @@ class CompanyController extends Controller
                 Response::HTTP_INTERNAL_SERVER_ERROR
             );
         }
+    }
+
+    public function createCompany(CompanyCreateCompanyRequest $request)
+    {
+        $company = $this->companyService->createCompany(
+            $request->input('name'),
+            $request->input('cityId'),
+            $request->input('street'),
+            $request->input('streetNumber'),
+            $request->input('email'),
+            $request->input('companyCategoryId'),
+            $request->input('phone'),
+            $request->input('website'),
+            $request->input('description')
+        );
+
+        if ($company) {
+            $this->companyService->addRoleToCompanyUser(
+                !empty($request->input('userId')) ? $request->input('userId') : Auth::id(),
+                $company->id,
+                $this->roleRepository->getRoleByName(RoleConstants::ROLE_COMPANY_OWNER)->id
+            );
+
+            return response($company, Response::HTTP_CREATED);
+        }
+
+        return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
     /**

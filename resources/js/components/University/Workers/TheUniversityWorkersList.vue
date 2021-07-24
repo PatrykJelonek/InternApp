@@ -24,7 +24,12 @@
                     @click:row="(item) => {$router.push({name: 'user', params: {id: item.id}})}"
                     class="elevation-1 component-background"
                 >
-                    <template v-slot:item.fullname="{ item }">
+
+                    <template v-slot:item.fullname="{item}">
+                        <v-avatar :size="30" rounded class="mr-2" :color="item.avatar_url ? '' : 'primary'">
+                            <v-img :src="item.avatar_url ? '/'+item.avatar_url : ''"
+                                   :alt="'Awatar użytkownika ' + item.full_name"></v-img>
+                        </v-avatar>
                         {{ item.full_name }}
                     </template>
                     <template v-slot:item.rolesChips="{ item }">

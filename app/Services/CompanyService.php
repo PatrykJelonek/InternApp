@@ -8,12 +8,17 @@
 
 namespace App\Services;
 
+use App\Constants\RoleConstants;
 use App\Models\Company;
 use App\Models\User;
+use App\Models\UserCompany;
 use App\Repositories\CompanyRepository;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class CompanyService
 {
@@ -155,5 +160,148 @@ class CompanyService
         );
 
         return false;
+    }
+
+    /**
+     * @param string      $name
+     * @param int         $cityId
+     * @param string      $street
+     * @param string      $streetNumber
+     * @param string      $email
+     * @param int         $companyCategoryId
+     * @param string|null $phone
+     * @param string|null $website
+     * @param string|null $description
+     * @param string|null $logoUrl
+     * @param int|null    $userId
+     *
+     * @return Company|null
+     */
+    public function createCompany(
+        string $name,
+        int $cityId,
+        string $street,
+        string $streetNumber,
+        string $email,
+        int $companyCategoryId,
+        ?string $phone = null,
+        ?string $website = null,
+        ?string $description = null,
+        ?string $logoUrl = null,
+        ?int $userId = null
+    ): ?Company {
+        $generatedAccessCode = UtilsService::generateAccessCode();
+
+        $company = new Company();
+        $company->name = $name;
+        $company->city_id = $cityId;
+        $company->street = $street;
+        $company->street_number = $streetNumber;
+        $company->email = $email;
+        $company->phone = $phone;
+        $company->website = $website;
+        $company->description = $description;
+        $company->slug = Str::slug($name);
+        $company->access_code = $generatedAccessCode;
+        $company->logo_url = $logoUrl;
+        $company->company_category_id = $companyCategoryId;
+        $company->user_id = !is_null($userId) ? $userId : Auth::id();
+        $company->freshTimestamp();
+
+        if ($company->save()) {
+            Log::channel('user')->info(
+                'Użytkownik dodał nową firmę!',
+                [
+                    'user_id' => Auth::id(),
+                    'data' => [
+                        'name' => $name,
+                        'city_id' => $cityId,
+                        'street' => $street,
+                        'streetNumber' => $streetNumber,
+                        'email' => $email,
+                        'phone' => $phone,
+                        'website' => $website,
+                        'description' => $description,
+                        'slug' => Str::slug($name),
+                        'access_code' => $generatedAccessCode,
+                        'logo_url' => $logoUrl,
+                        'company_category_id' => $companyCategoryId,
+                        'user_id' => !is_null($userId) ? $userId : Auth::id(),
+                    ],
+                ]
+            );
+
+            return $company;
+        }
+
+        Log::channel('user')->error(
+            'Wystąpił problem z akceptacją użytkownika jako pracownika firmy!',
+            [
+                'user_id' => Auth::id(),
+                'data' => [
+                    'name' => $name,
+                    'city_id' => $cityId,
+                    'street' => $street,
+                    'streetNumber' => $streetNumber,
+                    'email' => $email,
+                    'phone' => $phone,
+                    'website' => $website,
+                    'description' => $description,
+                    'slug' => Str::slug($name),
+                    'access_code' => $generatedAccessCode,
+                    'logo_url' => $logoUrl,
+                    'company_category_id' => $companyCategoryId,
+                    'user_id' => !is_null($userId) ? $userId : Auth::id(),
+                ],
+            ]
+        );
+
+        return null;
+    }
+
+    /**
+     * @param int $userId
+     * @param int $companyId
+     * @param int $roleId
+     *
+     * @return UserCompany|null
+     */
+    public function addRoleToCompanyUser(int $userId, int $companyId, int $roleId): ?UserCompany
+    {
+        $userCompany = new UserCompany();
+        $userCompany->user_id = !empty($userId) ? $userId : Auth::id();
+        $userCompany->company_id = $companyId;
+
+        if ($userCompany->save()) {
+            $userCompany->roles()->attach([$roleId], ['created_at' => Carbon::now(), 'updated_at' => Carbon::now()]);
+
+            Log::channel('user')->info(
+                'Dodano nową rolę do użytkownika w firmie!',
+                [
+                    'user_id' => Auth::id(),
+                    'data' => [
+                        'userId' => $userId,
+                        'companyId' => $companyId,
+                        'roleId' => $roleId,
+                    ],
+                ]
+            );
+
+            return $userCompany;
+        }
+
+        Log::channel('user')->error(
+            'Wystąpił problem z dodaniem roli do użytkownika w firmie!',
+            [
+                'user_id' => Auth::id(),
+                'data' => [
+                    'userId' => $userId,
+                    'companyId' => $companyId,
+                    'roleId' => $roleId,
+                ],
+            ]
+        );
+
+        return null;
     }
 }

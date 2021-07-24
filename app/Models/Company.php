@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Company extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     const COMPANY_CATEGORY_SOFTWARE = 'Oprogramowanie';
     const COMPANY_CATEGORY_COMPUTER_NETWORKS = 'Sieci Komputerowe';
@@ -60,19 +61,8 @@ class Company extends Model
         return $this->belongsToMany('App\Models\Questionnaire','companies_questionnaires','company_id', 'questionnaire_id');
     }
 
-    public static function messages()
+    public function author()
     {
-        return [
-            'name.required' => 'Nazwa firmy jest wymagana!',
-            'name.unique' => 'Firma o podanej nazwie istnieje już w naszym serwisie!',
-            'companyCategoryId:required' => 'Kategoria firmy jest wymagana!',
-            'cityId:required' => 'Miasto jest wymagane!',
-            'street:required' => 'Ulica jest wymagana!',
-            'streetNumber:required' => 'Numer budynku jest wymagany!',
-            'email:required' => 'Email jest wymagany!',
-            'phone:required' => 'Numer telefonu jest wymagany!',
-            'website:required' => 'Strona internetowa jest wymagana!',
-            'description:required' => 'Opis firmy jest wymagany'
-        ];
+        return $this->hasOne(User::class, 'user_id','id');
     }
 }

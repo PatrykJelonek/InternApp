@@ -8,6 +8,7 @@
 
 namespace App\Repositories;
 
+use App\Constants\RoleConstants;
 use App\Models\Agreement;
 use App\Models\Company;
 use App\Models\Offer;
@@ -130,22 +131,20 @@ class CompanyRepository implements CompanyRepositoryInterface
 
     public function getCompanyWorkers(string $slug, ?array $roles = null, ?array $statuses = null, ?int $limit = null)
     {
-        $company = Company::with(['users','users.status'])->where(['slug' => $slug])->first()->toArray();
-        $users = [];
-
-        foreach ($company['users'] as $user) {
-            $pivotId = $user['pivot']['id'];
-            $userCompanyRoles = UserCompanyRole::with(['role'])->where(['user_company_id'=> $pivotId])->get();
-            $user['company_roles'] = [];
-
-            foreach ($userCompanyRoles as $userCompanyRole) {
-                $user['company_roles'][] = $userCompanyRole->role;
+        return User::with(
+            [
+                'companiesWithRoles' => function ($query) use ($slug) {
+                    $query->whereHas('company', function ($query) use ($slug) {
+                        $query->where(['slug' => $slug]);
+                    });
+                },
+            ]
+        )->whereHas(
+            'companies',
+            function (Builder $query) use ($slug) {
+                $query->where('slug', $slug);
             }
-
-            $users[] = $user;
-        }
-
-        return $users;
+        )->get();
     }
 
     public function getCompanyAgreements(string $slug, ?bool $isActive = null)
