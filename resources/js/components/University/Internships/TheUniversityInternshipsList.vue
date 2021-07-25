@@ -11,6 +11,8 @@
                     :items="internships"
                     :items-per-page="5"
                     :loading="internshipsLoading"
+                    no-data-text="Niestety, ta uczelnia nie posiada jeszcze praktyk, ani staży!"
+                    loading-text="Pobieranie listy praktyk i staży..."
                     class="elevation-1 component-background"
                     @click:row="(item) => {$router.push({name: 'internship', params: {internshipId: item.id}})}"
                 >

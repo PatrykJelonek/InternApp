@@ -45,7 +45,7 @@ export default {
     created() {
         this.setBreadcrumbs([
             {text: 'Panel', to: {name: 'panel'}, exact: true},
-            {text: 'Uczelnia', to: {name: 'university', params: {slug: this.$route.params.slug}}, exact: true},
+            {text: this.university.name ?? 'Uczelnia', to: {name: 'university', params: {slug: this.$route.params.slug}}, exact: true},
             {text: 'Ustawienia', to: {name: 'university-settings', params: {slug: this.$route.params.slug}}, exact: true},
         ])
     }

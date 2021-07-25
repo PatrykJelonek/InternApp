@@ -23,6 +23,7 @@
                             :item-key="questionnaires.id"
                             class="component-background cursor-pointer"
                             no-data-text="Niestety, ale aktualnie nie mu tu żadnych ankiet!"
+                            loading-text="Pobieranie listy ankiet..."
                             @click:row="(questionnaire) => this.$router.push({name: 'company-questionnaire', params: {slug: this.$route.params.slug, questionnaireId: questionnaire.id}})"
                         >
                             <template v-slot:item.user="{item}">

@@ -28,6 +28,7 @@ class UsersSeeder extends Seeder
             'last_name' => 'Jelonek',
             'phone' => '000000000',
             'user_status_id' => 1,
+            'activation_token' => Str::random(64),
             'created_at' => date('Y-m-d H:i:s'),
             'updated_at' => date('Y-m-d H:i:s')
         ]);

@@ -53,6 +53,7 @@
                         :loading="agreementsLoading"
                         class="elevation-1 component-background"
                         no-data-text="Niestety, ta uczelnia nie posiada jeszcze umów!"
+                        loading-text="Pobieranie listy umów..."
                     >
                         <template v-slot:item.company="{ item }">
                             <router-link :to="{name: 'company', params: {slug: item.company.slug}}">{{

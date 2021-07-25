@@ -338,7 +338,7 @@ class CompanyController extends Controller
             return response($offers, Response::HTTP_OK);
         }
 
-        return response(null, Response::HTTP_NO_CONTENT);
+        return response([], Response::HTTP_NO_CONTENT);
     }
 
     /**

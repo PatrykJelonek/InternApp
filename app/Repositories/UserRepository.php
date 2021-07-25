@@ -8,6 +8,7 @@ use App\Models\Internship;
 use App\Models\InternshipStatus;
 use App\Models\Message;
 use App\Models\User;
+use App\Models\UserStatus;
 use App\Repositories\Interfaces\UserRepositoryInterface;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
@@ -133,5 +134,10 @@ class UserRepository implements UserRepositoryInterface
         $pivotId = $userUniversity->pivot->id;
 
         # TODO: Do dokończenia
+    }
+
+    public function getUserStatusByName(string $name)
+    {
+        return UserStatus::where(['name' => $name])->first();
     }
 }

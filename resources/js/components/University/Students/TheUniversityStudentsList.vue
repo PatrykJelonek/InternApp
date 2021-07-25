@@ -12,6 +12,8 @@
                     :loading="studentsLoading"
                     @click:row="(item) => {$router.push({name: 'user', params: {id: item.id}})}"
                     class="elevation-1 component-background"
+                    no-data-text="Niestety, ta uczelnia nie posiada jeszcze zarejestrowanych studentów."
+                    loading-text="Pobieranie listy studentów..."
                 >
                     <template v-slot:item.fullname="{ item }">
                         {{ item.full_name }}

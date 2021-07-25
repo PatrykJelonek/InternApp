@@ -28,8 +28,10 @@ class CreateUniversitiesTable extends Migration
             $table->string('access_code', 8)->nullable()->unique();
             $table->string('slug', 255)->unique();
             $table->string('logo_url', 255)->nullable();
-            $table->dateTime('created_at', 0);
-            $table->dateTime('updated_at', 0);
+            $table->foreignId('user_id');
+            $table->foreign('user_id')->references('id')->on('users');
+            $table->timestamps();
+            $table->softDeletes();
         });
     }
 

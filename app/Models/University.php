@@ -4,12 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class University extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $table = 'universities';
+
     protected $hidden = ['city_id', 'university_type_id'];
 
     public function type()
@@ -24,7 +26,9 @@ class University extends Model
 
     public function users()
     {
-        return $this->belongsToMany('App\Models\User', 'users_universities', 'university_id', 'user_id')->withPivot(['id','active']);
+        return $this->belongsToMany('App\Models\User', 'users_universities', 'university_id', 'user_id')->withPivot(
+            ['id', 'active']
+        );
     }
 
     public function faculties()
@@ -39,24 +43,16 @@ class University extends Model
 
     public function questionnaires()
     {
-        return $this->belongsToMany('App\Models\Questionnaire','universities_questionnaires','university_id', 'questionnaire_id');
+        return $this->belongsToMany(
+            'App\Models\Questionnaire',
+            'universities_questionnaires',
+            'university_id',
+            'questionnaire_id'
+        );
     }
 
-    public function roles() {
-        return $this->hasMany(UserUniversity::class);
-    }
-
-    public static function messages()
+    public function roles()
     {
-        return [
-            'name.required' => 'Nazwa uczelni jest wymagana!',
-            'universityTypeId:required' => 'Rodzaj uczelni jest wymagany!',
-            'cityId:required' => 'Miasto jest wymagane!',
-            'street:required' => 'Ulica jest wymagana!',
-            'streetNumber:required' => 'Numer budynku jest wymagany!',
-            'email:required' => 'Email jest wymagany!',
-            'phone:required' => 'Numer telefonu jest wymagany!',
-            'website:required' => 'Strona internetowa jest wymagana!'
-        ];
+        return $this->hasMany(UserUniversity::class);
     }
 }

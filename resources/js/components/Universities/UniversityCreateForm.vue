@@ -163,6 +163,8 @@
 
         methods: {
             ...mapActions({
+                setSnackbar: 'snackbar/setSnackbar',
+                fetchUserUniversities: 'user/fetchUserUniversities',
                 fetchUniversityTypes: 'university/fetchUniversityTypes',
                 fetchCities: 'city/fetchCities',
                 createUniversity: 'university/createUniversity'
@@ -172,10 +174,14 @@
                 this.$refs.observer.validate();
 
                 await this.createUniversity(this.university).then((response) => {
+                    this.fetchUserUniversities();
                     this.$router.push({name: 'university', params: {slug: response.slug}});
+                    this.setSnackbar({message: 'Uczelnia została dodana!', color: 'success'});
                 }).catch((e) => {
                     if(e.response.status == 422) {
                         this.$refs.observer.setErrors(e.response.data.errors);
+                    } else {
+                        this.setSnackbar({message: 'Nie udało się dodać uczelni!', color: 'error'});
                     }
                 });
             }

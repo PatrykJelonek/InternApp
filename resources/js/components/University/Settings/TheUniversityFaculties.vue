@@ -33,7 +33,7 @@
         </custom-card-title>
 
         <v-row no-gutters class="pa-1">
-            <v-col cols="12">
+            <v-col cols="12" v-if="facultiesTreeView.length > 0">
                 <v-treeview :items="facultiesTreeView">
                     <template v-slot:label="{ item }">
                         {{ item.name }}
@@ -87,6 +87,9 @@
                         </v-tooltip>
                     </template>
                 </v-treeview>
+            </v-col>
+            <v-col cols="12" v-else>
+                <p class="text--disabled text-center mt-5">Niestety, ta uczelnia nie posiada jeszcze wydziałów!</p>
             </v-col>
         </v-row>
     </custom-card>

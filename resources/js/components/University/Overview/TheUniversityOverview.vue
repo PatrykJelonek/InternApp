@@ -5,7 +5,7 @@
             <template v-slot:subheader>Podstawowe informacje o uczelni {{ university.name }}</template>
         </page-title>
         <v-row>
-            <v-col cols="12" md="12" lg="8" xl="6">
+            <v-col cols="12">
                 <the-university-details
                     :name="university.name"
                     :type="university.type.name"

@@ -23,4 +23,6 @@ interface UserRepositoryInterface
     public function getUserCompanyRoles(int $userId, $companySlug);
 
     public function getUserUniversityRoles(int $userId, $universitySlug);
+
+    public function getUserStatusByName(string $name);
 }

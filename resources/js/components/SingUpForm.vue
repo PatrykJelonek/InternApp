@@ -159,14 +159,10 @@
 
         methods: {
             ...mapActions({
+                setSnackbar: 'snackbar/setSnackbar',
                 createUserAccount: "user/createUserAccount",
                 createUser: "user/createUser",
             }),
-
-            submit (e) {
-                this.createUserAccount(this.account);
-                e.preventDefault();
-            },
 
             phonePattern() {
                 switch(this.account.phone.length) {
@@ -180,10 +176,21 @@
                 this.$refs.observer.validate();
 
                 await this.createUser(this.account).then(() => {
-                    this.$router.replace('login');
+                   this.account = {
+                       firstName: null,
+                       lastName: null,
+                       email: null,
+                       phone: null,
+                       password: null,
+                       passwordRepeat: null,
+                       acceptedRules: false
+                   };
+                   this.setSnackbar({message: 'Twoje konto zostało założone. Aktywuj konto klikając w link wysłany na podany przez Ciebie email.', color: 'success'});
                 }).catch((e) => {
                     if(e.response.status === 422) {
                         this.$refs.observer.setErrors(e.response.data.errors);
+                    } else {
+                        this.setSnackbar({message: 'Wystąpił problem podczas tworzenia konta, skontaktuj się z administratorem serwisu!', color: 'error'});
                     }
                 });
             }

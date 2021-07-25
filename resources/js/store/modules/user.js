@@ -120,7 +120,6 @@ export default {
     mutations: {
         CREATE_USER_ACCOUNT(state, message) {
             state.validationErrors = '';
-            console.log(message);
             router.push('/login');
         },
 
@@ -247,7 +246,7 @@ export default {
 
     actions: {
         createUserAccount({commit}, account) {
-            window.axios({
+            return axios({
                 method: 'post',
                 url: '/api/users',
                 headers: {'X-CSRF-TOKEN': window.Laravel.csrfToken},

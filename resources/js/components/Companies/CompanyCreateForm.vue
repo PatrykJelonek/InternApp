@@ -187,6 +187,8 @@
 
         methods: {
             ...mapActions({
+                updateUserData: 'auth/updateUserData',
+                setSnackbar: 'snackbar/setSnackbar',
                 fetchCompanyCategories: 'company/fetchCompanyCategories',
                 fetchCities: 'city/fetchCities',
                 createCompany: 'company/createCompany'
@@ -195,8 +197,10 @@
             async submit() {
                 this.$refs.observer.validate();
 
-                await this.createCompany(this.company).then(() => {
-                    this.$router.replace('companies');
+                await this.createCompany(this.company).then((res) => {
+                    this.updateUserData();
+                    this.$router.push({name: 'company', params: {slug: res.data.slug}});
+                    this.setSnackbar({message: 'Firma została dodana!', color: 'success'});
                 }).catch((e) => {
                     if(e.response.status == 422) {
                         console.log(e.response.data.errors);

@@ -3,8 +3,22 @@
         <template v-if="!companyLoading">
             <page-title>
                 <template v-slot:default>{{ company.name }}</template>
-                <template v-slot:subheader>Informacje o firmie {{ company.name }}</template>
+                <template v-slot:subheader>{{ company.description }}</template>
             </page-title>
+
+            <v-row>
+                <v-col cols="12">
+                    <the-company-details
+                    :name="company.name"
+                    :category="company.category.name"
+                    :address="company.street + ' ' + company.street_number + ', ' + company.city.name"
+                    :email="company.email"
+                    :phone="company.phone"
+                    :website="company.website"
+                    :description="company.description"
+                    ></the-company-details>
+                </v-col>
+            </v-row>
         </template>
         <template v-else>
             <page-loader></page-loader>
@@ -16,10 +30,11 @@
 import {mapActions, mapGetters} from "vuex";
 import PageTitle from "../../_Helpers/PageTitle";
 import PageLoader from "../../_General/PageLoader";
+import TheCompanyDetails from "./TheCompanyDetails";
 
 export default {
     name: "TheCompanyOverview",
-    components: {PageLoader, PageTitle},
+    components: {TheCompanyDetails, PageLoader, PageTitle},
 
     computed: {
         ...mapGetters({

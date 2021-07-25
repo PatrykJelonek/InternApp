@@ -3,15 +3,19 @@
 namespace App\Http\Controllers\Api;
 
 use App\Constants\InternshipStatusConstants;
+use App\Constants\UserStatusConstants;
+use App\Events\UserCreated;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UserResetPasswordRequest;
 use App\Http\Requests\UserShowRequest;
+use App\Http\Requests\UserStoreRequest;
 use App\Http\Requests\UserUpdateAvatarRequest;
 use App\Http\Requests\UserUpdatePasswordRequest;
 use App\Http\Requests\UserUpdatePersonalDataRequest;
 use App\Http\Resources\Collections\InternshipCollection;
 use App\Models\User;
 use App\Repositories\UserRepository;
+use App\Services\UserService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Arr;
@@ -28,13 +32,20 @@ class UserController extends Controller
     private $userRepository;
 
     /**
+     * @var UserService
+     */
+    private $userService;
+
+    /**
      * UserController constructor.
      *
      * @param UserRepository $userRepository
+     * @param UserService    $userService
      */
-    public function __construct(UserRepository $userRepository)
+    public function __construct(UserRepository $userRepository, UserService $userService)
     {
         $this->userRepository = $userRepository;
+        $this->userService = $userService;
     }
 
     /**
@@ -66,48 +77,28 @@ class UserController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param Request $request
+     * @param UserStoreRequest $request
      *
      * @return Response
      */
-    public function store(Request $request)
+    public function store(UserStoreRequest $request)
     {
-        $validatedData = $request->validate(
-            [
-                'firstName' => 'required|max:64',
-                'lastName' => 'required|max:64',
-                'phone' => 'required|max:16',
-                'email' => 'required|unique:users|max:64',
-                'password' => 'required|max:255',
-            ]
+        $user = $this->userService->createUser(
+            $request->input("email"),
+            $request->input("password"),
+            $request->input("firstName"),
+            $request->input("lastName"),
+            $request->input("phone"),
+            $this->userRepository->getUserStatusByName(UserStatusConstants::USER_STATUS_INACTIVE)->id
         );
 
-        $user = new User;
-
-        //Personal Data
-        $user->first_name = $request->input("firstName");
-        $user->last_name = $request->input("lastName");
-        $user->phone = $request->input("phone");
-
-        //Login Data
-        $user->email = $request->input("email");
-        $user->password_hash = Hash::make($request->input("password"));
-        $user->password_reset_token = Str::random(64);
-        $user->remember_token = "remember_token";
-
-        //Account Data
-        $user->user_status_id = 1;
-
-        //Dates
-        $user->created_at = date('Y-m-d H:i:s');
-        $user->updated_at = date('Y-m-d H:i:s');
-
-        if ($user->save()) {
+        if (!is_null($user)) {
             $user->attachRole('user');
-            return response("Account has been created!", Response::HTTP_CREATED);
-        } else {
-            return response("Account has not been created!", Response::HTTP_INTERNAL_SERVER_ERROR);
+            UserCreated::dispatch($user);
+            return response($user, Response::HTTP_CREATED);
         }
+
+        return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
     /**

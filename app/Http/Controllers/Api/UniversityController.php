@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Constants\RoleConstants;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UniversityAgreementsRequest;
 use App\Http\Requests\UniversityChangeUniversityWorkerRolesRequest;
@@ -24,6 +25,7 @@ use App\Models\Agreement;
 use App\Models\Internship;
 use App\Models\University;
 use App\Repositories\FacultyRepository;
+use App\Repositories\RoleRepository;
 use App\Repositories\UniversityRepository;
 use App\Services\FacultyService;
 use App\Services\QuestionnairesService;
@@ -31,6 +33,7 @@ use App\Services\UniversityService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -62,6 +65,11 @@ class UniversityController extends Controller
     private $universityService;
 
     /**
+     * @var RoleRepository
+     */
+    private $roleRepository;
+
+    /**
      * UniversityController constructor.
      *
      * @param UniversityRepository  $universityRepository
@@ -69,19 +77,22 @@ class UniversityController extends Controller
      * @param FacultyService        $facultyService
      * @param FacultyRepository     $facultyRepository
      * @param UniversityService     $universityService
+     * @param RoleRepository        $roleRepository
      */
     public function __construct(
         UniversityRepository $universityRepository,
         QuestionnairesService $questionnairesService,
         FacultyService $facultyService,
         FacultyRepository $facultyRepository,
-        UniversityService $universityService
+        UniversityService $universityService,
+        RoleRepository $roleRepository
     ) {
         $this->universityRepository = $universityRepository;
         $this->questionnairesService = $questionnairesService;
         $this->facultyService = $facultyService;
         $this->facultyRepository = $facultyRepository;
         $this->universityService = $universityService;
+        $this->roleRepository = $roleRepository;
     }
 
     /**
@@ -220,7 +231,28 @@ class UniversityController extends Controller
 
     public function createUniversity(UniversityCreateUniversityRequest $request)
     {
+        $createdUniversity = $this->universityService->createUniversity(
+            $request->input('name'),
+            $request->input('universityTypeId'),
+            $request->input('cityId'),
+            $request->input('street'),
+            $request->input('streetNumber'),
+            $request->input('email'),
+            $request->input('phone'),
+            $request->input('website')
+        );
 
+        if (!is_null($createdUniversity)) {
+            $this->universityService->addRoleToUniversityUser(
+                !empty($request->input('userId')) ? $request->input('userId') : Auth::id(),
+                $createdUniversity->id,
+                $this->roleRepository->getRoleByName(RoleConstants::ROLE_UNIVERSITY_OWNER)->id
+            );
+
+            return response($createdUniversity, Response::HTTP_CREATED);
+        }
+
+        return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
     /**

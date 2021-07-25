@@ -25,6 +25,7 @@ class UserSeeder extends Seeder
                 'last_name' => 'Nowacki',
                 'phone' => '345123986',
                 'user_status_id' => 1,
+                'activation_token' => Str::random(64),
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
             ]
@@ -39,6 +40,7 @@ class UserSeeder extends Seeder
                 'last_name' => 'Maciejewski',
                 'phone' => '765342043',
                 'user_status_id' => 1,
+                'activation_token' => Str::random(64),
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
             ]
@@ -53,6 +55,7 @@ class UserSeeder extends Seeder
                 'last_name' => 'Wiśniewska',
                 'phone' => '873456123',
                 'user_status_id' => 1,
+                'activation_token' => Str::random(64),
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
             ]
@@ -67,6 +70,7 @@ class UserSeeder extends Seeder
                 'last_name' => 'Piotrowska',
                 'phone' => '873456123',
                 'user_status_id' => 1,
+                'activation_token' => Str::random(64),
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
             ]
@@ -81,6 +85,7 @@ class UserSeeder extends Seeder
                 'last_name' => 'Stachursky',
                 'phone' => '876234093',
                 'user_status_id' => 1,
+                'activation_token' => Str::random(64),
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
             ]
@@ -95,6 +100,7 @@ class UserSeeder extends Seeder
                 'last_name' => 'Trombka',
                 'phone' => '734956023',
                 'user_status_id' => 1,
+                'activation_token' => Str::random(64),
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
             ]
@@ -109,6 +115,7 @@ class UserSeeder extends Seeder
                 'last_name' => 'Maczek',
                 'phone' => '345132412',
                 'user_status_id' => 1,
+                'activation_token' => Str::random(64),
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
             ]
@@ -123,6 +130,7 @@ class UserSeeder extends Seeder
                 'last_name' => 'Piątek',
                 'phone' => '765342043',
                 'user_status_id' => 1,
+                'activation_token' => Str::random(64),
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
             ]
@@ -137,6 +145,7 @@ class UserSeeder extends Seeder
                 'last_name' => 'Jelonek',
                 'phone' => '000000000',
                 'user_status_id' => 1,
+                'activation_token' => Str::random(64),
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
             ]

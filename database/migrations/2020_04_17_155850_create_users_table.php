@@ -17,7 +17,8 @@ class CreateUsersTable extends Migration
             $table->id();
             $table->string('email', 64)->unique();
             $table->string('password_hash', 255);
-            $table->string('password_reset_token', 255);
+            $table->string('password_reset_token', 255)->unique();
+            $table->string('activation_token', 255)->unique();
             $table->string('first_name', 64);
             $table->string('last_name', 64);
             $table->string('phone', 16);
