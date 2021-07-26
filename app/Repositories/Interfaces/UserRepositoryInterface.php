@@ -25,4 +25,6 @@ interface UserRepositoryInterface
     public function getUserUniversityRoles(int $userId, $universitySlug);
 
     public function getUserStatusByName(string $name);
+
+    public function getUserByActivationToken(string $activationToken);
 }

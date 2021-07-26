@@ -11,7 +11,9 @@ namespace App\Services;
 use App\Constants\UserStatusConstants;
 use App\Models\User;
 use App\Repositories\UserRepository;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
 class UserService
@@ -65,9 +67,72 @@ class UserService
         $user->freshTimestamp();
 
         if ($user->save()) {
+            Log::channel('user')->info(
+                'Konto zostało utworzone!',
+                [
+                    'user_id' => $user->id,
+                    'data' => [
+                        'email' => $email,
+                        'first_name' => $firstName,
+                        'last_name' => $lastName,
+                        'phone' => $phone,
+                        'user_status_id' => $userStatusId,
+                        'avatar_url' => $avatarUrl
+                    ],
+                ]
+            );
+
             return $user;
         }
 
+        Log::channel('user')->error(
+            'Wystąpił problem przy tworzeniu konta',
+            [
+                'user_id' => $user->id,
+                'data' => [
+                    'email' => $email,
+                    'first_name' => $firstName,
+                    'last_name' => $lastName,
+                    'phone' => $phone,
+                    'user_status_id' => $userStatusId,
+                    'avatar_url' => $avatarUrl
+                ],
+            ]
+        );
+
         return null;
+    }
+
+    public function changeUserStatus(int $userId, int $userStatusId): bool {
+        $user = $this->repository->getUserById($userId);
+        $user->user_status_id = $userStatusId;
+
+        if ($user->save()) {
+            Log::channel('user')->info(
+                'Status użytkownika został zmieniony',
+                [
+                    'user_id' => Auth::id(),
+                    'data' => [
+                        'user_id' => $userId,
+                        'user_status_id' => $userStatusId
+                    ],
+                ]
+            );
+
+            return true;
+        }
+
+        Log::channel('user')->error(
+            'Nie udało się zmienić statusu użytkownika!',
+            [
+                'user_id' => Auth::id(),
+                'data' => [
+                    'user_id' => $userId,
+                    'user_status_id' => $userStatusId
+                ],
+            ]
+        );
+
+        return false;
     }
 }

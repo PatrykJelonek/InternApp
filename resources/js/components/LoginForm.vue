@@ -37,7 +37,7 @@
                 </v-row>
                 <v-row>
                     <v-col cols="6" class="d-flex justify-start">
-                        <v-btn color="secondary" text type="submit" dark :to="{name: 'register'}">Rejestracja</v-btn>
+                        <v-btn color="secondary" outlined type="submit" dark :to="{name: 'register'}">Rejestracja</v-btn>
                     </v-col>
                     <v-col cols="6" class="d-flex justify-end">
                         <v-btn color="primary" outlined dark @click="submit">Zaloguj Się</v-btn>

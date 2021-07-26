@@ -65,6 +65,8 @@ import Questionnaire from "../views/Questionnaire";
 import Questionnaires from "../views/Questionnaires";
 import TheCompanyQuestionnaire from "../components/Company/Questionnaires/TheCompanyQuestionnaire";
 import TheUniversityQuestionnaire from "../components/University/Questionnaires/TheUniversityQuestionnaire";
+import UserCreated from "../views/UserCreated";
+import UserActivated from "../views/UserActivated";
 
 Vue.use(VueRouter);
 
@@ -99,6 +101,11 @@ const router = new VueRouter({
             component: ResetPassword,
         },
         {
+            path: '/registration/success',
+            name: 'registration-success',
+            component: UserCreated
+        },
+        {
             path: '/login',
             name: 'login',
             component: Login,
@@ -118,6 +125,11 @@ const router = new VueRouter({
             component: Registration,
         },
         {
+            path: '/users/activate/:activationToken',
+            name: 'user-activation',
+            component: UserActivated
+        },
+        {
             path: '/register/student',
             name: 'student-registration',
             component: StudentRegistration,
@@ -126,9 +138,9 @@ const router = new VueRouter({
             path: '/logout',
             name: 'logout',
             beforeEnter: (to, from, next) => {
-               store.dispatch('auth/signOut').then(() =>{
-                   return next({name: 'login'})
-               })
+                store.dispatch('auth/signOut').then(() => {
+                    return next({name: 'login'})
+                })
 
                 return next();
             },
@@ -194,7 +206,7 @@ const router = new VueRouter({
                     path: '/panel/companies',
                     name: 'companies',
                     component: Companies,
-                    meta: { have: ['admin','company_worker','company_owner'], title: 'Firma'}
+                    meta: {have: ['admin', 'company_worker', 'company_owner'], title: 'Firma'}
                 },
                 {
                     path: '/panel/companies/:slug',
@@ -382,18 +394,21 @@ const router = new VueRouter({
                     path: '/panel/internships',
                     name: 'internships',
                     component: Internships,
-                    meta: {have: ['admin','student','company_worker','university_worker'], title: 'Staże i praktyki'},
+                    meta: {
+                        have: ['admin', 'student', 'company_worker', 'university_worker'],
+                        title: 'Staże i praktyki'
+                    },
                 },
                 {
                     path: '/panel/internships/:internshipId',
                     name: 'internship',
                     component: Internship,
-                    meta: {have: ['admin','student','company_worker','university_worker']},
+                    meta: {have: ['admin', 'student', 'company_worker', 'university_worker']},
                     children: [
                         {
                             path: '/internships/:internshipId/students/:studentIndex',
                             name: 'internship-student',
-                            meta: {have: ['admin','student','company_worker','university_worker']},
+                            meta: {have: ['admin', 'student', 'company_worker', 'university_worker']},
                         }
                     ]
                 },
@@ -467,12 +482,12 @@ router.afterEach((to, from) => {
 });
 
 router.beforeEach((to, from, next) => {
-    const { can, have } = to.meta;
+    const {can, have} = to.meta;
     const currentUser = store.getters['auth/user'];
 
     if (can || have) {
         if (!currentUser) {
-            return next({ path: '/login', query: { returnUrl: to.path } });
+            return next({path: '/login', query: {returnUrl: to.path}});
         }
 
         if (have && have.length && !have.find(role => currentUser.roles.map(role => role['name']).includes(role))) {
@@ -490,10 +505,10 @@ router.beforeEach((to, from, next) => {
 const hasRole = function (rolesToCheck) {
     let haveRole = false;
 
-    if(store.getters['auth/roles'].length > 0)
+    if (store.getters['auth/roles'].length > 0)
         store.getters['auth/roles'].forEach((role) => {
             rolesToCheck.forEach((roleToCheck) => {
-                if(roleToCheck === role)
+                if (roleToCheck === role)
                     haveRole = true;
             });
         });

@@ -6,6 +6,7 @@ use App\Constants\InternshipStatusConstants;
 use App\Constants\UserStatusConstants;
 use App\Events\UserCreated;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UserActivateUserRequest;
 use App\Http\Requests\UserResetPasswordRequest;
 use App\Http\Requests\UserShowRequest;
 use App\Http\Requests\UserStoreRequest;
@@ -264,6 +265,20 @@ class UserController extends Controller
 
         if (!is_null($internships)) {
             return response($internships, Response::HTTP_OK);
+        }
+
+        return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+
+    public function activateUser(UserActivateUserRequest $request, string $activationToken)
+    {
+        $result = $this->userService->changeUserStatus(
+            $this->userRepository->getUserByActivationToken($activationToken)->id,
+            $this->userRepository->getUserStatusByName(UserStatusConstants::USER_STATUS_ACTIVE)->id
+        );
+
+        if ($result) {
+            return response(null, Response::HTTP_OK);
         }
 
         return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);

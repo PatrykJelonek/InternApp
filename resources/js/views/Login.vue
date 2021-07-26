@@ -3,11 +3,12 @@
         <v-app-bar
             :flat="flatNavbar"
             :color="navbarBackground"
-            dark
             class="px-5"
             :absolute="isTrue"
         >
-            <v-toolbar-title class="font-weight-bold">InternApp</v-toolbar-title>
+            <v-toolbar-title class="cursor-pointer" @click="$router.push('/')">
+                <b>Intern<span class="green--text text--accent-4">App</span></b>
+            </v-toolbar-title>
         </v-app-bar>
         <v-content class="fill-height component-background">
             <v-container fluid class="pa-0 fill-height">
@@ -17,7 +18,8 @@
                         class="pt-10 d-flex flex-column justify-center align-center fill-height"
                     >
                         <h2 class="font-weight-medium title font-weight-bold pa-0 ma-2">Logowanie</h2>
-                        <p class="subtitle-2 pa-0 ma-2 text-center">Zaloguj się na swoje konto by skorzystać ze wszystkich funkcji naszego serwisu!</p>
+                        <p class="subtitle-2 pa-0 ma-2 text-center">Zaloguj się na swoje konto by skorzystać ze
+                            wszystkich funkcji naszego serwisu!</p>
                         <login-form></login-form>
                     </v-col>
                 </v-row>
@@ -27,26 +29,29 @@
 </template>
 
 <script>
-    import LoginForm from "../components/LoginForm";
-    export default {
-        name: "Login",
-        components: {LoginForm},
+import LoginForm from "../components/LoginForm";
 
-        data() {
-            return {
-                darkTheme: true,
-                flatNavbar: true,
-                navbarBackground: "transparent",
-                inset: false,
-                isFalse: false,
-                isTrue: true,
-                snackbar: false,
-                snackbarMessage: '',
-            }
-        },
-    }
+export default {
+    name: "Login",
+    components: {LoginForm},
+
+    data() {
+        return {
+            darkTheme: true,
+            flatNavbar: true,
+            navbarBackground: "transparent",
+            inset: false,
+            isFalse: false,
+            isTrue: true,
+            snackbar: false,
+            snackbarMessage: '',
+        }
+    },
+}
 </script>
 
 <style scoped>
-
+.cursor-pointer {
+    cursor: pointer;
+}
 </style>

@@ -2,7 +2,7 @@
     <v-card
         elevation="0"
         color="component-background"
-        class="fill-height"
+        :class="compact ? '' : 'fill-height'"
         :loading="loading"
     >
         <template v-slot:progress>
@@ -15,7 +15,7 @@
 <script>
 export default {
     name: "CustomCard",
-    props: ['fillHeight','loading'],
+    props: ['compact','loading'],
 
     data() {
         return {

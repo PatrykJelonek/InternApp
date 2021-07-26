@@ -1,13 +1,14 @@
 <template>
-    <v-app>
+    <v-app class="pa-0">
         <v-app-bar
             :flat="flatNavbar"
             :color="navbarBackground"
-            dark
             class="px-5"
             :absolute="isTrue"
         >
-            <v-toolbar-title class="font-weight-bold">Internships</v-toolbar-title>
+            <v-toolbar-title class="cursor-pointer" @click="$router.push('/')">
+                <b>Intern<span class="green--text text--accent-4">App</span></b>
+            </v-toolbar-title>
         </v-app-bar>
         <v-content class="fill-height component-background">
             <v-container fluid class="pa-0 fill-height">
@@ -28,9 +29,12 @@
 
 <script>
     import SingUpForm from "../components/SingUpForm";
+    import CustomCard from "../components/_General/CustomCard";
+    import PageTitle from "../components/_Helpers/PageTitle";
+    import CustomCardTitle from "../components/_General/CustomCardTitle";
     export default {
         name: "Registration",
-        components: {SingUpForm},
+        components: {CustomCardTitle, PageTitle, CustomCard, SingUpForm},
         data() {
             return {
                 darkTheme: true,
@@ -45,5 +49,7 @@
 </script>
 
 <style scoped>
-
+    .cursor-pointer {
+        cursor: pointer;
+    }
 </style>

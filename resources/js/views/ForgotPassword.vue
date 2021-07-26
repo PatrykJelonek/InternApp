@@ -1,7 +1,9 @@
 <template>
     <v-app>
         <v-app-bar :flat="true" color="transparent" dark class="px-5" :absolute="true">
-            <v-toolbar-title class="font-weight-bold">InternApp</v-toolbar-title>
+            <v-toolbar-title class="cursor-pointer" @click="$router.push('/')">
+                <b>Intern<span class="green--text text--accent-4">App</span></b>
+            </v-toolbar-title>
         </v-app-bar>
         <v-main>
             <v-content class="fill-height component-background">
@@ -10,8 +12,9 @@
                         cols="12" sm="9" md="6" lg="5" xl="3"
                         class="pt-10 d-flex flex-column justify-center align-center fill-height"
                     >
-                        <h2 class="font-weight-medium title font-weight-bold pa-0 ma-2">Wyślij link do zresetowania hasła</h2>
-                        <p class="subtitle-2 pa-0 ma-2 text-center">Podaj email używany w naszym serwisie by otrzymać na niego link który umożliwi Ci zresetowanie hasła</p>
+                        <v-icon large color="primary">mdi-lock-reset</v-icon>
+                        <h2>Wyślij link do zresetowania hasła</h2>
+                        <p class="text-center text-body-2">Podaj email używany w naszym serwisie by otrzymać na niego link który umożliwi Ci zresetowanie hasła</p>
                         <v-container>
                             <forgot-password-form></forgot-password-form>
                         </v-container>

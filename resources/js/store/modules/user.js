@@ -1,6 +1,7 @@
 import vue from "vue";
 import router from "../../router/routers";
 import moment from "moment";
+import axios from "axios";
 
 export default {
     namespaced: true,
@@ -420,6 +421,10 @@ export default {
 
         markNotificationAsRead({commit}, id) {
             return axios.put(`/api/me/notifications/${id}`);
+        },
+
+        activateUser({commit}, activationToken) {
+            return axios.put(`/api/users/activate/${activationToken}`);
         }
     }
 };

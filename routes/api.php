@@ -37,6 +37,8 @@ Route::get('/helpers/offers', 'Api\LandingPageController@offers');
 
 Route::resource('/users', 'Api\UserController');
 
+Route::put('/users/activate/{activationToken}', 'Api\UserController@activateUser');
+
 //For Logged Users
 Route::group(['middleware' => ['jwt.verify']], function() {
     Route::resource('/user_statuses', 'Api\UserStatusController');

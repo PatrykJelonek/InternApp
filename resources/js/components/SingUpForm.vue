@@ -4,7 +4,7 @@
             <v-form>
                 <v-row>
                     <v-col cols="6">
-                        <validation-provider v-slot="{ errors }"  vid="firstName" rules="required">
+                        <validation-provider v-slot="{ errors }" vid="firstName" rules="required">
                             <v-text-field
                                 label="Imię"
                                 v-model="account.firstName"
@@ -17,7 +17,7 @@
                         </validation-provider>
                     </v-col>
                     <v-col cols="6">
-                        <validation-provider v-slot="{ errors }"  vid="lastName" rules="required">
+                        <validation-provider v-slot="{ errors }" vid="lastName" rules="required">
                             <v-text-field
                                 label="Nazwisko"
                                 v-model="account.lastName"
@@ -30,7 +30,7 @@
                         </validation-provider>
                     </v-col>
                     <v-col cols="12">
-                        <validation-provider v-slot="{ errors }"  vid="email" rules="required|email">
+                        <validation-provider v-slot="{ errors }" vid="email" rules="required|email">
                             <v-text-field
                                 label="Email"
                                 type="email"
@@ -44,7 +44,7 @@
                         </validation-provider>
                     </v-col>
                     <v-col cols="12">
-                        <validation-provider v-slot="{ errors }"  vid="phone" rules="required|max:11">
+                        <validation-provider v-slot="{ errors }" vid="phone" rules="required|max:11">
                             <v-text-field
                                 label="Numer Telefonu"
                                 type="tel"
@@ -59,7 +59,7 @@
                         </validation-provider>
                     </v-col>
                     <v-col cols="12">
-                        <validation-provider v-slot="{ errors }"  vid="password" rules="required|min:6">
+                        <validation-provider v-slot="{ errors }" vid="password" rules="required|min:6">
                             <v-text-field
                                 label="Hasło"
                                 v-model="account.password"
@@ -73,7 +73,8 @@
                         </validation-provider>
                     </v-col>
                     <v-col cols="12">
-                        <validation-provider v-slot="{ errors }"  vid="passwordRepeat" rules="required_if:password|confirmed:password">
+                        <validation-provider v-slot="{ errors }" vid="passwordRepeat"
+                                             rules="required_if:password|confirmed:password">
                             <v-text-field
                                 label="Powtórz Hasło"
                                 v-model="account.passwordRepeat"
@@ -87,7 +88,7 @@
                         </validation-provider>
                     </v-col>
                     <v-col cols="12">
-                        <validation-provider v-slot="{ errors }"  vid="acceptedRules" rules="min_value:1">
+                        <validation-provider v-slot="{ errors }" vid="acceptedRules" rules="min_value:1">
                             <v-checkbox
                                 v-model="account.acceptedRules"
                                 color="blue accent-4"
@@ -115,128 +116,140 @@
                 </v-row>
                 <v-row>
                     <v-col cols="6" class="d-flex justify-start">
-                        <v-btn color="secondary" text :to="{name: 'login'}">Logowanie</v-btn>
+                        <v-btn color="secondary" outlined :to="{name: 'login'}">Logowanie</v-btn>
                     </v-col>
                     <v-col cols="6" class="d-flex justify-end">
                         <v-btn color="primary" outlined @click="submitForm">Załóż Konto</v-btn>
                     </v-col>
                 </v-row>
-
             </v-form>
         </validation-observer>
     </v-container>
 </template>
 
 <script>
-    import {mapActions, mapState} from "vuex";
-    import { required, email, required_if, confirmed, min, min_value, max } from "vee-validate/dist/rules";
-    import {  extend, setInteractionMode, ValidationProvider, ValidationObserver } from "vee-validate";
+import {mapActions, mapState} from "vuex";
+import {required, email, required_if, confirmed, min, min_value, max} from "vee-validate/dist/rules";
+import {extend, setInteractionMode, ValidationProvider, ValidationObserver} from "vee-validate";
+import PageLoader from "./_General/PageLoader";
 
-    setInteractionMode('eager');
+setInteractionMode('eager');
 
-    export default {
-        name: "SingUpForm",
+export default {
+    name: "SingUpForm",
 
-        components: {
-            ValidationProvider,
-            ValidationObserver
-        },
+    components: {
+        PageLoader,
+        ValidationProvider,
+        ValidationObserver
+    },
 
-        data() {
-            return {
-                account: {
-                    firstName: "",
-                    lastName: "",
-                    email: "",
-                    phone: "",
-                    password: "",
-                    passwordRepeat: "",
-                    acceptedRules: false
-                },
-                persistentHint: false,
-            }
-        },
-
-        methods: {
-            ...mapActions({
-                setSnackbar: 'snackbar/setSnackbar',
-                createUserAccount: "user/createUserAccount",
-                createUser: "user/createUser",
-            }),
-
-            phonePattern() {
-                switch(this.account.phone.length) {
-                    case 3:
-                    case 7:
-                        this.account.phone += '-';
-                }
+    data() {
+        return {
+            processed: false,
+            account: {
+                firstName: "",
+                lastName: "",
+                email: "",
+                phone: "",
+                password: "",
+                passwordRepeat: "",
+                acceptedRules: false
             },
+            persistentHint: false,
+        }
+    },
 
-            async submitForm() {
-                this.$refs.observer.validate();
+    methods: {
+        ...mapActions({
+            setSnackbar: 'snackbar/setSnackbar',
+            createUserAccount: "user/createUserAccount",
+            createUser: "user/createUser",
+        }),
 
-                await this.createUser(this.account).then(() => {
-                   this.account = {
-                       firstName: null,
-                       lastName: null,
-                       email: null,
-                       phone: null,
-                       password: null,
-                       passwordRepeat: null,
-                       acceptedRules: false
-                   };
-                   this.setSnackbar({message: 'Twoje konto zostało założone. Aktywuj konto klikając w link wysłany na podany przez Ciebie email.', color: 'success'});
-                }).catch((e) => {
-                    if(e.response.status === 422) {
-                        this.$refs.observer.setErrors(e.response.data.errors);
-                    } else {
-                        this.setSnackbar({message: 'Wystąpił problem podczas tworzenia konta, skontaktuj się z administratorem serwisu!', color: 'error'});
-                    }
-                });
+        phonePattern() {
+            switch (this.account.phone.length) {
+                case 3:
+                case 7:
+                    this.account.phone += '-';
             }
         },
 
-        computed: {
-            ...mapState({
-                validationErrors: state => state.user.validationErrors,
-            }),
-        },
-    };
+        async submitForm() {
+            this.$refs.observer.validate();
+            this.processed = true;
 
-    extend('required', {
-        ...required,
-        message: 'To pole jest wymagane!',
-    });
+            await this.createUser(this.account).then(() => {
+                this.account = {
+                    firstName: null,
+                    lastName: null,
+                    email: null,
+                    phone: null,
+                    password: null,
+                    passwordRepeat: null,
+                    acceptedRules: false
+                };
+                this.processed = false;
+                this.$router.push({name: 'registration-success'});
+                this.setSnackbar({
+                    message: 'Twoje konto zostało założone. Aktywuj konto klikając w link wysłany na podany przez Ciebie email.',
+                    color: 'success'
+                });
+            }).catch((e) => {
+                this.processed = false;
+                if (e.response.status === 422) {
+                    this.$refs.observer.setErrors(e.response.data.errors);
+                } else {
+                    this.setSnackbar({
+                        message: 'Wystąpił problem podczas tworzenia konta, skontaktuj się z administratorem serwisu!',
+                        color: 'error'
+                    });
+                }
+            });
+        }
+    },
 
-    extend('required_if', {
-        ...required_if,
-        message: 'Potwierdż hasło!',
-    });
+    computed: {
+        ...mapState({
+            validationErrors: state => state.user.validationErrors,
+        }),
+    },
+};
 
-    extend('confirmed', {
-        ...confirmed,
-        message: 'Hasła muszą być identyczne!',
-    });
+extend('required', {
+    ...required,
+    message: 'To pole jest wymagane!',
+});
 
-    extend('email', {
-        ...email,
-        message: 'Podaj prawidłowy adres email!',
-    });
+extend('required_if', {
+    ...required_if,
+    message: 'Potwierdż hasło!',
+});
 
-    extend('min', {
-        ...min,
-        message: 'Pole musi mieć min. {length} znaków!',
-    });
+extend('confirmed', {
+    ...confirmed,
+    message: 'Hasła muszą być identyczne!',
+});
 
-    extend('max', {
-        ...max,
-        message: 'Pole może mieć maks. {length} znaków!',
-    });
+extend('email', {
+    ...email,
+    message: 'Podaj prawidłowy adres email!',
+});
 
-    extend('min_value', {
-        ...min_value,
-        message: 'Musisz zaakceptować regulamin!',
-    });
+extend('min', {
+    ...min,
+    message: 'Pole musi mieć min. {length} znaków!',
+});
+
+extend('max', {
+    ...max,
+    message: 'Pole może mieć maks. {length} znaków!',
+});
+
+extend('min_value', {
+    ...min_value,
+    message: 'Musisz zaakceptować regulamin!',
+});
 </script>
 
 <style scoped>

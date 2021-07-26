@@ -1,6 +1,9 @@
 <template>
     <v-container fluid>
-        <page-title>{{ $route.meta.title ? $route.meta.title : 'Oferty Praktyk' }}</page-title>
+        <page-title>
+            <template v-slot:default>Oferty Praktyk</template>
+            <template v-slot:subheader>Lista ofert praktyk i staży dostępnych w serwisie</template>
+        </page-title>
         <v-row v-has="['student']">
             <v-col cols="12">
                 <v-card elevation="0" color="card-background">

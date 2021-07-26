@@ -17,7 +17,7 @@
                 </v-col>
             </v-row>
         </v-col>
-        <v-col cols="12">
+        <v-col cols="12" v-if="!withoutDivider">
             <v-divider></v-divider>
         </v-col>
     </v-row>
@@ -25,7 +25,8 @@
 
 <script>
 export default {
-    name: "CustomCardTitle"
+    name: "CustomCardTitle",
+    props: ['withoutDivider']
 }
 </script>
 

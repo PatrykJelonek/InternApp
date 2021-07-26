@@ -140,4 +140,9 @@ class UserRepository implements UserRepositoryInterface
     {
         return UserStatus::where(['name' => $name])->first();
     }
+
+    public function getUserByActivationToken(string $activationToken)
+    {
+        return User::where(['activation_token' => $activationToken])->first();
+    }
 }
