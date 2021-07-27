@@ -5,6 +5,12 @@
             <template v-slot:default>Wpisy</template>
             <template v-slot:subheader>Lista wpisów wybranego studenta.</template>
             <template v-slot:actions>
+                <v-btn
+                    icon
+                    @click="download"
+                >
+                    <v-icon>mdi-download</v-icon>
+                </v-btn>
                 <the-internship-create-student-journal-entry-dialog></the-internship-create-student-journal-entry-dialog>
                 <v-btn
                     icon
@@ -90,14 +96,27 @@ export default {
 
     methods: {
         ...mapActions({
+            downloadInternshipJournal: 'internship/downloadInternshipJournal',
             fetchStudentJournalEntries: 'student/fetchStudentJournalEntries'
         }),
+
+        async download() {
+            await this.downloadInternshipJournal({internship: 1, student: 1}).then((response) => {
+                console.log(response);
+                var fileURL = window.URL.createObjectURL(new Blob([response.data], {type: 'application/pdf'}));
+                var fileLink = document.createElement('a');
+                fileLink.href = fileURL;
+                fileLink.setAttribute('download', 'file.pdf');
+                document.body.appendChild(fileLink);
+                fileLink.click();
+            });
+        }
     },
 
     created() {
         if (this.$route.params.studentIndex !== null) {
             this.fetchStudentJournalEntries({
-                internshipId: 1,
+                internshipId: this.$route.params.internshipId,
                 studentIndex: this.$route.params.studentIndex
             }).then(() => {
 

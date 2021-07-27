@@ -3,7 +3,7 @@
         <v-col cols="12" v-has="['student','intern']">
             <the-student-offers></the-student-offers>
         </v-col>
-        <v-col cols="12" v-has="['company_worker','company_owner','university_worker','university_owner', 'deanery_worker']">
+        <v-col cols="12">
             <offers-list></offers-list>
         </v-col>
     </v-row>

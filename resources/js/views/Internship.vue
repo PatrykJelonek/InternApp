@@ -120,6 +120,7 @@ export default {
             fetchInternship: 'internship/fetchInternship',
             fetchInternshipStudents: 'internship/fetchInternshipStudents',
             setBreadcrumbs: 'helpers/setBreadcrumbs',
+            downloadInternshipJournal: 'internship/downloadInternshipJournal'
         }),
     },
 

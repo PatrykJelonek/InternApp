@@ -10,6 +10,7 @@
     "require": {
         "php": "^7.3.0",
         "ext-json": "*",
+        "barryvdh/laravel-dompdf": "^0.9.0",
         "beyondcode/laravel-websockets": "^1.12",
         "binarytorch/larecipe": "^2.4",
         "fideloper/proxy": "^4.2",

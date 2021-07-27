@@ -168,6 +168,7 @@
 
         computed: {
             ...mapGetters({
+                company: 'company/company',
                 agreement: 'agreement/agreement',
                 agreementLoading: 'agreement/agreementLoading'
             }),
@@ -175,6 +176,7 @@
 
         methods: {
             ...mapActions({
+                setBreadcrumbs: 'helpers/setBreadcrumbs',
                 fetchAgreement: 'agreement/fetchAgreement',
                 activeAgreement: 'agreement/activeAgreement',
                 setSnackbar: 'snackbar/setSnackbar',
@@ -201,7 +203,12 @@
 
         created() {
             this.fetchAgreement(this.$route.params.slug).then(() => {
-
+                this.setBreadcrumbs([
+                    {text: 'Panel', to: {name: 'panel'}, exact: true},
+                    {text: this.agreement.company.name, to: {name: 'company', params: {slug: this.agreement.company.slug}}, exact: true},
+                    {text: 'Umowy', to: {name: 'company-agreements', params: {slug: this.agreement.company.slug}}, exact: true},
+                    {text: this.agreement.name, to: {name: 'agreement', params: {slug: this.$route.params.slug}}, exact: true},
+                ])
             }).catch((e) => {
 
             });

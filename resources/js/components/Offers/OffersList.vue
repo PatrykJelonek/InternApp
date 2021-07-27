@@ -1,5 +1,5 @@
 <template>
-    <v-container fluid>
+    <v-container fluid class="pa-0">
         <v-data-iterator
             :items="offers"
             item-key="id"
@@ -9,22 +9,34 @@
         >
             <template v-slot:default="{ items, isExpanded, expand }">
                 <v-row>
-                    <v-col cols="3" v-for="offer in items"
+                    <v-col cols="12" v-for="offer in items"
                            :key="offer.id">
-                        <offer-card
-                            :title="offer.name"
-                            :company-name="offer.company.name"
-                            :created-at="offer.created_at"
-                            :city="offer.company.city.name"
+<!--                        <offer-card-->
+<!--                            :title="offer.name"-->
+<!--                            :company-name="offer.company.name"-->
+<!--                            :created-at="offer.created_at"-->
+<!--                            :city="offer.company.city.name"-->
+<!--                            :interview="offer.interview"-->
+<!--                            :category-name="offer.category.display_name"-->
+<!--                            :program="offer.program"-->
+<!--                            :date-from="offer.date_from"-->
+<!--                            :date-to="offer.date_to"-->
+<!--                        ></offer-card>-->
+                        <offers-list-row
+                            :name="offer.name"
+                            :address="offer.company.city.name"
+                            :category="offer.category.display_name"
                             :interview="offer.interview"
-                            :category-name="offer.category.display_name"
-                            :program="offer.program"
-                            :date-from="offer.date_from"
-                            :date-to="offer.date_to"
-                        ></offer-card>
+                            :company-name="offer.company.name"
+                            :date-range="formatDate(offer.date_from) + ' - ' + formatDate(offer.date_to)"
+                            :logo-url="offer.company.logo_url"
+                            :slug="offer.slug"
+                        ></offers-list-row>
+                    </v-col>
+                    <v-col cols="12">
+                        <offers-list-row></offers-list-row>
                     </v-col>
                 </v-row>
-
             </template>
 
             <template v-slot:loading>
@@ -45,10 +57,11 @@ import ExpandCard from "../_Helpers/ExpandCard";
 import CreateAgreementDialog from "../Agreements/CreateAgreementDialog";
 import CustomCard from "../_General/CustomCard";
 import OfferCard from "./OfferCard";
+import OffersListRow from "./OffersListRow";
 
 export default {
     name: "OffersList",
-    components: {OfferCard, CustomCard, CreateAgreementDialog, ExpandCard},
+    components: {OffersListRow, OfferCard, CustomCard, CreateAgreementDialog, ExpandCard},
     data() {
         return {
             show: true,

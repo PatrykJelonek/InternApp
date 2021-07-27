@@ -150,6 +150,10 @@ export default {
             return axios.put(`/api/internships/${internshipId}/change-status`, {
                 statusId: statusId,
             })
+        },
+
+        downloadInternshipJournal({commit}, {internship, student}) {
+            return axios.get(`/api/internships/${internship}/students/${student}/download`);
         }
     },
 }

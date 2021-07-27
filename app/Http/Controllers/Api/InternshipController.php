@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\InternshipChangeInternshipStatusRequest;
+use App\Http\Requests\InternshipDownloadInternshipJournalRequest;
 use App\Http\Requests\InternshipStatusesRequest;
 use App\Http\Requests\InternshipStoreRequest;
 use App\Http\Resources\InternshipResource;
@@ -16,9 +17,11 @@ use App\Models\User;
 use App\Repositories\InternshipRepository;
 use App\Repositories\UserRepository;
 use App\Services\InternshipService;
+use Barryvdh\DomPDF\PDF;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 
 use function Symfony\Component\String\s;
@@ -41,17 +44,23 @@ class InternshipController extends Controller
     private $internshipService;
 
     /**
+     * @var PDF
+     */
+    private $pdfCreator;
+
+    /**
      * InternshipController constructor.
      *
      * @param InternshipRepository $internshipRepository
      * @param UserRepository       $userRepository
      * @param InternshipService    $internshipService
      */
-    public function __construct(InternshipRepository $internshipRepository, UserRepository $userRepository, InternshipService $internshipService)
+    public function __construct(InternshipRepository $internshipRepository, UserRepository $userRepository, InternshipService $internshipService, PDF $pdfCreator)
     {
         $this->internshipRepository = $internshipRepository;
         $this->userRepository = $userRepository;
         $this->internshipService = $internshipService;
+        $this->pdfCreator = $pdfCreator;
     }
 
     /**
@@ -210,5 +219,13 @@ class InternshipController extends Controller
         }
 
         return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+
+    public function downloadInternshipJournal(InternshipDownloadInternshipJournalRequest $request)
+    {
+        $pdf = $this->pdfCreator->loadView('pdf.student_journal_pdf');
+
+        // download PDF file with download method
+        return $pdf->download('filesss.pdf');
     }
 }

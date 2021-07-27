@@ -106,14 +106,14 @@
                                     </router-link>
                                 </template>
                                 <template v-slot:item.status="{ item }">
-                                    <v-chip small :color="item.status.hex_color">
+                                    <v-chip small :color="item.status.hex_color" outlined>
                                         {{ item.status.display_name }}
                                     </v-chip>
                                 </template>
                                 <template v-slot:item.interview="{ item }">
-                                    <v-chip small :color="item.interview ? '#00E676' : ''">
-                                        {{ item.interview ? 'Tak' : 'Nie' }}
-                                    </v-chip>
+                                    <v-icon :color="item.interview ? 'primary' : 'error'">
+                                        {{ item.interview ? 'mdi-check' : 'mdi-close' }}
+                                    </v-icon>
                                 </template>
                                 <template v-slot:item.date_from="{ item }">
                                     {{ formatDate(item.date_from) }}
@@ -163,7 +163,7 @@ export default {
                 {text: 'Opiekun', value: 'supervisor', sortable: false},
                 {text: 'Od', value: 'date_from'},
                 {text: 'Do', value: 'date_to'},
-                {text: 'Interview', value: 'interview'},
+                {text: 'Interview', value: 'interview', align: 'center', sortable: false},
                 {text: 'Status', value: 'status', sortable: false},
             ],
             categories: [

@@ -131,6 +131,7 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::post('/internships', 'Api\InternshipController@store');
     Route::post('/internships/{internship}/tasks', 'Api\TaskController@store');
     Route::get('/internships/{internship}/students/{student}/tasks', 'Api\StudentTaskController@index');
+    Route::get('/internships/{internship}/students/{student}/download', 'Api\InternshipController@downloadInternshipJournal');
     Route::post('/internships/{internship}/students/{student?}/tasks', 'Api\TaskController@store');
     Route::get('/internships/{internship}/students/{student}/tasks/{task}', 'Api\TaskController@show');
 

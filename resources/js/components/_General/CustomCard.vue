@@ -4,6 +4,7 @@
         color="component-background"
         :class="compact ? '' : 'fill-height'"
         :loading="loading"
+        :ripple="ripple"
     >
         <template v-slot:progress>
             <v-progress-linear color="primary" indeterminate></v-progress-linear>
@@ -15,7 +16,7 @@
 <script>
 export default {
     name: "CustomCard",
-    props: ['compact','loading'],
+    props: ['compact','loading','ripple'],
 
     data() {
         return {
