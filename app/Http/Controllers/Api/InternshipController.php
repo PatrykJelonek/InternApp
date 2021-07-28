@@ -17,7 +17,7 @@ use App\Models\User;
 use App\Repositories\InternshipRepository;
 use App\Repositories\UserRepository;
 use App\Services\InternshipService;
-use Barryvdh\DomPDF\PDF;
+use \PDF;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Arr;
@@ -221,11 +221,15 @@ class InternshipController extends Controller
         return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
+    public function preview()
+    {
+        return view('pdf.student_journal_pdf');
+    }
+
     public function downloadInternshipJournal(InternshipDownloadInternshipJournalRequest $request)
     {
-        $pdf = $this->pdfCreator->loadView('pdf.student_journal_pdf');
+        $pdf = PDF::loadView('pdf.student_journal_pdf');
 
-        // download PDF file with download method
-        return $pdf->download('filesss.pdf');
+        return base64_encode($pdf->output());
     }
 }

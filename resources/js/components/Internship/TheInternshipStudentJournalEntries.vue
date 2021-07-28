@@ -1,13 +1,22 @@
 <template>
     <custom-card :loading="loadingStudentJournalEntries">
 
+        <the-internship-pdf-generate-dialog
+            title="Pobierz dziennik praktyk"
+            :subheader="`Dokument w formacie PDF zawierający dziennik praktyk studenta`"
+            max-width="600"
+            :dialog="dialogs.DIALOG_FIELD_GENERATE_STUDENT_JOURNAL"
+            :internship-id="$route.params.internshipId"
+            :student-index="$route.params.studentIndex"
+        ></the-internship-pdf-generate-dialog>
+
         <custom-card-title>
             <template v-slot:default>Wpisy</template>
             <template v-slot:subheader>Lista wpisów wybranego studenta.</template>
             <template v-slot:actions>
                 <v-btn
-                    icon
-                    @click="download"
+                    color="transparent"
+                    @click="toggleDialog({key: 'DIALOG_FIELD_GENERATE_STUDENT_JOURNAL', val: true})"
                 >
                     <v-icon>mdi-download</v-icon>
                 </v-btn>
@@ -65,10 +74,12 @@ import InternshipStudentJournalEntry from "./InternshipStudentJournalEntry";
 import TheInternshipCreateStudentJournalEntryDialog from "./TheInternshipCreateStudentJournalEntryDialog";
 import CustomCard from "../_General/CustomCard";
 import CustomCardTitle from "../_General/CustomCardTitle";
+import TheInternshipPdfGenerateDialog from "./TheInternshipPdfGenerateDialog";
 
 export default {
     name: "TheInternshipStudentJournalEntries",
     components: {
+        TheInternshipPdfGenerateDialog,
         CustomCardTitle,
         CustomCard, TheInternshipCreateStudentJournalEntryDialog, InternshipStudentJournalEntry
     },
@@ -85,6 +96,7 @@ export default {
 
     computed: {
         ...mapGetters({
+            dialogs: 'helpers/dialogs',
             studentJournalEntries: 'student/studentJournalEntries',
             loadingStudentJournalEntries: 'student/loadingStudentJournalEntries',
         }),
@@ -96,21 +108,10 @@ export default {
 
     methods: {
         ...mapActions({
+            toggleDialog: 'helpers/toggleDialog',
             downloadInternshipJournal: 'internship/downloadInternshipJournal',
             fetchStudentJournalEntries: 'student/fetchStudentJournalEntries'
         }),
-
-        async download() {
-            await this.downloadInternshipJournal({internship: 1, student: 1}).then((response) => {
-                console.log(response);
-                var fileURL = window.URL.createObjectURL(new Blob([response.data], {type: 'application/pdf'}));
-                var fileLink = document.createElement('a');
-                fileLink.href = fileURL;
-                fileLink.setAttribute('download', 'file.pdf');
-                document.body.appendChild(fileLink);
-                fileLink.click();
-            });
-        }
     },
 
     created() {

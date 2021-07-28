@@ -12,6 +12,7 @@ export default {
             DIALOG_FIELD_CHANGE_INTERNSHIP_STATUS: false,
             DIALOG_FIELD_SELECT_ROLES: false,
             DIALOG_FIELD_VERIFY_UNIVERSITY_WORKER: false,
+            DIALOG_FIELD_GENERATE_STUDENT_JOURNAL: false,
         },
         dialogsArgs: {
             DIALOG_FIELD_ACTIVATE_AGREEMENT: null,
@@ -20,6 +21,7 @@ export default {
             DIALOG_FIELD_CHANGE_INTERNSHIP_STATUS: null,
             DIALOG_FIELD_SELECT_ROLES: null,
             DIALOG_FIELD_VERIFY_UNIVERSITY_WORKER: null,
+            DIALOG_FIELD_GENERATE_STUDENT_JOURNAL: null,
         },
         createInternshipDialog: false,
         createOfferDialog: false,

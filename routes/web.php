@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
+Route::get('pdf/preview', [\App\Http\Controllers\Api\InternshipController::class, 'preview'])->name('pdf.preview');
+Route::get('pdf/generate', [\App\Http\Controllers\Api\InternshipController::class, 'downloadInternshipJournal'])->name('pdf.generate');
 //Vue routing
 Route::get('/{any}', 'SinglePageController@index')->where('any', '.*');
+
