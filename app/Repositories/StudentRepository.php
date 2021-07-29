@@ -25,7 +25,7 @@ class StudentRepository implements StudentRepositoryInterface
      */
     public function one($studentIndex)
     {
-        return Student::where('student_index', $studentIndex)->first();
+        return Student::with(['user'])->where('student_index', $studentIndex)->first();
     }
 
     public function all()
@@ -34,16 +34,19 @@ class StudentRepository implements StudentRepositoryInterface
     }
 
     /**
-     * @param $studentIndex
+     * @param int    $internshipId
+     * @param string $studentIndex
      *
      * @return mixed
      */
-    public function getStudentJournalEntries($studentIndex)
+    public function getStudentJournalEntries(int $internshipId, string $studentIndex)
     {
         $student = $this->one($studentIndex);
 
         if (!empty($student)) {
-            return $student->journalEntries()->orderByDesc('date')->get();
+            return $student->journalEntries()->whereHas('internship', function (Builder $query) use ($internshipId) {
+                $query->where(['id' => $internshipId]);
+            })->orderByDesc('date')->get();
         }
 
         return null;
@@ -203,5 +206,10 @@ class StudentRepository implements StudentRepositoryInterface
         }
 
         dd($data);
+    }
+
+    public function getStudentByIndex(int $studentIndex)
+    {
+        return Student::with(['user'])->where(['student_index' => $studentIndex])->first();
     }
 }

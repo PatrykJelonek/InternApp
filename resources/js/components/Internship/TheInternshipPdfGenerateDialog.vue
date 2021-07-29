@@ -5,7 +5,7 @@
         :max-width="maxWidth ? maxWidth : '800px'"
         @click:outside="toggleDialog({key: 'DIALOG_FIELD_GENERATE_STUDENT_JOURNAL', val: false})"
     >
-        <custom-card :loading="fileContent === null">
+        <custom-card :loading="fileContent === null  && !error">
             <custom-card-title>
                 <template v-slot:default>{{ title }}</template>
                 <template v-slot:subheader>{{ subheader }}</template>
@@ -13,9 +13,12 @@
 
             <v-row no-gutters class="pa-5">
                 <v-fade-transition>
-                    <v-col cols="12" class="text-center text--disabled" v-if="fileContent === null">
+                    <v-col cols="12" class="text-center text--disabled" v-if="fileContent === null && !error">
                         Generowanie pliku PDF...
                     </v-col>
+                   <v-col cols="12" class="text-center error--text" v-else-if="fileContent === null && error">
+                       Wystąpił problem podczas generowania dokumentu!
+                   </v-col>
                     <v-col cols="12" class="text-center" v-else>
                         <v-btn
                             outlined
@@ -46,6 +49,7 @@ export default {
     data() {
         return {
             fileContent: null,
+            error: false,
         }
     },
 
@@ -71,6 +75,8 @@ export default {
                 student: this.studentIndex
             }).then((response) => {
                 this.fileContent = `data:application/pdf;base64,${response.data}`;
+            }).catch(() => {
+                this.error = true;
             });
         },
     },
@@ -82,6 +88,7 @@ export default {
             } else {
                 setTimeout(() => {
                     this.fileContent = null;
+                    this.error = null;
                 }, 1000);
             }
         }

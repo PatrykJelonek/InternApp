@@ -30,13 +30,14 @@ class StudentJournalEntryController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @param int $internshipid
+     * @param int $internshipId
      * @param int $studentIndex
+     *
      * @return \Illuminate\Http\Response
      */
-    public function index(int $internshipid, int $studentIndex)
+    public function index(int $internshipId, int $studentIndex)
     {
-        $studentJournalEntries = $this->studentRepository->getStudentJournalEntries($studentIndex);
+        $studentJournalEntries = $this->studentRepository->getStudentJournalEntries($internshipId, $studentIndex);
 
         if (!empty($studentJournalEntries)) {
             return response(new JournalEntryCollection($studentJournalEntries), Response::HTTP_OK);

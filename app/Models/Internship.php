@@ -33,12 +33,12 @@ class Internship extends Model
 
     public function universitySupervisor()
     {
-        return $this->hasOne('App\Models\User', 'id', 'university_supervisor_id');
+        return $this->hasOne(User::class, 'id', 'university_supervisor_id');
     }
 
     public function companySupervisor()
     {
-        return $this->hasOne('App\Models\User', 'id', 'company_supervisor_id');
+        return $this->hasOne(User::class, 'id', 'company_supervisor_id');
     }
 
     public function journalEntries()

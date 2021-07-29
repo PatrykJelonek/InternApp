@@ -11,20 +11,16 @@ use App\Http\Resources\InternshipResource;
 use App\Models\Agreement;
 use App\Models\Internship;
 use App\Models\InternshipStatus;
-use App\Models\Offer;
-use App\Models\Student;
 use App\Models\User;
 use App\Repositories\InternshipRepository;
+use App\Repositories\StudentRepository;
 use App\Repositories\UserRepository;
 use App\Services\InternshipService;
 use \PDF;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
-
-use function Symfony\Component\String\s;
 
 class InternshipController extends Controller
 {
@@ -49,18 +45,28 @@ class InternshipController extends Controller
     private $pdfCreator;
 
     /**
+     * @var StudentRepository
+     */
+    private $studentRepository;
+
+    /**
      * InternshipController constructor.
      *
      * @param InternshipRepository $internshipRepository
      * @param UserRepository       $userRepository
      * @param InternshipService    $internshipService
+     * @param StudentRepository    $studentRepository
      */
-    public function __construct(InternshipRepository $internshipRepository, UserRepository $userRepository, InternshipService $internshipService, PDF $pdfCreator)
-    {
+    public function __construct(
+        InternshipRepository $internshipRepository,
+        UserRepository $userRepository,
+        InternshipService $internshipService,
+        StudentRepository $studentRepository
+    ) {
         $this->internshipRepository = $internshipRepository;
         $this->userRepository = $userRepository;
         $this->internshipService = $internshipService;
-        $this->pdfCreator = $pdfCreator;
+        $this->studentRepository = $studentRepository;
     }
 
     /**
@@ -148,7 +154,7 @@ class InternshipController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param Request    $request
+     * @param Request $request
      * @param Internship $intership
      *
      * @return Response
@@ -226,9 +232,23 @@ class InternshipController extends Controller
         return view('pdf.student_journal_pdf');
     }
 
-    public function downloadInternshipJournal(InternshipDownloadInternshipJournalRequest $request)
-    {
-        $pdf = PDF::loadView('pdf.student_journal_pdf');
+    public function downloadInternshipJournal(
+        InternshipDownloadInternshipJournalRequest $request,
+        int $internshipId,
+        string $studentIndex
+    ) {
+        $studentJournal = $this->studentRepository->getStudentJournalEntries($internshipId, $studentIndex);
+        $internship = $this->internshipRepository->getInternship($internshipId);
+        $student = $this->studentRepository->getStudentByIndex($studentIndex);
+
+        $pdf = PDF::loadView(
+            'pdf.student_journal_pdf',
+            [
+                'journalEntires' => $studentJournal,
+                'internship' => $internship,
+                'student' => $student
+            ]
+        );
 
         return base64_encode($pdf->output());
     }

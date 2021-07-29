@@ -6,17 +6,8 @@
             </v-col>
         </v-row>
         <v-row class="mt-10">
-            <v-col cols="12" md="6" lg="6">
+            <v-col cols="12" md="12" lg="6">
                 <the-dashboard-internships></the-dashboard-internships>
-            </v-col>
-            <v-col cols="12" md="6" lg="6">
-                <the-dashboard-messages></the-dashboard-messages>
-            </v-col>
-            <v-col cols="12" md="12" lg="8">
-                <the-dashboard-activity></the-dashboard-activity>
-            </v-col>
-            <v-col cols-="12" md="6" lg="4">
-                <the-dashboard-others></the-dashboard-others>
             </v-col>
         </v-row>
     </v-container>

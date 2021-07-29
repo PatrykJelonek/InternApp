@@ -26,10 +26,10 @@ class InternshipRepository implements InternshipRepositoryInterface
      */
     public function getInternship($id)
     {
-        $internship = null;
+        $with = ['agreement.university.city', 'agreement.company.city', 'universitySupervisor', 'companySupervisor'];
 
         if (Auth::user()->hasRole(RoleConstants::ROLE_ADMIN)) {
-            $internship = Internship::find($id);
+            $internship = Internship::with($with)->where(['id' => $id])->first();
         } else {
             $internship = Internship::where('id', $id)
                 ->where(
@@ -37,10 +37,10 @@ class InternshipRepository implements InternshipRepositoryInterface
                         $query->where('university_supervisor_id', Auth::user()->id)
                             ->orWhere('company_supervisor_id', Auth::user()->id);
                     }
-                )->with(['agreement.university', 'agreement.company'])->first();
+                )->with($with)->first();
         }
 
-        return $internship;
+        return $internship ?? null;
     }
 
     public function getInternships()

@@ -23,6 +23,8 @@ class InternshipResource extends JsonResource
             'grade' => $this->grade,
             'interview_date' => $this->intervie_date,
             'internship_status_id' => $this->internship_status_id,
+            'company_supervisor' => $this->companySupervisor,
+            'university_supervisor' => $this->universitySupervisor,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];
