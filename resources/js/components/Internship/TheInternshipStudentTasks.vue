@@ -4,7 +4,7 @@
             <template v-slot:default>Zadania</template>
             <template v-slot:subheader>Lista zadań przypisanych do wybranego studenta.</template>
             <template v-slot:actions>
-                <the-internship-create-student-task-dialog></the-internship-create-student-task-dialog>
+                <the-internship-create-student-task-dialog v-if="$route.params.studentIndex"></the-internship-create-student-task-dialog>
                 <v-btn
                     icon
                     @click="show = !show"

@@ -23,7 +23,7 @@ class Student extends Model
 
     public function specialization()
     {
-        return $this->hasOne('App\Models\Specialization', 'id', 'specialization_id')->withTrashed();
+        return $this->hasOne(Specialization::class, 'id', 'specialization_id')->withTrashed();
     }
 
     public function journalEntries()

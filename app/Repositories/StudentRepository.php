@@ -210,6 +210,6 @@ class StudentRepository implements StudentRepositoryInterface
 
     public function getStudentByIndex(int $studentIndex)
     {
-        return Student::with(['user'])->where(['student_index' => $studentIndex])->first();
+        return Student::with(['user', 'specialization.field.faculty'])->where(['student_index' => $studentIndex])->first();
     }
 }

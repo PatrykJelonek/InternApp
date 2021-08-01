@@ -19,7 +19,8 @@ class CreateInternshipsStudents extends Migration
             $table->foreign('internship_id')->references('id')->on('internships');
             $table->foreignId('student_id');
             $table->foreign('student_id')->references('id')->on('students');
-            $table->integer('grade')->nullable();
+            $table->float('grade')->nullable();
+            $table->text('company_supervisor_opinion')->nullable();
             $table->date('interview_date')->nullable();
             $table->timestamps();
         });

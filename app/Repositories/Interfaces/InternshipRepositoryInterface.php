@@ -35,4 +35,8 @@ interface InternshipRepositoryInterface
     public function create(int $userId, int $offerId, int $agreementId, int $companySupervisorId, int $universitySupervisorId);
 
     public function getInternshipStatuses();
+
+    public function getInternshipStudentByIndex(int $internshipId, string $studentIndex);
+
+    public function getInternshipStatusByName(string $internshipStatusName);
 }

@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Constants\InternshipStatusConstants;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\InternshipChangeInternshipStatusRequest;
 use App\Http\Requests\InternshipDownloadInternshipJournalRequest;
 use App\Http\Requests\InternshipStatusesRequest;
 use App\Http\Requests\InternshipStoreRequest;
+use App\Http\Requests\InternshipSummarizeInternshipRequest;
 use App\Http\Resources\InternshipResource;
 use App\Models\Agreement;
 use App\Models\Internship;
@@ -16,6 +18,8 @@ use App\Repositories\InternshipRepository;
 use App\Repositories\StudentRepository;
 use App\Repositories\UserRepository;
 use App\Services\InternshipService;
+use App\Services\StudentService;
+use Illuminate\Support\Facades\DB;
 use \PDF;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -50,6 +54,11 @@ class InternshipController extends Controller
     private $studentRepository;
 
     /**
+     * @var StudentService
+     */
+    private $studentService;
+
+    /**
      * InternshipController constructor.
      *
      * @param InternshipRepository $internshipRepository
@@ -61,12 +70,14 @@ class InternshipController extends Controller
         InternshipRepository $internshipRepository,
         UserRepository $userRepository,
         InternshipService $internshipService,
-        StudentRepository $studentRepository
+        StudentRepository $studentRepository,
+        StudentService $studentService
     ) {
         $this->internshipRepository = $internshipRepository;
         $this->userRepository = $userRepository;
         $this->internshipService = $internshipService;
         $this->studentRepository = $studentRepository;
+        $this->studentService = $studentService;
     }
 
     /**
@@ -240,16 +251,63 @@ class InternshipController extends Controller
         $studentJournal = $this->studentRepository->getStudentJournalEntries($internshipId, $studentIndex);
         $internship = $this->internshipRepository->getInternship($internshipId);
         $student = $this->studentRepository->getStudentByIndex($studentIndex);
+        $internshipStudent = $this->internshipRepository->getInternshipStudentByIndex($internshipId, $studentIndex);
 
         $pdf = PDF::loadView(
             'pdf.student_journal_pdf',
             [
                 'journalEntires' => $studentJournal,
                 'internship' => $internship,
-                'student' => $student
+                'student' => $student,
+                'internshipStudent' => $internshipStudent,
             ]
         );
 
         return base64_encode($pdf->output());
+    }
+
+    public function summarizeInternship(InternshipSummarizeInternshipRequest $request, int $internshipId)
+    {
+        $opinions = $request->input('opinions');
+        $summarizeSuccess = false;
+
+        DB::beginTransaction();
+        foreach ($opinions as $opinion) {
+            $internshipStudent = $this->internshipRepository->getInternshipStudentByIndex(
+                $internshipId,
+                $opinion['index']
+            );
+
+            if (!is_null($internshipStudent)) {
+                $student = $this->studentService->addCompanySupervisorOpinion(
+                    $internshipStudent->id,
+                    $opinion['opinion']
+                );
+
+                if (!is_null($student)) {
+                    $summarizeSuccess = true;
+                    continue;
+                }
+            }
+
+            $summarizeSuccess = false;
+        }
+
+        if ($summarizeSuccess) {
+            $internship = $this->internshipService->changeInternshipStatus(
+                $internshipId,
+                $this->internshipRepository->getInternshipStatusByName(
+                    InternshipStatusConstants::STATUS_ENDED_BY_COMPANY
+                )->id,
+            );
+
+            if (!is_null($internship)) {
+                DB::commit();
+                return response($internship, Response::HTTP_OK);
+            }
+        }
+
+        DB::rollBack();
+        return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 }

@@ -60,7 +60,9 @@
 import {mapActions, mapGetters} from "vuex";
 import CustomCard from "../../_General/CustomCard";
 import CustomCardTitle from "../../_General/CustomCardTitle";
-import {ValidationObserver, ValidationProvider} from "vee-validate";
+import {extend, setInteractionMode, ValidationProvider, ValidationObserver} from "vee-validate";
+
+setInteractionMode('eager');
 
 export default {
     name: "TheUniversitySpecializationDialog",

@@ -154,6 +154,12 @@ export default {
 
         downloadInternshipJournal({commit}, {internship, student}) {
             return axios.get(`/api/internships/${internship}/students/${student}/download`);
+        },
+
+        summarizeInternship({commit}, {internship, opinions}) {
+            return axios.put(`/api/internships/${internship}/summarize-internship`, {
+                opinions: opinions
+            });
         }
     },
 }

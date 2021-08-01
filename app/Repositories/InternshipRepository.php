@@ -4,17 +4,12 @@ namespace App\Repositories;
 
 use App\Constants\InternshipStatusConstants;
 use App\Constants\RoleConstants;
-use App\Http\Requests\InternshipStatusesRequest;
 use App\Models\Internship;
 use App\Models\InternshipStatus;
-use App\Models\Offer;
-use App\Models\Student;
-use App\Notifications\InternshipCreated;
+use App\Models\InternshipStudent;
 use App\Repositories\Interfaces\InternshipRepositoryInterface;
-use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Notification;
 
 class InternshipRepository implements InternshipRepositoryInterface
 {
@@ -83,5 +78,25 @@ class InternshipRepository implements InternshipRepositoryInterface
     public function getInternshipStatuses()
     {
         return InternshipStatus::all();
+    }
+
+    public function getInternshipStudentByIndex(int $internshipId, string $studentIndex)
+    {
+        return InternshipStudent::with(['student.user'])->whereHas(
+            'internship',
+            function (Builder $query) use ($internshipId) {
+                $query->where(['id' => $internshipId]);
+            }
+        )->whereHas(
+            'student',
+            function (Builder $query) use ($studentIndex) {
+                $query->where(['student_index' => $studentIndex]);
+            }
+        )->first();
+    }
+
+    public function getInternshipStatusByName(string $internshipStatusName)
+    {
+        return InternshipStatus::where(['name' => $internshipStatusName])->first();
     }
 }

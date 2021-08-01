@@ -9,6 +9,7 @@
 namespace App\Services;
 
 use App\Constants\OfferStatusConstants;
+use App\Models\InternshipStudent;
 use App\Models\Offer;
 use App\Repositories\AttachmentRepository;
 use App\Repositories\CityRepository;
@@ -138,5 +139,42 @@ class StudentService
             );
             return null;
         }
+    }
+
+    public function addGrade(int $internshipStudentId, float $grade)
+    {
+        $student = InternshipStudent::find($internshipStudentId);
+        $student->grade($grade);
+
+        if ($student->save()) {
+            return $student;
+        }
+
+        return null;
+    }
+
+    public function addCompanySupervisorOpinion(int $internshipStudentId, string $opinion)
+    {
+        $student = InternshipStudent::find($internshipStudentId);
+        $student->company_supervisor_opinion = $opinion;
+
+        if ($student->save()) {
+            return $student;
+        }
+
+        return null;
+    }
+
+    public function summarizeStudentInternship(int $internshipStudentId, float $grade, string $opinion)
+    {
+        $student = InternshipStudent::find($internshipStudentId);
+        $student->company_supervisor_opinion = $opinion;
+        $student->grade($grade);
+
+        if ($student->save()) {
+            return $student;
+        }
+
+        return null;
     }
 }

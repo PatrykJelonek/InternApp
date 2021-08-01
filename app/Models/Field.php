@@ -16,4 +16,9 @@ class Field extends Model
     {
         return $this->hasMany(Specialization::class, 'field_id', 'id');
     }
+
+    public function faculty()
+    {
+        return $this->belongsTo(Faculty::class, 'faculty_id', 'id');
+    }
 }

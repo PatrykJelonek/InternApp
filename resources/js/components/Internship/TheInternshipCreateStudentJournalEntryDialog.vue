@@ -5,7 +5,6 @@
                 icon
                 v-on="on"
                 v-bind="attrs"
-                v-if="$route.params.studentIndex"
             >
                 <v-icon>mdi-plus</v-icon>
             </v-btn>

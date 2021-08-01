@@ -406,7 +406,7 @@ const router = new VueRouter({
                     meta: {have: ['admin', 'student', 'company_worker', 'university_worker']},
                     children: [
                         {
-                            path: '/internships/:internshipId/students/:studentIndex',
+                            path: '/panel/internships/:internshipId/students/:studentIndex',
                             name: 'internship-student',
                             meta: {have: ['admin', 'student', 'company_worker', 'university_worker']},
                         }

@@ -1,9 +1,24 @@
 <template>
     <v-container fluid class="pa-0">
         <div v-if="!internshipLoading">
+            <internship-summary-dialog
+                :internship-students="internshipStudents"
+                :internship-id="internship.id"
+                v-if="!internshipStudentsLoading && internshipStudents.length > 0"
+            ></internship-summary-dialog>
+
             <!--        <the-internship-students-drawer v-if="!$vuetify.breakpoint.mobile"></the-internship-students-drawer>-->
             <page-title>
                 <template v-slot:default>{{ internship.offer.name }}</template>
+                <template v-slot:actions>
+                    <v-btn
+                        color="primary"
+                        outlined
+                        @click="toggleDialog({key: 'DIALOG_FIELD_INTERNSHIP_SUMMARY', val: true})"
+                    >
+                        Zakończ praktykę
+                    </v-btn>
+                </template>
             </page-title>
             <v-row>
                 <v-col cols="12" md="12" lg="12">
@@ -70,10 +85,12 @@ import TheInternshipPercent from "../components/Internship/TheInternshipPercent"
 import TheInternshipStudentJournalEntries from "../components/Internship/TheInternshipStudentJournalEntries";
 import TheInternshipFab from "../components/Internship/TheInternshipFab";
 import TheInternshipStudentTasks from "../components/Internship/TheInternshipStudentTasks";
+import InternshipSummaryDialog from "../components/Internship/InternshipSummaryDialog";
 
 export default {
     name: "Internship",
     components: {
+        InternshipSummaryDialog,
         TheInternshipStudentTasks,
         TheInternshipFab,
         TheInternshipStudentJournalEntries,
@@ -108,6 +125,8 @@ export default {
 
     computed: {
         ...mapGetters({
+            internshipStudents: 'internship/internshipStudents',
+            internshipStudentsLoading: 'internship/internshipStudentsLoading',
             currentUser: 'auth/user',
             internship: 'internship/internship',
             preview: 'internship/preview',
@@ -117,6 +136,7 @@ export default {
 
     methods: {
         ...mapActions({
+            toggleDialog: 'helpers/toggleDialog',
             fetchInternship: 'internship/fetchInternship',
             fetchInternshipStudents: 'internship/fetchInternshipStudents',
             setBreadcrumbs: 'helpers/setBreadcrumbs',

@@ -20,6 +20,15 @@
             font-size: 14px;
         }
 
+        th {
+            vertical-align: top;
+            width: 130px;
+        }
+
+        td {
+            vertical-align: top;
+        }
+
         .page-title {
             font-weight: bold;
             margin: 5px 0 10px 0;
@@ -81,8 +90,16 @@
                     <td class="pl-5">{{ $student->student_index ?? '' }}</td>
                 </tr>
                 <tr>
+                    <th>Wydział:</th>
+                    <td class="pl-5">{{ $student->specialization->field->faculty->name ?? '' }}</td>
+                </tr>
+                <tr>
+                    <th>Kierunek:</th>
+                    <td class="pl-5">{{ $student->specialization->field->name ?? '' }}</td>
+                </tr>
+                <tr>
                     <th>Specjalność:</th>
-                    <td class="pl-5">{{ $student->specialization->name ?? 'P' }}</td>
+                    <td class="pl-5">{{ $student->specialization->name ?? '' }}</td>
                 </tr>
             </table>
         </div>
@@ -141,6 +158,10 @@
                         <tr>
                             <th>Opiekun praktyk:</th>
                             <td class="pl-5">{{ $internship->companySupervisor->full_name }}</td>
+                        </tr>
+                        <tr>
+                            <th>Opinia opiekuna praktyk:</th>
+                            <td class="pl-5">{{ $internshipStudent->company_supervisor_opinion }}</td>
                         </tr>
                     </table>
                 </div>

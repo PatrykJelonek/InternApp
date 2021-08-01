@@ -17,10 +17,11 @@
                 <v-btn
                     color="transparent"
                     @click="toggleDialog({key: 'DIALOG_FIELD_GENERATE_STUDENT_JOURNAL', val: true})"
+                    v-if="$route.params.studentIndex"
                 >
                     <v-icon>mdi-download</v-icon>
                 </v-btn>
-                <the-internship-create-student-journal-entry-dialog></the-internship-create-student-journal-entry-dialog>
+                <the-internship-create-student-journal-entry-dialog  v-if="$route.params.studentIndex"></the-internship-create-student-journal-entry-dialog>
                 <v-btn
                     icon
                     @click="show = !show"
