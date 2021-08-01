@@ -9,9 +9,25 @@
                 <v-btn color="primary" outlined>Dodaj studenta</v-btn>
             </template>
         </page-title>
+
         <v-row>
             <v-col cols="12">
-                <the-university-students-list></the-university-students-list>
+                <custom-card>
+                    <v-text-field
+                        v-model="search"
+                        append-icon="mdi-magnify"
+                        label="Search"
+                        single-line
+                        hide-details
+                        outlined
+                    ></v-text-field>
+                </custom-card>
+            </v-col>
+        </v-row>
+
+        <v-row>
+            <v-col cols="12">
+                <the-university-students-list :search="search"></the-university-students-list>
             </v-col>
         </v-row>
     </v-container>
@@ -21,9 +37,16 @@
 import TheUniversityStudentsList from "./TheUniversityStudentsList";
 import {mapActions, mapGetters} from "vuex";
 import PageTitle from "../../_Helpers/PageTitle";
+import CustomCard from "../../_General/CustomCard";
 export default {
     name: "TheUniversityStudents",
-    components: {PageTitle, TheUniversityStudentsList},
+    components: {CustomCard, PageTitle, TheUniversityStudentsList},
+
+    data() {
+        return {
+            search: '',
+        }
+    },
 
     computed: {
         ...mapGetters({

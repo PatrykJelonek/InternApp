@@ -14,6 +14,7 @@
                     class="elevation-1 component-background"
                     no-data-text="Niestety, ta uczelnia nie posiada jeszcze zarejestrowanych studentów."
                     loading-text="Pobieranie listy studentów..."
+                    :search="search"
                 >
                     <template v-slot:item.fullname="{ item }">
                         {{ item.full_name }}
@@ -59,6 +60,9 @@ import moment from "moment";
 export default {
     name: "TheUniversityStudentsList",
     components: {CustomCardTitle, CustomCard},
+
+    props: ['search'],
+
     data() {
         return {
             show: true,
