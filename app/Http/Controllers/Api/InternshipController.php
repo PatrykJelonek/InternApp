@@ -6,6 +6,8 @@ use App\Constants\InternshipStatusConstants;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\InternshipChangeInternshipStatusRequest;
 use App\Http\Requests\InternshipDownloadInternshipJournalRequest;
+use App\Http\Requests\InternshipGetInternshipStudentRequest;
+use App\Http\Requests\InternshipSetInternshipStudentGradeRequest;
 use App\Http\Requests\InternshipStatusesRequest;
 use App\Http\Requests\InternshipStoreRequest;
 use App\Http\Requests\InternshipSummarizeInternshipRequest;
@@ -65,6 +67,7 @@ class InternshipController extends Controller
      * @param UserRepository       $userRepository
      * @param InternshipService    $internshipService
      * @param StudentRepository    $studentRepository
+     * @param StudentService       $studentService
      */
     public function __construct(
         InternshipRepository $internshipRepository,
@@ -165,7 +168,7 @@ class InternshipController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param Request $request
+     * @param Request    $request
      * @param Internship $intership
      *
      * @return Response
@@ -308,6 +311,34 @@ class InternshipController extends Controller
         }
 
         DB::rollBack();
+        return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+
+    public function getInternshipStudent(
+        InternshipGetInternshipStudentRequest $request,
+        int $internshipId,
+        string $studentIndex
+    ) {
+        $student = $this->internshipRepository->getInternshipStudentByIndex($internshipId, $studentIndex);
+
+        if (!is_null($student)) {
+            return response($student, Response::HTTP_OK);
+        }
+
+        return response(null, Response::HTTP_NO_CONTENT);
+    }
+
+    public function setInternshipStudentGrade(
+        InternshipSetInternshipStudentGradeRequest $request,
+        int $internshipId,
+        string $studentIndex
+    ) {
+        $student = $this->studentService->addGrade($internshipId, $studentIndex, $request->input('grade'));
+
+        if (!is_null($student)) {
+            return response($student, Response::HTTP_OK);
+        }
+
         return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 }

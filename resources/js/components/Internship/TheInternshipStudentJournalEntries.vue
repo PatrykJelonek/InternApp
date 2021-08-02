@@ -1,6 +1,5 @@
 <template>
     <custom-card :loading="loadingStudentJournalEntries">
-
         <the-internship-pdf-generate-dialog
             title="Pobierz dziennik praktyk"
             :subheader="`Dokument w formacie PDF zawierający dziennik praktyk studenta`"

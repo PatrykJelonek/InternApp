@@ -160,6 +160,10 @@ export default {
             return axios.put(`/api/internships/${internship}/summarize-internship`, {
                 opinions: opinions
             });
+        },
+
+        setGrade({commit}, {internship, student, grade}) {
+            return
         }
     },
 }

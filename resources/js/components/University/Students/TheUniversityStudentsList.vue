@@ -14,6 +14,7 @@
                     class="elevation-1 component-background"
                     no-data-text="Niestety, ta uczelnia nie posiada jeszcze zarejestrowanych studentów."
                     loading-text="Pobieranie listy studentów..."
+                    no-results-text="Niestety, ale nie znaleźliśmy wyników które pasowałby do podanych danych"
                     :search="search"
                 >
                     <template v-slot:item.fullname="{ item }">
@@ -67,11 +68,11 @@ export default {
         return {
             show: true,
             headers: [
-                {text: 'Imię i nazwisko', value: 'fullname'},
+                {text: 'Imię i nazwisko', value: 'full_name'},
                 {text: 'Indeks', value: 'student.student_index'},
                 {text: 'Semestr', value: 'student.semester'},
                 {text: 'Rok', value: 'student.study_year'},
-                {text: 'Specjalizacja', value: 'specialization'},
+                {text: 'Specjalizacja', value: 'student.specialization.name'},
                 {text: 'Email', value: 'email'},
                 {text: 'Akcje', value: 'actions', sortable: false, align: 'center'},
             ],

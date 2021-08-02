@@ -1,8 +1,21 @@
 <template>
     <custom-card :loading="internshipStudentsLoading">
+        <internship-rate-student-dialog></internship-rate-student-dialog>
         <custom-card-title>
             <template v-slot:default>Lista studentów</template>
-            <template v-slot:subheader>Wybierz jednego ze studentów z poniższej listy by zobaczyć jego wpisy i zadania w dzienniku praktyk.</template>
+            <template v-slot:subheader>Wybierz jednego ze studentów z poniższej listy by zobaczyć jego wpisy i zadania w
+                dzienniku praktyk.
+            </template>
+            <template v-slot:actions>
+                <v-btn
+                    outlined
+                    color="primary"
+                    v-if="student != null && $route.params.studentIndex"
+                    @click="toggleDialog({key: 'DIALOG_FIELD_RATE_STUDENT', val: true})"
+                >
+                    Wystaw ocenę
+                </v-btn>
+            </template>
         </custom-card-title>
         <v-row v-if="!internshipStudentsLoading && internshipStudents.length > 0" no-gutters>
             <v-col cols="12" class="px-1 pt-3 pb-3">
@@ -12,6 +25,7 @@
                         :key="student.id"
                         :fullname="student.user.first_name + ' ' + student.user.last_name"
                         :index="student.student_index"
+                        :student="student"
                     ></internship-student>
                 </v-slide-group>
             </v-col>
@@ -25,15 +39,16 @@
 </template>
 
 <script>
-import {mapGetters} from "vuex";
+import {mapActions, mapGetters} from "vuex";
 import InternshipStudentListItem from "./InternshipStudentListItem";
 import InternshipStudent from "./InternshipStudent";
 import CustomCard from "../_General/CustomCard";
 import CustomCardTitle from "../_General/CustomCardTitle";
+import InternshipRateStudentDialog from "./InternshipRateStudentDialog";
 
 export default {
     name: "TheInternshipStudents",
-    components: {CustomCardTitle, CustomCard, InternshipStudent, InternshipStudentListItem},
+    components: {InternshipRateStudentDialog, CustomCardTitle, CustomCard, InternshipStudent, InternshipStudentListItem},
     data() {
         return {
             show: true,
@@ -43,10 +58,17 @@ export default {
 
     computed: {
         ...mapGetters({
+            student: 'student/student',
             internship: 'internship/internship',
             internshipStudents: 'internship/internshipStudents',
             internshipStudentsLoading: 'internship/internshipStudentsLoading',
         })
+    },
+
+    methods: {
+        ...mapActions({
+            toggleDialog: 'helpers/toggleDialog'
+        }),
     },
 
     created() {

@@ -83,6 +83,8 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::put('/internships/{internship}/summarize-internship','Api\InternshipController@summarizeInternship');
     Route::put('/internships/{id}/change-status','Api\InternshipController@changeInternshipStatus');
     Route::get('/internships/{internship}/students','Api\InternshipStudentController@index');
+    Route::get('/internships/{internship}/students/{student}','Api\InternshipController@getInternshipStudent');
+    Route::put('/internships/{internship}/students/{student}/set-grade','Api\InternshipController@setInternshipStudentGrade');
     Route::get('/internships/{internship}/students/{student}/journal-entries', 'Api\StudentJournalEntryController@index');
     Route::post('/internships/{internship}/students/{student}/journal-entries', 'Api\StudentJournalEntryController@store');
     Route::get('/internships/{internship}/students/{student}/journal-entries/{journalEntry}','Api\JournalController@show');

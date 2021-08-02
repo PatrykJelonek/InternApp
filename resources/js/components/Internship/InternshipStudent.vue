@@ -29,7 +29,7 @@ import {mapActions, mapGetters} from "vuex";
 
 export default {
     name: "InternshipStudent",
-    props: ['fullname', 'index'],
+    props: ['fullname', 'index', 'student'],
 
     computed: {
         ...mapGetters({
@@ -42,10 +42,13 @@ export default {
             fetchStudentJournalEntries: 'student/fetchStudentJournalEntries',
             fetchStudentTasks: 'student/fetchStudentTasks',
             setBreadcrumbs: 'helpers/setBreadcrumbs',
+            setDialogArgs: 'helpers/setDialogArgs'
         }),
 
         cardOnClick() {
             if (this.$route.params.studentIndex !== this.index) {
+                this.setDialogArgs({key: 'DIALOG_FIELD_RATE_STUDENT', val: {student: this.student}});
+                this.$store.commit('student/SET_STUDENT', this.student);
                 router.push({name: 'internship-student', params: {studentIndex: this.index}});
                 this.fetchStudentJournalEntries({internshipId: this.$route.params.internshipId, studentIndex: this.index});
                 this.fetchStudentTasks({internshipId: this.$route.params.internshipId, studentIndex: this.index});
