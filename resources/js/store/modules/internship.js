@@ -5,6 +5,8 @@ export default {
         internships: [],
         internship: null,
         internshipStudents: [],
+        internshipStudent: [],
+        internshipStudentLoading: false,
         preview: null,
         internshipLoading: true,
         internshipStudentsLoading: true,
@@ -44,6 +46,14 @@ export default {
         internshipStatusesLoading(state) {
             return state.internshipStatusesLoading;
         },
+
+        internshipStudent(state) {
+            return state.internshipStudent;
+        },
+
+        internshipStudentLoading(state) {
+            return state.internshipStudentLoading;
+        },
     },
 
     mutations: {
@@ -77,6 +87,14 @@ export default {
 
         SET_INTERNSHIP_STATUSES_LOADING(state, data) {
             state.internshipStatusesLoading = data;
+        },
+
+        SET_INTERNSHIP_STUDENT(state, data) {
+            state.internshipStudent = data;
+        },
+
+        SET_INTERNSHIP_STUDENT_LOADING(state, data) {
+            state.internshipStudentLoading = data;
         },
     },
 
@@ -163,7 +181,21 @@ export default {
         },
 
         setGrade({commit}, {internship, student, grade}) {
-            return
+            return axios.put(`/api/internships/${internship}/students/${student}/set-grade`, {
+                grade: grade,
+            })
+        },
+
+        async fetchInternshipStudent({commit}, {internship, student}) {
+            commit('SET_INTERNSHIP_STUDENT_LOADING', true);
+            try {
+                let response = await axios.get(`/api/internships/${internship}/students/${student}`);
+                commit('SET_INTERNSHIP_STUDENT', response.data);
+                commit('SET_INTERNSHIP_STUDENT_LOADING', false);
+            } catch (e) {
+                commit('SET_INTERNSHIP_STUDENT', []);
+                commit('SET_INTERNSHIP_STUDENT_LOADING', false);
+            }
         }
     },
 }

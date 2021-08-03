@@ -20,7 +20,8 @@
                 >
                     <v-icon>mdi-download</v-icon>
                 </v-btn>
-                <the-internship-create-student-journal-entry-dialog  v-if="$route.params.studentIndex"></the-internship-create-student-journal-entry-dialog>
+                <the-internship-create-student-journal-entry-dialog
+                    v-if="$route.params.studentIndex"></the-internship-create-student-journal-entry-dialog>
                 <v-btn
                     icon
                     @click="show = !show"
@@ -110,12 +111,18 @@ export default {
         ...mapActions({
             toggleDialog: 'helpers/toggleDialog',
             downloadInternshipJournal: 'internship/downloadInternshipJournal',
-            fetchStudentJournalEntries: 'student/fetchStudentJournalEntries'
+            fetchStudentJournalEntries: 'student/fetchStudentJournalEntries',
+            fetchInternshipStudent: 'internship/fetchInternshipStudent',
         }),
     },
 
     created() {
         if (this.$route.params.studentIndex !== null) {
+            this.fetchInternshipStudent({
+                internship: this.$route.params.internshipId,
+                student: this.$route.params.studentIndex
+            });
+
             this.fetchStudentJournalEntries({
                 internshipId: this.$route.params.internshipId,
                 studentIndex: this.$route.params.studentIndex

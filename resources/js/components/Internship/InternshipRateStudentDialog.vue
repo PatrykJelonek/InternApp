@@ -7,7 +7,7 @@
         max-width="600"
         v-if="dialogsArgs['DIALOG_FIELD_RATE_STUDENT'].student !== null"
     >
-        <custom-card>
+        <custom-card :loading="internshipStudentLoading">
             <custom-card-title>
                 <template v-slot:default>Wystaw ocenę</template>
                 <template v-slot:subheader>Oceń praktykę/staż studenta</template>
@@ -28,7 +28,7 @@
                                 <v-text-field
                                     label="Student"
                                     outlined
-                                    :value="`${student.user.full_name} - ${student.student_index}`"
+                                    :value="`${internshipStudent.user.full_name} - ${internshipStudent.student_index}`"
                                     dense
                                     readonly
                                     disabled
@@ -107,19 +107,32 @@ export default {
         ...mapGetters({
             dialogs: 'helpers/dialogs',
             dialogsArgs: 'helpers/dialogsArgs',
-            student: 'student/student'
+            student: 'student/student',
+            internshipStudent: 'internship/internshipStudent',
+            internshipStudentLoading: 'internship/internshipStudentLoading',
         })
     },
 
     methods: {
         ...mapActions({
-            toggleDialog: 'helpers/toggleDialog'
+            setSnackbar: 'snackbar/setSnackbar',
+            toggleDialog: 'helpers/toggleDialog',
+            setGrade: 'internship/setGrade'
         }),
 
         async submit() {
             await this.$refs.observer.validate().then((isValid) => {
                 if (isValid) {
+                    this.setGrade({
+                        internship: this.$route.params.internshipId,
+                        student: this.$route.params.studentIndex,
+                        grade: this.selectedGrade
+                    }).then((response) => {
+                        this.setSnackbar({message: 'Ocena została dodana!', color: 'success'});
+                        this.toggleDialog({key: 'DIALOG_FIELD_RATE_STUDENT', val: false});
+                    }).catch((e) => {
 
+                    });
                 }
             });
         },
