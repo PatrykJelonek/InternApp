@@ -10,10 +10,10 @@
                 <v-btn
                     outlined
                     color="primary"
-                    v-if="student != null && $route.params.studentIndex"
+                    v-if="!internshipStudentLoading && internship.status.name === 'ended_by_company' && internshipStudent != null && $route.params.studentIndex"
                     @click="toggleDialog({key: 'DIALOG_FIELD_RATE_STUDENT', val: true})"
                 >
-                    Wystaw ocenę
+                    {{ internshipStudent.grade ? 'Zmień ocenę' : 'Wystaw ocenę' }}
                 </v-btn>
             </template>
         </custom-card-title>
@@ -26,6 +26,7 @@
                         :fullname="student.user.first_name + ' ' + student.user.last_name"
                         :index="student.student_index"
                         :student="student"
+                        :grade="student.grade"
                     ></internship-student>
                 </v-slide-group>
             </v-col>
@@ -61,6 +62,8 @@ export default {
             student: 'student/student',
             internship: 'internship/internship',
             internshipStudents: 'internship/internshipStudents',
+            internshipStudent: 'internship/internshipStudent',
+            internshipStudentLoading: 'internship/internshipStudentLoading',
             internshipStudentsLoading: 'internship/internshipStudentsLoading',
         })
     },

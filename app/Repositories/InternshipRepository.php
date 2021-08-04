@@ -21,7 +21,7 @@ class InternshipRepository implements InternshipRepositoryInterface
      */
     public function getInternship($id)
     {
-        $with = ['agreement.university.city', 'agreement.company.city', 'universitySupervisor', 'companySupervisor'];
+        $with = ['agreement.university.city', 'agreement.company.city', 'universitySupervisor', 'companySupervisor', 'status'];
 
         if (Auth::user()->hasRole(RoleConstants::ROLE_ADMIN)) {
             $internship = Internship::with($with)->where(['id' => $id])->first();

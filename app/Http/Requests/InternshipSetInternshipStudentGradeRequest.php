@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class InternshipSetInternshipStudentGradeRequest extends FormRequest
 {
@@ -13,7 +14,14 @@ class InternshipSetInternshipStudentGradeRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
+    }
+
+    public function all($keys = null)
+    {
+        $all= array_merge(parent::all(), $this->route()->parameters());
+        clock()->info('aa', $all);
+        return $all;
     }
 
     /**
@@ -24,7 +32,12 @@ class InternshipSetInternshipStudentGradeRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'internship' => 'required|exists:App\Models\Internship,id',
+            'student' => 'required|exists:App\Models\Student,student_index',
+            'grade' => [
+                'required',
+                Rule::in([2,2.5,3,3.5,4,4.5,5])
+            ]
         ];
     }
 }

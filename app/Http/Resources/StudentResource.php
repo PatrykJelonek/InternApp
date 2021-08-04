@@ -21,6 +21,7 @@ class StudentResource extends JsonResource
             'study_year' => $this->study_year,
             'specialization' => new Specialization($this->specialization),
             'user' => new User($this->user),
+            'grade' => $this->pivot->grade,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

@@ -144,7 +144,7 @@ class StudentService
     public function addGrade(int $internshipStudentId, float $grade)
     {
         $student = InternshipStudent::find($internshipStudentId);
-        $student->grade($grade);
+        $student->grade = $grade;
 
         if ($student->save()) {
             return $student;

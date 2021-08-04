@@ -25,7 +25,7 @@ class Internship extends JsonResource
             'grade' => $this->grade,
             'interview_date' => $this->interview_date,
             'internship_status_id' => $this->internship_status_id,
-            'journal_entries' => JournalEntryCollection::collection($this->journalEntries),
+            'status' => $this->status,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at
         ];

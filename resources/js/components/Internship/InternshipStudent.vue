@@ -17,6 +17,9 @@
                         <v-list-item-title>{{ fullname }}</v-list-item-title>
                         <v-list-item-subtitle>{{ index }}</v-list-item-subtitle>
                     </v-list-item-content>
+                    <v-list-item-action v-if="grade">
+                        <v-btn icon>{{ grade }}</v-btn>
+                    </v-list-item-action>
                 </v-list-item>
             </v-list>
         </v-card>
@@ -29,7 +32,7 @@ import {mapActions, mapGetters} from "vuex";
 
 export default {
     name: "InternshipStudent",
-    props: ['fullname', 'index'],
+    props: ['fullname', 'index', 'grade'],
 
     computed: {
         ...mapGetters({

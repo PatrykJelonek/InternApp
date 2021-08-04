@@ -5,7 +5,7 @@
         @click:outside="close"
         persistent
         max-width="600"
-        v-if="dialogsArgs['DIALOG_FIELD_RATE_STUDENT'].student !== null"
+        v-if="internshipStudent"
     >
         <custom-card :loading="internshipStudentLoading">
             <custom-card-title>
@@ -28,7 +28,7 @@
                                 <v-text-field
                                     label="Student"
                                     outlined
-                                    :value="`${internshipStudent.user.full_name} - ${internshipStudent.student_index}`"
+                                    :value="`${internshipStudent.student.user.full_name} - ${internshipStudent.student.student_index}`"
                                     dense
                                     readonly
                                     disabled

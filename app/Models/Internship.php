@@ -23,7 +23,7 @@ class Internship extends Model
 
     public function students()
     {
-        return $this->belongsToMany('App\Models\Student','internships_students','internship_id','student_id');
+        return $this->belongsToMany(Student::class,'internships_students','internship_id','student_id')->withPivot(['grade']);
     }
 
     public function status()

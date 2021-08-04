@@ -333,7 +333,8 @@ class InternshipController extends Controller
         int $internshipId,
         string $studentIndex
     ) {
-        $student = $this->studentService->addGrade($internshipId, $studentIndex, $request->input('grade'));
+        $internshipStudentId = $this->internshipRepository->getInternshipStudentByIndex($internshipId, $studentIndex)->id;
+        $student = $this->studentService->addGrade($internshipStudentId, $request->input('grade'));
 
         if (!is_null($student)) {
             return response($student, Response::HTTP_OK);
