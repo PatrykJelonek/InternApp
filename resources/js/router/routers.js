@@ -195,7 +195,6 @@ const router = new VueRouter({
                     components: {
                         default: Universities,
                     },
-                    meta: {title: 'Uczelnia'},
                 },
                 {
                     path: '/create-university',

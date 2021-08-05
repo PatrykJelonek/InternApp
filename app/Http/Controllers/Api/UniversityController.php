@@ -4,6 +4,9 @@ namespace App\Http\Controllers\Api;
 
 use App\Constants\RoleConstants;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UniversityAddStudentToUniversityRequest;
+use App\Http\Requests\UniversityAddUserToUniversityRequest;
+use App\Http\Requests\UniversityAddWorkerToUniversityRequest;
 use App\Http\Requests\UniversityAgreementsRequest;
 use App\Http\Requests\UniversityChangeUniversityWorkerRolesRequest;
 use App\Http\Requests\UniversityCreateUniversityFacultyFieldRequest as CreateFieldRequest;
@@ -30,6 +33,7 @@ use App\Repositories\UniversityRepository;
 use App\Services\FacultyService;
 use App\Services\QuestionnairesService;
 use App\Services\UniversityService;
+use Clockwork\Request\Log;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Arr;
@@ -795,6 +799,85 @@ class UniversityController extends Controller
         } catch (\Exception $e) {
             return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
+    }
+
+    public function getUniversities()
+    {
+        $universities = $this->universityRepository->getUniversities();
+
+        return response($universities, Response::HTTP_OK);
+    }
+
+    public function addWorkerToUniversity(
+        UniversityAddWorkerToUniversityRequest $request,
+        string $slug,
+        int $userId = null
+    ) {
+        $university = $this->universityRepository->getUniversityBySlug($slug);
+
+        if (!is_null($university)) {
+            $university->users()->attach($userId ?? Auth::id());
+            $userUniversity = $this->universityService->addRoleToUniversityUser(
+                $userId ?? Auth::id(),
+                $university->id,
+                $this->roleRepository->getRoleByName(
+                    RoleConstants::ROLE_UNIVERSITY_WORKER
+                )->id
+            );
+
+            if (!is_null($userUniversity)) {
+                \Illuminate\Support\Facades\Log::channel('user')->info(
+                    'Dodano użytkownika do uczelni',
+                    [
+                        'userId' => Auth::id(),
+                        'data' => [
+                            'universitySlug' => $slug,
+                            'userId' => $userId,
+                        ],
+                    ]
+                );
+
+                return response($userUniversity, Response::HTTP_OK);
+            }
+        }
+
+        \Illuminate\Support\Facades\Log::channel('user')->error(
+            'Nie udało się dodać użytkownika do uczelni',
+            [
+                'userId' => Auth::id(),
+                'data' => [
+                    'universitySlug' => $slug,
+                    'userId' => $userId,
+                ],
+            ]
+        );
+
+        return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+
+    public function addStudentToUniversity(
+        UniversityAddStudentToUniversityRequest $request,
+        string $slug,
+        int $userId = null
+    ) {
+        $university = $this->universityRepository->getUniversityBySlug($slug);
+
+        if (!is_null($university)) {
+            $university->users()->attach($userId ?? Auth::id());
+            $userUniversity = $this->universityService->addRoleToUniversityUser(
+                $userId ?? Auth::id(),
+                $university->id,
+                $this->roleRepository->getRoleByName(
+                    RoleConstants::ROLE_STUDENT
+                )->id
+            );
+
+            if (!is_null($userUniversity)) {
+                return response($userUniversity, Response::HTTP_OK);
+            }
+        }
+
+        return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
     /**

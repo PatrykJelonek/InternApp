@@ -15,6 +15,7 @@ export default {
             DIALOG_FIELD_GENERATE_STUDENT_JOURNAL: false,
             DIALOG_FIELD_INTERNSHIP_SUMMARY: false,
             DIALOG_FIELD_RATE_STUDENT: false,
+            DIALOG_FIELD_SELECT_TYPE_OF_UNIVERSITY_USER: false,
         },
         dialogsArgs: {
             DIALOG_FIELD_ACTIVATE_AGREEMENT: null,
@@ -26,6 +27,7 @@ export default {
             DIALOG_FIELD_GENERATE_STUDENT_JOURNAL: null,
             DIALOG_FIELD_INTERNSHIP_SUMMARY: null,
             DIALOG_FIELD_RATE_STUDENT: null,
+            DIALOG_FIELD_SELECT_TYPE_OF_UNIVERSITY_USER: null,
         },
         createInternshipDialog: false,
         createOfferDialog: false,

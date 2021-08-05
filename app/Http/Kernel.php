@@ -6,6 +6,7 @@ use App\Http\Middleware\Authenticate;
 use App\Http\Middleware\CheckForMaintenanceMode;
 use App\Http\Middleware\EncryptCookies;
 use App\Http\Middleware\JwtMiddleware;
+use App\Http\Middleware\LoggingTrace;
 use App\Http\Middleware\RedirectIfAuthenticated;
 use App\Http\Middleware\TrimStrings;
 use App\Http\Middleware\TrustProxies;
@@ -67,6 +68,7 @@ class Kernel extends HttpKernel
         'api' => [
             'throttle:60,1',
             SubstituteBindings::class,
+            LoggingTrace::class,
         ],
     ];
 
@@ -92,5 +94,6 @@ class Kernel extends HttpKernel
         'permission' => LaratrustPermission::class,
         'ability' => LaratrustAbility::class,
         'jwt.verify' => JwtMiddleware::class,
+        'logging.trace' => LoggingTrace::class,
     ];
 }

@@ -17,18 +17,34 @@ class UniversitiesSeeder extends Seeder
     {
         DB::table('universities')->insert(
             [
-                'name' => 'Państwowa Wyższa Szkoła Państwowa',
-                'university_type_id' => 2,
-                'city_id' => 5,
-                'street' => 'Wojska Polskiego',
-                'street_number' => '1',
-                'email' => 'kontakt@pwsz.elblag.pl',
-                'phone' => '545545545',
-                'website' => 'pwsz.elblag.pl',
-                'slug' => Str::slug('Państwowa Wyższa Szkoła Państwowa'),
-                'user_id' => 1,
-                'created_at' => date('Y-m-d H:i:s'),
-                'updated_at' => date('Y-m-d H:i:s'),
+                [
+                    'name' => 'Państwowa Wyższa Szkoła Państwowa',
+                    'university_type_id' => 2,
+                    'city_id' => 5,
+                    'street' => 'Wojska Polskiego',
+                    'street_number' => '1',
+                    'email' => 'kontakt@pwsz.elblag.pl',
+                    'phone' => '545545545',
+                    'website' => 'pwsz.elblag.pl',
+                    'slug' => Str::slug('Państwowa Wyższa Szkoła Państwowa'),
+                    'user_id' => 1,
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s'),
+                ],
+                [
+                    'name' => 'Politechnika Gdańska',
+                    'university_type_id' => 1,
+                    'city_id' => 2,
+                    'street' => 'Armii Krajowej',
+                    'street_number' => '12',
+                    'email' => 'kontakt@pg.pl',
+                    'phone' => '545545545',
+                    'website' => 'pg.pl',
+                    'slug' => Str::slug('Politechnika Gdańska'),
+                    'user_id' => 1,
+                    'created_at' => date('Y-m-d H:i:s'),
+                    'updated_at' => date('Y-m-d H:i:s'),
+                ],
             ]
         );
 //

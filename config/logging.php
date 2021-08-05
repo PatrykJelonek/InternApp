@@ -111,6 +111,12 @@ return [
             'path' => storage_path('logs/user.log'),
             'level' => 'debug'
         ],
+
+        'traces' => [
+            'driver' => 'daily',
+            'path' => storage_path('logs/traces/traces.log'),
+            'level' => 'debug'
+        ],
     ],
 
 ];

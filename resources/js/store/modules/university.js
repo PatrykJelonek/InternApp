@@ -7,6 +7,7 @@ export default {
         selectedUniversityId: '',
         selectedUniversity: null,
         universities: [],
+        universitiesLoading: false,
         universityTypes: [],
         universityUsers: [],
         universityAgreements: [],
@@ -31,6 +32,10 @@ export default {
     getters: {
         universities: state => {
             return state.universities;
+        },
+
+        universitiesLoading: state => {
+            return state.universitiesLoading;
         },
 
         university: state => {
@@ -121,6 +126,10 @@ export default {
     mutations: {
         SET_UNIVERSITIES(state, data) {
             state.universities = data;
+        },
+
+        SET_UNIVERSITIES_LOADING(state, data) {
+            state.universitiesLoading = data;
         },
 
         SET_UNIVERSITY_TYPES(state, data) {
@@ -271,11 +280,14 @@ export default {
 
     actions: {
         async fetchUniversities({commit}) {
+            commit('SET_UNIVERSITIES_LOADING', true);
             try {
                 let response = await axios.get('/api/universities');
-                commit('SET_UNIVERSITIES', response.data.data);
+                commit('SET_UNIVERSITIES', response.data);
+                commit('SET_UNIVERSITIES_LOADING', false);
             } catch (e) {
                 commit('SET_UNIVERSITIES', []);
+                commit('SET_UNIVERSITIES_LOADING', false);
             }
         },
 
@@ -486,6 +498,14 @@ export default {
             return axios.put(`/api/universities/${slug}/workers/${userId}/verify`, {
                 userUniversityId: userUniversityId,
             });
-        }
+        },
+
+        addWorkerToUniversity({commit}, {slug, userId}) {
+            return axios.post(`/api/universities/${slug}/workers/${userId}`);
+        },
+
+        addStudentToUniversity({commit}, {slug, userId, student}) {
+            return axios.post(`/api/universities/${slug}/students/${userId}`, student);
+        },
     },
 };

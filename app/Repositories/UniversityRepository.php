@@ -217,4 +217,9 @@ class UniversityRepository implements UniversityRepositoryInterface
             }
         )->get();
     }
+
+    public function getUniversities()
+    {
+        return University::with(['city', 'type', 'faculties.fields.specializations'])->get();
+    }
 }

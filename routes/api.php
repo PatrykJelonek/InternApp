@@ -139,12 +139,15 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::get('/internships/{internship}/students/{student}/tasks/{task}', 'Api\TaskController@show');
 
     # Universities
+    Route::get('/universities', 'Api\UniversityController@getUniversities');
     Route::post('/universities', 'Api\UniversityController@createUniversity');
     Route::get('/universities/{slug}', 'Api\UniversityController@show');
     Route::get('/universities/{slug}/workers','Api\UniversityController@getWorkers');
+    Route::post('/universities/{slug}/workers/{userId}','Api\UniversityController@addWorkerToUniversity');
     Route::put('/universities/{slug}/workers/{userId}/change-roles','Api\UniversityController@changeUniversityWorkerRoles');
     Route::put('/universities/{slug}/workers/{userId}/verify','Api\UniversityController@verifyUniversityWorker');
     Route::get('/universities/{slug}/students','Api\UniversityController@getStudents');
+    Route::post('/universities/{slug}/students/{userId}','Api\UniversityController@addStudentToUniversity');
     Route::get('/universities/{slug}/agreements','Api\UniversityController@getAgreements');
     Route::get('/universities/{slug}/internships','Api\UniversityController@getInternships2');
     Route::get('/universities/{slug}/faculties','Api\UniversityController@getFaculties');
@@ -229,7 +232,6 @@ Route::post('/forgot-password', 'Api\Auth\AuthController@forgotPassword');
 Route::post('/reset-password', 'Api\UserController@resetPassword');
 
 //For not logged in users
-Route::get('/universities', 'Api\UniversityController@index');
 Route::get('/specializations', 'Api\SpecializationController@index');
 Route::get('/university/{id}/faculties', 'Api\UniversityController@universityFaculties');
 Route::get('/faculty/{id}/fields', 'Api\FacultyController@facultyFields');

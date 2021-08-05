@@ -33,6 +33,7 @@ export default {
     computed: {
         ...mapGetters({
             user: 'auth/user',
+            userUniversities: 'user/userUniversities',
             selectedUniversity: 'helpers/selectedUniversity',
         }),
     },
