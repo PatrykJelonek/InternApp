@@ -18,7 +18,16 @@
                         <v-list-item-subtitle>{{ index }}</v-list-item-subtitle>
                     </v-list-item-content>
                     <v-list-item-action v-if="grade">
-                        <v-btn icon>{{ grade }}</v-btn>
+                        <v-tooltip bottom color="component-background">
+                            <template v-slot:activator="{ on, attrs }">
+                                <v-btn
+                                    icon
+                                    v-on="on"
+                                    v-bind="attrs"
+                                >{{ grade }}</v-btn>
+                            </template>
+                            <span>Ocena z praktyki</span>
+                        </v-tooltip>
                     </v-list-item-action>
                 </v-list-item>
             </v-list>

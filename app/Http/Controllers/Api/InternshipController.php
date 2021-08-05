@@ -6,6 +6,7 @@ use App\Constants\InternshipStatusConstants;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\InternshipChangeInternshipStatusRequest;
 use App\Http\Requests\InternshipDownloadInternshipJournalRequest;
+use App\Http\Requests\InternshipGetInternshipRequest;
 use App\Http\Requests\InternshipGetInternshipStudentRequest;
 use App\Http\Requests\InternshipSetInternshipStudentGradeRequest;
 use App\Http\Requests\InternshipStatusesRequest;
@@ -138,13 +139,14 @@ class InternshipController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  $id
+     * @param InternshipGetInternshipRequest $request
+     * @param int                            $internshipId
      *
      * @return Response
      */
-    public function show($id)
+    public function show(InternshipGetInternshipRequest $request, int $internshipId)
     {
-        $internship = $this->internshipRepository->getInternship($id);
+        $internship = $this->internshipRepository->getInternship($internshipId);
 
         if (!empty($internship)) {
             return response(new InternshipResource($internship), Response::HTTP_OK);

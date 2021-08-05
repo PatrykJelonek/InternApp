@@ -9,7 +9,20 @@
 
             <!--        <the-internship-students-drawer v-if="!$vuetify.breakpoint.mobile"></the-internship-students-drawer>-->
             <page-title>
-                <template v-slot:default>{{ internship.offer.name }}</template>
+                <template v-slot:default>
+                    {{ internship.offer.name }}
+                    <v-tooltip bottom color="component-background">
+                        <template v-slot:activator="{ on, attrs }">
+                            <v-chip
+                                small
+                                outlined
+                                v-on="on"
+                                v-bind="attrs"
+                            >{{ internship.status.displayed_name }}</v-chip>
+                        </template>
+                        <span>Status praktyki</span>
+                    </v-tooltip>
+                </template>
                 <template v-slot:actions>
                     <v-btn
                         color="primary"

@@ -4,7 +4,9 @@
             <template v-slot:default>Zadania</template>
             <template v-slot:subheader>Lista zadań przypisanych do wybranego studenta.</template>
             <template v-slot:actions>
-                <the-internship-create-student-task-dialog v-if="$route.params.studentIndex"></the-internship-create-student-task-dialog>
+                <the-internship-create-student-task-dialog
+                    v-if="$route.params.studentIndex && !internship.status.name.includes('ended_by_company', 'ended_by_university' , 'ended')"
+                ></the-internship-create-student-task-dialog>
                 <v-btn
                     icon
                     @click="show = !show"
@@ -71,6 +73,7 @@ export default {
 
     computed: {
         ...mapGetters({
+            internship: 'internship/internship',
             studentTasks: 'student/studentTasks',
             loadingStudentTasks: 'student/loadingStudentTasks',
         }),

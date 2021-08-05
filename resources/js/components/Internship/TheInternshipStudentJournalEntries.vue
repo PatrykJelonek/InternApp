@@ -21,7 +21,8 @@
                     <v-icon>mdi-download</v-icon>
                 </v-btn>
                 <the-internship-create-student-journal-entry-dialog
-                    v-if="$route.params.studentIndex"></the-internship-create-student-journal-entry-dialog>
+                    v-if="$route.params.studentIndex && !internship.status.name.includes('ended_by_company', 'ended_by_university' , 'ended')"
+                ></the-internship-create-student-journal-entry-dialog>
                 <v-btn
                     icon
                     @click="show = !show"
@@ -97,6 +98,7 @@ export default {
 
     computed: {
         ...mapGetters({
+            internship: 'internship/internship',
             dialogs: 'helpers/dialogs',
             studentJournalEntries: 'student/studentJournalEntries',
             loadingStudentJournalEntries: 'student/loadingStudentJournalEntries',
