@@ -21,8 +21,8 @@ class LoggingTrace
         \Illuminate\Support\Facades\Log::channel('traces')->info(
             $request->path(),
             [
+                'method' => strtoupper($request->method()),
                 'client_ip' => $request->ip(),
-                'full_url' => $request->fullUrl(),
                 'data_dump' => $request->all(),
             ]
         );
