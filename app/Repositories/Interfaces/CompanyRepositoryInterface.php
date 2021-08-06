@@ -15,7 +15,7 @@ interface CompanyRepositoryInterface
 
     public function getCompanyBySlug(string $slug);
 
-    public function getAll();
+    public function getCompanies();
 
     public function createCompany(array $data);
 

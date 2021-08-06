@@ -145,18 +145,14 @@ class UniversityRepository implements UniversityRepositoryInterface
             function (Builder $query) use ($slug) {
                 $query->where('slug', $slug);
             }
-        )->whereHas('student')
-            ->whereHas(
-                'roles',
-                function (Builder $query) {
-                    $query->whereIn(
-                        'name',
-                        [
-                            RoleConstants::ROLE_STUDENT,
-                        ]
-                    );
-                }
-            )->get();
+        )->whereHas(
+            'universitiesWithRoles',
+            function (Builder $query) use ($slug) {
+                $query->whereHas('roles', function (Builder $query) {
+                    $query->where(['name' => RoleConstants::ROLE_STUDENT]);
+                });
+            }
+        )->get();
     }
 
     public function getAgreements(string $slug)

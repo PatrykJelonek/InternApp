@@ -16,6 +16,11 @@ class UniversityAddWorkerToUniversityRequest extends FormRequest
         return true;
     }
 
+    public function all($keys = null)
+    {
+        return array_merge(parent::all(), $this->route()->parameters());
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -24,7 +29,9 @@ class UniversityAddWorkerToUniversityRequest extends FormRequest
     public function rules()
     {
         return [
-            //
+            'slug' => 'required|exists:App\Models\University,slug',
+            'userId' => 'required|exists:App\Models\User,id',
+            'accessCode' => 'required|exists:App\Models\University,access_code',
         ];
     }
 }

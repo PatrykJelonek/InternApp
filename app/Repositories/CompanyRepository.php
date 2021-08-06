@@ -34,9 +34,9 @@ class CompanyRepository implements CompanyRepositoryInterface
         return Company::with(['city', 'category'])->where(['slug' => $slug])->first();
     }
 
-    public function getAll()
+    public function getCompanies()
     {
-        return Company::all();
+        return Company::with(['city', 'category'])->get();
     }
 
     public function createCompany(array $data)

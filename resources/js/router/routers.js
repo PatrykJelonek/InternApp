@@ -197,7 +197,7 @@ const router = new VueRouter({
                     },
                 },
                 {
-                    path: '/create-university',
+                    path: '/panel/universities/create',
                     name: 'create-university',
                     component: UniversityCreate,
                 },
@@ -205,7 +205,6 @@ const router = new VueRouter({
                     path: '/panel/companies',
                     name: 'companies',
                     component: Companies,
-                    meta: {have: ['admin', 'company_worker', 'company_owner'], title: 'Firma'}
                 },
                 {
                     path: '/panel/companies/:slug',
@@ -295,7 +294,7 @@ const router = new VueRouter({
                     ]
                 },
                 {
-                    path: '/create-company',
+                    path: '/panel/companies/create',
                     name: 'create-company',
                     component: CompanyCreate,
                 },

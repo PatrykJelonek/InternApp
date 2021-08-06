@@ -100,7 +100,7 @@ class UniversityService
         return null;
     }
 
-    public function addRoleToUniversityUser(int $userId, int $universityId, int $roleId)
+    public function addUserToUniversityWithRole(int $userId, int $universityId, int $roleId)
     {
         $userUniversity = new UserUniversity();
         $userUniversity->user_id = !empty($userId) ? $userId : Auth::id();

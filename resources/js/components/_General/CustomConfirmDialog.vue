@@ -10,9 +10,14 @@
                 <template v-slot:default>{{ title }}</template>
                 <template v-slot:subheader>{{ subheader }}</template>
             </custom-card-title>
-            <v-row no-gutters>
+            <v-row no-gutters v-if="description">
                 <v-col cols="12" class="pa-5 text-body-2 hyphens-auto">
                     {{ description }}
+                </v-col>
+            </v-row>
+            <v-row no-gutters>
+                <v-col cols="12" class="pa-5">
+                    <slot></slot>
                 </v-col>
             </v-row>
             <v-divider></v-divider>

@@ -119,7 +119,9 @@ export default {
             let userCanJoin = true;
 
             this.userUniversities.forEach((userUniversities) => {
-                userCanJoin = userUniversities.university.id !== id;
+                if(userUniversities.university.id === id) {
+                    userCanJoin = false;
+                }
             });
 
             return userCanJoin;

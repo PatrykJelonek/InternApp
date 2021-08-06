@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Constants\RoleConstants;
 use App\Http\Requests\CompanyAcceptCompanyWorkerRequest;
+use App\Http\Requests\CompanyAddWorkerToCompanyRequest;
 use App\Http\Requests\CompanyCreateCompanyQuestionnaireRequest as CreateQuestionnaireRequest;
 use App\Http\Requests\CompanyCreateCompanyRequest;
 use App\Http\Requests\CompanyDeleteCompanyWorkerRequest;
@@ -26,6 +27,8 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -54,10 +57,10 @@ class CompanyController extends Controller
     /**
      * CompanyController constructor.
      *
-     * @param CompanyRepository     $companyRepository
+     * @param CompanyRepository $companyRepository
      * @param QuestionnairesService $questionnairesService
-     * @param CompanyService        $companyService
-     * @param RoleRepository        $roleRepository
+     * @param CompanyService $companyService
+     * @param RoleRepository $roleRepository
      */
     public function __construct(
         CompanyRepository $companyRepository,
@@ -78,9 +81,7 @@ class CompanyController extends Controller
      */
     public function index()
     {
-        $companies = Company::select(
-            ['id', 'name', 'city_id', 'street', 'street_number', 'email', 'phone', 'website', 'company_category_id']
-        )->get();
+        $companies = $this->companyRepository->getCompanies();
 
         if (isset($companies)) {
             return response($companies, Response::HTTP_OK);
@@ -533,5 +534,56 @@ class CompanyController extends Controller
         }
 
         return \response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+
+    public function addWorkerToCompany(CompanyAddWorkerToCompanyRequest $request, string $slug, string $userId)
+    {
+        $company = $this->companyRepository->getCompanyBySlug($slug);
+
+        if (!is_null($company)) {
+            DB::beginTransaction();
+            $companyUser = $this->companyService->addUserToCompanyWithRole(
+                $userId,
+                $company->id,
+                $this->roleRepository->getRoleByName(
+                    RoleConstants::ROLE_COMPANY_WORKER
+                )->id
+            );
+
+            if (!is_null($companyUser)) {
+                Log::channel('user')->info(
+                    'Dodano użytkownika do firmy',
+                    [
+                        'method_reference' => 'CompanyController::addWorkerToCompany',
+                        'success' => true,
+                        'user_id' => Auth::id(),
+                        'data' => [
+                            'universitySlug' => $slug,
+                            'userId' => $userId,
+                        ],
+                    ]
+                );
+
+
+                DB::commit();
+                return response($companyUser, Response::HTTP_OK);
+            }
+        }
+
+        Log::channel('user')->info(
+            'Nie udało się dodać użytkownika do firmy',
+            [
+                'method_reference' => 'CompanyController::addWorkerToCompany',
+                'success' => false,
+                'user_id' => Auth::id(),
+                'data' => [
+                    'universitySlug' => $slug,
+                    'userId' => $userId,
+                ],
+            ]
+        );
+
+        DB::rollBack();
+        return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 }

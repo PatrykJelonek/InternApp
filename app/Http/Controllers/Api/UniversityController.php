@@ -256,7 +256,7 @@ class UniversityController extends Controller
         );
 
         if (!is_null($createdUniversity)) {
-            $this->universityService->addRoleToUniversityUser(
+            $this->universityService->addUserToUniversityWithRole(
                 !empty($request->input('userId')) ? $request->input('userId') : Auth::id(),
                 $createdUniversity->id,
                 $this->roleRepository->getRoleByName(RoleConstants::ROLE_UNIVERSITY_OWNER)->id
@@ -826,8 +826,7 @@ class UniversityController extends Controller
 
         if (!is_null($university)) {
             DB::beginTransaction();
-            $university->users()->attach($userId ?? Auth::id());
-            $userUniversity = $this->universityService->addRoleToUniversityUser(
+            $userUniversity = $this->universityService->addUserToUniversityWithRole(
                 $userId ?? Auth::id(),
                 $university->id,
                 $this->roleRepository->getRoleByName(
@@ -876,8 +875,7 @@ class UniversityController extends Controller
 
         if (!is_null($university)) {
             DB::beginTransaction();
-            $university->users()->attach($userId ?? Auth::id());
-            $userUniversity = $this->universityService->addRoleToUniversityUser(
+            $userUniversity = $this->universityService->addUserToUniversityWithRole(
                 $userId ?? Auth::id(),
                 $university->id,
                 $this->roleRepository->getRoleByName(
@@ -885,7 +883,7 @@ class UniversityController extends Controller
                 )->id
             );
 
-            $this->studentService->createStudent(
+            $student = $this->studentService->createStudent(
                 $userId ?? Auth::id(),
                 $request->input('index'),
                 $request->input('semester'),
@@ -893,7 +891,7 @@ class UniversityController extends Controller
                 $request->input('specializationId')
             );
 
-            if (!is_null($userUniversity)) {
+            if (!is_null($userUniversity) && !is_null($student)) {
                 DB::commit();
                 return response($userUniversity, Response::HTTP_OK);
             }

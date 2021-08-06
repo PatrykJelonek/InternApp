@@ -500,8 +500,10 @@ export default {
             });
         },
 
-        addWorkerToUniversity({commit}, {slug, userId}) {
-            return axios.post(`/api/universities/${slug}/workers/${userId}`);
+        addWorkerToUniversity({commit}, {slug, userId, accessCode}) {
+            return axios.post(`/api/universities/${slug}/workers/${userId}`, {
+                accessCode: accessCode,
+            });
         },
 
         addStudentToUniversity({commit}, {slug, userId, student}) {

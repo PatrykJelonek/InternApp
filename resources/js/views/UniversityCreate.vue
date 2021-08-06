@@ -28,10 +28,25 @@ import PageDetailsHeader from "../components/Page/PageDetailsHeader";
 import PageTitle from "../components/_Helpers/PageTitle";
 import CustomCard from "../components/_General/CustomCard";
 import CustomCardTitle from "../components/_General/CustomCardTitle";
+import {mapActions} from "vuex";
 
 export default {
     name: "UniversityCreate",
-    components: {CustomCardTitle, CustomCard, PageTitle, PageDetailsHeader, UniversityCreateForm}
+    components: {CustomCardTitle, CustomCard, PageTitle, PageDetailsHeader, UniversityCreateForm},
+
+    methods: {
+        ...mapActions({
+            setBreadcrumbs: 'helpers/setBreadcrumbs'
+        })
+    },
+
+    created() {
+        this.setBreadcrumbs([
+            {text: 'Panel', to: {name: 'panel'}, exact: true},
+            {text: 'Uczelnie', to: {name: 'universities'}, exact: true},
+            {text: 'Nowa Uczelnia', to: {name: 'crate-university'}, exact: true},
+        ]);
+    }
 }
 </script>
 

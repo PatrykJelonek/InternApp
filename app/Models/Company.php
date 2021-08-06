@@ -34,7 +34,9 @@ class Company extends Model
 
     protected $table = "companies";
 
-    protected $hidden = ['city_id', 'company_category_id'];
+    protected $hidden = ['city_id', 'company_category_id', 'access_code'];
+
+    protected $appends = ['full_address'];
 
     public function category()
     {
@@ -64,5 +66,10 @@ class Company extends Model
     public function author()
     {
         return $this->hasOne(User::class, 'user_id','id');
+    }
+
+    public function getFullAddressAttribute()
+    {
+        return "{$this->street} {$this->street_number}, {$this->city->post_code} {$this->city->name}";
     }
 }

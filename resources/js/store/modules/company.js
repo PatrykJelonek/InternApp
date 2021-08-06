@@ -298,6 +298,12 @@ export default {
 
         deleteCompanyWorker({commit}, {slug, userId}) {
             return axios.delete(`/api/companies/${slug}/workers/${userId}`);
+        },
+
+        addWorkerToCompany({commit}, {slug, userId, accessCode}) {
+            return axios.post(`/api/companies/${slug}/workers/${userId}`, {
+                accessCode: accessCode,
+            });
         }
     },
 }

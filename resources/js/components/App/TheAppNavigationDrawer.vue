@@ -402,7 +402,8 @@
                         <span>Ustawienia</span>
                     </v-tooltip>
                 </template>
-                <template v-else>
+                <template>
+                    <v-divider></v-divider>
                     <v-tooltip
                         right
                         nudge-right="10"
@@ -415,7 +416,8 @@
                                 exact
                                 v-on="on"
                                 v-bind="attrs"
-                                :to="{name: 'create-company'}"
+                                :to="{name: 'companies'}"
+                                class="mt-1"
                             >
                                 <v-list-item-icon class="mr-2">
                                     <v-icon dense>mdi-plus</v-icon>

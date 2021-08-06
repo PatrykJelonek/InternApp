@@ -266,7 +266,7 @@ class CompanyService
      *
      * @return UserCompany|null
      */
-    public function addRoleToCompanyUser(int $userId, int $companyId, int $roleId): ?UserCompany
+    public function addUserToCompanyWithRole(int $userId, int $companyId, int $roleId): ?UserCompany
     {
         $userCompany = new UserCompany();
         $userCompany->user_id = !empty($userId) ? $userId : Auth::id();

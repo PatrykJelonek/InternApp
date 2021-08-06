@@ -106,6 +106,7 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::get('/companies/{slug}/offers','Api\CompanyController@getCompanyOffers');
     Route::get('/companies/{slug}/workers','Api\CompanyController@getCompanyWorkers');
     Route::delete('/companies/{slug}/workers/{userId}','Api\CompanyController@deleteCompanyWorker');
+    Route::post('/companies/{slug}/workers/{userId}','Api\CompanyController@addWorkerToCompany');
     Route::put('/companies/{slug}/workers/{userId}/accept','Api\CompanyController@acceptCompanyWorker');
     Route::get('/companies/{slug}/agreements','Api\CompanyController@getAgreements');
     Route::get('/companies/{slug}/questionnaires','Api\CompanyController@getCompanyQuestionnaires');
