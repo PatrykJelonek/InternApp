@@ -32,12 +32,14 @@ use App\Repositories\RoleRepository;
 use App\Repositories\UniversityRepository;
 use App\Services\FacultyService;
 use App\Services\QuestionnairesService;
+use App\Services\StudentService;
 use App\Services\UniversityService;
 use Clockwork\Request\Log;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -74,6 +76,11 @@ class UniversityController extends Controller
     private $roleRepository;
 
     /**
+     * @var StudentService
+     */
+    private $studentService;
+
+    /**
      * UniversityController constructor.
      *
      * @param UniversityRepository  $universityRepository
@@ -89,7 +96,8 @@ class UniversityController extends Controller
         FacultyService $facultyService,
         FacultyRepository $facultyRepository,
         UniversityService $universityService,
-        RoleRepository $roleRepository
+        RoleRepository $roleRepository,
+        StudentService $studentService
     ) {
         $this->universityRepository = $universityRepository;
         $this->questionnairesService = $questionnairesService;
@@ -97,6 +105,7 @@ class UniversityController extends Controller
         $this->facultyRepository = $facultyRepository;
         $this->universityService = $universityService;
         $this->roleRepository = $roleRepository;
+        $this->studentService = $studentService;
     }
 
     /**
@@ -816,6 +825,7 @@ class UniversityController extends Controller
         $university = $this->universityRepository->getUniversityBySlug($slug);
 
         if (!is_null($university)) {
+            DB::beginTransaction();
             $university->users()->attach($userId ?? Auth::id());
             $userUniversity = $this->universityService->addRoleToUniversityUser(
                 $userId ?? Auth::id(),
@@ -837,6 +847,7 @@ class UniversityController extends Controller
                     ]
                 );
 
+                DB::commit();
                 return response($userUniversity, Response::HTTP_OK);
             }
         }
@@ -852,6 +863,7 @@ class UniversityController extends Controller
             ]
         );
 
+        DB::rollBack();
         return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
@@ -863,6 +875,7 @@ class UniversityController extends Controller
         $university = $this->universityRepository->getUniversityBySlug($slug);
 
         if (!is_null($university)) {
+            DB::beginTransaction();
             $university->users()->attach($userId ?? Auth::id());
             $userUniversity = $this->universityService->addRoleToUniversityUser(
                 $userId ?? Auth::id(),
@@ -872,11 +885,21 @@ class UniversityController extends Controller
                 )->id
             );
 
+            $this->studentService->createStudent(
+                $userId ?? Auth::id(),
+                $request->input('index'),
+                $request->input('semester'),
+                 floor($request->input('semester') / 2),
+                $request->input('specializationId')
+            );
+
             if (!is_null($userUniversity)) {
+                DB::commit();
                 return response($userUniversity, Response::HTTP_OK);
             }
         }
 
+        DB::rollBack();
         return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 

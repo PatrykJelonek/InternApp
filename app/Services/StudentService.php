@@ -11,6 +11,7 @@ namespace App\Services;
 use App\Constants\OfferStatusConstants;
 use App\Models\InternshipStudent;
 use App\Models\Offer;
+use App\Models\Student;
 use App\Repositories\AttachmentRepository;
 use App\Repositories\CityRepository;
 use App\Repositories\CompanyRepository;
@@ -60,11 +61,11 @@ class StudentService
     /**
      * StudentService constructor.
      *
-     * @param CompanyRepository     $companyRepository
-     * @param OfferRepository       $offerRepository
+     * @param CompanyRepository $companyRepository
+     * @param OfferRepository $offerRepository
      * @param OfferStatusRepository $offerStatusRepository
-     * @param CityRepository        $cityRepository
-     * @param AttachmentService     $attachmentService
+     * @param CityRepository $cityRepository
+     * @param AttachmentService $attachmentService
      */
     public function __construct(
         CompanyRepository $companyRepository,
@@ -170,6 +171,28 @@ class StudentService
         $student = InternshipStudent::find($internshipStudentId);
         $student->company_supervisor_opinion = $opinion;
         $student->grade($grade);
+
+        if ($student->save()) {
+            return $student;
+        }
+
+        return null;
+    }
+
+    public function createStudent(
+        int $userId,
+        string $studentIndex,
+        int $semester,
+        int $studyYear,
+        int $specializationId
+    ): ?Student {
+        $student = new Student();
+        $student->user_id = $userId;
+        $student->student_index = $studentIndex;
+        $student->semester = $semester;
+        $student->study_year = $studyYear;
+        $student->specialization_id = $specializationId;
+        $student->freshTimestamp();
 
         if ($student->save()) {
             return $student;

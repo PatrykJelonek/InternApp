@@ -75,8 +75,8 @@
                                         </v-col>
                                         <v-col cols="12">
                                             <v-select
-                                                v-model="student.faculty"
-                                                @change="student.field = null; student.specialization = null;"
+                                                v-model="tmp.faculty"
+                                                @change="tmp.field = null; student.specialization = null;"
                                                 :items="dialogsArgs['DIALOG_FIELD_SELECT_TYPE_OF_UNIVERSITY_USER'].faculties"
                                                 item-text="name"
                                                 return-object
@@ -89,9 +89,10 @@
                                         <v-expand-transition>
                                             <v-col cols="12">
                                                 <v-select
-                                                    v-if="student.faculty"
-                                                    v-model="student.field"
-                                                    :items="student.faculty.fields"
+                                                    v-if="tmp.faculty"
+                                                    @change="student.specialization = null;"
+                                                    v-model="tmp.field"
+                                                    :items="tmp.faculty.fields"
                                                     item-text="name"
                                                     return-object
                                                     outlined
@@ -104,11 +105,11 @@
                                         <v-expand-transition>
                                             <v-col cols="12">
                                                 <v-select
-                                                    v-if="student.field"
-                                                    v-model="student.specialization"
-                                                    :items="student.field.specializations"
+                                                    v-if="tmp.field"
+                                                    v-model="student.specializationId"
+                                                    :items="tmp.field.specializations"
                                                     item-text="name"
-                                                    return-object
+                                                    item-value="id"
                                                     outlined
                                                     dense
                                                     label="Specjalność"
@@ -156,9 +157,11 @@ export default {
                 index: null,
                 semester: null,
                 year: null,
+                specializationId: null,
+            },
+            tmp: {
                 faculty: null,
                 field: null,
-                specialization: null,
             }
         }
     },
@@ -204,12 +207,12 @@ export default {
                     userId: this.dialogsArgs['DIALOG_FIELD_SELECT_TYPE_OF_UNIVERSITY_USER'].userId,
                     student: this.student,
                 }).then((response) => {
-                    // this.fetchUserUniversities();
-                    // this.close();
-                    // this.setSnackbar({message: 'Zostałeś dodany do uczelni!', color: 'success'});
+                    this.fetchUserUniversities();
+                    this.close();
+                    this.setSnackbar({message: 'Zostałeś dodany do uczelni!', color: 'success'});
                 }).catch((e) => {
-                    // this.close();
-                    // this.setSnackbar({message: 'Wystąpił problem, skontaktuj się administratorem!', color: 'error'});
+                    this.close();
+                    this.setSnackbar({message: 'Wystąpił problem, skontaktuj się administratorem!', color: 'error'});
                 });
             }
         }
