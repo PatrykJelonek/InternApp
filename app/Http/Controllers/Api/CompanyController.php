@@ -14,6 +14,7 @@ use App\Http\Requests\CompanyShowRequest;
 use App\Http\Requests\CompanyUpdateCompanyDataRequest as UpdateDataRequest;
 use App\Http\Requests\CompanyUpdateCompanyLogoRequest as UpdateLogoRequest;
 use App\Http\Requests\GetCompanyWorkersRequest;
+use App\Http\Requests\UniversityCreateOwnAgreementRequest;
 use App\Models\Company;
 use App\Http\Controllers\Controller;
 use App\Models\Internship;

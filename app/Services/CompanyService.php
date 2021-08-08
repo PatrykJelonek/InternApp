@@ -215,7 +215,7 @@ class CompanyService
         $company->logo_url = $logoUrl;
         $company->company_category_id = $companyCategoryId;
         $company->user_id = !is_null($userId) ? $userId : Auth::id();
-        $company->accepted = false;
+        $company->accepted = $draft;
         $company->draft = $draft;
         $company->freshTimestamp();
 

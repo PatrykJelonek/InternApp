@@ -2,20 +2,24 @@
     <v-container fluid class="pa-0">
         <template v-if="!companyLoading">
             <page-title>
-                <template v-slot:default>{{ company.name }}</template>
+                <template v-slot:default>
+                    {{ company.draft ? company.draft_name : company.name }}
+                    <v-chip small v-if="company.draft" color="disabled" outlined>Draft</v-chip>
+                </template>
                 <template v-slot:subheader>{{ company.description }}</template>
             </page-title>
 
             <v-row>
                 <v-col cols="12">
                     <the-company-details
-                    :name="company.name"
+                    :name="company.draft ? company.draft_name : company.name"
                     :category="company.category.name"
                     :address="company.street + ' ' + company.street_number + ', ' + company.city.name"
-                    :email="company.email"
+                    :email="company.draft ? company.draft_email : company.email"
                     :phone="company.phone"
                     :website="company.website"
                     :description="company.description"
+                    :draft="company.draft"
                     ></the-company-details>
                 </v-col>
             </v-row>
@@ -53,7 +57,7 @@ export default {
         this.setBreadcrumbs([
             {text: 'Panel', to: {name: 'panel'}, exact: true},
             {
-                text: this.company.name ?? 'Firma',
+                text: (this.company.draft ? this.company.draft_name : this.company.name) ?? 'Firma',
                 to: {name: 'company', params: {slug: this.$route.params.slug}},
                 exact: true
             },

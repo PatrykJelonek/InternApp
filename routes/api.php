@@ -150,6 +150,7 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::get('/universities/{slug}/students','Api\UniversityController@getStudents');
     Route::post('/universities/{slug}/students/{userId}','Api\UniversityController@addStudentToUniversity');
     Route::get('/universities/{slug}/agreements','Api\UniversityController@getAgreements');
+    Route::post('/universities/{slug}/agreements','Api\UniversityController@createOwnAgreement');
     Route::get('/universities/{slug}/internships','Api\UniversityController@getInternships2');
     Route::get('/universities/{slug}/faculties','Api\UniversityController@getFaculties');
     Route::post('/universities/{slug}/faculties','Api\UniversityController@createUniversityFaculty');

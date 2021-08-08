@@ -10,7 +10,9 @@
                     <v-list-item two-line>
                         <v-list-item-content>
                             <v-list-item-title>Nazwa</v-list-item-title>
-                            <v-list-item-subtitle>{{ name }}</v-list-item-subtitle>
+                            <v-list-item-subtitle>
+                                {{ name }}
+                            </v-list-item-subtitle>
                         </v-list-item-content>
                     </v-list-item>
                     <v-list-item>
@@ -60,7 +62,7 @@ import CustomCardTitle from "../../_General/CustomCardTitle";
 export default {
     name: "TheCompanyDetails",
     components: {CustomCardTitle, CustomCard},
-    props: ['name', 'category', 'address', 'email', 'phone', 'website', 'description',],
+    props: ['name', 'category', 'address', 'email', 'phone', 'website', 'description', 'draft'],
 
 }
 </script>

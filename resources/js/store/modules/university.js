@@ -509,5 +509,9 @@ export default {
         addStudentToUniversity({commit}, {slug, userId, student}) {
             return axios.post(`/api/universities/${slug}/students/${userId}`, student);
         },
+
+        createOwnAgreement({commit}, {slug, data}) {
+            return axios.post(`/api/universities/${slug}/agreements`, data);
+        }
     },
 };

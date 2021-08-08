@@ -50,26 +50,32 @@
                         :headers="headers"
                         :items="agreements"
                         :items-per-page="5"
+                        :search="search"
                         :loading="agreementsLoading"
                         class="elevation-1 component-background"
                         no-data-text="Niestety, ta uczelnia nie posiada jeszcze umów!"
                         loading-text="Pobieranie listy umów..."
                     >
-                        <template v-slot:item.company="{ item }">
+                        <template v-slot:item.company.name="{ item }">
                             <router-link :to="{name: 'company', params: {slug: item.company.slug}}">{{
-                                    item.company.name
+                                    item.company.draft ? item.company.draft_name : item.company.name
                                 }}
                             </router-link>
                         </template>
-                        <template v-slot:item.universitySupervisor="{ item }">
+                        <template v-slot:item.supervisor.full_name="{ item }">
                             <router-link :to="{name: 'user', params: {id: item.supervisor.id}}">
-                                {{ item.supervisor.first_name + ' ' + item.supervisor.last_name }}
+                                {{ item.supervisor.full_name }}
                             </router-link>
                         </template>
-                        <template v-slot:item.companySupervisor="{ item }">
-                            <router-link :to="{name: 'user', params: {id: item.offer.supervisor.id}}">
-                                {{ item.offer.supervisor.first_name + ' ' + item.offer.supervisor.last_name }}
-                            </router-link>
+                        <template v-slot:item.offer.supervisor.full_name ="{ item }">
+                            <template v-if="item.offer">
+                                <router-link :to="{name: 'user', params: {id: item.offer.supervisor.id}}">
+                                    {{ item.offer.supervisor.full_name }}
+                                </router-link>
+                            </template>
+                            <template v-else>
+                                Brak
+                            </template>
                         </template>
                         <template v-slot:item.dates="{ item }">
                             {{ formatDate(item.date_from) + ' - ' + formatDate(item.date_to) }}
@@ -142,14 +148,16 @@ import CustomConfirmDialog from "../../_General/CustomConfirmDialog";
 export default {
     name: "TheUniversityAgreementsList",
     components: {CustomConfirmDialog, CustomCardTitle, CustomCard, PageTitle, CreateOwnAgreementDialog, ExpandCard},
+    props: ['search'],
+
     data() {
         return {
             show: true,
             headers: [
-                {text: 'Nazwa', value: 'offer.name'},
-                {text: 'Firma', value: 'company'},
-                {text: 'Opiekun z uczelni', value: 'universitySupervisor'},
-                {text: 'Opiekun z firmy', value: 'companySupervisor'},
+                {text: 'Nazwa', value: 'name'},
+                {text: 'Firma', value: 'company.name'},
+                {text: 'Opiekun z uczelni', value: 'supervisor.full_name'},
+                {text: 'Opiekun z firmy', value: 'offer.supervisor.full_name '},
                 {text: 'Okres ważności', value: 'dates'},
                 {text: 'Status', value: 'is_active'},
                 {text: 'Akcje', value: 'actions', sortable: false, align: 'center'},

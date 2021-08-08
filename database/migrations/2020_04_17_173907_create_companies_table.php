@@ -15,7 +15,7 @@ class CreateCompaniesTable extends Migration
     {
         Schema::create('companies', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 64)->unique();
+            $table->string('name', 255)->unique();
             $table->foreignId('city_id');
             $table->foreign('city_id')->references('id')->on('cities');
             $table->string('street', 64);

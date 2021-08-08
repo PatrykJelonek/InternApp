@@ -3,15 +3,30 @@
         <v-stepper alt-labels v-model="createOwnAgreementStepper" flat color="component-background">
             <!-- STEPPER HEADER -->
             <v-stepper-header class="component-background mt-0">
-                <v-stepper-step step="1" :rules="stepOneErrors">Miejsce praktyk</v-stepper-step>
-
+                <v-stepper-step
+                    step="1"
+                    :rules="[() => !stepOneErrors]"
+                    :complete="stepOneCompleted"
+                >
+                    Miejsce praktyk
+                </v-stepper-step>
                 <v-divider></v-divider>
-
-                <v-stepper-step step="2" :rules="stepTwoErrors">Dane praktyki</v-stepper-step>
-
+                <v-stepper-step
+                    step="2"
+                    :rules="[() => !stepTwoErrors]"
+                    :complete="stepTwoCompleted"
+                >
+                    Dane praktyki
+                </v-stepper-step>
                 <v-divider></v-divider>
-
-                <v-stepper-step step="3" :rules="stepThreeErrors">Dane umowy</v-stepper-step>
+                <v-stepper-step
+                    step="3"
+                    :rules="[() =>
+                    !stepThreeErrors]"
+                    :complete="stepThreeCompleted"
+                >
+                    Dane umowy
+                </v-stepper-step>
             </v-stepper-header>
 
             <v-divider></v-divider>
@@ -112,6 +127,7 @@
                                                 dense
                                                 v-mask="'##-###'"
                                                 label="Kod pocztowy"
+                                                @change="(val) => getCity(val)"
                                                 :error-messages="errors"
                                             ></v-text-field>
                                         </validation-provider>
@@ -169,7 +185,7 @@
                                     <v-col cols="6">
                                         <validation-provider
                                             vid="company.phone"
-                                            rules="required|regex:/^/d{3}-/d{3}-/d{3}/|max-16"
+                                            rules="required|max:16"
                                             v-slot="{ errors }"
                                         >
                                             <v-text-field
@@ -200,13 +216,19 @@
                                         </validation-provider>
                                     </v-col>
                                     <v-col cols="12">
-                                        <v-textarea
-                                            v-model="data.company.description"
-                                            outlined
-                                            dense
-                                            label="Opis firmy"
-                                            :error-messages="errors"
-                                        ></v-textarea>
+                                        <validation-provider
+                                            vid="company.description"
+                                            rules=""
+                                            v-slot="{ errors }"
+                                        >
+                                            <v-textarea
+                                                v-model="data.company.description"
+                                                outlined
+                                                dense
+                                                label="Opis firmy"
+                                                :error-messages="errors"
+                                            ></v-textarea>
+                                        </validation-provider>
                                     </v-col>
                                 </v-row>
                             </template>
@@ -257,7 +279,6 @@
                                             transition="scale-transition"
                                             offset-y
                                             min-width="auto"
-                                            :error-messages="errors"
                                         >
                                             <template v-slot:activator="{ on, attrs }">
                                                 <validation-provider
@@ -387,7 +408,7 @@
                                             <template v-slot:activator="{ on, attrs }">
                                                 <validation-provider
                                                     vid="agreement.signingDate"
-                                                    rules="required"
+                                                    rules=""
                                                     v-slot="{ errors }"
                                                 >
                                                     <v-text-field
@@ -411,7 +432,7 @@
                                     <v-col cols="12">
                                         <validation-provider
                                             vid="agreement.content"
-                                            rules="required"
+                                            rules=""
                                             v-slot="{ errors }"
                                         >
                                             <v-textarea
@@ -424,15 +445,21 @@
                                         </validation-provider>
                                     </v-col>
                                     <v-col cols="12">
-                                        <v-file-input
-                                            outlined
-                                            dense
-                                            multiple
-                                            prepend-icon=""
-                                            prepend-inner-icon="mdi-paperclip"
-                                            label="Załączniki do umowy"
-                                            :error-messages="errors"
-                                        ></v-file-input>
+                                        <validation-provider
+                                            vid="agreement.attachments"
+                                            rules=""
+                                            v-slot="{ errors }"
+                                        >
+                                            <v-file-input
+                                                v-model="data.agreement.attachments"
+                                                outlined
+                                                dense
+                                                multiple
+                                                prepend-icon=""
+                                                prepend-inner-icon="mdi-paperclip"
+                                                label="Załączniki do umowy"
+                                            ></v-file-input>
+                                        </validation-provider>
                                     </v-col>
                                     <v-col cols="12">
                                         <v-checkbox
@@ -440,13 +467,20 @@
                                             v-model="data.agreement.active"
                                             label="Umowa aktywna (widoczna dla studentów)"
                                             hide-details="auto"
-                                            :error-messages="errors"
                                         ></v-checkbox>
                                     </v-col>
                                 </v-row>
                             </template>
                         </v-form>
                     </validation-observer>
+                </v-stepper-content>
+
+                <v-stepper-content step="4" class="component-background pa-0">
+                    <v-row no-gutters>
+                        <v-col cols="12" class="d-flex justify-center align-center pa-5">
+                            <v-progress-circular indeterminate color="primary"></v-progress-circular>
+                        </v-col>
+                    </v-row>
                 </v-stepper-content>
             </v-stepper-items>
         </v-stepper>
@@ -459,6 +493,7 @@ import {setInteractionMode, ValidationProvider, ValidationObserver, extend} from
 import moment from 'moment';
 import {Base64} from 'js-base64';
 import {max, regex} from "vee-validate/dist/rules";
+
 
 export default {
     name: "CreateOwnAgreementForm",
@@ -520,6 +555,9 @@ export default {
             stepOneErrors: false,
             stepTwoErrors: false,
             stepThreeErrors: false,
+            stepOneCompleted: false,
+            stepTwoCompleted: false,
+            stepThreeCompleted: false,
         }
     },
 
@@ -549,6 +587,8 @@ export default {
             createStudentOwnInternship: 'student/createStudentOwnInternship',
             fetchUniversityWorkers: 'university/fetchWorkers',
             setCreateOwnAgreementStepper: 'helpers/setCreateOwnAgreementStepper',
+            createOwnAgreement: 'university/createOwnAgreement',
+            fetchUniversityAgreements: 'university/fetchAgreements',
         }),
 
         postcodePattern() {
@@ -559,42 +599,13 @@ export default {
         },
 
         getCity(postcode) {
-            this.fetchCity(postcode).then(() => {
-                this.data.company.city.name = this.city.name ?? '';
-                this.data.company.city.id = this.city.id ?? '';
-            })
-        },
-        goNext() {
-            switch (this.stepper) {
-                case 1:
-                    this.$refs.observerStepOne.validate().then((value) => {
-                        this.stepOne = value;
-                        if (value) {
-                            this.stepper++
-                        }
-                    });
-                    break;
-
-                case 2:
-                    this.$refs.observerStepTwo.validate().then((value) => {
-                        this.stepTwo = value;
-                        if (value) {
-                            this.stepper++
-                        }
-                    });
-                    break;
-
-                case 3:
-                    this.$refs.observerStepThree.validate().then((value) => {
-                        this.stepThree = value;
-                        if (value) {
-                            this.stepper++
-                        }
-                    });
-                    break;
+            if (postcode.length === 6) {
+                this.fetchCity(postcode).then(() => {
+                    this.data.company.city.name = this.city.name ?? '';
+                    this.data.company.city.id = this.city.id ?? '';
+                })
             }
         },
-
     },
 
     created() {
@@ -631,6 +642,8 @@ export default {
                         if (this.data.company.id === null || this.data.company.name !== null) {
                             this.$refs.observerStepOne.validate().then((isValid) => {
                                 if (isValid) {
+                                    this.stepOneErrors = false;
+                                    this.stepOneCompleted = true;
                                     console.log('asd 1');
                                 } else {
                                     this.stepOneErrors = true;
@@ -638,12 +651,16 @@ export default {
                                 }
                             });
                         } else {
+                            this.stepOneCompleted = true;
+                            this.stepOneErrors = false;
                             this.$refs.observerStepOne.reset();
                         }
                         break;
                     case 2:
                         this.$refs.observerStepTwo.validate().then((isValid) => {
                             if (isValid) {
+                                this.stepTwoErrors = false;
+                                this.stepTwoCompleted = true;
                                 console.log('asd 2');
                             } else {
                                 this.stepTwoErrors = true;
@@ -654,6 +671,8 @@ export default {
                     case 3:
                         this.$refs.observerStepThree.validate().then((isValid) => {
                             if (isValid) {
+                                this.stepThreeErrors = false;
+                                this.stepThreeCompleted = true;
                                 console.log('asd 2');
                             } else {
                                 this.stepThreeErrors = true;
@@ -663,15 +682,24 @@ export default {
                         break;
                 }
             }
+
+            if (newVal === 4) {
+                this.createOwnAgreement({slug: this.$route.params.slug, data: this.data}).then(() => {
+                    this.fetchUniversityAgreements(this.$route.params.slug);
+                    this.toggleDialog({key: 'DIALOG_FIELD_CREATE_OWN_AGREEMENT', val: false});
+                    this.setSnackbar({message: "Umowa została dodana!", color: 'success'});
+                }).catch((e) => {
+                    if (e.response.status === 422) {
+                        console.log(e.response.data.errors);
+                        this.$refs.observerStepOne.setErrors(e.response.data.errors);
+                        this.$refs.observerStepTwo.setErrors(e.response.data.errors);
+                        this.$refs.observerStepThree.setErrors(e.response.data.errors);
+                    }
+                });
+            }
         }
     }
 }
-
-extend('regex', {
-    ...regex,
-    message: "Zły format numeru"
-});
-
 </script>
 
 <style scoped>

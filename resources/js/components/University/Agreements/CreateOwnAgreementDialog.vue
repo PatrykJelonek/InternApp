@@ -1,8 +1,9 @@
 <template>
     <v-dialog
-        v-model="createOwnAgreementDialog"
+        v-model="dialogs['DIALOG_FIELD_CREATE_OWN_AGREEMENT']"
         persistent
         max-width="800px"
+        @click:outside="closeDialog"
         :fullscreen="this.$vuetify.breakpoint.smAndDown"
     >
         <custom-card>
@@ -13,7 +14,7 @@
                     <v-btn
                         small
                         icon
-                        @click="toggleCreateOwnAgreementDialog(false)">
+                        @click="closeDialog">
                         <v-icon>mdi-close</v-icon>
                     </v-btn>
                 </template>
@@ -26,15 +27,22 @@
             </v-row>
 
             <custom-card-footer>
-                <template v-slot:left>
+                <template v-slot:left v-if="createOwnAgreementStepper > 1">
                     <v-btn outlined color="secondary" @click="setCreateOwnAgreementStepper(createOwnAgreementStepper - 1);">
                         Cofnij
                     </v-btn>
                 </template>
                 <template v-slot:right>
-                    <v-btn outlined color="primary" @click="setCreateOwnAgreementStepper(createOwnAgreementStepper + 1);">
-                        Dalej
-                    </v-btn>
+                    <template v-if="createOwnAgreementStepper === 3">
+                        <v-btn outlined color="primary" @click="setCreateOwnAgreementStepper(4);">
+                            Dodaj
+                        </v-btn>
+                    </template>
+                    <template v-else>
+                        <v-btn outlined color="primary" @click="setCreateOwnAgreementStepper(createOwnAgreementStepper + 1);">
+                            Dalej
+                        </v-btn>
+                    </template>
                 </template>
             </custom-card-footer>
         </custom-card>
@@ -61,17 +69,21 @@ export default {
 
     computed: {
         ...mapGetters({
-            createOwnAgreementDialog: 'helpers/createOwnAgreementDialog',
+            dialogs: 'helpers/dialogs',
             createOwnAgreementStepper: 'helpers/createOwnAgreementStepper',
         }),
     },
 
     methods: {
         ...mapActions({
-            toggleCreateOwnAgreementDialog: 'helpers/toggleCreateOwnAgreementDialog',
+            toggleDialog: 'helpers/toggleDialog',
             fetchCompanies: 'company/fetchCompanies',
             setCreateOwnAgreementStepper: 'helpers/setCreateOwnAgreementStepper',
         }),
+
+        closeDialog() {
+            this.toggleDialog({key: 'DIALOG_FIELD_CREATE_OWN_AGREEMENT', val: false});
+        }
     },
 }
 </script>

@@ -1,11 +1,25 @@
 <template>
     <v-container fluid class="pa-0">
+        <custom-card class="mb-5">
+            <v-row no-gutters>
+                <v-col cols="12">
+                    <v-text-field
+                        outlined
+                        prepend-inner-icon="mdi-magnify"
+                        hide-details
+                        v-model="search"
+                        label="Szukaj"
+                        ></v-text-field>
+                </v-col>
+            </v-row>
+        </custom-card>
         <v-data-iterator
             :items="offers"
             item-key="id"
             :items-per-page="10"
             :loading="offersLoading"
             locale="pl-PL"
+            :search="search"
         >
             <template v-slot:default="{ items, isExpanded, expand }">
                 <v-row>
@@ -64,6 +78,7 @@ export default {
     components: {OffersListRow, OfferCard, CustomCard, CreateAgreementDialog, ExpandCard},
     data() {
         return {
+            search: null,
             show: true,
             selectedOffer: null,
             headers: [

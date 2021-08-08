@@ -8,6 +8,7 @@
 
 namespace App\Services;
 
+use App\Constants\AgreementStatusConstants;
 use App\Models\Agreement;
 use App\Repositories\AgreementRepository;
 use App\Repositories\AgreementStatusRepository;
@@ -69,39 +70,62 @@ class AgreementService
     }
 
     /**
-     * @param array $data
+     * @param string      $name
+     * @param string      $dateFrom
+     * @param string      $dateTo
+     * @param string      $program
+     * @param string      $schedule
+     * @param int         $companyId
+     * @param int         $universityId
+     * @param int         $universitySupervisorId
+     * @param int         $placesNumber
+     * @param string|null $content
+     * @param int|null    $offerId
+     * @param bool|null   $isActive
+     * @param string|null $signingDate
      *
      * @return Agreement|null
      */
-    public function createAgreement(array $data): ?Agreement
-    {
-        DB::beginTransaction();
+    public function createAgreement(
+        string $name,
+        string $dateFrom,
+        string $dateTo,
+        string $program,
+        string $schedule,
+        int $companyId,
+        int $universityId,
+        int $universitySupervisorId,
+        int $placesNumber = 1,
+        ?string $content = null,
+        ?int $offerId = null,
+        ?bool $isActive = false,
+        ?string $signingDate = null
+    ): ?Agreement {
+        $agreementStatus = $this->agreementStatusRepository->getStatusByName(AgreementStatusConstants::STATUS_NEW);
 
-        $university = $this->universityRepository->getUniversityBySlug($data['universitySlug']);
-        $agreementStatus = $this->agreementStatusRepository->getStatusByName('new');
+        $agreement = new Agreement();
+        $agreement->name = $name;
+        $agreement->slug = Str::slug($name . '-' . Str::random(5));
+        $agreement->signing_date = $signingDate ?? null;
+        $agreement->places_number = $placesNumber ?? null;
+        $agreement->date_from = $dateFrom;
+        $agreement->date_to = $dateTo;
+        $agreement->program = $program;
+        $agreement->schedule = $schedule;
+        $agreement->content = $content;
+        $agreement->company_id = $companyId;
+        $agreement->university_id = $universityId;
+        $agreement->university_supervisor_id = $universitySupervisorId;
+        $agreement->agreement_status_id = $agreementStatus->id;
+        $agreement->offer_id = $offerId ?? null;
+        $agreement->user_id = Auth::id();
+        $agreement->is_active = $isActive;
+        $agreement->freshTimestamp();
 
-        $this->offerRepository->updateOffer(
-            ['placesNumber' => $data['offerPlacesNumber'] - $data['placesNumber']],
-            $data['offerId']
-        );
-
-        $data['userId'] = Auth()->id();
-        $data['universityId'] = $university->id;
-        $data['agreementStatusId'] = $agreementStatus->id;
-
-        $agreement = $this->agreementRepository->create($data);
-
-        if ($agreement !== null) {
-            DB::commit();
-
-            if (!empty($data['attachments'])) {
-                $this->attachmentService->storeAgreementAttachments($data['attachments'], $agreement->id);
-            }
-
+        if ($agreement->save()) {
             return $agreement;
         }
 
-        DB::rollBack();
         return null;
     }
 

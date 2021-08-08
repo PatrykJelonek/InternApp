@@ -11,7 +11,10 @@ use App\Http\Requests\AgreementStoreRequest;
 use App\Models\Agreement;
 use App\Http\Controllers\Controller;
 use App\Repositories\AgreementRepository;
+use App\Repositories\OfferRepository;
+use App\Repositories\UniversityRepository;
 use App\Services\AgreementService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -28,15 +31,33 @@ class AgreementController extends Controller
     private $agreementRepository;
 
     /**
+     * @var UniversityRepository
+     */
+    private $universityRepository;
+
+    /**
+     * @var OfferRepository
+     */
+    private $offerRepository;
+
+    /**
      * AgreementController constructor.
      *
-     * @param AgreementService    $agreementService
-     * @param AgreementRepository $agreementRepository
+     * @param AgreementService     $agreementService
+     * @param AgreementRepository  $agreementRepository
+     * @param UniversityRepository $universityRepository
+     * @param OfferRepository      $offerRepository
      */
-    public function __construct(AgreementService $agreementService, AgreementRepository $agreementRepository)
-    {
+    public function __construct(
+        AgreementService $agreementService,
+        AgreementRepository $agreementRepository,
+        UniversityRepository $universityRepository,
+        OfferRepository $offerRepository
+    ) {
         $this->agreementService = $agreementService;
         $this->agreementRepository = $agreementRepository;
+        $this->universityRepository = $universityRepository;
+        $this->offerRepository = $offerRepository;
     }
 
     /**
@@ -88,7 +109,31 @@ class AgreementController extends Controller
      */
     public function store(AgreementStoreRequest $request)
     {
-        $agreement = $this->agreementService->createAgreement($request->all());
+        $university = $this->universityRepository->getUniversityBySlug($request->input('universitySlug'));
+
+        $agreement = $this->agreementService->createAgreement(
+            $request->input('name'),
+            $request->input('dateFrom'),
+            $request->input('dateTo'),
+            $request->input('program'),
+            $request->input('schedule'),
+            $request->input('companyId'),
+            $university->id,
+            $request->input('universitySupervisorId'),
+            $request->input('placesNumber'),
+            $request->input('content'),
+            $request->input('offerId'),
+            $request->input('isActive'),
+            Carbon::today()
+        );
+
+        $offer = $this->offerRepository->getOfferById($request->input('offerId'));
+        $this->offerRepository->updateOffer(
+            [
+                'placesNumber' => $offer->places_number - $request->input('placesNumber'),
+            ],
+            $offer->id
+        );
 
         if ($agreement !== null) {
             return response($agreement, Response::HTTP_OK);

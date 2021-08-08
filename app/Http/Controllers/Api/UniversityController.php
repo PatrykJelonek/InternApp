@@ -9,6 +9,7 @@ use App\Http\Requests\UniversityAddUserToUniversityRequest;
 use App\Http\Requests\UniversityAddWorkerToUniversityRequest;
 use App\Http\Requests\UniversityAgreementsRequest;
 use App\Http\Requests\UniversityChangeUniversityWorkerRolesRequest;
+use App\Http\Requests\UniversityCreateOwnAgreementRequest;
 use App\Http\Requests\UniversityCreateUniversityFacultyFieldRequest as CreateFieldRequest;
 use App\Http\Requests\UniversityCreateUniversityFacultyFieldSpecializationRequest as CreateSpecializationRequest;
 use App\Http\Requests\UniversityCreateUniversityFacultyRequest as CreateFacultyRequest;
@@ -30,6 +31,8 @@ use App\Models\University;
 use App\Repositories\FacultyRepository;
 use App\Repositories\RoleRepository;
 use App\Repositories\UniversityRepository;
+use App\Services\AgreementService;
+use App\Services\CompanyService;
 use App\Services\FacultyService;
 use App\Services\QuestionnairesService;
 use App\Services\StudentService;
@@ -81,6 +84,16 @@ class UniversityController extends Controller
     private $studentService;
 
     /**
+     * @var CompanyService
+     */
+    private $companyService;
+
+    /**
+     * @var AgreementService
+     */
+    private $agreementService;
+
+    /**
      * UniversityController constructor.
      *
      * @param UniversityRepository  $universityRepository
@@ -97,7 +110,9 @@ class UniversityController extends Controller
         FacultyRepository $facultyRepository,
         UniversityService $universityService,
         RoleRepository $roleRepository,
-        StudentService $studentService
+        StudentService $studentService,
+        CompanyService $companyService,
+        AgreementService $agreementService
     ) {
         $this->universityRepository = $universityRepository;
         $this->questionnairesService = $questionnairesService;
@@ -106,6 +121,8 @@ class UniversityController extends Controller
         $this->universityService = $universityService;
         $this->roleRepository = $roleRepository;
         $this->studentService = $studentService;
+        $this->companyService = $companyService;
+        $this->agreementService = $agreementService;
     }
 
     /**
@@ -894,6 +911,63 @@ class UniversityController extends Controller
             if (!is_null($userUniversity) && !is_null($student)) {
                 DB::commit();
                 return response($userUniversity, Response::HTTP_OK);
+            }
+        }
+
+        DB::rollBack();
+        return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+
+
+    public function createOwnAgreement(UniversityCreateOwnAgreementRequest $request, string $slug)
+    {
+        $university = $this->universityRepository->getUniversityBySlug($slug);
+
+        if (!is_null($university)) {
+            DB::beginTransaction();
+
+            $companyId = $request->input('company.id');
+
+            if (empty($companyId)) {
+                $company = $this->companyService->createCompany(
+                    $request->input('company.name'),
+                    $request->input('company.city.id'),
+                    $request->input('company.street'),
+                    $request->input('company.streetNumber'),
+                    $request->input('company.email'),
+                    $request->input('company.companyCategoryId'),
+                    $request->input('company.phone'),
+                    $request->input('company.website'),
+                    $request->input('company.description'),
+                    null,
+                    Auth::id(),
+                    true,
+                );
+
+                $companyId = $company->id ?? null;
+            }
+
+            if (!empty($companyId)) {
+                $agreement = $this->agreementService->createAgreement(
+                    $request->input('agreement.name'),
+                    $request->input('agreement.dateFrom'),
+                    $request->input('agreement.dateTo'),
+                    $request->input('agreement.program'),
+                    $request->input('agreement.schedule'),
+                    $companyId,
+                    $university->id,
+                    $request->input('agreement.universitySupervisorId'),
+                    $request->input('agreement.placesNumber'),
+                    $request->input('agreement.content'),
+                    null,
+                    $request->input('agreement.active'),
+                    $request->input('agreement.signingDate')
+                );
+            }
+
+            if (!is_null($agreement)) {
+                DB::commit();
+                return response($agreement, Response::HTTP_CREATED);
             }
         }
 
