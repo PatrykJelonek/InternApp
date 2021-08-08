@@ -8,35 +8,35 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Company extends Model
 {
-    use HasFactory, SoftDeletes;
+    public const COMPANY_CATEGORY_SOFTWARE = 'Oprogramowanie';
+    public const COMPANY_CATEGORY_COMPUTER_NETWORKS = 'Sieci Komputerowe';
+    public const COMPANY_CATEGORY_GAMES = 'Gry Komputerowe';
+    public const COMPANY_CATEGORY_GRAPHICS = 'Grafika Komputerowa';
+    public const COMPANY_CATEGORY_ELECTRONICS = 'Elektronika';
 
-    const COMPANY_CATEGORY_SOFTWARE = 'Oprogramowanie';
-    const COMPANY_CATEGORY_COMPUTER_NETWORKS = 'Sieci Komputerowe';
-    const COMPANY_CATEGORY_GAMES = 'Gry Komputerowe';
-    const COMPANY_CATEGORY_GRAPHICS = 'Grafika Komputerowa';
-    const COMPANY_CATEGORY_ELECTRONICS = 'Elektronika';
-
-    const COMPANY_BASIC_CATEGORIES = [
+    public const COMPANY_BASIC_CATEGORIES = [
         self::COMPANY_CATEGORY_SOFTWARE,
         self::COMPANY_CATEGORY_COMPUTER_NETWORKS,
         self::COMPANY_CATEGORY_GAMES,
         self::COMPANY_CATEGORY_GRAPHICS,
-        self::COMPANY_CATEGORY_ELECTRONICS
+        self::COMPANY_CATEGORY_ELECTRONICS,
     ];
 
-    const COMPANY_CATEGORY_DESCRIPTIONS = [
+    public const COMPANY_CATEGORY_DESCRIPTIONS = [
         self::COMPANY_CATEGORY_SOFTWARE => 'Firma zajmująca się wytwarzaniem oprogramowania.',
         self::COMPANY_CATEGORY_COMPUTER_NETWORKS => 'Firma zajmująca się dostarczaniem usług z zakresu sieci komputerowych.',
         self::COMPANY_CATEGORY_GAMES => 'Firma zajmująca się tworzeniem gier komputerowych.',
         self::COMPANY_CATEGORY_GRAPHICS => 'Firma zajmująca się tworzeniem i obróbką grafiki komputerowej.',
-        self::COMPANY_CATEGORY_ELECTRONICS => 'Firma zajmująca się produkcją i konserwacją urządzeń elektronicznych.'
+        self::COMPANY_CATEGORY_ELECTRONICS => 'Firma zajmująca się produkcją i konserwacją urządzeń elektronicznych.',
     ];
+
+    use HasFactory, SoftDeletes;
 
     protected $table = "companies";
 
     protected $hidden = ['city_id', 'company_category_id', 'access_code'];
 
-    protected $appends = ['full_address'];
+    protected $appends = ['full_address', 'draft_name', 'draft_email'];
 
     public function category()
     {
@@ -68,8 +68,18 @@ class Company extends Model
         return $this->hasOne(User::class, 'user_id','id');
     }
 
-    public function getFullAddressAttribute()
+    public function getFullAddressAttribute(): string
     {
         return "{$this->street} {$this->street_number}, {$this->city->post_code} {$this->city->name}";
+    }
+
+    public function getDraftNameAttribute()
+    {
+        return preg_replace('/(__(\d|[a-z])*__draft__)/','', $this->name);
+    }
+
+    public function getDraftEmailAttribute()
+    {
+        return preg_replace('/(__(\d|[a-z])*__draft__)/','', $this->email);
     }
 }

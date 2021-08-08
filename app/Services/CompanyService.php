@@ -174,6 +174,7 @@ class CompanyService
      * @param string|null $description
      * @param string|null $logoUrl
      * @param int|null    $userId
+     * @param bool|null   $draft
      *
      * @return Company|null
      */
@@ -188,9 +189,17 @@ class CompanyService
         ?string $website = null,
         ?string $description = null,
         ?string $logoUrl = null,
-        ?int $userId = null
+        ?int $userId = null,
+        ?bool $draft = false
     ): ?Company {
         $generatedAccessCode = UtilsService::generateAccessCode();
+
+        if ($draft) {
+            $randomDraftKey = strtolower(Str::random(4));
+
+            $name = '__' . $randomDraftKey . '__draft__' . $name;
+            $email = '__' . $randomDraftKey . '__draft__' . $email;
+        }
 
         $company = new Company();
         $company->name = $name;
@@ -206,12 +215,15 @@ class CompanyService
         $company->logo_url = $logoUrl;
         $company->company_category_id = $companyCategoryId;
         $company->user_id = !is_null($userId) ? $userId : Auth::id();
+        $company->accepted = false;
+        $company->draft = $draft;
         $company->freshTimestamp();
 
         if ($company->save()) {
             Log::channel('user')->info(
                 'Użytkownik dodał nową firmę!',
                 [
+                    'method_reference' => 'CompanyService::createCompany',
                     'user_id' => Auth::id(),
                     'data' => [
                         'name' => $name,
@@ -227,6 +239,8 @@ class CompanyService
                         'logo_url' => $logoUrl,
                         'company_category_id' => $companyCategoryId,
                         'user_id' => !is_null($userId) ? $userId : Auth::id(),
+                        'accepted' => false,
+                        'draft' => $draft
                     ],
                 ]
             );
@@ -235,8 +249,9 @@ class CompanyService
         }
 
         Log::channel('user')->error(
-            'Wystąpił problem z akceptacją użytkownika jako pracownika firmy!',
+            'Nie udało się dodać nowej firmy',
             [
+                'method_reference' => 'CompanyService::createCompany',
                 'user_id' => Auth::id(),
                 'data' => [
                     'name' => $name,

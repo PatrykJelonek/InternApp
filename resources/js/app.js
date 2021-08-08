@@ -9,11 +9,14 @@ import * as Sentry from "@sentry/vue";
 import {Integrations} from "@sentry/tracing";
 import {CaptureConsole} from "@sentry/integrations";
 import moment from "moment";
+import { VueMaskDirective } from 'v-mask';
 
 require('./bootstrap');
 require('./store/subscriber');
 require('./plugins/acl');
 window.Vue = require('vue');
+
+Vue.directive('mask', VueMaskDirective);
 
 Sentry.init({
     Vue,

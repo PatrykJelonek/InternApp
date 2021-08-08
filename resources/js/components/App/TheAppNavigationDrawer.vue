@@ -3,7 +3,9 @@
         app
         floating
         color="component-background"
-        :mini-variant="navigationDrawer"
+        :mini-variant="!this.$vuetify.breakpoint.smAndDown && navigationDrawer"
+        @input="(val) => toggleNavigationDrawerModel(val)"
+        v-model="navigationDrawerModel"
     >
         <div style="height: 64px;" class="primary">
             <v-list nav dense>
@@ -474,7 +476,7 @@
         </v-list>
 
         <!-- Navigation Drawer Append -->
-        <template v-slot:append>
+        <template v-slot:append v-if="!this.$vuetify.breakpoint.smAndDown">
             <v-list nav dense>
                 <v-list-item
                     link
@@ -506,7 +508,8 @@ export default {
         ...mapActions({
             setSelectedUniversity: 'helpers/setSelectedUniversity',
             setSelectedCompany: 'helpers/setSelectedCompany',
-            toggleNavigationDrawer: 'helpers/toggleNavigationDrawer'
+            toggleNavigationDrawer: 'helpers/toggleNavigationDrawer',
+            toggleNavigationDrawerModel: 'helpers/toggleNavigationDrawerModel'
         })
     },
 
@@ -514,6 +517,7 @@ export default {
         ...mapGetters({
             user: 'auth/user',
             navigationDrawer: 'helpers/navigationDrawer',
+            navigationDrawerModel: 'helpers/navigationDrawerModel',
             selectedCompany: 'helpers/selectedCompany',
             selectedUniversity: 'helpers/selectedUniversity',
         }),

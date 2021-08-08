@@ -34,9 +34,19 @@ class CompanyRepository implements CompanyRepositoryInterface
         return Company::with(['city', 'category'])->where(['slug' => $slug])->first();
     }
 
-    public function getCompanies()
+    public function getCompanies(bool $withNotAccepted = false, bool $withDrafts = false)
     {
-        return Company::with(['city', 'category'])->get();
+        $company = Company::with(['city', 'category']);
+
+        if (!$withNotAccepted) {
+            $company->where(['accepted' => true]);
+        }
+
+        if (!$withDrafts) {
+            $company->where(['draft' => false]);
+        }
+
+        return $company->get();
     }
 
     public function createCompany(array $data)
@@ -53,6 +63,8 @@ class CompanyRepository implements CompanyRepositoryInterface
         $company->slug = Str::slug($data['name']);
         $company->access_code = $this->generateAccessCode();
         $company->company_category_id = $data['companyCategoryId'];
+        $company->accepted = false;
+        $company->draft = $data['draft'] ?? false;
         $company->created_at = Carbon::today();
         $company->updated_at = Carbon::today();
 

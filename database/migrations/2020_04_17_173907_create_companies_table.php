@@ -31,6 +31,8 @@ class CreateCompaniesTable extends Migration
             $table->foreign('company_category_id')->references('id')->on('company_categories');
             $table->foreignId('user_id');
             $table->foreign('user_id')->references('id')->on('users');
+            $table->boolean('accepted')->default(false);
+            $table->boolean('draft')->default(false);
             $table->timestamps();
             $table->softDeletes();
         });

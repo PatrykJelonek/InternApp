@@ -52,10 +52,12 @@ export default {
         universitySpecializationDialogArgs: null,
         fillHeight: false,
         navigationDrawer: true,
+        navigationDrawerModel: true,
         errorMessage: '',
         selectedCompany: null,
         selectedUniversity: null,
         breadcrumbs: [],
+        createOwnAgreementStepper: 1,
     },
 
     getters: {
@@ -109,6 +111,10 @@ export default {
 
         navigationDrawer(state) {
             return state.navigationDrawer;
+        },
+
+        navigationDrawerModel(state) {
+            return state.navigationDrawerModel;
         },
 
         selectedCompany(state) {
@@ -165,7 +171,11 @@ export default {
 
         dialogsArgs(state) {
             return state.dialogsArgs;
-        }
+        },
+
+        createOwnAgreementStepper(state) {
+            return state.createOwnAgreementStepper;
+        },
     },
 
     mutations: {
@@ -285,13 +295,21 @@ export default {
             state.universitySpecializationDialogArgs = null;
         },
 
+        TOGGLE_NAVIGATION_DRAWER_MODEL(state, value) {
+            state.navigationDrawerModel = value;
+        },
+
         TOGGLE_DIALOG(state, {key, val}) {
             state.dialogs[key] = val;
         },
 
         SET_DIALOG_ARGS(state, {key, val}) {
             state.dialogsArgs[key] = val;
-        }
+        },
+
+        SET_CREATE_OWN_AGREEMENT_STEPPER(state, val) {
+            state.createOwnAgreementStepper = val;
+        },
     },
 
     actions: {
@@ -333,6 +351,10 @@ export default {
 
         toggleNavigationDrawer({commit}, value) {
             commit('TOGGLE_NAVIGATION_DRAWER', value);
+        },
+
+        toggleNavigationDrawerModel({commit}, value) {
+            commit('TOGGLE_NAVIGATION_DRAWER_MODEL', value);
         },
 
         toggleCreateQuestionnaireDialog({commit}, value) {
@@ -425,6 +447,10 @@ export default {
 
         setBreadcrumbs({commit}, value) {
             commit('SET_BREADCRUMBS', value);
+        },
+
+        setCreateOwnAgreementStepper({commit}, value) {
+            commit('SET_CREATE_OWN_AGREEMENT_STEPPER', value);
         }
     },
 }

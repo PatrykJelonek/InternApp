@@ -15,6 +15,9 @@
 
         <!-- Snackbar Instance -->
         <snackbar></snackbar>
+
+        <!-- Bottom menu -->
+        <the-app-bottom-menu v-if="$vuetify.breakpoint.mobile"></the-app-bottom-menu>
     </v-app>
 </template>
 
@@ -23,9 +26,10 @@ import {mapActions, mapGetters} from "vuex";
 import TheAppBarDesktop from "../components/App/TheAppBarDesktop";
 import TheAppNavigationDrawer from "../components/App/TheAppNavigationDrawer";
 import Snackbar from "../components/_Helpers/Snackbar";
+import TheAppBottomMenu from "../components/App/TheAppBottomMenu";
 
 export default {
-    components: {Snackbar, TheAppNavigationDrawer, TheAppBarDesktop},
+    components: {TheAppBottomMenu, Snackbar, TheAppNavigationDrawer, TheAppBarDesktop},
     data() {
         return {
             menuDialog: false,
