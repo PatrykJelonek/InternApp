@@ -1,5 +1,6 @@
 <template>
     <v-container fluid class="pa-0">
+        <create-agreement-dialog></create-agreement-dialog>
         <custom-card class="mb-5">
             <v-row no-gutters>
                 <v-col cols="12">
@@ -45,6 +46,7 @@
                             :date-range="formatDate(offer.date_from) + ' - ' + formatDate(offer.date_to)"
                             :logo-url="offer.company.logo_url"
                             :slug="offer.slug"
+                            :offer="offer"
                         ></offers-list-row>
                     </v-col>
                     <v-col cols="12">

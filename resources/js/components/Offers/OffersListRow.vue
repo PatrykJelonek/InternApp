@@ -7,7 +7,6 @@
                     <v-col cols="auto" class="mr-5 d-flex justify-center align-center">
                         <v-avatar rounded :color="logoUrl ? '' : 'primary'">
                             <v-img :src="`/${logoUrl}`" v-if="logoUrl"></v-img>
-                            <template v-else>{{ companyName[0] }}</template>
                         </v-avatar>
                     </v-col>
                     <v-col cols="auto">
@@ -51,11 +50,11 @@
                     <v-col cols="auto" class="d-flex justify-center align-center">
                         <menu-dots>
                             <template v-slot:items>
-                                <v-list-item>
+                                <v-list-item class="cursor-pointer">
                                     <v-list-item-title>Aplikuj</v-list-item-title>
                                 </v-list-item>
-                                <v-list-item>
-                                    <v-list-item-title>Utwórz umowę</v-list-item-title>
+                                <v-list-item class="cursor-pointer">
+                                    <v-list-item-title @click="openCreateAgreementDialog">Utwórz umowę</v-list-item-title>
                                 </v-list-item>
                             </template>
                         </menu-dots>
@@ -69,11 +68,25 @@
 <script>
 import CustomCard from "../_General/CustomCard";
 import MenuDots from "../_General/MenuDots";
+import {mapActions} from "vuex";
 
 export default {
     name: "OffersListRow",
     components: {MenuDots, CustomCard},
-    props: ['name', 'slug', 'logoUrl', 'interview', 'companyName', 'address', 'dateRange', 'category']
+    props: ['name', 'slug', 'logoUrl', 'interview', 'companyName', 'address', 'dateRange', 'category', 'offer'],
+
+    methods: {
+        ...mapActions({
+           setDialogArgs: 'helpers/setDialogArgs',
+           toggleDialog: 'helpers/toggleDialog',
+        }),
+
+        openCreateAgreementDialog()
+        {
+            this.setDialogArgs({key: 'DIALOG_FIELD_CREATE_AGREEMENT_FROM_OFFER', val: this.offer});
+            this.toggleDialog({key: 'DIALOG_FIELD_CREATE_AGREEMENT_FROM_OFFER', val: true});
+        }
+    }
 }
 </script>
 

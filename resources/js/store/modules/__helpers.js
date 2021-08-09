@@ -18,6 +18,7 @@ export default {
             DIALOG_FIELD_SELECT_TYPE_OF_UNIVERSITY_USER: false,
             DIALOG_FIELD_CONFIRM_JOINING_TO_COMPANY: false,
             DIALOG_FIELD_CREATE_OWN_AGREEMENT: false,
+            DIALOG_FIELD_CREATE_AGREEMENT_FROM_OFFER: false,
         },
         dialogsArgs: {
             DIALOG_FIELD_ACTIVATE_AGREEMENT: null,
@@ -32,6 +33,7 @@ export default {
             DIALOG_FIELD_SELECT_TYPE_OF_UNIVERSITY_USER: null,
             DIALOG_FIELD_CONFIRM_JOINING_TO_COMPANY: null,
             DIALOG_FIELD_CREATE_OWN_AGREEMENT: null,
+            DIALOG_FIELD_CREATE_AGREEMENT_FROM_OFFER: null,
         },
         createInternshipDialog: false,
         createOfferDialog: false,

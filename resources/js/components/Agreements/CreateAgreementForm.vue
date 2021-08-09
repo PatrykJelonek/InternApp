@@ -47,8 +47,8 @@
                         <v-select
                             v-model="selectedUniversity"
                             :items="userUniversities"
-                            item-value="slug"
-                            item-text="name"
+                            item-value="university.slug"
+                            item-text="university.name"
                             :loading="userUniversitiesLoading"
                             outlined
                             hide-details="auto"
@@ -358,9 +358,9 @@ export default {
 
         this.fetchUserUniversities().then(() => {
             if (this.userUniversities.length === 1) {
-                this.selectedUniversity = this.userUniversities[0];
-                this.agreement.universitySlug = this.userUniversities[0].slug;
-                this.fetchUniversityWorkers(this.userUniversities[0].slug);
+                this.selectedUniversity = this.userUniversities[0].university;
+                this.agreement.universitySlug = this.userUniversities[0].university.slug;
+                this.fetchUniversityWorkers(this.userUniversities[0].university.slug);
             }
         }).catch((e) => {
 
