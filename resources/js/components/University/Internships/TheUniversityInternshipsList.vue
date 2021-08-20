@@ -77,7 +77,7 @@ export default {
                 {text: 'Opiekun z firmy', value: 'companySupervisor'},
                 {text: 'Data rozpoczęcia', value:'startDate'},
                 {text: 'Data zakończenia', value:'endDate'},
-                {text: 'Status', value: 'status.displayed_name'},
+                {text: 'Status', value: 'status.display_name'},
                 {text: 'Akcje', value: 'actions', sortable: false, align: 'center'},
             ],
         }

@@ -16,8 +16,11 @@ class CreateInternshipStatusesTable extends Migration
         Schema::create('internship_statuses', function (Blueprint $table) {
             $table->id();
             $table->string('name', 32)->unique();
-            $table->string('displayed_name', 64)->nullable();
-            $table->dateTime('created_at', 0);
+            $table->string('display_name', 64);
+            $table->string('hex_color', 8)->nullable();
+            $table->enum('group', \App\Constants\InternshipStatusConstants::STATUSES);
+            $table->timestamps();
+            $table->softDeletes();
         });
     }
 

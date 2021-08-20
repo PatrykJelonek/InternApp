@@ -7,6 +7,7 @@ use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\CanResetPassword;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Notifications\Notifiable;
 use Laratrust\Traits\LaratrustUserTrait;
 use Tymon\JWTAuth\Contracts\JWTSubject;
@@ -37,9 +38,12 @@ class User extends Model implements AuthenticatableContract, JWTSubject, CanRese
         return $this->hasOne('App\Models\Student', 'user_id', 'id');
     }
 
-    public function roles()
+    /**
+     * @return BelongsToMany
+     */
+    public function roles(): BelongsToMany
     {
-        return $this->belongsToMany('App\Models\Role', 'users_roles', 'user_id', 'role_id');
+        return $this->belongsToMany(Role::class, 'users_roles', 'user_id', 'role_id');
     }
 
     public function permissions()

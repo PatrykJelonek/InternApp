@@ -270,7 +270,7 @@ export default {
         CHANGE_UNIVERSITY_INTERNSHIP_STATUS(state, {id, status}) {
             state.internships.map((internship) => {
                 if (internship.id === id) {
-                    internship.status.displayed_name = status;
+                    internship.status.display_name = status;
                 }
 
                 return internship;

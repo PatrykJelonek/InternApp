@@ -25,7 +25,7 @@ class InternshipStatusConstants
         self::STATUS_ENDED_BY_UNIVERSITY,
     ];
 
-    public const STATUSES_DISPLAYED_NAME = [
+    public const STATUSES_DISPLAY_NAME = [
         self::STATUS_NEW => 'Nowy',
         self::STATUS_ACCEPTED => 'Zaakceptowany',
         self::IN_PROGRESS => 'W trakcie',

@@ -37,7 +37,7 @@ class DatabaseSeeder extends Seeder
                 StudentsTasksSeeder::class,
                 StudentsJournalEntriesSeeder::class,
                 CommentsSeeder::class,
-                JournalEntriesCommentsSeeder::class,
+                StudentsJournalEntriesCommentsSeeder::class,
             ]
         );
     }

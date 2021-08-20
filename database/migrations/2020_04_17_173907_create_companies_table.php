@@ -18,7 +18,7 @@ class CreateCompaniesTable extends Migration
             $table->string('name', 255)->unique();
             $table->foreignId('city_id');
             $table->foreign('city_id')->references('id')->on('cities');
-            $table->string('street', 64);
+            $table->string('street', 128);
             $table->string('street_number', 8);
             $table->string('email', 64)->unique();
             $table->string('phone', 16)->nullable();

@@ -15,8 +15,8 @@ class CreateAgreementsTable extends Migration
     {
         Schema::create('agreements', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 80);
-            $table->string('slug', 80)->unique();
+            $table->string('name', 128);
+            $table->string('slug', 128)->unique();
             $table->integer('places_number')->default(1);
             $table->date('signing_date')->nullable();
             $table->date('date_from');

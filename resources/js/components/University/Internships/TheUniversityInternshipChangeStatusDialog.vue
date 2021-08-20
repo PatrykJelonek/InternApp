@@ -17,7 +17,7 @@
                         label="Status"
                         v-model="selectedStatus"
                         :items="internshipStatuses"
-                        item-text="displayed_name"
+                        item-text="display_name"
                         item-value="id"
                         :loading="internshipStatusesLoading"
                         outlined
@@ -87,7 +87,7 @@ export default {
             }).then((response) => {
                 this.$store.commit('university/CHANGE_UNIVERSITY_INTERNSHIP_STATUS', {
                     id: response.data.id,
-                    status: this.internshipStatuses.find(status => status.id === response.data.internship_status_id).displayed_name,
+                    status: this.internshipStatuses.find(status => status.id === response.data.internship_status_id).display_name,
                 })
                 this.setSnackbar({message: 'Status został zmieniony!', color: 'success'});
                 this.toggleDialog({key: 'DIALOG_FIELD_CHANGE_INTERNSHIP_STATUS', val: false});

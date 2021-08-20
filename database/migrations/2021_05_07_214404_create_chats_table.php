@@ -17,8 +17,8 @@ class CreateChatsTable extends Migration
             $table->id();
             $table->uuid('uuid')->unique();
             $table->boolean('one_one')->default(false);
-            $table->softDeletes();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

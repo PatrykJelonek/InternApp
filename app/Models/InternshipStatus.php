@@ -14,7 +14,7 @@ class InternshipStatus extends Model
         self::STATUS_ACCEPTED
     ];
 
-    const STATUSES_DISPLAYED_NAME = [
+    const STATUSES_DISPLAY_NAME = [
         self::STATUS_NEW => 'Nowy',
         self::STATUS_ACCEPTED => 'Zaakceptowany'
     ];

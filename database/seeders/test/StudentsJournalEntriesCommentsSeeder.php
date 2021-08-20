@@ -5,7 +5,7 @@ namespace Database\Seeders\Test;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class JournalEntriesCommentsSeeder extends Seeder
+class StudentsJournalEntriesCommentsSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -14,9 +14,9 @@ class JournalEntriesCommentsSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('journal_entries_comments')->insert([
+        DB::table('students_journal_entries_comments')->insert([
             [
-                'journal_entry_id' => 1,
+                'student_journal_entry_id' => 1,
                 'comment_id' => 1,
             ],
         ]);

@@ -18,7 +18,7 @@
                                 outlined
                                 v-on="on"
                                 v-bind="attrs"
-                            >{{ internship.status.displayed_name }}</v-chip>
+                            >{{ internship.status.display_name }}</v-chip>
                         </template>
                         <span>Status praktyki</span>
                     </v-tooltip>
