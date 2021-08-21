@@ -16,7 +16,7 @@ class CreateQuestionnairesTable extends Migration
         Schema::create('questionnaires', function (Blueprint $table) {
             $table->id();
             $table->string('name', 64)->unique();
-            $table->longText('description');
+            $table->mediumText('description');
             $table->foreignId('university_id')->nullable();
             $table->foreign('university_id')->references('id')->on('universities');
             $table->foreignId('company_id')->nullable();

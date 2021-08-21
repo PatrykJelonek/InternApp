@@ -20,7 +20,7 @@ class CreateOffersTable extends Migration
             $table->foreignId('user_id');
             $table->foreign('user_id')->references('id')->on('users');
             $table->string('name', 80)->unique();
-            $table->integer('places_number')->nullable()->default(0);
+            $table->integer('places_number')->default(0);
             $table->longText('program')->nullable();
             $table->longText('schedule')->nullable();
             $table->foreignId('offer_category_id');
@@ -33,8 +33,8 @@ class CreateOffersTable extends Migration
             $table->date('date_to')->nullable();
             $table->string('slug', 80)->unique();
             $table->boolean('interview');
-            $table->dateTime('created_at', 0);
-            $table->dateTime('updated_at', 0);
+            $table->timestamps();
+            $table->softDeletes();
         });
     }
 

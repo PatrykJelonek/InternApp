@@ -17,11 +17,10 @@ class CreateOfferStatusesTable extends Migration
             $table->id();
             $table->string('name', 16)->unique();
             $table->string('description', 128)->nullable();
-            $table->string('display_name', 128)->nullable();
-            $table->string('hex_color', 7)->nullable();
+            $table->string('display_name', 128);
+            $table->string('hex_color', 8)->nullable();
             $table->enum('group',['new','accepted','rejected'])->nullable();
-            $table->dateTime('created_at', 0);
-            $table->dateTime('updated_at', 0);
+            $table->timestamps();
         });
     }
 

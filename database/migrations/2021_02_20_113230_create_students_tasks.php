@@ -19,7 +19,7 @@ class CreateStudentsTasks extends Migration
             $table->foreign('student_id')->references('id')->on('students');
             $table->foreignId('task_id');
             $table->foreign('task_id')->references('id')->on('tasks');
-            $table->boolean('done');
+            $table->dateTime('done_at')->nullable();
             $table->timestamps();
         });
     }

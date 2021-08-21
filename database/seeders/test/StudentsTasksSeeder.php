@@ -2,6 +2,7 @@
 
 namespace Database\Seeders\Test;
 
+use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -18,17 +19,17 @@ class StudentsTasksSeeder extends Seeder
             [
                 'student_id' => 1,
                 'task_id' => 1,
-                'done' => true,
+                'done_at' => null
             ],
             [
                 'student_id' => 1,
                 'task_id' => 2,
-                'done' => true,
+                'done_at' => Carbon::today()->addDays(2),
             ],
             [
                 'student_id' => 2,
                 'task_id' => 1,
-                'done' => false,
+                'done_at' => Carbon::today()->addDays(2),
             ],
         ]);
     }

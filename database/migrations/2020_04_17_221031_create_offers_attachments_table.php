@@ -19,7 +19,7 @@ class CreateOffersAttachmentsTable extends Migration
             $table->foreign('offer_id')->references('id')->on('offers');
             $table->foreignId('attachment_id');
             $table->foreign('attachment_id')->references('id')->on('attachments');
-            $table->timestamps();
+            $table->timestamp('created_at');
         });
     }
 

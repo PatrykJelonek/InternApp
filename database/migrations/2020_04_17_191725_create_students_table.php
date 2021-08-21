@@ -20,10 +20,9 @@ class CreateStudentsTable extends Migration
             $table->string('student_index',8);
             $table->integer('semester');
             $table->integer('study_year');
-            $table->foreignId('specialization_id');
+            $table->foreignId('specialization_id')->nullable();
             $table->foreign('specialization_id')->references('id')->on('specializations');
-            $table->dateTime('created_at', 0);
-            $table->dateTime('updated_at', 0);
+            $table->timestamps();
         });
     }
 

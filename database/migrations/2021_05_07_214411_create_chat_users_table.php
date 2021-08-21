@@ -19,7 +19,7 @@ class CreateChatUsersTable extends Migration
             $table->foreign('chat_uuid')->references('uuid')->on('chats');
             $table->foreignId('user_id');
             $table->foreign('user_id')->references('id')->on('users');
-            $table->timestamp('created_at');
+            $table->timestamps();
             $table->softDeletes();
         });
     }

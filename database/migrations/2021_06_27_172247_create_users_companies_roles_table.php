@@ -19,7 +19,7 @@ class CreateUsersCompaniesRolesTable extends Migration
             $table->foreign('user_company_id')->references('id')->on('users_companies');
             $table->foreignId('role_id');
             $table->foreign('role_id')->references('id')->on('roles');
-            $table->timestamps();
+            $table->timestamp('created_at');
         });
     }
 
