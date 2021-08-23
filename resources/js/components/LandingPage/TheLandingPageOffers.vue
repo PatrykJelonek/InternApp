@@ -35,7 +35,7 @@
                     </v-fade-transition>
                 </v-slide-item>
                 <v-slide-item v-if="offers.length > 9">
-                    <v-card elevation="0" width="300px" class="mx-5 my-10 d-flex justify-start align-self-center">
+                    <v-card elevation="0" width="300px" class="mx-5 my-10 d-flex justify-start align-self-center transparent">
                         <v-btn
                             outlined
                             color="green accent-4"

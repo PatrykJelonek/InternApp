@@ -490,10 +490,6 @@
 <script>
 import {mapActions, mapGetters} from "vuex";
 import {setInteractionMode, ValidationProvider, ValidationObserver, extend} from "vee-validate";
-import moment from 'moment';
-import {Base64} from 'js-base64';
-import {max, regex} from "vee-validate/dist/rules";
-
 
 export default {
     name: "CreateOwnAgreementForm",

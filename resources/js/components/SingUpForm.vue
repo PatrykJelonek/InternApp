@@ -48,12 +48,13 @@
                             <v-text-field
                                 label="Numer Telefonu"
                                 type="tel"
+                                v-mask="'###-###-###'"
+                                prefix="+48"
                                 v-model="account.phone"
                                 outlined
                                 dense
                                 hide-details="auto"
                                 placeholder="123-456-789"
-                                v-on:input="phonePattern"
                                 :error-messages="errors"
                             ></v-text-field>
                         </validation-provider>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Constants\InternshipStatusConstants;
+use App\Constants\RoleConstants;
 use App\Constants\UserStatusConstants;
 use App\Events\UserCreated;
 use App\Http\Controllers\Controller;
@@ -27,6 +28,12 @@ use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
+    private const REQUEST_FIELD_EMAIL = 'email';
+    private const REQUEST_FIELD_PASSWORD = 'password';
+    private const REQUEST_FIELD_FIRSTNAME = 'firstName';
+    private const REQUEST_FIELD_LASTNAME = 'lastName';
+    private const REQUEST_FIELD_PHONE = 'phone';
+
     /**
      * @var UserRepository
      */
@@ -85,16 +92,16 @@ class UserController extends Controller
     public function store(UserStoreRequest $request)
     {
         $user = $this->userService->createUser(
-            $request->input("email"),
-            $request->input("password"),
-            $request->input("firstName"),
-            $request->input("lastName"),
-            $request->input("phone"),
+            $request->input(self::REQUEST_FIELD_EMAIL),
+            $request->input(self::REQUEST_FIELD_PASSWORD),
+            $request->input(self::REQUEST_FIELD_FIRSTNAME),
+            $request->input(self::REQUEST_FIELD_LASTNAME),
+            $request->input(self::REQUEST_FIELD_PHONE),
             $this->userRepository->getUserStatusByName(UserStatusConstants::USER_STATUS_INACTIVE)->id
         );
 
         if (!is_null($user)) {
-            $user->attachRole('user');
+            $user->attachRole(RoleConstants::ROLE_USER);
             UserCreated::dispatch($user);
             return response($user, Response::HTTP_CREATED);
         }

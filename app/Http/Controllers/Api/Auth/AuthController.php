@@ -20,16 +20,31 @@ use Tymon\JWTAuth\Exceptions\TokenInvalidException;
  */
 class AuthController extends Controller
 {
+    private const REQUEST_FIELD_EMAIL = 'email';
+    private const REQUEST_FIELD_PASSWORD = 'password';
+    private const USER_STATUS_ACTIVE = 1;
+    private const TOKEN_TYPE_BEARER = 'bearer';
+
     public function login(AuthLoginRequest $request)
     {
-        if (!$token = auth()->attempt(['email' => $request->input("email"), 'password' => $request->input('password'), 'user_status_id' => 1])) {
-            return response('User has not been authenticated!', Response::HTTP_UNAUTHORIZED);
+        $token = auth()->attempt(
+            [
+                'email' => $request->input(self::REQUEST_FIELD_EMAIL),
+                'password' => $request->input(self::REQUEST_FIELD_PASSWORD),
+                'user_status_id' => self::USER_STATUS_ACTIVE,
+            ]);
+
+        if (!$token) {
+            return response('Użytkownik nie został uwierzytelniony!', Response::HTTP_UNAUTHORIZED);
         }
 
-        $userInformation = User::with(['roles', 'permissions','universities','companies'])->where('email', $request->input("email"))->first();
+        $userInformation = User::with(['roles', 'permissions','universities','companies'])
+            ->where('email', $request->input(self::REQUEST_FIELD_EMAIL))
+            ->first();
+
         return response()->json([
             'token' => $token,
-            'token_type' => 'bearer',
+            'token_type' => self::TOKEN_TYPE_BEARER,
             'user' => $userInformation
         ], Response::HTTP_OK);
     }
