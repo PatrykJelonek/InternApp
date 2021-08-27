@@ -16,13 +16,16 @@ use App\Http\Requests\UniversityCreateUniversityFacultyRequest as CreateFacultyR
 use App\Http\Requests\UniversityCreateUniversityQuestionnaireRequest;
 use App\Http\Requests\RoleGetAvailableRolesByGroupRequest;
 use App\Http\Requests\UniversityCreateUniversityRequest;
+use App\Http\Requests\UniversityGetUniversitiesToVerificationRequest;
 use App\Http\Requests\UniversityGetUniversityQuestionnairesRequest;
+use App\Http\Requests\UniversityGetUniversityRequest;
 use App\Http\Requests\UniversityInternshipsRequest;
 use App\Http\Requests\UniversityStudentsRequest;
 use App\Http\Requests\UniversityUpdateUniversityFacultyFieldRequest;
 use App\Http\Requests\UniversityUpdateUniversityFacultyFieldSpecializationRequest;
 use App\Http\Requests\UniversityUpdateUniversityFacultyRequest;
 use App\Http\Requests\UniversityUpdateUniversityLogoRequest as UpdateLogoRequest;
+use App\Http\Requests\UniversityVerifyUniversityRequest;
 use App\Http\Requests\UniversityVerifyUniversityWorkerRequest;
 use App\Http\Requests\UniversityWorkersRequest;
 use App\Models\Agreement;
@@ -48,6 +51,16 @@ use Illuminate\Support\Str;
 
 class UniversityController extends Controller
 {
+    public const REQUEST_FIELD_UNIVERSITY_NAME = 'name';
+    public const REQUEST_FIELD_UNIVERSITY_TYPE_ID = 'universityTypeId';
+    public const REQUEST_FIELD_UNIVERSITY_CITY_ID = 'cityId';
+    public const REQUEST_FIELD_UNIVERSITY_STREET = 'street';
+    public const REQUEST_FIELD_UNIVERSITY_STREET_NUMBER = 'streetNumber';
+    public const REQUEST_FIELD_UNIVERSITY_EMAIL = 'email';
+    public const REQUEST_FIELD_UNIVERSITY_PHONE = 'phone';
+    public const REQUEST_FIELD_UNIVERSITY_WEBSITE = 'website';
+    public const REQUEST_FIELD_USER_ID = 'userId';
+
     /**
      * @var UniversityRepository
      */
@@ -261,38 +274,47 @@ class UniversityController extends Controller
 
     public function createUniversity(UniversityCreateUniversityRequest $request)
     {
+        DB::beginTransaction();
         $createdUniversity = $this->universityService->createUniversity(
-            $request->input('name'),
-            $request->input('universityTypeId'),
-            $request->input('cityId'),
-            $request->input('street'),
-            $request->input('streetNumber'),
-            $request->input('email'),
-            $request->input('phone'),
-            $request->input('website')
+            $request->input(self::REQUEST_FIELD_UNIVERSITY_NAME),
+            $request->input(self::REQUEST_FIELD_UNIVERSITY_TYPE_ID),
+            $request->input(self::REQUEST_FIELD_UNIVERSITY_CITY_ID),
+            $request->input(self::REQUEST_FIELD_UNIVERSITY_STREET),
+            $request->input(self::REQUEST_FIELD_UNIVERSITY_STREET_NUMBER),
+            $request->input(self::REQUEST_FIELD_UNIVERSITY_EMAIL),
+            $request->input(self::REQUEST_FIELD_UNIVERSITY_PHONE),
+            $request->input(self::REQUEST_FIELD_UNIVERSITY_WEBSITE)
         );
 
         if (!is_null($createdUniversity)) {
-            $this->universityService->addUserToUniversityWithRole(
-                !empty($request->input('userId')) ? $request->input('userId') : Auth::id(),
+            $result = $this->universityService->addUserToUniversityWithRole(
+                !empty($request->input(self::REQUEST_FIELD_USER_ID)) ?
+                    $request->input(self::REQUEST_FIELD_USER_ID) : Auth::id(),
                 $createdUniversity->id,
-                $this->roleRepository->getRoleByName(RoleConstants::ROLE_UNIVERSITY_OWNER)->id
+                $this->roleRepository->getRoleByName(RoleConstants::ROLE_UNIVERSITY_OWNER)->id,
+                true,
+                true
             );
 
-            return response($createdUniversity, Response::HTTP_CREATED);
+            if (!is_null($result)) {
+                DB::commit();
+                return response($createdUniversity, Response::HTTP_CREATED);
+            }
         }
 
+        DB::rollBack();
         return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  $slug
+     * @param UniversityGetUniversityRequest $request
+     * @param string                         $slug
      *
      * @return Response
      */
-    public function show($slug): Response
+    public function getUniversity(UniversityGetUniversityRequest $request, string $slug): Response
     {
         $university = $this->universityRepository->getUniversityBySlug($slug);
 
@@ -663,7 +685,11 @@ class UniversityController extends Controller
                 $university->logo_url = $path;
 
                 if ($university->update()) {
-                    Storage::delete($oldAvatarPath);
+
+                    if (!empty($oldAvatarPath)) {
+                        Storage::delete($oldAvatarPath);
+                    }
+
                     return response($path, Response::HTTP_OK);
                 }
             }
@@ -841,18 +867,16 @@ class UniversityController extends Controller
     ) {
         $university = $this->universityRepository->getUniversityBySlug($slug);
 
+        DB::beginTransaction();
         if (!is_null($university)) {
-            DB::beginTransaction();
             $userUniversity = $this->universityService->addUserToUniversityWithRole(
                 $userId ?? Auth::id(),
                 $university->id,
-                $this->roleRepository->getRoleByName(
-                    RoleConstants::ROLE_UNIVERSITY_WORKER
-                )->id
+                $this->roleRepository->getRoleByName(RoleConstants::ROLE_UNIVERSITY_WORKER)->id
             );
 
             if (!is_null($userUniversity)) {
-                \Illuminate\Support\Facades\Log::channel('user')->info(
+                \Illuminate\Support\Facades\Log::channel(config('global.defaultLogChannel'))->info(
                     'Dodano użytkownika do uczelni',
                     [
                         'userId' => Auth::id(),
@@ -868,7 +892,7 @@ class UniversityController extends Controller
             }
         }
 
-        \Illuminate\Support\Facades\Log::channel('user')->error(
+        \Illuminate\Support\Facades\Log::channel(config('global.defaultLogChannel'))->error(
             'Nie udało się dodać użytkownika do uczelni',
             [
                 'userId' => Auth::id(),
@@ -890,14 +914,12 @@ class UniversityController extends Controller
     ) {
         $university = $this->universityRepository->getUniversityBySlug($slug);
 
+        DB::beginTransaction();
         if (!is_null($university)) {
-            DB::beginTransaction();
             $userUniversity = $this->universityService->addUserToUniversityWithRole(
                 $userId ?? Auth::id(),
                 $university->id,
-                $this->roleRepository->getRoleByName(
-                    RoleConstants::ROLE_STUDENT
-                )->id
+                $this->roleRepository->getRoleByName(RoleConstants::ROLE_STUDENT)->id
             );
 
             $student = $this->studentService->createStudent(
@@ -961,7 +983,7 @@ class UniversityController extends Controller
                     $request->input('agreement.content'),
                     null,
                     $request->input('agreement.active'),
-                    $request->input('agreement.signingDate')
+                    $request->input('agreement.signingDate'),
                 );
             }
 
@@ -972,6 +994,20 @@ class UniversityController extends Controller
         }
 
         DB::rollBack();
+        return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+
+    public function getUniversitiesToVerification(UniversityGetUniversitiesToVerificationRequest $request) {
+        return response($this->universityRepository->getUniversitiesToVerification(), Response::HTTP_OK);
+    }
+
+    public function verifyUniversity(UniversityVerifyUniversityRequest $request, string $slug) {
+        $verifiedUniversity = $this->universityService->verifyUniversity($slug);
+
+        if (!is_null($verifiedUniversity)) {
+            return response($verifiedUniversity, Response::HTTP_OK);
+        }
+
         return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 

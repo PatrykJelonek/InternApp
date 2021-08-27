@@ -10,7 +10,7 @@ class RoleConstants
     public const ROLE_COMPANY_OWNER = 'company_owner';
     public const ROLE_UNIVERSITY_WORKER = 'university_worker';
     public const ROLE_UNIVERSITY_OWNER = 'university_owner';
-    public const ROLE_DEANERY_WORKER = 'deanery_worker';
+    public const ROLE_UNIVERSITY_DEANERY_WORKER = 'deanery_worker';
     public const ROLE_INTERN = 'intern';
     public const ROLE_STUDENT = 'student';
     public const ROLE_UNIVERSITY_SUPERVISOR = 'university_supervisor';
@@ -33,7 +33,7 @@ class RoleConstants
         self::ROLE_STUDENT,
         self::ROLE_UNIVERSITY_WORKER,
         self::ROLE_UNIVERSITY_OWNER,
-        self::ROLE_DEANERY_WORKER,
+        self::ROLE_UNIVERSITY_DEANERY_WORKER,
         self::ROLE_COMPANY_WORKER,
         self::ROLE_COMPANY_OWNER,
         self::ROLE_INTERN,
@@ -49,7 +49,7 @@ class RoleConstants
         self::ROLE_COMPANY_OWNER => 'User type: ' . self::ROLE_COMPANY_OWNER,
         self::ROLE_UNIVERSITY_WORKER => 'User type: ' . self::ROLE_UNIVERSITY_WORKER,
         self::ROLE_UNIVERSITY_OWNER => 'User type: ' . self::ROLE_UNIVERSITY_OWNER,
-        self::ROLE_DEANERY_WORKER => 'User type: ' . self::ROLE_DEANERY_WORKER,
+        self::ROLE_UNIVERSITY_DEANERY_WORKER => 'User type: ' . self::ROLE_UNIVERSITY_DEANERY_WORKER,
         self::ROLE_INTERN => 'User type: ' . self::ROLE_INTERN,
         self::ROLE_STUDENT => 'User type: ' . self::ROLE_STUDENT,
         self::ROLE_UNIVERSITY_SUPERVISOR => 'User type: ' . self::ROLE_UNIVERSITY_SUPERVISOR,
@@ -63,7 +63,7 @@ class RoleConstants
         self::ROLE_COMPANY_OWNER => 'Właściciel firmy',
         self::ROLE_UNIVERSITY_WORKER => 'Pracownik uczelni',
         self::ROLE_UNIVERSITY_OWNER => 'Właściciel uczelni',
-        self::ROLE_DEANERY_WORKER => 'Pracownik dziekanatu',
+        self::ROLE_UNIVERSITY_DEANERY_WORKER => 'Pracownik dziekanatu',
         self::ROLE_INTERN => 'Praktykant/Stażysta',
         self::ROLE_STUDENT => 'Student',
         self::ROLE_UNIVERSITY_SUPERVISOR => 'Opiekun praktykanta z uczelni',
@@ -77,7 +77,7 @@ class RoleConstants
         self::ROLE_COMPANY_OWNER => 'Właściciel firmy',
         self::ROLE_UNIVERSITY_WORKER => 'Pracownik uczelni',
         self::ROLE_UNIVERSITY_OWNER => 'Właściciel uczelni',
-        self::ROLE_DEANERY_WORKER => 'Pracownik dziekanatu',
+        self::ROLE_UNIVERSITY_DEANERY_WORKER => 'Pracownik dziekanatu',
         self::ROLE_INTERN => 'Praktykant/Stażysta',
         self::ROLE_STUDENT => 'Student',
         self::ROLE_UNIVERSITY_SUPERVISOR => 'Opiekun praktykanta z uczelni',
@@ -91,7 +91,7 @@ class RoleConstants
         self::ROLE_COMPANY_OWNER => self::ROLE_GROUP_COMPANY,
         self::ROLE_UNIVERSITY_WORKER => self::ROLE_GROUP_UNIVERSITY,
         self::ROLE_UNIVERSITY_OWNER => self::ROLE_GROUP_UNIVERSITY,
-        self::ROLE_DEANERY_WORKER => self::ROLE_GROUP_UNIVERSITY,
+        self::ROLE_UNIVERSITY_DEANERY_WORKER => self::ROLE_GROUP_UNIVERSITY,
         self::ROLE_INTERN => self::ROLE_GROUP_OTHER,
         self::ROLE_STUDENT => self::ROLE_GROUP_OTHER,
         self::ROLE_UNIVERSITY_SUPERVISOR => self::ROLE_GROUP_UNIVERSITY,

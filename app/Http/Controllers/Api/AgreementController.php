@@ -20,6 +20,7 @@ use Illuminate\Http\Response;
 
 class AgreementController extends Controller
 {
+    const AGREEMENT_INACTIVE = false;
     /**
      * @var AgreementService
      */
@@ -123,7 +124,7 @@ class AgreementController extends Controller
             $request->input('placesNumber'),
             $request->input('content'),
             $request->input('offerId'),
-            $request->input('isActive'),
+            self::AGREEMENT_INACTIVE,
             Carbon::today()
         );
 

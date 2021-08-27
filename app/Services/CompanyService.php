@@ -188,9 +188,10 @@ class CompanyService
         ?string $phone = null,
         ?string $website = null,
         ?string $description = null,
-        ?string $logoUrl = null,
+        ?bool $verified = false,
         ?int $userId = null,
-        ?bool $draft = false
+        ?bool $draft = false,
+        ?string $logoUrl = null
     ): ?Company {
         $generatedAccessCode = UtilsService::generateAccessCode();
 
@@ -215,7 +216,7 @@ class CompanyService
         $company->logo_url = $logoUrl;
         $company->company_category_id = $companyCategoryId;
         $company->user_id = !is_null($userId) ? $userId : Auth::id();
-        $company->accepted = $draft;
+        $company->verified = $verified;
         $company->draft = $draft;
         $company->freshTimestamp();
 
@@ -275,22 +276,34 @@ class CompanyService
     }
 
     /**
-     * @param int $userId
-     * @param int $companyId
-     * @param int $roleId
+     * @param int       $userId
+     * @param int       $companyId
+     * @param int       $roleId
+     * @param bool|null $verified
+     * @param bool|null $active
      *
      * @return UserCompany|null
      */
-    public function addUserToCompanyWithRole(int $userId, int $companyId, int $roleId): ?UserCompany
-    {
+    public function addUserToCompanyWithRole(
+        int $userId,
+        int $companyId,
+        int $roleId,
+        ?bool $verified = false,
+        ?bool $active = false
+    ): ?UserCompany {
         $userCompany = new UserCompany();
         $userCompany->user_id = !empty($userId) ? $userId : Auth::id();
         $userCompany->company_id = $companyId;
+        $userCompany->verified = $verified;
+        $userCompany->active = $active;
 
         if ($userCompany->save()) {
-            $userCompany->roles()->attach([$roleId], ['created_at' => Carbon::now(), 'updated_at' => Carbon::now()]);
+            $userCompany->roles()->attach(
+                [$roleId],
+                ['created_at' => Carbon::now(),]
+            );
 
-            Log::channel('user')->info(
+            Log::channel(config('global.defaultLogChannel'))->info(
                 'Dodano nową rolę do użytkownika w firmie!',
                 [
                     'user_id' => Auth::id(),
@@ -305,7 +318,7 @@ class CompanyService
             return $userCompany;
         }
 
-        Log::channel('user')->error(
+        Log::channel(config('global.defaultLogChannel'))->error(
             'Wystąpił problem z dodaniem roli do użytkownika w firmie!',
             [
                 'user_id' => Auth::id(),

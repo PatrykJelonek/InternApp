@@ -11,54 +11,74 @@
             </template>
         </page-title>
 
-        <custom-card>
-            <custom-card-title>
-                <template v-slot:default>Lista umów</template>
-            </custom-card-title>
-            <v-data-table
-                :items="companyAgreements"
-                :loading="companyAgreementsLoading"
-                :headers="headers"
-                class="table-cursor component-background"
-                @click:row="(item) => {this.$router.push({name: 'agreement', params: {slug: item.slug}})}"
-            >
-                <template v-slot:item.status="{ item }">
-                    <v-chip small :color="item.status.hex_color">
-                        {{ item.status.display_name }}
-                    </v-chip>
-                </template>
-                <template v-slot:item.actions="{ item }">
-                    <v-menu offset-y>
-                        <template v-slot:activator="{ on, attrs }">
-                            <v-btn
-                                icon
-                                v-bind="attrs"
-                                v-on="on"
-                            >
-                                <v-icon>mdi-dots-vertical</v-icon>
-                            </v-btn>
+        <v-row no-gutters>
+            <v-col cols="12">
+                <custom-card>
+                    <v-text-field
+                        v-model="search"
+                        outlined
+                        prepend-inner-icon="mdi-magnify"
+                        label="Szukaj"
+                        hide-details
+                    ></v-text-field>
+                </custom-card>
+            </v-col>
+        </v-row>
+
+        <v-row>
+            <v-col cols="12">
+                <custom-card>
+                    <custom-card-title>
+                        <template v-slot:default>Lista umów</template>
+                    </custom-card-title>
+                    <v-data-table
+                        :items="companyAgreements"
+                        :loading="companyAgreementsLoading"
+                        :headers="headers"
+                        class="table-cursor component-background"
+                        :search="search"
+                    >
+                        <template v-slot:item.status.display_name="{ item }">
+                            <v-chip small outlined :color="item.status.hex_color">
+                                {{ item.status.display_name }}
+                            </v-chip>
                         </template>
-                        <v-list dense>
-                            <v-list-item>
-                                <v-list-item-title
-                                    class="cursor-pointer"
-                                    :to="{name: 'offer', params: {slug: item.offer.slug}}"
-                                >
-                                    Wyświetl ofertę
-                                </v-list-item-title>
-                            </v-list-item>
-                            <v-divider v-if="item.status.group === 'new'"></v-divider>
-                            <v-list-item v-if="item.status.group === 'new'" @click="accept(item)">
-                                <v-list-item-title class="cursor-pointer">Akceptuj</v-list-item-title>
-                            </v-list-item>
-                            <v-list-item v-if="item.status.group === 'new'" @click="reject(item)">
-                                <v-list-item-title class="cursor-pointer">Odrzuć</v-list-item-title>
-                            </v-list-item>
-                        </v-list>
-                    </v-menu>
-                </template>
-            </v-data-table>
-        </custom-card>
+                        <template v-slot:item.actions="{ item }">
+                            <v-menu offset-y>
+                                <template v-slot:activator="{ on, attrs }">
+                                    <v-btn
+                                        icon
+                                        v-bind="attrs"
+                                        v-on="on"
+                                    >
+                                        <v-icon>mdi-dots-vertical</v-icon>
+                                    </v-btn>
+                                </template>
+                                <v-list dense class="cursor-pointer">
+                                    <v-list-item :to="{name: 'agreement', params: {slug: item.slug}}">
+                                        <v-list-item-title>
+                                            Wyświetl umowę
+                                        </v-list-item-title>
+                                    </v-list-item>
+                                    <v-list-item :to="{name: 'offer', params: {slug: item.offer.slug}}">
+                                        <v-list-item-title class="cursor-pointer">
+                                            Wyświetl ofertę
+                                        </v-list-item-title>
+                                    </v-list-item>
+                                    <v-divider v-if="item.status.group === 'new'"></v-divider>
+                                    <v-list-item v-if="item.status.group === 'new'" @click="accept(item)">
+                                        <v-list-item-title class="cursor-pointer">Akceptuj</v-list-item-title>
+                                    </v-list-item>
+                                    <v-list-item v-if="item.status.group === 'new'" @click="reject(item)">
+                                        <v-list-item-title class="cursor-pointer">Odrzuć</v-list-item-title>
+                                    </v-list-item>
+                                </v-list>
+                            </v-menu>
+                        </template>
+                    </v-data-table>
+                </custom-card>
+            </v-col>
+        </v-row>
     </v-container>
 </template>
 
@@ -78,15 +98,16 @@ export default {
 
     data() {
         return {
+            search: null,
             selectedAgreement: {
                 slug: null,
             },
             headers: [
-                {text: 'Oferta', value: 'offer.name'},
+                {text: 'Nazwa', value: 'name'},
                 {text: 'Miejsca', value: 'places_number'},
                 {text: 'Od', value: 'date_from'},
                 {text: 'Do', value: 'date_to'},
-                {text: 'Status', value: 'status'},
+                {text: 'Status', value: 'status.display_name'},
                 {text: 'Akcje', value: 'actions'},
             ],
         }

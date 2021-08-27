@@ -103,6 +103,8 @@
                             outlined
                             dense
                             hide-details="auto"
+                            prefix="+48"
+                            v-mask="'###-###-###'"
                             :error-messages="errors"
                             placeholder="123-456-789"
                         ></v-text-field>
@@ -205,7 +207,6 @@
                     if(e.response.status == 422) {
                         console.log(e.response.data.errors);
                         this.$refs.observer.setErrors(e.response.data.errors);
-
                     }
                 });
             }

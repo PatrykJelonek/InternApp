@@ -27,4 +27,6 @@ interface UniversityRepositoryInterface
     public function getQuestionnaires(string $slug);
 
     public function getUniversities();
+
+    public function getUniversitiesToVerification();
 }

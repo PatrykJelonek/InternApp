@@ -2,9 +2,14 @@
     <custom-card>
         <custom-card-title>
             <template v-slot:default>Kod dostępu</template>
+            <template v-slot:actions>
+                <v-btn icon @click="generateAccessCode">
+                    <v-icon>mdi-cached</v-icon>
+                </v-btn>
+            </template>
         </custom-card-title>
-        <v-row>
-            <v-col cols="12">
+        <v-row no-gutters>
+            <v-col cols="12" class="fill-height d-flex justify-center align-center">
                 <v-form class="ma-5">
                     <v-text-field
                         label="Kod dostępu"
@@ -12,10 +17,8 @@
                         readonly
                         outlined
                         hide-details dense
-                        append-outer-icon="mdi-cached"
                         append-icon="mdi-content-copy"
                         :loading="codeLoading"
-                        @click:append-outer="generateAccessCode"
                         @click:append="copyAccessCode"
                     ></v-text-field>
                 </v-form>

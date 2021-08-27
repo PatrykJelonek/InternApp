@@ -1,14 +1,6 @@
 <template>
     <v-app>
-        <v-app-bar
-            :flat="true"
-            color="transparent"
-            dark
-            class="px-5"
-            :absolute="true"
-        >
-            <v-toolbar-title class="font-weight-bold">InternApp</v-toolbar-title>
-        </v-app-bar>
+        <app-bar-minimal></app-bar-minimal>
         <v-main>
             <v-content class="fill-height component-background">
                 <v-container fluid class="pa-0 fill-height">
@@ -17,7 +9,7 @@
                             cols="12" sm="9" md="6" lg="5" xl="3"
                             class="pt-10 d-flex flex-column justify-center align-center fill-height"
                         >
-                            <h2 class="font-weight-medium title font-weight-bold pa-0 ma-2">Przypomij hasło</h2>
+                            <h2 class="font-weight-medium title font-weight-bold pa-0 ma-2">Zmień hasło</h2>
                             <p class="subtitle-2 pa-0 ma-2 text-center">Zaloguj się na swoje konto by skorzystać ze
                                 wszystkich funkcji naszego serwisu!</p>
                             <v-container>
@@ -38,6 +30,7 @@
                                                 type="password"
                                                 placeholder="jankowalski@example.com"
                                                 :error-messages="errors"
+                                                class="mb-5"
                                             ></v-text-field>
                                         </validation-provider>
                                         <validation-provider
@@ -62,7 +55,7 @@
                             <v-container>
                                 <v-row>
                                     <v-col cols="12" class="d-flex justify-center">
-                                        <v-btn color="primary" outlined dark @click="submit">Przypomij hasło</v-btn>
+                                        <v-btn color="primary" outlined dark @click="submit">Zmień hasło</v-btn>
                                     </v-col>
                                 </v-row>
                             </v-container>
@@ -77,6 +70,7 @@
 <script>
 import {extend, setInteractionMode, ValidationProvider, ValidationObserver} from "vee-validate";
 import {mapActions} from "vuex";
+import AppBarMinimal from "../components/App/AppBarMinimal";
 
 setInteractionMode('eager');
 
@@ -84,6 +78,7 @@ export default {
     name: "ResetPassword",
 
     components: {
+        AppBarMinimal,
         ValidationProvider,
         ValidationObserver
     },
@@ -98,7 +93,8 @@ export default {
 
     methods: {
         ...mapActions({
-            resetPassword: 'auth/resetPassword'
+            resetPassword: 'auth/resetPassword',
+            setSnackbar: 'snackbar/setSnackbar',
         }),
 
         async submit() {
@@ -106,7 +102,14 @@ export default {
                 token: this.token,
                 password: this.password,
                 passwordRepeat: this.passwordRepeat
-            })
+            }).then(() => {
+                this.setSnackbar({message: "Hasło zostało zmienione! Za chwile zostaniesz przekierowany do formularza logowania!", color: 'success'});
+                window.setTimeout(() => {
+                    this.$router.push({name: 'login'});
+                }, 3000);
+            }).catch((e) => {
+                this.setSnackbar({message: "Wystąpił błąd, skontaktuj się z administratorem serwisu!", color: 'error'});
+            });
         }
     },
 

@@ -33,6 +33,7 @@ class UserController extends Controller
     private const REQUEST_FIELD_FIRSTNAME = 'firstName';
     private const REQUEST_FIELD_LASTNAME = 'lastName';
     private const REQUEST_FIELD_PHONE = 'phone';
+    private const REQUEST_FIELD_TOKEN = 'token';
 
     /**
      * @var UserRepository
@@ -143,9 +144,10 @@ class UserController extends Controller
 
     public function resetPassword(UserResetPasswordRequest $request)
     {
-        $user = User::where(['password_reset_token' => $request->input('token')])->first();
+        $user = User::where(['password_reset_token' => $request->input(self::REQUEST_FIELD_TOKEN)])
+            ->first();
 
-        $user->password_hash = Hash::make($request->input('password'));
+        $user->password_hash = Hash::make($request->input(self::REQUEST_FIELD_PASSWORD));
         $user->password_reset_token = Str::uuid();
 
         if ($user->update()) {

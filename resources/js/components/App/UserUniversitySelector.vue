@@ -7,8 +7,7 @@
         return-object
         dense
         @change="changeUniversity"
-        solo
-        flat
+        outlined
         color="primary"
         item-color="primary"
         background-color="transparent"

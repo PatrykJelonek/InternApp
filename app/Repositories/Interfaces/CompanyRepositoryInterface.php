@@ -34,4 +34,6 @@ interface CompanyRepositoryInterface
     public function getCompanyAgreements(string $slug, ?bool $isActive = null);
 
     public function getCompanyQuestionnaires(string $slug);
+
+    public function getCompaniesToVerification();
 }

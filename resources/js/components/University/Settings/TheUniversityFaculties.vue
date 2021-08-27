@@ -5,12 +5,13 @@
         <the-university-specialization-dialog></the-university-specialization-dialog>
         <custom-confirm-dialog
             :title="toDelete.title"
-            :description="toDelete.description"
             :dialog-state="deleteUniversityFacultyDialog"
             :confirm-function="deleteItem"
             :confirm-function-args="[toDelete.args]"
             :toggle-function="toggleDeleteUniversityFacultyDialog"
-        ></custom-confirm-dialog>
+        >
+            {{ toDelete.description }}
+        </custom-confirm-dialog>
 
         <custom-card-title>
             <template v-slot:default>Wydziały, kierunki i specjalności</template>

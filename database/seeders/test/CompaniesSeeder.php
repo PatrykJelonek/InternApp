@@ -30,7 +30,7 @@ class CompaniesSeeder extends Seeder
                     'slug' => Str::slug('Polcom Software'),
                     'company_category_id' => 1,
                     'user_id' => 1,
-                    'accepted' => true,
+                    'verified' => true,
                     'created_at' => now(),
                     'updated_at' => now()
                 ],
@@ -47,7 +47,7 @@ class CompaniesSeeder extends Seeder
                     'company_category_id' => 1,
                     'slug' => Str::slug('Adma - IT Consulting'),
                     'user_id' => 1,
-                    'accepted' => true,
+                    'verified' => true,
                     'created_at' => now(),
                     'updated_at' => now()
                 ]

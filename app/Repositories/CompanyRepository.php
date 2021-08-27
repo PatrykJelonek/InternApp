@@ -13,6 +13,7 @@ use App\Models\Agreement;
 use App\Models\Company;
 use App\Models\Offer;
 use App\Models\Questionnaire;
+use App\Models\University;
 use App\Models\User;
 use App\Models\UserCompanyRole;
 use App\Repositories\Interfaces\CompanyRepositoryInterface;
@@ -31,7 +32,9 @@ class CompanyRepository implements CompanyRepositoryInterface
 
     public function getCompanyBySlug(string $slug)
     {
-        return Company::with(['city', 'category'])->where(['slug' => $slug])->first();
+        return Company::with(['city', 'category'])
+            ->where(['slug' => $slug])
+            ->first();
     }
 
     public function getCompanies(bool $withNotAccepted = false, bool $withDrafts = false)
@@ -39,7 +42,7 @@ class CompanyRepository implements CompanyRepositoryInterface
         $company = Company::with(['city', 'category']);
 
         if (!$withNotAccepted) {
-            $company->where(['accepted' => true]);
+            $company->where(['verified' => true]);
         }
 
         if (!$withDrafts) {
@@ -182,5 +185,12 @@ class CompanyRepository implements CompanyRepositoryInterface
         return Questionnaire::with(['questions', 'company', 'user'])->whereHas('company', function (Builder $query) use ($slug) {
             $query->where(['slug' => $slug]);
         })->get();
+    }
+
+    public function getCompaniesToVerification()
+    {
+        return Company::with(['city', 'type'])
+            ->where(['verified' => 0])
+            ->get();
     }
 }

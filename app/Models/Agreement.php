@@ -12,6 +12,12 @@ class Agreement extends Model
 
     protected $table = 'agreements';
 
+    protected $casts = [
+        'date_from' => 'date:d.m.Y',
+        'date_to' => 'date:d.m.Y',
+    ];
+
+
     public function company()
     {
         return $this->belongsTo('App\Models\Company');

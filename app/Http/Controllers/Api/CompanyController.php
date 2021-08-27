@@ -35,6 +35,22 @@ use Illuminate\Support\Str;
 
 class CompanyController extends Controller
 {
+    public const REQUEST_FIELD_NAME = 'name';
+    public const REQUEST_FIELD_CITY_ID = 'cityId';
+    public const REQUEST_FIELD_STREET = 'street';
+    public const REQUEST_FIELD_STREET_NUMBER = 'streetNumber';
+    public const REQUEST_FIELD_EMAIL = 'email';
+    public const REQUEST_FIELD_COMPANY_CATEGORY_ID = 'companyCategoryId';
+    public const REQUEST_FIELD_PHONE = 'phone';
+    public const REQUEST_FIELD_WEBSITE = 'website';
+    public const REQUEST_FIELD_DESCRIPTION = 'description';
+    public const REQUEST_FIELD_USER_ID = 'userId';
+    public const COMPANY_VERIFIED = true;
+    public const COMPANY_NOT_VERIFIED = false;
+    public const USER_VERIFIED = true;
+    public const USER_NOT_VERIFIED = false;
+    public const USER_ACCEPTED = true;
+    public const USER_NOT_ACCEPTED = false;
     /**
      * @var CompanyRepository
      */
@@ -165,28 +181,38 @@ class CompanyController extends Controller
 
     public function createCompany(CompanyCreateCompanyRequest $request)
     {
+        DB::beginTransaction();
         $company = $this->companyService->createCompany(
-            $request->input('name'),
-            $request->input('cityId'),
-            $request->input('street'),
-            $request->input('streetNumber'),
-            $request->input('email'),
-            $request->input('companyCategoryId'),
-            $request->input('phone'),
-            $request->input('website'),
-            $request->input('description')
+            $request->input(self::REQUEST_FIELD_NAME),
+            $request->input(self::REQUEST_FIELD_CITY_ID),
+            $request->input(self::REQUEST_FIELD_STREET),
+            $request->input(self::REQUEST_FIELD_STREET_NUMBER),
+            $request->input(self::REQUEST_FIELD_EMAIL),
+            $request->input(self::REQUEST_FIELD_COMPANY_CATEGORY_ID),
+            $request->input(self::REQUEST_FIELD_PHONE),
+            $request->input(self::REQUEST_FIELD_WEBSITE),
+            $request->input(self::REQUEST_FIELD_DESCRIPTION),
+            self::COMPANY_NOT_VERIFIED
         );
 
-        if ($company) {
-            $this->companyService->addRoleToCompanyUser(
-                !empty($request->input('userId')) ? $request->input('userId') : Auth::id(),
+        if (!is_null($company)) {
+            $userCompany = $this->companyService->addUserToCompanyWithRole(
+                !empty($request->input(self::REQUEST_FIELD_USER_ID)) ?
+                    $request->input(self::REQUEST_FIELD_USER_ID) : Auth::id(),
                 $company->id,
-                $this->roleRepository->getRoleByName(RoleConstants::ROLE_COMPANY_OWNER)->id
+                $this->roleRepository->getRoleByName(RoleConstants::ROLE_COMPANY_OWNER)->id,
+                self::USER_VERIFIED,
+                self::USER_ACCEPTED
             );
 
-            return response($company, Response::HTTP_CREATED);
+
+            if (!is_null($userCompany)) {
+                DB::commit();
+                return response($company, Response::HTTP_CREATED);
+            }
         }
 
+        DB::rollBack();
         return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
@@ -198,7 +224,7 @@ class CompanyController extends Controller
      *
      * @return Response
      */
-    public function show(CompanyShowRequest $request, $slug)
+    public function getCompany(CompanyShowRequest $request, $slug)
     {
         $company = $this->companyRepository->getCompanyBySlug($slug);
 
@@ -541,14 +567,16 @@ class CompanyController extends Controller
     {
         $company = $this->companyRepository->getCompanyBySlug($slug);
 
+        DB::beginTransaction();
         if (!is_null($company)) {
-            DB::beginTransaction();
             $companyUser = $this->companyService->addUserToCompanyWithRole(
                 $userId,
                 $company->id,
                 $this->roleRepository->getRoleByName(
                     RoleConstants::ROLE_COMPANY_WORKER
-                )->id
+                )->id,
+                self::USER_NOT_VERIFIED,
+                self::USER_NOT_ACCEPTED
             );
 
             if (!is_null($companyUser)) {

@@ -13,24 +13,28 @@
                     :loading="internshipsLoading"
                     no-data-text="Niestety, ta uczelnia nie posiada jeszcze praktyk, ani staży!"
                     loading-text="Pobieranie listy praktyk i staży..."
-                    class="elevation-1 component-background"
+                    class="component-background"
+                    :search="search"
                     @click:row="(item) => {$router.push({name: 'internship', params: {internshipId: item.id}})}"
                 >
-                    <template v-slot:item.universitySupervisor="{ item }">
+                    <template v-slot:item.university_supervisor.full_name="{ item }">
                         <router-link :to="{name: 'user', params: {id: item.university_supervisor.id}}">
-                            {{ item.university_supervisor.first_name + ' ' + item.university_supervisor.last_name }}
+                            {{ item.university_supervisor.full_name }}
                         </router-link>
                     </template>
-                    <template v-slot:item.companySupervisor="{ item }">
+                    <template v-slot:item.company_supervisor.full_name="{ item }">
                         <router-link :to="{name: 'user', params: {id: item.company_supervisor.id}}">
-                            {{ item.company_supervisor.first_name + ' ' + item.company_supervisor.last_name }}
+                            {{ item.company_supervisor.full_name }}
                         </router-link>
                     </template>
-                    <template v-slot:item.startDate="{ item }">
-                        {{ formatDate(item.agreement.date_from) }}
+                    <template v-slot:item.agreement.date_from="{ item }">
+                        {{ item.agreement.date_from }}
                     </template>
-                    <template v-slot:item.endDate="{ item }">
-                        {{ formatDate(item.agreement.date_to) }}
+                    <template v-slot:item.agreement.date_to="{ item }">
+                        {{ item.agreement.date_to }}
+                    </template>
+                    <template v-slot:item.status.display_name="{ item }">
+                        <v-chip small outlined :color="item.status.hex_color">{{ item.status.display_name }}</v-chip>
                     </template>
                     <template v-slot:item.actions="{ item }">
                         <v-menu offset-y class="component-background">
@@ -43,7 +47,17 @@
                                     <v-icon>mdi-dots-vertical</v-icon>
                                 </v-btn>
                             </template>
-                            <v-list dense color="component-background">
+                            <v-list dense color="component-background" class="cursor-pointer">
+                                <v-list-item>
+                                    <v-list-item-title @click="$router.push({name: 'internship', params: {internshipId: item.id}})">
+                                        Zobacz praktykę
+                                    </v-list-item-title>
+                                </v-list-item>
+                                <v-list-item>
+                                    <v-list-item-title @click="$router.push({name: 'agreement', params: {slug: item.agreement.slug}})">
+                                        Zobacz umowę
+                                    </v-list-item-title>
+                                </v-list-item>
                                 <v-list-item>
                                     <v-list-item-title @click="openChangeStatusDialog(item)">
                                         Zmień status
@@ -68,15 +82,18 @@ import TheUniversityInternshipChangeStatusDialog from "./TheUniversityInternship
 export default {
     name: "TheUniversityInternshipsList",
     components: {TheUniversityInternshipChangeStatusDialog, CustomCardTitle, CustomCard},
+
+    props: ['search'],
+
     data() {
         return {
             show: true,
             headers: [
                 {text: 'Nazwa', value: 'offer.name'},
-                {text: 'Opiekun z uczelni', value: 'universitySupervisor'},
-                {text: 'Opiekun z firmy', value: 'companySupervisor'},
-                {text: 'Data rozpoczęcia', value:'startDate'},
-                {text: 'Data zakończenia', value:'endDate'},
+                {text: 'Opiekun z uczelni', value: 'university_supervisor.full_name'},
+                {text: 'Opiekun z firmy', value: 'company_supervisor.full_name'},
+                {text: 'Data rozpoczęcia', value:'agreement.date_from'},
+                {text: 'Data zakończenia', value:'agreement.date_to'},
                 {text: 'Status', value: 'status.display_name'},
                 {text: 'Akcje', value: 'actions', sortable: false, align: 'center'},
             ],
@@ -124,5 +141,7 @@ export default {
 </script>
 
 <style scoped>
-
+    .cursor-pointer {
+        cursor: pointer;
+    }
 </style>

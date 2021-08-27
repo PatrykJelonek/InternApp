@@ -101,7 +101,7 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::get('/companies', 'Api\CompanyController@index');
     Route::post('/companies','Api\CompanyController@createCompany');
     Route::get('/companies/categories', 'Api\CompanyCategoryController@index');
-    Route::get('/companies/{slug}', 'Api\CompanyController@show');
+    Route::get('/companies/{slug}', 'Api\CompanyController@getCompany');
     Route::put('/companies/{slug}', 'Api\CompanyController@updateCompanyData');
     Route::get('/companies/{slug}/offers','Api\CompanyController@getCompanyOffers');
     Route::get('/companies/{slug}/workers','Api\CompanyController@getCompanyWorkers');
@@ -142,7 +142,7 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     # Universities
     Route::get('/universities', 'Api\UniversityController@getUniversities');
     Route::post('/universities', 'Api\UniversityController@createUniversity');
-    Route::get('/universities/{slug}', 'Api\UniversityController@show');
+    Route::get('/universities/{slug}', 'Api\UniversityController@getUniversity');
     Route::get('/universities/{slug}/workers','Api\UniversityController@getWorkers');
     Route::post('/universities/{slug}/workers/{userId}','Api\UniversityController@addWorkerToUniversity');
     Route::put('/universities/{slug}/workers/{userId}/change-roles','Api\UniversityController@changeUniversityWorkerRoles');
@@ -222,6 +222,12 @@ Route::group(['middleware' => ['jwt.verify']], function() {
 
     Route::get('/test', 'Api\TestController@test');
     Route::post('/test', 'Api\TestController@testPost');
+
+    # Admin
+    Route::get('/admin/universities/verification', 'Api\UniversityController@getUniversitiesToVerification');
+    Route::post('/admin/universities/{slug}/verify', 'Api\UniversityController@verifyUniversity');
+    Route::get('/admin/companies/verification', 'Api\CompanyController@getCompaniesToVerification');
+    Route::post('/admin/companies/{slug}/verify', 'Api\CompanyController@verifyCompany');
 
 
     Route::get('/me', [

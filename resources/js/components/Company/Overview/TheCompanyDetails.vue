@@ -62,7 +62,7 @@ import CustomCardTitle from "../../_General/CustomCardTitle";
 export default {
     name: "TheCompanyDetails",
     components: {CustomCardTitle, CustomCard},
-    props: ['name', 'category', 'address', 'email', 'phone', 'website', 'description', 'draft'],
+    props: ['name', 'category', 'address', 'email', 'phone', 'website', 'description', 'draft', 'verified'],
 
 }
 </script>

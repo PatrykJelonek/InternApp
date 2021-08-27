@@ -23,7 +23,7 @@
                             :item-key="questionnaires.id"
                             class="component-background cursor-pointer"
                             no-data-text="Niestety, ale aktualnie nie mu tu żadnych ankiet!"
-                            @click:row="(questionnaire) => this.$router.push({name: 'company-questionnaire', params: {slug: this.$route.params.slug, questionnaireId: questionnaire.id}})"
+                            @click:row="(questionnaire) => this.$router.push({name: 'edit-questionnaire', params: {slug: this.$route.params.slug, questionnaireId: questionnaire.id}})"
                         >
                             <template v-slot:item.user="{item}">
                                 <v-avatar :size="30" class="mr-2" :color="item.user.avatar_url ? '' : 'primary'">

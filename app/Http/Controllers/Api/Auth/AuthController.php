@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\Controller;
 use App\Http\Requests\AuthForgotPasswordRequest;
 use App\Http\Requests\AuthLoginRequest;
 use App\Models\User;
+use App\Notifications\ResetPasswordNotification;
 use App\Notifications\UserResetPasswordEmail;
 use Illuminate\Http\Response;
 use Tymon\JWTAuth\Exceptions\JWTException;
@@ -83,10 +84,11 @@ class AuthController extends Controller
 
     public function forgotPassword(AuthForgotPasswordRequest $request)
     {
-        $user = User::where(['email' => $request->only('email')])->first();
+        $user = User::where(['email' => $request->only(self::REQUEST_FIELD_EMAIL)])
+            ->first();
 
-        if(!empty($user) && !empty($user->password_reset_token)) {
-            $user->notify(new UserResetPasswordEmail($user));
+        if (!empty($user) && !empty($user->password_reset_token)) {
+            $user->notify(new ResetPasswordNotification($user));
         }
 
         return response(null, Response::HTTP_OK);

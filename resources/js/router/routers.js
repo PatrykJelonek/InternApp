@@ -67,6 +67,9 @@ import TheCompanyQuestionnaire from "../components/Company/Questionnaires/TheCom
 import TheUniversityQuestionnaire from "../components/University/Questionnaires/TheUniversityQuestionnaire";
 import UserCreated from "../views/UserCreated";
 import UserActivated from "../views/UserActivated";
+import TheAdminUniversities from "../components/Admin/Universities/TheAdminUniversities";
+import TheAdminUniversitiesVerification
+    from "../components/Admin/Universities/UniversitiesVerification/TheAdminUniversitiesVerification";
 
 Vue.use(VueRouter);
 
@@ -236,11 +239,6 @@ const router = new VueRouter({
                             component: TheCompanyQuestionnaires
                         },
                         {
-                            path: 'questionnaires/:questionnaireId',
-                            name: 'company-questionnaire',
-                            component: TheCompanyQuestionnaire
-                        },
-                        {
                             path: 'settings',
                             name: 'company-settings',
                             component: TheCompanySettings
@@ -401,12 +399,10 @@ const router = new VueRouter({
                     path: '/panel/internships/:internshipId',
                     name: 'internship',
                     component: Internship,
-                    meta: {have: ['admin', 'student', 'company_worker', 'university_worker']},
                     children: [
                         {
                             path: '/panel/internships/:internshipId/students/:studentIndex',
                             name: 'internship-student',
-                            meta: {have: ['admin', 'student', 'company_worker', 'university_worker']},
                         }
                     ]
                 },
@@ -416,9 +412,14 @@ const router = new VueRouter({
                     component: Questionnaires,
                 },
                 {
-                    path: '/panel/questionnaires/:id',
+                    path: '/panel/questionnaires/:questionnaireId',
                     name: 'questionnaire',
                     component: Questionnaire,
+                },
+                {
+                    path: '/panel/questionnaires/:questionnaireId',
+                    name: 'edit-questionnaire',
+                    component: TheCompanyQuestionnaire
                 },
                 {
                     path: '/panel/admin',
@@ -442,6 +443,20 @@ const router = new VueRouter({
                             name: 'admin-offers',
                             component: TheAdminOffers,
                             meta: {have: ['admin']},
+                        },
+                        {
+                            path: 'universities',
+                            name: 'admin-universities',
+                            component: TheAdminUniversities,
+                            meta: {have: ['admin']},
+                            children: [
+                                {
+                                    path: 'verification',
+                                    name: 'admin-universities-verification',
+                                    component: TheAdminUniversitiesVerification,
+                                    meta: {have: ['admin']},
+                                }
+                            ]
                         },
                         {
                             path: 'users',

@@ -8,7 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class UserResetPasswordEmail extends Notification implements ShouldQueue
+class ResetPasswordNotification extends Notification
 {
     use Queueable;
 
@@ -24,7 +24,6 @@ class UserResetPasswordEmail extends Notification implements ShouldQueue
      */
     public function __construct(User $user)
     {
-        //
         $this->user = $user;
     }
 
@@ -48,8 +47,13 @@ class UserResetPasswordEmail extends Notification implements ShouldQueue
     public function toMail($notifiable)
     {
         return (new MailMessage)
-                    ->line('Oto link do zmiany hasła!')
-                    ->action('Zmień hasło', url('/reset-password/'.$this->user->password_reset_token));
+            ->subject('Link do zmiany hasła!')
+            ->markdown(
+                'emails.users.reset_password_email',
+                [
+                    'url' => url('/reset-password/' . $this->user->password_reset_token),
+                ]
+            );
     }
 
     /**

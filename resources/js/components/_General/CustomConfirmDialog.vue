@@ -27,7 +27,8 @@
                         <v-btn outlined color="secondary" @click="toggle">Anuluj</v-btn>
                     </v-col>
                     <v-col cols="6" class="text-right">
-                        <v-btn outlined color="primary" @click="confirmFunction(...confirmFunctionArgs)">Potwierdź
+                        <v-btn outlined color="primary" @click="confirmFunction(...confirmFunctionArgs)">
+                            {{ confirmBtnText ? confirmBtnText : 'Potwierdź' }}
                         </v-btn>
                     </v-col>
                 </v-row>
@@ -52,7 +53,8 @@ export default {
         title: String,
         subheader: String,
         description: String,
-        dialogKey: String
+        dialogKey: String,
+        confirmBtnText: String,
     },
 
     methods: {

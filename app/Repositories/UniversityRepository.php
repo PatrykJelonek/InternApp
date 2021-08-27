@@ -113,9 +113,9 @@ class UniversityRepository implements UniversityRepositoryInterface
         return User::with(
             [
                 'universitiesWithRoles' => function ($query) use ($slug) {
-                $query->whereHas('university', function ($query) use ($slug) {
-                    $query->where(['slug' => $slug]);
-                });
+                    $query->whereHas('university', function ($query) use ($slug) {
+                        $query->where(['slug' => $slug]);
+                    });
                 },
             ]
         )->whereHas(
@@ -124,23 +124,37 @@ class UniversityRepository implements UniversityRepositoryInterface
                 $query->where('slug', $slug);
             }
         )->whereHas(
-            'roles',
-            function (Builder $query) {
-                $query->whereIn(
-                    'name',
-                    [
-                        RoleConstants::ROLE_UNIVERSITY_SUPERVISOR,
+            'universitiesWithRoles',
+            function (Builder $query) use ($slug) {
+                $query->whereHas('university', function ($query) use ($slug) {
+                    $query->where(['slug' => $slug]);
+                })->whereHas('roles', function (Builder $query) {
+                    $query->whereIn('name', [
                         RoleConstants::ROLE_UNIVERSITY_WORKER,
                         RoleConstants::ROLE_UNIVERSITY_OWNER,
-                    ]
-                );
+                        RoleConstants::ROLE_UNIVERSITY_DEANERY_WORKER,
+                        RoleConstants::ROLE_UNIVERSITY_SUPERVISOR
+                    ]);
+                });
             }
         )->get();
     }
 
     public function getStudents(string $slug)
     {
-        return User::with(['roles', 'student', 'student.specialization', 'student.internships'])->whereHas(
+        return User::with(
+            [
+                'roles',
+                'student',
+                'student.specialization',
+                'student.internships',
+                'universitiesWithRoles' => function ($query) use ($slug) {
+                    $query->whereHas('university', function ($query) use ($slug) {
+                        $query->where(['slug' => $slug]);
+                    });
+                },
+            ]
+        )->whereHas(
             'universities',
             function (Builder $query) use ($slug) {
                 $query->where('slug', $slug);
@@ -206,7 +220,7 @@ class UniversityRepository implements UniversityRepositoryInterface
 
     public function getQuestionnaires(string $slug)
     {
-        return Questionnaire::with(['questions', 'university',  'user'])->whereHas(
+        return Questionnaire::with(['questions', 'university', 'user'])->whereHas(
             'university',
             function (Builder $query) use ($slug) {
                 $query->where(['slug' => $slug]);
@@ -217,5 +231,12 @@ class UniversityRepository implements UniversityRepositoryInterface
     public function getUniversities()
     {
         return University::with(['city', 'type', 'faculties.fields.specializations'])->get();
+    }
+
+    public function getUniversitiesToVerification()
+    {
+        return University::with(['city', 'type'])
+            ->where(['verified' => 0])
+            ->get();
     }
 }

@@ -10,14 +10,13 @@
                     :items="students"
                     :items-per-page="5"
                     :loading="studentsLoading"
-                    @click:row="(item) => {$router.push({name: 'user', params: {id: item.id}})}"
-                    class="elevation-1 component-background"
+                    class="component-background"
                     no-data-text="Niestety, ta uczelnia nie posiada jeszcze zarejestrowanych studentów."
                     loading-text="Pobieranie listy studentów..."
                     no-results-text="Niestety, ale nie znaleźliśmy wyników które pasowałby do podanych danych"
                     :search="search"
                 >
-                    <template v-slot:item.fullname="{ item }">
+                    <template v-slot:item.full_name="{ item }">
                         {{ item.full_name }}
                     </template>
                     <template v-slot:item.student.semester="{ item }">
@@ -26,12 +25,7 @@
                     <template v-slot:item.student.study_year="{ item }">
                         {{ `${item.student.study_year} Rok`}}
                     </template>
-                    <template v-slot:item.actions="{ item }">
-                        <v-btn icon small>
-                            <v-icon>mdi-dots-vertical</v-icon>
-                        </v-btn>
-                    </template>
-                    <template v-slot:item.specialization="{ item }">
+                    <template v-slot:item.student.specialization.name="{ item }">
                         <v-tooltip right color="tooltip-background" v-if="item.student.specialization.deleted_at">
                             <template v-slot:activator="{ on, attrs }">
                                  <span
@@ -45,6 +39,35 @@
                         <template v-else>
                             {{ item.student.specialization.name }}
                         </template>
+                    </template>
+                    <template v-slot:item.universities_with_roles.verified="{ item }">
+                        <v-chip outlined small class="ml-2" v-if="!item.universities_with_roles.verified">Niezweryfikowany</v-chip>
+                        <v-chip outlined small class="ml-2" color="success" v-else>Zweryfikowany</v-chip>
+                    </template>
+                    <template v-slot:item.actions="{ item }">
+                        <v-menu offset-y class="component-background">
+                            <template v-slot:activator="{ on, attrs }">
+                                <v-btn
+                                    icon
+                                    v-bind="attrs"
+                                    v-on="on"
+                                >
+                                    <v-icon>mdi-dots-vertical</v-icon>
+                                </v-btn>
+                            </template>
+                            <v-list dense color="component-background" class="cursor-pointer">
+                                <v-list-item v-if="!item.universities_with_roles.verified">
+                                    <v-list-item-title>
+                                        Akceptuj studenta
+                                    </v-list-item-title>
+                                </v-list-item>
+                                <v-list-item>
+                                    <v-list-item-title @click="$router.push({name: 'user', params: {id: item.id}})">
+                                        Zobacz profil
+                                    </v-list-item-title>
+                                </v-list-item>
+                            </v-list>
+                        </v-menu>
                     </template>
                 </v-data-table>
             </v-col>
@@ -73,7 +96,7 @@ export default {
                 {text: 'Semestr', value: 'student.semester'},
                 {text: 'Rok', value: 'student.study_year'},
                 {text: 'Specjalizacja', value: 'student.specialization.name'},
-                {text: 'Email', value: 'email'},
+                {text: 'Status', value: 'universities_with_roles.verified'},
                 {text: 'Akcje', value: 'actions', sortable: false, align: 'center'},
             ],
         }
@@ -108,5 +131,7 @@ export default {
 </script>
 
 <style scoped>
-
+    .cursor-pointer {
+        cursor: pointer;
+    }
 </style>

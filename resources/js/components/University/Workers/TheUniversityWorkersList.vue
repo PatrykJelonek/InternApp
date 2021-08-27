@@ -2,13 +2,14 @@
     <custom-card>
         <custom-confirm-dialog
             title="Zweryfikuj"
-            description="Czy na pewno chcesz zweryfikować tego pracownika?"
             :confirm-function="verifyWorker"
             :confirm-function-args="[]"
             dialog-key="DIALOG_FIELD_VERIFY_UNIVERSITY_WORKER"
             :dialog-state="dialogs['DIALOG_FIELD_VERIFY_UNIVERSITY_WORKER']"
             :toggle-function="toggleDialog"
-        ></custom-confirm-dialog>
+        >
+            Czy na pewno chcesz zweryfikować tego pracownika?
+        </custom-confirm-dialog>
         <select-roles-dialog :groups="['university']" :submit-function="changeRoles"
                              :existent-roles-id="selectedWorkerRolesIds"></select-roles-dialog>
         <custom-card-title>
@@ -21,13 +22,13 @@
                     :items="workers"
                     :items-per-page="5"
                     :loading="workersLoading"
-                    @click:row="(item) => {$router.push({name: 'user', params: {id: item.id}})}"
-                    class="elevation-1 component-background"
+                    class="component-background"
                     no-data-text="Niestety, ta uczelnia nie posiada jeszcze pracowników!"
+                    no-results-text="Niestety, nie znaleziono szukanego pracownika!"
                     loading-text="Pobieranie listy pracowników..."
+                    :search="search"
                 >
-
-                    <template v-slot:item.fullname="{item}">
+                    <template v-slot:item.full_name="{item}">
                         <v-avatar :size="30" rounded class="mr-2" :color="item.avatar_url ? '' : 'primary'">
                             <v-img :src="item.avatar_url ? '/'+item.avatar_url : ''"
                                    :alt="'Awatar użytkownika ' + item.full_name"></v-img>
@@ -60,6 +61,16 @@
                             Nie
                         </template>
                     </template>
+                    <template v-slot:item.active="{ item }">
+                        <template v-if="item.universities_with_roles[0].active">
+                            <v-icon color="primary" small class="mr-2">mdi-check-decagram-outline</v-icon>
+                            Tak
+                        </template>
+                        <template v-else>
+                            <v-icon color="secondary" small class="mr-2">mdi-alert-decagram-outline</v-icon>
+                            Nie
+                        </template>
+                    </template>
                     <template v-slot:item.actions="{ item }">
                         <v-menu offset-y class="component-background">
                             <template v-slot:activator="{ on, attrs }">
@@ -71,17 +82,46 @@
                                     <v-icon>mdi-dots-vertical</v-icon>
                                 </v-btn>
                             </template>
-                            <v-list dense color="component-background">
-                                <v-list-item class="cursor-pointer" v-if="item.universities_with_roles.verified">
-                                    <v-list-item-title @click="openVerifyWorkerDialog(item)">
-                                        Zweryfikuj
-                                    </v-list-item-title>
-                                </v-list-item>
-                                <v-list-item class="cursor-pointer">
-                                    <v-list-item-title @click="openChangeRoleDialog(item)">
-                                        Zmień role
-                                    </v-list-item-title>
-                                </v-list-item>
+                            <v-list dense color="component-background" class="cursor-pointer">
+                                <template  v-if="!item.universities_with_roles[0].verified">
+                                    <v-list-item>
+                                        <v-list-item-title @click="openVerifyWorkerDialog(item)">
+                                            Zweryfikuj
+                                        </v-list-item-title>
+                                    </v-list-item>
+                                    <v-list-item>
+                                        <v-list-item-title @click="openVerifyWorkerDialog(item)">
+                                            Odrzuć
+                                        </v-list-item-title>
+                                    </v-list-item>
+                                </template>
+
+                                <template v-else>
+                                    <v-list-item>
+                                        <v-list-item-title @click="$router.push({name: 'user', params: {id: item.id}})">
+                                            Wyświetl profil
+                                        </v-list-item-title>
+                                    </v-list-item>
+                                    <v-list-item>
+                                        <v-list-item-title @click="openChangeRoleDialog(item)">
+                                            Zmień role
+                                        </v-list-item-title>
+                                    </v-list-item>
+                                    <v-list-item>
+                                        <v-list-item-title
+                                            v-if="!item.universities_with_roles[0].active"
+                                            @click="$router.push({name: 'user', params: {id: item.id}})"
+                                        >
+                                            Aktywuj
+                                        </v-list-item-title>
+                                        <v-list-item-title
+                                            v-else
+                                            @click="$router.push({name: 'user', params: {id: item.id}})"
+                                        >
+                                            Dezaktywuj
+                                        </v-list-item-title>
+                                    </v-list-item>
+                                </template>
                             </v-list>
                         </v-menu>
                     </template>
@@ -102,15 +142,19 @@ import CustomConfirmDialog from "../../_General/CustomConfirmDialog";
 export default {
     name: "TheUniversityWorkersList",
     components: {CustomConfirmDialog, SelectRolesDialog, CustomCardTitle, CustomCard},
+
+    props: ['search'],
+
     data() {
         return {
             selectedItem: null,
             selectedWorkerRolesIds: '',
             show: true,
             headers: [
-                {text: 'Imię i nazwisko', value: 'fullname'},
+                {text: 'Imię i nazwisko', value: 'full_name'},
                 {text: 'Role', value: 'rolesChips'},
                 {text: 'Zweryfikowany', value: 'verified', sortable: false, align: 'center'},
+                {text: 'Aktywny', value: 'active', sortable: false, align: 'center'},
                 {text: 'Akcje', value: 'actions', sortable: false, align: 'center'},
             ],
         }
@@ -148,7 +192,6 @@ export default {
         },
 
         changeRoles(rolesIds) {
-            console.log(this.selectedItem);
             this.changeUniversityWorkerRoles({
                 slug: this.$route.params.slug,
                 userId: this.selectedItem.id,

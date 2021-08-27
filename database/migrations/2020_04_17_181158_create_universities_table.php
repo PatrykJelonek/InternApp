@@ -28,6 +28,7 @@ class CreateUniversitiesTable extends Migration
             $table->string('access_code', 8)->nullable()->unique();
             $table->string('slug', 255)->unique();
             $table->string('logo_url', 255)->nullable();
+            $table->boolean('verified')->default(false);
             $table->foreignId('user_id');
             $table->foreign('user_id')->references('id')->on('users');
             $table->timestamps();

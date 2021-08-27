@@ -1,7 +1,7 @@
 <template>
     <validation-observer ref="observer" v-slot="{ validate }">
         <v-form>
-            <v-row>
+            <v-row class="pa-5">
                 <v-col cols="12">
                     <validation-provider
                         v-slot="{ errors }"
@@ -224,8 +224,8 @@
                     ></v-switch>
                 </v-col>
             </v-row>
-            <v-row>
-                <v-col cols="12" class="d-flex justify-end">
+            <custom-card-footer>
+                <template v-slot:right>
                     <v-btn
                         outlined
                         color="primary"
@@ -233,8 +233,8 @@
                     >
                         Dodaj
                     </v-btn>
-                </v-col>
-            </v-row>
+                </template>
+            </custom-card-footer>
         </v-form>
     </validation-observer>
 </template>
@@ -245,6 +245,7 @@ import {setInteractionMode, ValidationProvider, ValidationObserver} from "vee-va
 import moment from 'moment';
 import {Base64} from 'js-base64';
 import PageLoader from "../../_General/PageLoader";
+import CustomCardFooter from "../../_General/CustomCardFooter";
 
 setInteractionMode('eager');
 
@@ -254,6 +255,7 @@ export default {
     props: ['updateFunction'],
 
     components: {
+        CustomCardFooter,
         PageLoader,
         ValidationProvider,
         ValidationObserver

@@ -88,6 +88,7 @@ export default {
                 this.$store.commit('university/CHANGE_UNIVERSITY_INTERNSHIP_STATUS', {
                     id: response.data.id,
                     status: this.internshipStatuses.find(status => status.id === response.data.internship_status_id).display_name,
+                    hexColor: this.internshipStatuses.find(status => status.id === response.data.internship_status_id).hex_color,
                 })
                 this.setSnackbar({message: 'Status został zmieniony!', color: 'success'});
                 this.toggleDialog({key: 'DIALOG_FIELD_CHANGE_INTERNSHIP_STATUS', val: false});

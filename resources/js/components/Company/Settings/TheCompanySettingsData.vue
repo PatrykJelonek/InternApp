@@ -73,6 +73,7 @@
                                         hide-details="auto"
                                         :error-messages="errors"
                                         label="Opis firmy"
+                                        height="100px"
                                         @change="checkDataIsChanged"
                                     ></v-textarea>
                                 </validation-provider>

@@ -82,16 +82,11 @@ export default {
         this.fetchQuestionnaire(this.$route.params.questionnaireId).then(() => {
             this.setBreadcrumbs([
                 {text: 'Panel', to: {name: 'panel'}, exact: true},
-                {
-                    text: this.company.name ?? 'Firma',
-                    to: {name: 'company', params: {slug: this.$route.params.slug}},
-                    exact: true
-                },
-                {text: 'Ankiety', to: {name: 'company-questionnaires'}, exact: true},
+                {text: 'Ankiety', exact: true},
                 {
                     text: this.questionnaire.name,
                     to: {
-                        name: 'company-questionnaire',
+                        name: 'edit-questionnaire',
                         params: {slug: this.$route.params.slug, questionnaireId: this.$route.params.questionnaireId}
                     },
                     exact: true

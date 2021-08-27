@@ -1,15 +1,6 @@
 <template>
     <v-app>
-        <v-app-bar
-            :flat="flatNavbar"
-            :color="navbarBackground"
-            class="px-5"
-            :absolute="isTrue"
-        >
-            <v-toolbar-title class="cursor-pointer" @click="$router.push('/')">
-                <b>Intern<span class="green--text text--accent-4">App</span></b>
-            </v-toolbar-title>
-        </v-app-bar>
+       <app-bar-minimal></app-bar-minimal>
         <v-content class="fill-height component-background">
             <v-container fluid class="pa-0 fill-height">
                 <v-row class="fill-height justify-center align-center">
@@ -30,10 +21,11 @@
 
 <script>
 import LoginForm from "../components/LoginForm";
+import AppBarMinimal from "../components/App/AppBarMinimal";
 
 export default {
     name: "Login",
-    components: {LoginForm},
+    components: {AppBarMinimal, LoginForm},
 
     data() {
         return {

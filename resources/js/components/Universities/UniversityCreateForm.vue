@@ -96,6 +96,8 @@
                             dense
                             hide-details="auto"
                             :error-messages="errors"
+                            prefix="+48"
+                            v-mask="'###-###-###'"
                             placeholder="123-456-789"
                         ></v-text-field>
                     </validation-provider>

@@ -5,13 +5,26 @@
             <template v-slot:subheader>
                 Lista pracowników przypisanych do {{ university.name }}.
             </template>
-            <template v-slot:actions>
-                <v-btn color="primary" outlined>Dodaj studenta</v-btn>
-            </template>
         </page-title>
+
         <v-row>
             <v-col cols="12">
-                <the-university-workers-list></the-university-workers-list>
+                <custom-card>
+                    <v-text-field
+                        v-model="search"
+                        append-icon="mdi-magnify"
+                        label="Szukaj"
+                        single-line
+                        hide-details
+                        outlined
+                    ></v-text-field>
+                </custom-card>
+            </v-col>
+        </v-row>
+
+        <v-row>
+            <v-col cols="12">
+                <the-university-workers-list :search="search"></the-university-workers-list>
             </v-col>
         </v-row>
     </v-container>
@@ -21,9 +34,16 @@
 import TheUniversityWorkersList from "./TheUniversityWorkersList";
 import {mapActions, mapGetters} from "vuex";
 import PageTitle from "../../_Helpers/PageTitle";
+import CustomCard from "../../_General/CustomCard";
 export default {
     name: "TheUniversityWorkers",
-    components: {PageTitle, TheUniversityWorkersList},
+    components: {CustomCard, PageTitle, TheUniversityWorkersList},
+
+    data() {
+        return {
+            search: null,
+        }
+    },
 
     computed: {
         ...mapGetters({

@@ -1,10 +1,6 @@
 <template>
     <v-app>
-        <v-app-bar :flat="true" color="transparent" dark class="px-5" :absolute="true">
-            <v-toolbar-title class="cursor-pointer" @click="$router.push('/')">
-                <b>Intern<span class="green--text text--accent-4">App</span></b>
-            </v-toolbar-title>
-        </v-app-bar>
+       <app-bar-minimal></app-bar-minimal>
         <v-main>
             <v-content class="fill-height component-background">
                 <v-row class="fill-height justify-center align-center">
@@ -31,6 +27,7 @@ import {extend, setInteractionMode, ValidationProvider, ValidationObserver} from
 import {mapActions} from "vuex";
 import Snackbar from "../components/_Helpers/Snackbar";
 import ForgotPasswordForm from "../components/_Other/ForgotPasswordForm";
+import AppBarMinimal from "../components/App/AppBarMinimal";
 
 setInteractionMode('eager');
 
@@ -38,6 +35,7 @@ export default {
     name: "ForgotPassword",
 
     components: {
+        AppBarMinimal,
         ForgotPasswordForm,
         Snackbar,
         ValidationProvider,

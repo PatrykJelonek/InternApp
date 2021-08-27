@@ -7,6 +7,7 @@
             :confirm-function="join"
             title="Dołącz do firmy"
             :subheader="`Czy na pewno chcesz dołączyć do tej firmy?`"
+            confirm-btn-text="Dołącz"
         >
             <validation-observer ref="observer" v-slot="{ validate }">
                 <v-form>

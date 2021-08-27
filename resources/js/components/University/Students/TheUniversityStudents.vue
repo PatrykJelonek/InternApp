@@ -5,9 +5,6 @@
             <template v-slot:subheader>
                 Lista studentów przypisanych do {{ university.name }}.
             </template>
-            <template v-slot:actions>
-                <v-btn color="primary" outlined>Dodaj studenta</v-btn>
-            </template>
         </page-title>
 
         <v-row>

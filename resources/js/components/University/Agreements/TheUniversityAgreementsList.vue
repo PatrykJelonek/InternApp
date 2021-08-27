@@ -67,7 +67,7 @@
                                 {{ item.supervisor.full_name }}
                             </router-link>
                         </template>
-                        <template v-slot:item.offer.supervisor.full_name ="{ item }">
+                        <template v-slot:item.offer.supervisor.full_name="{ item }">
                             <template v-if="item.offer">
                                 <router-link :to="{name: 'user', params: {id: item.offer.supervisor.id}}">
                                     {{ item.offer.supervisor.full_name }}
@@ -157,7 +157,7 @@ export default {
                 {text: 'Nazwa', value: 'name'},
                 {text: 'Firma', value: 'company.name'},
                 {text: 'Opiekun z uczelni', value: 'supervisor.full_name'},
-                {text: 'Opiekun z firmy', value: 'offer.supervisor.full_name '},
+                {text: 'Opiekun z firmy', value: 'offer.supervisor.full_name'},
                 {text: 'Okres ważności', value: 'dates'},
                 {text: 'Status', value: 'is_active'},
                 {text: 'Akcje', value: 'actions', sortable: false, align: 'center'},

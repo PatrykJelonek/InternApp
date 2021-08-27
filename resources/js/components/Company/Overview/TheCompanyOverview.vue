@@ -5,6 +5,7 @@
                 <template v-slot:default>
                     {{ company.draft ? company.draft_name : company.name }}
                     <v-chip small v-if="company.draft" color="disabled" outlined>Draft</v-chip>
+                    <v-chip small outlined v-else-if="!company.verified">Niezweryfikowany</v-chip>
                 </template>
                 <template v-slot:subheader>{{ company.description }}</template>
             </page-title>
@@ -20,6 +21,7 @@
                     :website="company.website"
                     :description="company.description"
                     :draft="company.draft"
+                    :verified="company.verified"
                     ></the-company-details>
                 </v-col>
             </v-row>

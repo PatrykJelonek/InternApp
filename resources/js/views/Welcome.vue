@@ -6,7 +6,7 @@
             </v-col>
         </v-row>
         <v-row class="mt-10">
-            <v-col cols="12" md="12" lg="6">
+            <v-col cols="12" md="12" lg="12" xl="6">
                 <the-dashboard-internships></the-dashboard-internships>
             </v-col>
         </v-row>

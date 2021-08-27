@@ -12,4 +12,5 @@ return [
     'acceptableAttachmentsMimeTypes' => ['application/pdf'],
     'acceptManyStudentInternships' => false,
     'numberOfReturnedMessages' => 15,
+    'defaultLogChannel' => 'user'
 ];

@@ -24,10 +24,9 @@
                             class="component-background cursor-pointer"
                             no-data-text="Niestety, ale aktualnie nie mu tu żadnych ankiet!"
                             loading-text="Pobieranie listy ankiet..."
-                            @click:row="(questionnaire) => this.$router.push({name: 'company-questionnaire', params: {slug: this.$route.params.slug, questionnaireId: questionnaire.id}})"
                         >
                             <template v-slot:item.user="{item}">
-                                <v-avatar :size="30" class="mr-2" :color="item.user.avatar_url ? '' : 'primary'">
+                                <v-avatar :size="30" class="mr-2" rounded :color="item.user.avatar_url ? '' : 'primary'">
                                     <v-img :src="item.user.avatar_url ? '/'+item.user.avatar_url : ''"
                                            :alt="'Awatar użytkownika ' + item.user.full_name"></v-img>
                                 </v-avatar>
@@ -38,6 +37,32 @@
                             </template>
                             <template v-slot:item.created_at="{item}">
                                 {{ formatDate(item.created_at) }}
+                            </template>
+                            <template v-slot:item.actions="{item}">
+                                <v-menu offset-y class="component-background">
+                                    <template v-slot:activator="{ on, attrs }">
+                                        <v-btn
+                                            icon
+                                            v-bind="attrs"
+                                            v-on="on"
+                                        >
+                                            <v-icon>mdi-dots-vertical</v-icon>
+                                        </v-btn>
+                                    </template>
+                                    <v-list dense color="component-background" class="cursor-pointer">
+                                        <v-list-item
+                                            @click="$router.push({name: 'edit-questionnaire', params: {slug: $route.params.slug, questionnaireId: item.id}})">
+                                            <v-list-item-title>
+                                                Edytuj ankietę
+                                            </v-list-item-title>
+                                        </v-list-item>
+                                        <v-list-item @click="$router.push({name: 'questionnaire', params: {questionnaireId: item.id}})">
+                                            <v-list-item-title>
+                                                Wyświetl ankietę
+                                            </v-list-item-title>
+                                        </v-list-item>
+                                    </v-list>
+                                </v-menu>
                             </template>
                         </v-data-table>
                     </custom-card>
@@ -70,7 +95,8 @@ export default {
                 {text: 'Nazwa', value: 'name'},
                 {text: 'Autor', value: 'user'},
                 {text: 'Liczba pytań', value: 'questions'},
-                {text: 'Data utworzenia', value: 'created_at'}
+                {text: 'Data utworzenia', value: 'created_at'},
+                {text: 'Akcje', value: 'actions'},
             ]
         }
     },

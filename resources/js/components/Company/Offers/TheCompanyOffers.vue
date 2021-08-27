@@ -17,74 +17,20 @@
         </page-title>
 
         <v-row no-gutters>
-            <v-col cols="12" class="mb-5">
+            <v-col cols="12">
                 <custom-card>
-                    <custom-card-title>
-                        <template v-slot:default>Filtry</template>
-                    </custom-card-title>
-                    <v-row no-gutters class="pa-5">
-                        <v-col
-                            cols="12"
-                            md="12"
-                            lg="5"
-                            xl="3"
-                            class="mr-5"
-                            v-bind:class="$vuetify.breakpoint.mdAndDown ? 'mb-5' : ''"
-                        >
-                            <v-text-field
-                                v-model="search.name"
-                                label="Nazwa"
-                                outlined
-                                dense
-                                hide-details
-                                clearable
-                                @input="searchByName"
-                            ></v-text-field>
-                        </v-col>
-                        <v-col
-                            cols="12"
-                            md="12"
-                            lg="3"
-                            xl="3"
-                            class="mr-5"
-                            v-bind:class="$vuetify.breakpoint.mdAndDown ? 'mb-5' : ''"
-                        >
-                            <v-combobox
-                                v-if="comboboxElements.categories.length > 1"
-                                v-model="search.categories"
-                                label="Kategorie"
-                                :items="comboboxElements.categories"
-                                :item-value="(category) => category.name"
-                                :item-text="(category) => category.display_name"
-                                outlined
-                                dense
-                                hide-details
-                                small-chips
-                                clearable
-                                multiple
-                                @input="searchByCategories"
-                            ></v-combobox>
-                        </v-col>
-                        <v-col cols="12" md="12" lg="3" xl="3">
-                            <v-combobox
-                                v-if="comboboxElements.statuses.length > 1"
-                                v-model="search.statuses"
-                                label="Statusy"
-                                :items="comboboxElements.statuses"
-                                :item-value="(status) => status.name"
-                                :item-text="(status) => status.display_name"
-                                outlined
-                                clearable
-                                dense
-                                hide-details
-                                small-chips
-                                multiple
-                                @input="searchByStatuses"
-                            ></v-combobox>
-                        </v-col>
-                    </v-row>
+                    <v-text-field
+                        v-model="search"
+                        outlined
+                        prepend-inner-icon="mdi-magnify"
+                        label="Szukaj"
+                        hide-details
+                    ></v-text-field>
                 </custom-card>
             </v-col>
+        </v-row>
+
+        <v-row>
             <v-col cols="12">
                 <custom-card>
                     <custom-card-title>
@@ -95,17 +41,18 @@
                             <v-data-table
                                 :no-data-text="`Niestety, ale ${company.name} nie posiada jeszcze ofert w systemie`"
                                 :headers="headers"
-                                :items="searchedItems"
+                                :items="companyOffers"
                                 :loading="companyOffersLoading"
+                                :search="search"
                                 class="component-background"
                             >
-                                <template v-slot:item.supervisor="{ item }">
+                                <template v-slot:item.supervisor.full_name="{ item }">
                                     <router-link class="primary--text" link small
                                                  :to="{name: 'user', params: {id: item.supervisor.id}}">
-                                        {{ item.supervisor.first_name + ' ' + item.supervisor.last_name }}
+                                        {{ item.supervisor.full_name}}
                                     </router-link>
                                 </template>
-                                <template v-slot:item.status="{ item }">
+                                <template v-slot:item.status.display_name="{ item }">
                                     <v-chip small :color="item.status.hex_color" outlined>
                                         {{ item.status.display_name }}
                                     </v-chip>
@@ -120,6 +67,31 @@
                                 </template>
                                 <template v-slot:item.date_to="{ item }">
                                     {{ formatDate(item.date_to) }}
+                                </template>
+                                <template v-slot:item.actions="{ item }">
+                                    <v-menu offset-y class="component-background">
+                                        <template v-slot:activator="{ on, attrs }">
+                                            <v-btn
+                                                icon
+                                                v-bind="attrs"
+                                                v-on="on"
+                                            >
+                                                <v-icon>mdi-dots-vertical</v-icon>
+                                            </v-btn>
+                                        </template>
+                                        <v-list dense color="component-background" class="cursor-pointer">
+                                            <v-list-item>
+                                                <v-list-item-title @click="$router.push({name: 'offer', params: {slug: item.slug}})">
+                                                    Zobacz ofertę
+                                                </v-list-item-title>
+                                            </v-list-item>
+                                            <v-list-item>
+                                                <v-list-item-title @click="$router.push({name: 'offer', params: {slug: item.slug}})">
+                                                    Usuń ofertę
+                                                </v-list-item-title>
+                                            </v-list-item>
+                                        </v-list>
+                                    </v-menu>
                                 </template>
                             </v-data-table>
                         </v-col>
@@ -146,29 +118,16 @@ export default {
 
     data() {
         return {
-            searchedItems: [],
-            search: {
-                name: null,
-                categories: null,
-                statuses: null,
-            },
-            comboboxElements: {
-                categories: [],
-                statuses: [],
-            },
+            search: null,
             headers: [
                 {text: 'Nazwa', value: 'name'},
-                {text: 'Dostępne Miejsca', value: 'places_number'},
-                {text: 'Kategoria', value: 'category.display_name'},
-                {text: 'Opiekun', value: 'supervisor', sortable: false},
+                {text: 'Miejsca', value: 'places_number'},
+                {text: 'Opiekun', value: 'supervisor.full_name'},
                 {text: 'Od', value: 'date_from'},
                 {text: 'Do', value: 'date_to'},
                 {text: 'Interview', value: 'interview', align: 'center', sortable: false},
-                {text: 'Status', value: 'status', sortable: false},
-            ],
-            categories: [
-                {id: 1, name: 'programing', display_name: 'Programowanie'},
-                {id: 2, name: 'computer_graphic', display_name: 'Grafika Komputerowa'},
+                {text: 'Status', value: 'status.display_name'},
+                {text: 'Akcje', value: 'actions', sortable: false},
             ],
         }
     },
@@ -259,7 +218,7 @@ export default {
         });
 
         this.fetchCompanyOffers(this.company.slug).then(() => {
-            this.updateSearchedItems();
+
         }).catch((e) => {
 
         });

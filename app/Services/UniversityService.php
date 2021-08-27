@@ -10,6 +10,7 @@ namespace App\Services;
 
 use App\Models\University;
 use App\Models\UserUniversity;
+use App\Repositories\UniversityRepository;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
@@ -18,6 +19,19 @@ use Illuminate\Support\Str;
 
 class UniversityService
 {
+    /**
+     * @var UniversityRepository
+     */
+    private $universityRepository;
+
+    /**
+     * @param UniversityRepository $universityRepository
+     */
+    public function __construct(UniversityRepository $universityRepository)
+    {
+        $this->universityRepository = $universityRepository;
+    }
+
     /**
      * @param int   $userUniversityId
      * @param array $rolesIds
@@ -100,16 +114,29 @@ class UniversityService
         return null;
     }
 
-    public function addUserToUniversityWithRole(int $userId, int $universityId, int $roleId)
-    {
+    public function addUserToUniversityWithRole(
+        int $userId,
+        int $universityId,
+        int $roleId,
+        ?bool $verified = false,
+        ?bool $active = false
+    ) {
         $userUniversity = new UserUniversity();
         $userUniversity->user_id = !empty($userId) ? $userId : Auth::id();
         $userUniversity->university_id = $universityId;
+        $userUniversity->verified = $verified;
+        $userUniversity->active = $active;
 
         if ($userUniversity->save()) {
-            $userUniversity->roles()->attach([$roleId], ['created_at' => Carbon::now(), 'updated_at' => Carbon::now()]);
+            $userUniversity->roles()->attach(
+                [$roleId],
+                [
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now(),
+                ]
+            );
 
-            Log::channel('user')->info(
+            Log::channel(config('global.defaultLogChannel'))->info(
                 'Dodano nową rolę do użytkownika uczelni!',
                 [
                     'user_id' => Auth::id(),
@@ -124,7 +151,7 @@ class UniversityService
             return $userUniversity;
         }
 
-        Log::channel('user')->error(
+        Log::channel(config('global.defaultLogChannel'))->error(
             'Wystąpił problem z dodaniem roli do użytkownika uczelni!',
             [
                 'user_id' => Auth::id(),
@@ -135,6 +162,17 @@ class UniversityService
                 ],
             ]
         );
+
+        return null;
+    }
+
+    public function verifyUniversity(string $slug) {
+        $university = $this->universityRepository->getUniversityBySlug($slug);
+        $university->verified = 1;
+
+        if ($university->update()) {
+            return $university;
+        }
 
         return null;
     }

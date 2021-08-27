@@ -8,6 +8,8 @@ export default {
         selectedUniversity: null,
         universities: [],
         universitiesLoading: false,
+        universitiesToVerification: [],
+        universitiesToVerificationLoading: false,
         universityTypes: [],
         universityUsers: [],
         universityAgreements: [],
@@ -36,6 +38,14 @@ export default {
 
         universitiesLoading: state => {
             return state.universitiesLoading;
+        },
+
+        universitiesToVerification: state => {
+            return state.universitiesToVerification;
+        },
+
+        universitiesToVerificationLoading: state => {
+            return state.universitiesToVerificationLoading;
         },
 
         university: state => {
@@ -130,6 +140,14 @@ export default {
 
         SET_UNIVERSITIES_LOADING(state, data) {
             state.universitiesLoading = data;
+        },
+
+        SET_UNIVERSITIES_TO_VERIFICATION(state, data) {
+            state.universitiesToVerification = data;
+        },
+
+        SET_UNIVERSITIES_TO_VERIFICATION_LOADING(state, data) {
+            state.universitiesToVerificationLoading = data;
         },
 
         SET_UNIVERSITY_TYPES(state, data) {
@@ -267,10 +285,11 @@ export default {
             })
         },
 
-        CHANGE_UNIVERSITY_INTERNSHIP_STATUS(state, {id, status}) {
+        CHANGE_UNIVERSITY_INTERNSHIP_STATUS(state, {id, status, hexColor}) {
             state.internships.map((internship) => {
                 if (internship.id === id) {
                     internship.status.display_name = status;
+                    internship.status.hex_color = hexColor;
                 }
 
                 return internship;
@@ -423,6 +442,18 @@ export default {
             }
         },
 
+        async fetchUniversitiesToVerification({commit}) {
+            commit('SET_UNIVERSITIES_TO_VERIFICATION_LOADING', true);
+            try {
+                let response = await axios.get(`/api/admin/universities/verification`);
+                commit('SET_UNIVERSITIES_TO_VERIFICATION', response.data);
+                commit('SET_UNIVERSITIES_TO_VERIFICATION_LOADING', false);
+            } catch (e) {
+                commit('SET_UNIVERSITIES_TO_VERIFICATION', []);
+                commit('SET_UNIVERSITIES_TO_VERIFICATION_LOADING', false);
+            }
+        },
+
         async fetchAvailableOffers({commit}) {
             commit('SET_AVAILABLE_OFFERS_LOADING', true);
             try {
@@ -512,6 +543,10 @@ export default {
 
         createOwnAgreement({commit}, {slug, data}) {
             return axios.post(`/api/universities/${slug}/agreements`, data);
+        },
+
+        verifyUniversity({commit}, {slug}) {
+            return axios.post(`/api/admin/universities/${slug}/verify`);
         }
     },
 };

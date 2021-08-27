@@ -5,13 +5,25 @@
             <template v-slot:subheader>
                 Lista praktyk i staży przypisanych do {{ university.name }}.
             </template>
-            <template v-slot:actions>
-                <v-btn color="primary" outlined>Dodaj praktykę / staż</v-btn>
-            </template>
         </page-title>
+
+        <v-row no-gutters>
+            <v-col cols="12">
+                <custom-card>
+                    <v-text-field
+                        v-model="search"
+                        outlined
+                        prepend-inner-icon="mdi-magnify"
+                        label="Szukaj"
+                        hide-details
+                    ></v-text-field>
+                </custom-card>
+            </v-col>
+        </v-row>
+
         <v-row>
             <v-col cols="12">
-                <the-university-internships-list></the-university-internships-list>
+                <the-university-internships-list :search="search"></the-university-internships-list>
             </v-col>
         </v-row>
     </v-container>
@@ -21,10 +33,17 @@
 import TheUniversityInternshipsList from "./TheUniversityInternshipsList";
 import {mapActions, mapGetters} from "vuex";
 import PageTitle from "../../_Helpers/PageTitle";
+import CustomCard from "../../_General/CustomCard";
 
 export default {
     name: "TheUniversityInternships",
-    components: {PageTitle, TheUniversityInternshipsList},
+    components: {CustomCard, PageTitle, TheUniversityInternshipsList},
+
+    data() {
+        return {
+            search: null,
+        }
+    },
 
     computed: {
         ...mapGetters({
