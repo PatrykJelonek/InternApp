@@ -21,7 +21,7 @@
             description="Czy na pewno chcesz usunąć tą umowę?"
             :dialog-state="dialogs['DIALOG_FIELD_DELETE_AGREEMENT']"
             :toggle-function="toggleDialog"
-            :confirm-function="deleteA"
+            :confirm-function="deleteAgreement"
             dialog-key="DIALOG_FIELD_DELETE_AGREEMENT"
         ></custom-confirm-dialog>
         <v-row>
@@ -52,7 +52,7 @@
                         :items-per-page="5"
                         :search="search"
                         :loading="agreementsLoading"
-                        class="elevation-1 component-background"
+                        class="component-background"
                         no-data-text="Niestety, ta uczelnia nie posiada jeszcze umów!"
                         loading-text="Pobieranie listy umów..."
                     >
@@ -78,15 +78,18 @@
                             </template>
                         </template>
                         <template v-slot:item.dates="{ item }">
-                            {{ formatDate(item.date_from) + ' - ' + formatDate(item.date_to) }}
+                            {{ item.date_from + ' - ' + item.date_to }}
                         </template>
                         <template v-slot:item.is_active="{ item }">
+                            {{ item.is_active ? 'Tak' : 'Nie' }}
+                        </template>
+                        <template v-slot:item.status.display_name="{ item }">
                             <v-chip
                                 small
                                 outlined
-                                :color="item.is_active  ? 'primary' : 'grey lighten-3'"
+                                :color="item.status.hex_color"
                             >
-                                {{ item.is_active ? 'Aktywna' : 'Nieaktywna' }}
+                                {{ item.status.display_name }}
                             </v-chip>
                         </template>
                         <template v-slot:item.actions="{ item }">
@@ -159,7 +162,8 @@ export default {
                 {text: 'Opiekun z uczelni', value: 'supervisor.full_name'},
                 {text: 'Opiekun z firmy', value: 'offer.supervisor.full_name'},
                 {text: 'Okres ważności', value: 'dates'},
-                {text: 'Status', value: 'is_active'},
+                {text: 'Status', value: 'status.display_name'},
+                {text: 'Aktywna', value: 'is_active'},
                 {text: 'Akcje', value: 'actions', sortable: false, align: 'center'},
             ],
             dialogArgs: [],
@@ -224,7 +228,7 @@ export default {
             });
         },
 
-        deleteA() {
+        deleteAgreement() {
             this.deleteAgreement({slug: this.dialogArgs.slug}).then((res) => {
                 this.deleteUniversityAgreement({slug: this.dialogArgs.slug});
                 this.toggle('DIALOG_FIELD_DELETE_AGREEMENT', false, null);

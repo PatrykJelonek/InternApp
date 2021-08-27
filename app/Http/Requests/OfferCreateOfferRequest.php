@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use App\Rules\Attachments;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreOfferRequest extends FormRequest
+class OfferCreateOfferRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.

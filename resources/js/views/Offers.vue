@@ -1,8 +1,18 @@
 <template>
-    <v-container fluid>
+    <v-container fluid class="pa-0">
+        <create-internship-dialog></create-internship-dialog>
         <page-title>
             <template v-slot:default>Oferty Praktyk</template>
             <template v-slot:subheader>Lista ofert praktyk i staży dostępnych w serwisie</template>
+            <template v-slot:actions>
+                <v-btn
+                    outlined
+                    color="primary"
+                    @click.stop="toggleDialog"
+                >
+                    Zgłoś własne miejsce praktyk
+                </v-btn>
+            </template>
         </page-title>
         <v-row v-has="['student']">
             <v-col cols="12">
@@ -29,11 +39,14 @@
     import StudentOffersList from "../components/Offers/Student/StudentOffersList";
     import TheStudentOfferApplicationsList from "../components/Offers/Student/TheStudentOfferApplicationsList";
     import {mapActions} from "vuex";
+    import CreateInternshipDialog from "../components/Offers/Student/CreateInternshipDialog";
 
     export default {
         name: "Offers",
 
-        components: {TheStudentOfferApplicationsList, StudentOffersList, PageTitle, PageDetailsHeader, OffersList},
+        components: {
+            CreateInternshipDialog,
+            TheStudentOfferApplicationsList, StudentOffersList, PageTitle, PageDetailsHeader, OffersList},
 
         data() {
             return {
@@ -53,7 +66,8 @@
 
         methods: {
             ...mapActions({
-                setBreadcrumbs: 'helpers/setBreadcrumbs'
+                setBreadcrumbs: 'helpers/setBreadcrumbs',
+                toggleDialog: 'helpers/toggleCreateInternshipDialog',
             }),
         },
 

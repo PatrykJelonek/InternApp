@@ -1,6 +1,7 @@
 <template>
     <v-container fluid class="pa-0">
         <create-agreement-dialog></create-agreement-dialog>
+
         <custom-card class="mb-5">
             <v-row no-gutters>
                 <v-col cols="12">
@@ -10,10 +11,11 @@
                         hide-details
                         v-model="search"
                         label="Szukaj"
-                        ></v-text-field>
+                    ></v-text-field>
                 </v-col>
             </v-row>
         </custom-card>
+
         <v-data-iterator
             :items="offers"
             item-key="id"
@@ -24,22 +26,14 @@
         >
             <template v-slot:default="{ items, isExpanded, expand }">
                 <v-row>
-                    <v-col cols="12" v-for="offer in items"
-                           :key="offer.id">
-<!--                        <offer-card-->
-<!--                            :title="offer.name"-->
-<!--                            :company-name="offer.company.name"-->
-<!--                            :created-at="offer.created_at"-->
-<!--                            :city="offer.company.city.name"-->
-<!--                            :interview="offer.interview"-->
-<!--                            :category-name="offer.category.display_name"-->
-<!--                            :program="offer.program"-->
-<!--                            :date-from="offer.date_from"-->
-<!--                            :date-to="offer.date_to"-->
-<!--                        ></offer-card>-->
+                    <v-col
+                        cols="12"
+                        v-for="offer in items"
+                        :key="offer.id"
+                    >
                         <offers-list-row
                             :name="offer.name"
-                            :address="offer.company.city.name"
+                            :address="offer.company.full_address"
                             :category="offer.category.display_name"
                             :interview="offer.interview"
                             :company-name="offer.company.name"
@@ -48,9 +42,6 @@
                             :slug="offer.slug"
                             :offer="offer"
                         ></offers-list-row>
-                    </v-col>
-                    <v-col cols="12">
-                        <offers-list-row></offers-list-row>
                     </v-col>
                 </v-row>
             </template>
@@ -74,10 +65,11 @@ import CreateAgreementDialog from "../Agreements/CreateAgreementDialog";
 import CustomCard from "../_General/CustomCard";
 import OfferCard from "./OfferCard";
 import OffersListRow from "./OffersListRow";
+import CreateInternshipDialog from "./Student/CreateInternshipDialog";
 
 export default {
     name: "OffersList",
-    components: {OffersListRow, OfferCard, CustomCard, CreateAgreementDialog, ExpandCard},
+    components: {CreateInternshipDialog, OffersListRow, OfferCard, CustomCard, CreateAgreementDialog, ExpandCard},
     data() {
         return {
             search: null,
@@ -108,6 +100,7 @@ export default {
         ...mapActions({
             fetchOffers: 'offer/fetchOffers',
             toggleCreateAgreementDialog: 'helpers/toggleCreateAgreementDialog',
+            toggleDialog: 'helpers/toggleCreateInternshipDialog',
         }),
 
         setSelectedOffer(offer) {

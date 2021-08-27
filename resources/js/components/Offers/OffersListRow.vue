@@ -2,11 +2,11 @@
     <custom-card :ripple="true">
         <v-row class="py-4 px-4 cursor-pointer" no-gutters
                @click="$router.push({name: 'offer', params: {slug: slug}})">
-            <v-col cols="6">
+            <v-col cols="10">
                 <v-row no-gutters>
                     <v-col cols="auto" class="mr-5 d-flex justify-center align-center">
                         <v-avatar rounded :color="logoUrl ? '' : 'primary'">
-                            <v-img :src="`/${logoUrl}`" v-if="logoUrl"></v-img>
+                            <v-img max-height="250px" :src="`/${logoUrl}`" v-if="logoUrl"></v-img>
                         </v-avatar>
                     </v-col>
                     <v-col cols="auto">
@@ -45,14 +45,14 @@
                     </v-col>
                 </v-row>
             </v-col>
-            <v-col cols="6" class="d-flex align-center">
+            <v-col cols="2" class="d-flex align-center">
                 <v-row no-gutters class="d-flex align-center justify-end">
                     <v-col cols="auto" class="d-flex justify-center align-center">
                         <menu-dots>
                             <template v-slot:items>
-                                <v-list-item class="cursor-pointer">
-                                    <v-list-item-title>Aplikuj</v-list-item-title>
-                                </v-list-item>
+<!--                                <v-list-item class="cursor-pointer">-->
+<!--                                    <v-list-item-title>Aplikuj</v-list-item-title>-->
+<!--                                </v-list-item>-->
                                 <v-list-item class="cursor-pointer">
                                     <v-list-item-title @click="openCreateAgreementDialog">Utwórz umowę</v-list-item-title>
                                 </v-list-item>

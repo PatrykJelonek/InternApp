@@ -171,7 +171,7 @@ class UniversityRepository implements UniversityRepositoryInterface
 
     public function getAgreements(string $slug)
     {
-        return Agreement::with(['offer', 'company', 'supervisor', 'offer.supervisor'])->whereHas(
+        return Agreement::with(['offer', 'company', 'supervisor', 'offer.supervisor', 'status'])->whereHas(
             'university',
             function (Builder $query) use ($slug) {
                 $query->where('slug', $slug);

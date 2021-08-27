@@ -74,11 +74,11 @@ class AgreementService
      * @param string      $dateFrom
      * @param string      $dateTo
      * @param string      $program
-     * @param string      $schedule
      * @param int         $companyId
      * @param int         $universityId
      * @param int         $universitySupervisorId
      * @param int         $placesNumber
+     * @param string|null $schedule
      * @param string|null $content
      * @param int|null    $offerId
      * @param bool|null   $isActive
@@ -91,17 +91,18 @@ class AgreementService
         string $dateFrom,
         string $dateTo,
         string $program,
-        string $schedule,
         int $companyId,
         int $universityId,
         int $universitySupervisorId,
         int $placesNumber = 1,
+        ?string $schedule = null,
         ?string $content = null,
         ?int $offerId = null,
         ?bool $isActive = false,
-        ?string $signingDate = null
+        ?string $signingDate = null,
+        ?int $agreementStatusId = null
     ): ?Agreement {
-        $agreementStatus = $this->agreementStatusRepository->getStatusByName(AgreementStatusConstants::STATUS_NEW);
+        $agreementStatus = $agreementStatusId ?? $this->agreementStatusRepository->getStatusByName(AgreementStatusConstants::STATUS_NEW);
 
         $agreement = new Agreement();
         $agreement->name = $name;

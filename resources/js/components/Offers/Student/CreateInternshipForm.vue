@@ -1,6 +1,6 @@
 <template>
-    <v-form class="pa-5">
-        <v-row v-show="showForm">
+    <v-form>
+        <v-row v-show="showForm" no-gutters>
             <v-col cols="12">
                 <v-stepper v-model="stepper" class="card-background elevation-0" alt-labels>
                     <v-stepper-header class="elevation-0">
@@ -22,6 +22,8 @@
                             </span>
                         </v-stepper-step>
                     </v-stepper-header>
+
+                    <v-divider></v-divider>
 
                     <v-stepper-items class="elevation-0">
                         <validation-observer ref="observerStepOne" v-slot="{ validate }">
@@ -47,6 +49,7 @@
                                                     @input="canGoNext = true"
                                                     :loading="companiesLoading"
                                                     outlined
+                                                    dense
                                                     hide-details="auto"
                                                     :error-messages="errors"
                                                 ></v-autocomplete>
@@ -68,6 +71,9 @@
                                 </v-row>
                                 <v-expand-transition>
                                     <v-row v-if="canGoNext">
+                                        <v-col cols="12">
+                                            <v-divider></v-divider>
+                                        </v-col>
                                         <v-col cols="12" class="text-right">
                                             <v-btn color="primary" outlined @click="goNext">
                                                 Dalej
@@ -87,6 +93,7 @@
                                                     label="Nazwa Firmy"
                                                     v-model="data.company.name"
                                                     outlined
+                                                    dense
                                                     hide-details="auto"
                                                     :error-messages="errors"
                                                 ></v-text-field>
@@ -106,6 +113,7 @@
                                                     item-value="id"
                                                     :loading="companyCategoriesLoading"
                                                     outlined
+                                                    dense
                                                     hide-details="auto"
                                                     :error-messages="errors"
                                                 ></v-select>
@@ -121,6 +129,7 @@
                                                     label="Ulica"
                                                     v-model="data.company.street"
                                                     outlined
+                                                    dense
                                                     hide-details="auto"
                                                     :error-messages="errors"
                                                 ></v-text-field>
@@ -136,6 +145,7 @@
                                                     label="Nr Budynku"
                                                     v-model="data.company.streetNumber"
                                                     outlined
+                                                    dense
                                                     hide-details="auto"
                                                     :error-messages="errors"
                                                 ></v-text-field>
@@ -154,6 +164,7 @@
                                                     v-on:input="postcodePattern"
                                                     maxlength="6"
                                                     outlined
+                                                    dense
                                                     hide-details="auto"
                                                     :error-messages="errors"
                                                 ></v-text-field>
@@ -170,6 +181,7 @@
                                                     v-model="data.company.city.name"
                                                     :loading="cityLoading"
                                                     outlined
+                                                    dense
                                                     hide-details="auto"
                                                     :error-messages="errors"
                                                 ></v-text-field>
@@ -185,6 +197,7 @@
                                                     label="Email Firmowy"
                                                     v-model="data.company.email"
                                                     outlined
+                                                    dense
                                                     hide-details="auto"
                                                     :error-messages="errors"
                                                 ></v-text-field>
@@ -200,6 +213,7 @@
                                                     label="Telefon Firmowy"
                                                     v-model="data.company.phone"
                                                     outlined
+                                                    dense
                                                     hide-details="auto"
                                                     :error-messages="errors"
                                                 ></v-text-field>
@@ -215,6 +229,7 @@
                                                     v-model="data.company.website"
                                                     hint="www.example.com"
                                                     outlined
+                                                    dense
                                                     hide-details="auto"
                                                     :error-messages="errors"
                                                 ></v-text-field>
@@ -222,6 +237,9 @@
                                         </v-col>
                                         <v-col cols="12">
                                             <v-row>
+                                                <v-col cols="12">
+                                                    <v-divider></v-divider>
+                                                </v-col>
                                                 <v-col cols="12" class="text-right">
                                                     <v-btn outlined color="primary" @click="goNext">
                                                         Dalej
@@ -246,6 +264,7 @@
                                                 label="Nazwa Praktyki"
                                                 v-model="data.offer.name"
                                                 outlined
+                                                dense
                                                 hide-details="auto"
                                                 :error-messages="errors"
                                             ></v-text-field>
@@ -265,6 +284,7 @@
                                                 item-value="id"
                                                 :loading="offerCategoriesLoading"
                                                 outlined
+                                                dense
                                                 hide-details="auto"
                                                 :error-messages="errors"
                                             ></v-select>
@@ -280,6 +300,7 @@
                                                 label="Program Praktyk"
                                                 v-model="data.offer.program"
                                                 outlined
+                                                dense
                                                 hide-details="auto"
                                                 :error-messages="errors"
                                             ></v-textarea>
@@ -306,6 +327,7 @@
                                                         hide-details="auto"
                                                         :error-messages="errors"
                                                         readonly
+                                                        dense
                                                         outlined
                                                         v-bind="attrs"
                                                         v-on="on"
@@ -343,6 +365,7 @@
                                                         :error-messages="errors"
                                                         readonly
                                                         outlined
+                                                        dense
                                                         v-bind="attrs"
                                                         v-on="on"
                                                     ></v-text-field>
@@ -359,6 +382,9 @@
                                     </v-col>
                                 </v-row>
                                 <v-row class="mt-1">
+                                    <v-col cols="12">
+                                        <v-divider></v-divider>
+                                    </v-col>
                                     <v-col cols="6" class="text-left">
                                         <v-btn color="grey darken-2" outlined @click="stepper--">
                                             Cofnij
@@ -384,6 +410,7 @@
                                                 label="Harmonogram Praktyk"
                                                 v-model="data.offer.schedule"
                                                 outlined
+                                                dense
                                                 hide-details="auto"
                                                 :error-messages="errors"
                                             ></v-textarea>
@@ -399,6 +426,7 @@
                                                 v-model="fileInput"
                                                 outlined
                                                 show-size
+                                                dense
                                                 prepend-icon=""
                                                 @change="createBase64"
                                                 :error-messages="errors"
@@ -407,6 +435,9 @@
                                     </v-col>
                                 </v-row>
                                 <v-row>
+                                    <v-col cols="12">
+                                        <v-divider></v-divider>
+                                    </v-col>
                                     <v-col cols="6" class="text-left">
                                         <v-btn outlined @click="stepper--">
                                             Cofnij
@@ -424,6 +455,7 @@
                 </v-stepper>
             </v-col>
         </v-row>
+
         <v-row v-show="!showForm">
             <v-fade-transition>
                 <v-col v-if="showLoadingCircle" cols="12" class="text-center">

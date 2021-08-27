@@ -7,7 +7,7 @@ use App\Http\Requests\AgreementChangeStatusRequest;
 use App\Http\Requests\AgreementDeactivateAgreementRequest;
 use App\Http\Requests\AgreementDeleteAgreementRequest;
 use App\Http\Requests\AgreementShowRequest;
-use App\Http\Requests\AgreementStoreRequest;
+use App\Http\Requests\AgreementCreateAgreementRequest;
 use App\Models\Agreement;
 use App\Http\Controllers\Controller;
 use App\Repositories\AgreementRepository;
@@ -17,10 +17,24 @@ use App\Services\AgreementService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
 
 class AgreementController extends Controller
 {
-    const AGREEMENT_INACTIVE = false;
+    public const AGREEMENT_INACTIVE = false;
+
+    public const REQUEST_FIELD_AGREEMENT_NAME = 'name';
+    public const REQUEST_FIELD_AGREEMENT_DATE_FROM = 'dateFrom';
+    public const REQUEST_FIELD_AGREEMENT_DATE_TO = 'dateTo';
+    public const REQUEST_FIELD_AGREEMENT_PROGRAM = 'program';
+    public const REQUEST_FIELD_AGREEMENT_SCHEDULE = 'schedule';
+    public const REQUEST_FIELD_AGREEMENT_COMPANY_ID = 'companyId';
+    public const REQUEST_FIELD_AGREEMENT_UNIVERSITY_SUPERVISOR_ID = 'universitySupervisorId';
+    public const REQUEST_FIELD_AGREEMENT_PLACES_NUMBER = 'placesNumber';
+    public const REQUEST_FIELD_AGREEMENT_OFFER_ID = 'offerId';
+    public const REQUEST_FIELD_AGREEMENT_CONTENT = 'content';
+    public const REQUEST_FIELD_AGREEMENT_UNIVERSITY_SLUG = 'universitySlug';
+
     /**
      * @var AgreementService
      */
@@ -104,42 +118,52 @@ class AgreementController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param AgreementStoreRequest $request
+     * @param AgreementCreateAgreementRequest $request
      *
      * @return Response
      */
-    public function store(AgreementStoreRequest $request)
+    public function createAgreement(AgreementCreateAgreementRequest $request): Response
     {
-        $university = $this->universityRepository->getUniversityBySlug($request->input('universitySlug'));
-
-        $agreement = $this->agreementService->createAgreement(
-            $request->input('name'),
-            $request->input('dateFrom'),
-            $request->input('dateTo'),
-            $request->input('program'),
-            $request->input('schedule'),
-            $request->input('companyId'),
-            $university->id,
-            $request->input('universitySupervisorId'),
-            $request->input('placesNumber'),
-            $request->input('content'),
-            $request->input('offerId'),
-            self::AGREEMENT_INACTIVE,
-            Carbon::today()
+        DB::beginTransaction();
+        $university = $this->universityRepository->getUniversityBySlug(
+            $request->input(self::REQUEST_FIELD_AGREEMENT_UNIVERSITY_SLUG)
         );
 
-        $offer = $this->offerRepository->getOfferById($request->input('offerId'));
-        $this->offerRepository->updateOffer(
-            [
-                'placesNumber' => $offer->places_number - $request->input('placesNumber'),
-            ],
-            $offer->id
-        );
+        if (!is_null($university)) {
+            $agreement = $this->agreementService->createAgreement(
+                $request->input(self::REQUEST_FIELD_AGREEMENT_NAME),
+                $request->input(self::REQUEST_FIELD_AGREEMENT_DATE_FROM),
+                $request->input(self::REQUEST_FIELD_AGREEMENT_DATE_TO),
+                $request->input(self::REQUEST_FIELD_AGREEMENT_PROGRAM),
+                $request->input(self::REQUEST_FIELD_AGREEMENT_COMPANY_ID),
+                $university->id,
+                $request->input(self::REQUEST_FIELD_AGREEMENT_UNIVERSITY_SUPERVISOR_ID),
+                $request->input(self::REQUEST_FIELD_AGREEMENT_PLACES_NUMBER),
+                $request->input(self::REQUEST_FIELD_AGREEMENT_SCHEDULE),
+                $request->input(self::REQUEST_FIELD_AGREEMENT_CONTENT),
+                $request->input(self::REQUEST_FIELD_AGREEMENT_OFFER_ID),
+                self::AGREEMENT_INACTIVE,
+                Carbon::today()
+            );
 
-        if ($agreement !== null) {
-            return response($agreement, Response::HTTP_OK);
+            $offer = $this->offerRepository->getOfferById(
+                $request->input(self::REQUEST_FIELD_AGREEMENT_OFFER_ID)
+            );
+
+            $newOfferPlacesNumber = $offer->places_number - $request->input(self::REQUEST_FIELD_AGREEMENT_PLACES_NUMBER);
+            $isOfferPlacesNumberChanged = $this->offerRepository
+                ->changeOfferPlacesNumber(
+                    $offer->id,
+                    $newOfferPlacesNumber
+                );
+
+            if ($isOfferPlacesNumberChanged && !is_null($agreement)) {
+                DB::commit();
+                return response($agreement, Response::HTTP_CREATED);
+            }
         }
 
+        DB::rollBack();
         return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 

@@ -1,95 +1,113 @@
 <template>
-    <v-row>
+    <v-container fluid class="pa-0">
         <accept-offer-dialog :name="selectedOffer.name" :slug="selectedOffer.slug"></accept-offer-dialog>
         <reject-offer-dialog :name="selectedOffer.name" :slug="selectedOffer.slug"></reject-offer-dialog>
-        <v-col cols="12">
-            <expand-card
-                title="Nowe Oferty"
-                description="Lista ofert do akceptacji"
-            >
-                <template v-slot:buttons>
-                    <v-tooltip top>
-                        <template v-slot:activator="{ on, attrs }">
-                            <v-btn
-                                small
-                                icon
-                                v-bind="attrs"
-                                v-on="on"
-                                @click="updateView">
-                                <v-icon>mdi-database-refresh-outline</v-icon>
-                            </v-btn>
+
+        <page-title>
+            <template v-slot:default>Oferty</template>
+            <template v-slot:subheader>Lista ofert w serwisie</template>
+        </page-title>
+
+        <v-row no-gutters class="mb-10">
+            <v-col cols="12">
+                <custom-card>
+                    <v-tabs>
+                        <v-tab>Do weryfikacji</v-tab>
+                    </v-tabs>
+                </custom-card>
+            </v-col>
+        </v-row>
+
+        <v-row no-gutters>
+            <v-col cols="12">
+                <custom-card>
+                    <custom-card-title>
+                        <template v-slot:default>Oferty</template>
+                        <template v-slot:subheader>Lista ofert do akceptacji</template>
+                        <template v-slot:actions>
+                            <v-tooltip top>
+                                <template v-slot:activator="{ on, attrs }">
+                                    <v-btn
+                                        small
+                                        icon
+                                        v-bind="attrs"
+                                        v-on="on"
+                                        @click="updateView">
+                                        <v-icon>mdi-database-refresh-outline</v-icon>
+                                    </v-btn>
+                                </template>
+                                <span>Pobierz kategorie</span>
+                            </v-tooltip>
                         </template>
-                        <span>Pobierz kategorie</span>
-                    </v-tooltip>
-                </template>
-                <v-data-table
-                    no-data-text="Nie ma jeszcze żadnych ofert do akceptacji"
-                    :items="offers"
-                    :loading="offersLoading"
-                    :headers="headers"
-                    class="component-background"
-                >
-                    <template v-slot:item.supervisor="{ item }">
-                        <router-link
-                            class="primary--text"
-                            link
-                            small
-                            :to="{name: 'user', params: {id: item.supervisor.id}}"
-                        >
-                            {{ item.supervisor.first_name + ' ' + item.supervisor.last_name }}
-                        </router-link>
-                    </template>
-                    <template v-slot:item.status="{ item }">
-                        <v-chip small :color="item.status.hex_color">
-                            {{ item.status.display_name }}
-                        </v-chip>
-                    </template>
-                    <template v-slot:item.interview="{ item }">
-                        <v-chip small :color="item.interview ? '#00E676' : ''">
-                            {{ item.interview ? 'Tak' : 'Nie' }}
-                        </v-chip>
-                    </template>
-                    <template v-slot:item.date_from="{ item }">
-                        {{ formatDate(item.date_from) }}
-                    </template>
-                    <template v-slot:item.date_to="{ item }">
-                        {{ formatDate(item.date_to) }}
-                    </template>
-                    <template v-slot:item.actions="{ item }">
-                        <v-menu offset-y>
-                            <template v-slot:activator="{ on, attrs }">
-                                <v-btn
-                                    icon
-                                    v-bind="attrs"
-                                    v-on="on"
-                                >
-                                    <v-icon>mdi-dots-vertical</v-icon>
-                                </v-btn>
-                            </template>
-                            <v-list dense>
-                                <v-list-item>
-                                    <v-list-item-title
-                                        @click.stop="openAcceptOfferDialog(item.name, item.slug)"
-                                        class="link"
+                    </custom-card-title>
+
+                    <v-data-table
+                        no-data-text="Nie ma jeszcze żadnych ofert do akceptacji"
+                        :items="offers"
+                        :loading="offersLoading"
+                        :headers="headers"
+                        class="component-background"
+                    >
+                        <template v-slot:item.supervisor="{ item }">
+                            <router-link
+                                class="primary--text"
+                                link
+                                small
+                                :to="{name: 'user', params: {id: item.supervisor.id}}"
+                            >
+                                {{ item.supervisor.first_name + ' ' + item.supervisor.last_name }}
+                            </router-link>
+                        </template>
+                        <template v-slot:item.status="{ item }">
+                            <v-chip outlined small :color="item.status.hex_color">
+                                {{ item.status.display_name }}
+                            </v-chip>
+                        </template>
+                        <template v-slot:item.interview="{ item }">
+                            <span :class="item.interview ? 'primary--text' : ''">{{ item.interview ? 'Tak' : 'Nie' }}</span>
+                        </template>
+                        <template v-slot:item.date_from="{ item }">
+                            {{ formatDate(item.date_from) }}
+                        </template>
+                        <template v-slot:item.date_to="{ item }">
+                            {{ formatDate(item.date_to) }}
+                        </template>
+                        <template v-slot:item.actions="{ item }">
+                            <v-menu offset-y>
+                                <template v-slot:activator="{ on, attrs }">
+                                    <v-btn
+                                        icon
+                                        v-bind="attrs"
+                                        v-on="on"
                                     >
-                                        Akceptuj
-                                    </v-list-item-title>
-                                </v-list-item>
-                                <v-list-item>
-                                    <v-list-item-title
-                                        @click.stop="openRejectOfferDialog(item.name, item.slug)"
-                                        class="link"
-                                    >
-                                        Odrzuć
-                                    </v-list-item-title>
-                                </v-list-item>
-                            </v-list>
-                        </v-menu>
-                    </template>
-                </v-data-table>
-            </expand-card>
-        </v-col>
-    </v-row>
+                                        <v-icon>mdi-dots-vertical</v-icon>
+                                    </v-btn>
+                                </template>
+                                <v-list dense>
+                                    <v-list-item>
+                                        <v-list-item-title
+                                            @click.stop="openAcceptOfferDialog(item.name, item.slug)"
+                                            class="link"
+                                        >
+                                            Akceptuj
+                                        </v-list-item-title>
+                                    </v-list-item>
+                                    <v-list-item>
+                                        <v-list-item-title
+                                            @click.stop="openRejectOfferDialog(item.name, item.slug)"
+                                            class="link"
+                                        >
+                                            Odrzuć
+                                        </v-list-item-title>
+                                    </v-list-item>
+                                </v-list>
+                            </v-menu>
+                        </template>
+                    </v-data-table>
+                </custom-card>
+            </v-col>
+        </v-row>
+    </v-container>
 </template>
 
 <script>
@@ -98,10 +116,13 @@ import moment from "moment";
 import AcceptOfferDialog from "./AcceptOfferDialog";
 import RejectOfferDialog from "./RejectOfferDialog";
 import ExpandCard from "../../_Helpers/ExpandCard";
+import CustomCard from "../../_General/CustomCard";
+import CustomCardTitle from "../../_General/CustomCardTitle";
+import PageTitle from "../../_Helpers/PageTitle";
 
 export default {
     name: "TheAdminOffers",
-    components: {ExpandCard, RejectOfferDialog, AcceptOfferDialog},
+    components: {CustomCardTitle, CustomCard, ExpandCard, RejectOfferDialog, AcceptOfferDialog, PageTitle},
     data() {
         return {
             acceptOfferDialog: null,
@@ -117,7 +138,7 @@ export default {
                 {text: 'Opiekun', value: 'supervisor', sortable: false},
                 {text: 'Od', value: 'date_from'},
                 {text: 'Do', value: 'date_to'},
-                {text: 'Interview', value: 'interview'},
+                {text: 'Interview', value: 'interview', sortable: false, align: 'center'},
                 {text: 'Status', value: 'status', sortable: false},
                 {text: 'Akcje', value: 'actions', sortable: false},
             ]

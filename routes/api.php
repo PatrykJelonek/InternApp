@@ -115,7 +115,7 @@ Route::group(['middleware' => ['jwt.verify']], function() {
 
     # Offers
     Route::get('/offers','Api\OfferController@index');
-    Route::post('/offers', 'Api\OfferController@store');
+    Route::post('/offers', 'Api\OfferController@createOffer');
     Route::get('/offers/statuses', 'Api\OfferStatusController@index');
     Route::get('/offers/categories', 'Api\OfferCategoryController@index');
     Route::get('/offers/{slug}','Api\OfferController@show');
@@ -123,7 +123,7 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::get('/offers/{slug}/reject','Api\OfferController@reject');
 
     # Agreements
-    Route::post('/agreements', 'Api\AgreementController@store');
+    Route::post('/agreements', 'Api\AgreementController@createAgreement');
     Route::get('/agreements/{slug}', 'Api\AgreementController@show');
     Route::get('/agreements/{slug}/accept','Api\agreementController@accept');
     Route::get('/agreements/{slug}/reject','Api\agreementController@reject');

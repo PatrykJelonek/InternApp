@@ -11,6 +11,7 @@
                         <v-text-field
                             v-model="agreement.name"
                             outlined
+                            dense
                             hide-details="auto"
                             :error-messages="errors"
                         >
@@ -29,6 +30,7 @@
                         <v-text-field
                             v-model="agreement.placesNumber"
                             outlined
+                            dense
                             hide-details="auto"
                             :error-messages="errors"
                         >
@@ -51,6 +53,7 @@
                             item-text="university.name"
                             :loading="userUniversitiesLoading"
                             outlined
+                            dense
                             hide-details="auto"
                             :error-messages="errors"
                             @input="selectUniversity"
@@ -75,6 +78,7 @@
                             :loading="universityWorkersLoading"
                             :disabled="universityWorkers.length < 1"
                             outlined
+                            dense
                             hide-details="auto"
                             :error-messages="errors"
                         >
@@ -93,6 +97,7 @@
                         <v-textarea
                             v-model="agreement.program"
                             outlined
+                            dense
                             hide-details="auto"
                             :error-messages="errors"
                         >
@@ -112,6 +117,7 @@
                             label="Harmonogram Praktyk"
                             v-model="agreement.schedule"
                             outlined
+                            dense
                             hide-details="auto"
                             :error-messages="errors"
                         ></v-textarea>
@@ -127,6 +133,7 @@
                             label="Treść umowy"
                             v-model="agreement.content"
                             outlined
+                            dense
                             hide-details="auto"
                             :error-messages="errors"
                         ></v-textarea>
@@ -152,6 +159,7 @@
                                     hide-details="auto"
                                     :error-messages="errors"
                                     readonly
+                                    dense
                                     outlined
                                     v-bind="attrs"
                                     v-on="on"
@@ -193,6 +201,7 @@
                                     v-model="agreement.dateTo"
                                     hide-details="auto"
                                     :error-messages="errors"
+                                    dense
                                     readonly
                                     outlined
                                     v-bind="attrs"
@@ -226,6 +235,7 @@
                             outlined
                             show-size
                             hide-details
+                            dense
                             multiple
                             prepend-icon=""
                             :error-messages="errors"

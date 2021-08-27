@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Constants\AgreementStatusConstants;
 use App\Constants\RoleConstants;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UniversityAddStudentToUniversityRequest;
@@ -31,6 +32,7 @@ use App\Http\Requests\UniversityWorkersRequest;
 use App\Models\Agreement;
 use App\Models\Internship;
 use App\Models\University;
+use App\Repositories\AgreementStatusRepository;
 use App\Repositories\FacultyRepository;
 use App\Repositories\RoleRepository;
 use App\Repositories\UniversityRepository;
@@ -60,6 +62,27 @@ class UniversityController extends Controller
     public const REQUEST_FIELD_UNIVERSITY_PHONE = 'phone';
     public const REQUEST_FIELD_UNIVERSITY_WEBSITE = 'website';
     public const REQUEST_FIELD_USER_ID = 'userId';
+
+    public const REQUEST_FIELD_OWN_AGREEMENT_COMPANY_ID = 'company.id';
+    public const REQUEST_FIELD_OWN_AGREEMENT_COMPANY_NAME = 'company.name';
+    public const REQUEST_FIELD_OWN_AGREEMENT_COMPANY_CITY_ID = 'company.city.id';
+    public const REQUEST_FIELD_OWN_AGREEMENT_COMPANY_STREET = 'company.street';
+    public const REQUEST_FIELD_OWN_AGREEMENT_COMPANY_STREET_NUMBER = 'company.streetNumber';
+    public const REQUEST_FIELD_OWN_AGREEMENT_COMPANY_EMAIL = 'company.email';
+    public const REQUEST_FIELD_OWN_AGREEMENT_COMPANY_CATEGORY_ID = 'company.companyCategoryId';
+    public const REQUEST_FIELD_OWN_AGREEMENT_COMPANY_PHONE = 'company.phone';
+    public const REQUEST_FIELD_OWN_AGREEMENT_COMPANY_WEBSITE = 'company.website';
+    public const REQUEST_FIELD_OWN_AGREEMENT_COMPANY_DESCRIPTION = 'company.description';
+    public const REQUEST_FIELD_OWN_AGREEMENT_NAME = 'agreement.name';
+    public const REQUEST_FIELD_OWN_AGREEMENT_DATE_FROM = 'agreement.dateFrom';
+    public const REQUEST_FIELD_OWN_AGREEMENT_DATE_TO = 'agreement.dateTo';
+    public const REQUEST_FIELD_OWN_AGREEMENT_PROGRAM = 'agreement.program';
+    public const REQUEST_FIELD_OWN_AGREEMENT_SCHEDULE = 'agreement.schedule';
+    public const REQUEST_FIELD_OWN_AGREEMENT_UNIVERSITY_SUPERVISOR_ID = 'agreement.universitySupervisorId';
+    public const REQUEST_FIELD_OWN_AGREEMENT_PLACES_NUMBER = 'agreement.placesNumber';
+    public const REQUEST_FIELD_OWN_AGREEMENT_CONTENT = 'agreement.content';
+    public const REQUEST_FIELD_OWN_AGREEMENT_ACTIVE = 'agreement.active';
+    public const REQUEST_FIELD_OWN_AGREEMENT_SIGNING_DATE = 'agreement.signingDate';
 
     /**
      * @var UniversityRepository
@@ -107,6 +130,11 @@ class UniversityController extends Controller
     private $agreementService;
 
     /**
+     * @var AgreementStatusRepository
+     */
+    private $agreementStatusRepository;
+
+    /**
      * UniversityController constructor.
      *
      * @param UniversityRepository  $universityRepository
@@ -125,7 +153,8 @@ class UniversityController extends Controller
         RoleRepository $roleRepository,
         StudentService $studentService,
         CompanyService $companyService,
-        AgreementService $agreementService
+        AgreementService $agreementService,
+        AgreementStatusRepository $agreementStatusRepository
     ) {
         $this->universityRepository = $universityRepository;
         $this->questionnairesService = $questionnairesService;
@@ -136,6 +165,7 @@ class UniversityController extends Controller
         $this->studentService = $studentService;
         $this->companyService = $companyService;
         $this->agreementService = $agreementService;
+        $this->agreementStatusRepository = $agreementStatusRepository;
     }
 
     /**
@@ -941,26 +971,32 @@ class UniversityController extends Controller
     }
 
 
-    public function createOwnAgreement(UniversityCreateOwnAgreementRequest $request, string $slug)
+    /**
+     * @param UniversityCreateOwnAgreementRequest $request
+     * @param string                              $slug
+     *
+     * @return Response
+     */
+    public function createOwnAgreement(UniversityCreateOwnAgreementRequest $request, string $slug): Response
     {
         $university = $this->universityRepository->getUniversityBySlug($slug);
 
+        DB::beginTransaction();
         if (!is_null($university)) {
-            DB::beginTransaction();
-
-            $companyId = $request->input('company.id');
+            $companyId = $request->input(self::REQUEST_FIELD_OWN_AGREEMENT_COMPANY_ID);
+            $isExistingCompany = !is_null($request->input(self::REQUEST_FIELD_OWN_AGREEMENT_COMPANY_ID));
 
             if (empty($companyId)) {
                 $company = $this->companyService->createCompany(
-                    $request->input('company.name'),
-                    $request->input('company.city.id'),
-                    $request->input('company.street'),
-                    $request->input('company.streetNumber'),
-                    $request->input('company.email'),
-                    $request->input('company.companyCategoryId'),
-                    $request->input('company.phone'),
-                    $request->input('company.website'),
-                    $request->input('company.description'),
+                    $request->input(self::REQUEST_FIELD_OWN_AGREEMENT_COMPANY_NAME),
+                    $request->input(self::REQUEST_FIELD_OWN_AGREEMENT_COMPANY_CITY_ID),
+                    $request->input(self::REQUEST_FIELD_OWN_AGREEMENT_COMPANY_STREET),
+                    $request->input(self::REQUEST_FIELD_OWN_AGREEMENT_COMPANY_STREET_NUMBER),
+                    $request->input(self::REQUEST_FIELD_OWN_AGREEMENT_COMPANY_EMAIL),
+                    $request->input(self::REQUEST_FIELD_OWN_AGREEMENT_COMPANY_CATEGORY_ID),
+                    $request->input(self::REQUEST_FIELD_OWN_AGREEMENT_COMPANY_PHONE),
+                    $request->input(self::REQUEST_FIELD_OWN_AGREEMENT_COMPANY_WEBSITE),
+                    $request->input(self::REQUEST_FIELD_OWN_AGREEMENT_COMPANY_DESCRIPTION),
                     null,
                     Auth::id(),
                     true,
@@ -971,25 +1007,31 @@ class UniversityController extends Controller
 
             if (!empty($companyId)) {
                 $agreement = $this->agreementService->createAgreement(
-                    $request->input('agreement.name'),
-                    $request->input('agreement.dateFrom'),
-                    $request->input('agreement.dateTo'),
-                    $request->input('agreement.program'),
-                    $request->input('agreement.schedule'),
+                    $request->input(self::REQUEST_FIELD_OWN_AGREEMENT_NAME),
+                    $request->input(self::REQUEST_FIELD_OWN_AGREEMENT_DATE_FROM),
+                    $request->input(self::REQUEST_FIELD_OWN_AGREEMENT_DATE_TO),
+                    $request->input(self::REQUEST_FIELD_OWN_AGREEMENT_PROGRAM),
                     $companyId,
                     $university->id,
-                    $request->input('agreement.universitySupervisorId'),
-                    $request->input('agreement.placesNumber'),
-                    $request->input('agreement.content'),
+                    $request->input(self::REQUEST_FIELD_OWN_AGREEMENT_UNIVERSITY_SUPERVISOR_ID),
+                    $request->input(self::REQUEST_FIELD_OWN_AGREEMENT_PLACES_NUMBER),
+                    $request->input(self::REQUEST_FIELD_OWN_AGREEMENT_SCHEDULE),
+                    $request->input(self::REQUEST_FIELD_OWN_AGREEMENT_CONTENT),
                     null,
-                    $request->input('agreement.active'),
-                    $request->input('agreement.signingDate'),
+                    $request->input(self::REQUEST_FIELD_OWN_AGREEMENT_ACTIVE),
+                    $request->input(self::REQUEST_FIELD_OWN_AGREEMENT_SIGNING_DATE),
+                    $this->agreementStatusRepository
+                        ->getStatusByName(
+                            $isExistingCompany ?
+                                AgreementStatusConstants::STATUS_NEW :
+                                AgreementStatusConstants::STATUS_ACCEPTED
+                        )->id
                 );
-            }
 
-            if (!is_null($agreement)) {
-                DB::commit();
-                return response($agreement, Response::HTTP_CREATED);
+                if (!is_null($agreement)) {
+                    DB::commit();
+                    return response($agreement, Response::HTTP_CREATED);
+                }
             }
         }
 

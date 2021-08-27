@@ -5,16 +5,31 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ChangeOfferStatusRequest;
 use App\Http\Requests\OfferIndexRequest;
-use App\Http\Requests\StoreOfferRequest;
+use App\Http\Requests\OfferCreateOfferRequest;
 use App\Models\Offer;
 use App\Models\OfferStatus;
 use App\Repositories\OfferRepository;
 use App\Services\OfferService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
 
 class OfferController extends Controller
 {
+    public const REQUEST_FIELD_OFFER_COMPANY_ID = 'companyId';
+    public const REQUEST_FIELD_OFFER_USER_ID = 'userId';
+    public const REQUEST_FIELD_OFFER_NAME = 'name';
+    public const REQUEST_FIELD_OFFER_PLACES_NUMBER = 'placesNumber';
+    public const REQUEST_FIELD_OFFER_PROGRAM = 'program';
+    public const REQUEST_FIELD_OFFER_SCHEDULE = 'schedule';
+    public const REQUEST_FIELD_OFFER_CATEGORY_ID = 'offerCategoryId';
+    public const REQUEST_FIELD_OFFER_STATUS_ID = 'offerStatusId';
+    public const REQUEST_FIELD_OFFER_COMPANY_SUPERVISOR_ID = 'companySupervisorId';
+    public const REQUEST_FIELD_OFFER_INTERVIEW = 'interview';
+    public const REQUEST_FIELD_OFFER_DATE_FROM = 'dateFrom';
+    public const REQUEST_FIELD_OFFER_DATE_TO = 'dateTo';
+    public const REQUEST_FIELD_OFFER_ATTACHMENTS = 'attachments';
+
     /**
      * @var OfferService
      */
@@ -73,19 +88,35 @@ class OfferController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param StoreOfferRequest $request
+     * @param OfferCreateOfferRequest $request
      *
      * @return Response
      */
-    public function store(StoreOfferRequest $request)
+    public function createOffer(OfferCreateOfferRequest $request): Response
     {
-        $offer = $this->offerService->createOffer($request->all());
+        DB::beginTransaction();
+        $offer = $this->offerService->createOffer(
+            $request->input(self::REQUEST_FIELD_OFFER_COMPANY_ID),
+            $request->input(self::REQUEST_FIELD_OFFER_NAME),
+            $request->input(self::REQUEST_FIELD_OFFER_PLACES_NUMBER),
+            $request->input(self::REQUEST_FIELD_OFFER_PROGRAM),
+            $request->input(self::REQUEST_FIELD_OFFER_CATEGORY_ID),
+            $request->input(self::REQUEST_FIELD_OFFER_SCHEDULE),
+            $request->input(self::REQUEST_FIELD_OFFER_DATE_FROM),
+            $request->input(self::REQUEST_FIELD_OFFER_DATE_TO),
+            $request->input(self::REQUEST_FIELD_OFFER_INTERVIEW),
+            $request->input(self::REQUEST_FIELD_OFFER_COMPANY_SUPERVISOR_ID),
+            $request->input(self::REQUEST_FIELD_OFFER_STATUS_ID),
+            $request->input(self::REQUEST_FIELD_OFFER_ATTACHMENTS),
+            $request->input(self::REQUEST_FIELD_OFFER_USER_ID)
+        );
 
-        if ($offer !== null) {
-            $offer = $this->offerRepository->getOfferById($offer->id);
+        if (!is_null($offer)) {
+            DB::commit();
             return response($offer, Response::HTTP_CREATED);
         }
 
+        DB::rollBack();
         return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 

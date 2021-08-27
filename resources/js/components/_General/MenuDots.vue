@@ -10,7 +10,7 @@
                 <v-icon>mdi-dots-vertical</v-icon>
             </v-btn>
         </template>
-        <v-list dense menu color="tooltip-background">
+        <v-list dense menu color="component-background lighten-1">
             <slot name="items"></slot>
         </v-list>
     </v-menu>

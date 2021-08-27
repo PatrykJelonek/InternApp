@@ -308,17 +308,9 @@ export default {
             await this.$refs.observer.validate().then((value) => {
                 if (value) {
                     this.submitLoading = true;
-                    this.offer.attachments = [];
 
-                    this.attachmentsFiles.forEach((file) => {
-                        this.convertToBase64(file).then(() => {
-                            if (this.tempBase64File) {
-                                this.offer.attachments.push(this.tempBase64File);
-                            }
-
-                            this.tempBase64File = null;
-                        });
-                    });
+                    let formData = new FormData();
+                    formData.append('attachments', this.attachmentsFiles);
 
                     this.createOffer(this.offer).then((offer) => {
                         this.setSnackbar({message: 'Oferta została dodana!', color: 'success'});

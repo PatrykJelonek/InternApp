@@ -3,13 +3,19 @@
         v-model="acceptOfferDialog"
         width="600"
     >
-        <expand-card
+        <custom-card
             title="Akceptuj Ofertę"
             :expand="false"
         >
-            <v-card-text>
-                Czy chcesz akceptować ofertę <strong>{{ name }}</strong>?
-            </v-card-text>
+            <custom-card-title>
+                <template v-slot:default>Akceptuj ofertę</template>
+            </custom-card-title>
+            <v-row no-gutters class="pa-5">
+                <v-col cols="12">
+                    Czy chcesz akceptować ofertę <strong>{{ name }}</strong>?
+                </v-col>
+            </v-row>
+            <v-divider></v-divider>
             <v-card-actions>
                 <v-row>
                     <v-col cols="6">
@@ -20,19 +26,21 @@
                     </v-col>
                 </v-row>
             </v-card-actions>
-        </expand-card>
+        </custom-card>
     </v-dialog>
 </template>
 
 <script>
 import ExpandCard from "../../_Helpers/ExpandCard";
 import {mapActions, mapGetters} from "vuex";
+import CustomCard from "../../_General/CustomCard";
+import CustomCardTitle from "../../_General/CustomCardTitle";
 
 export default {
     name: "AcceptOfferDialog",
     props: ['name', 'slug'],
 
-    components: {ExpandCard},
+    components: {CustomCardTitle, CustomCard, ExpandCard},
 
     data() {
         return {

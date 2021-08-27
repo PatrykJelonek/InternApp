@@ -118,32 +118,32 @@ class OfferRepository implements OfferRepositoryInterface
      */
     public function createOffer(array $data): ?Offer
     {
-        $offer = new Offer();
-        $offer->company_id = $data['companyId'];
-        $offer->user_id = $data['userId'];
-        $offer->name = $data['name'];
-        $offer->places_number = $data['placesNumber'] ?? 1;
-        $offer->program = $data['program'] ?? '';
-        $offer->schedule = $data['schedule'] ?? '';
-        $offer->offer_category_id = $data['offerCategoryId'];
-        $offer->offer_status_id = $data['offerStatusId'] ?? $this->offerStatusRepository->getOfferStatusByName(
-                OfferStatusConstants::STATUS_NEW
-            )->toArray()['id'];
-        $offer->company_supervisor_id = $data['companySupervisorId'] ?? null;
-        $offer->slug = Str::slug($data['name']);
-        $offer->interview = $data['interview'] ?? false;
-        $offer->date_from = $data['dateFrom'] ?? Carbon::today();
-        $offer->date_to = $data['dateTo'] ?? Carbon::today()->addMonths(
-                config('global.defaultDifferenceBetweenStartAndEndOfferDate')
-            );
-        $offer->created_at = Carbon::today();
-        $offer->updated_at = Carbon::today();
-
-        if ($offer->save()) {
-            return $offer;
-        }
-
-        return null;
+//        $offer = new Offer();
+//        $offer->company_id = $data['companyId'];
+//        $offer->user_id = $data['userId'];
+//        $offer->name = $data['name'];
+//        $offer->places_number = $data['placesNumber'] ?? 1;
+//        $offer->program = $data['program'] ?? '';
+//        $offer->schedule = $data['schedule'] ?? '';
+//        $offer->offer_category_id = $data['offerCategoryId'];
+//        $offer->offer_status_id = $data['offerStatusId'] ?? $this->offerStatusRepository->getOfferStatusByName(
+//                OfferStatusConstants::STATUS_NEW
+//            )->toArray()['id'];
+//        $offer->company_supervisor_id = $data['companySupervisorId'] ?? null;
+//        $offer->slug = Str::slug($data['name']);
+//        $offer->interview = $data['interview'] ?? false;
+//        $offer->date_from = $data['dateFrom'] ?? Carbon::today();
+//        $offer->date_to = $data['dateTo'] ?? Carbon::today()->addMonths(
+//                config('global.defaultDifferenceBetweenStartAndEndOfferDate')
+//            );
+//        $offer->created_at = Carbon::today();
+//        $offer->updated_at = Carbon::today();
+//
+//        if ($offer->save()) {
+//            return $offer;
+//        }
+//
+//        return null;
     }
 
     public function updateOfferBySlug(string $slug)
@@ -247,5 +247,13 @@ class OfferRepository implements OfferRepositoryInterface
         }
 
         return null;
+    }
+
+    public function changeOfferPlacesNumber(int $offerId, int $newPlacesNumber)
+    {
+        $offer = Offer::find($offerId);
+        $offer->places_number = $newPlacesNumber;
+
+        return $offer->update();
     }
 }
