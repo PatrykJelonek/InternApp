@@ -10,6 +10,7 @@
                     color="primary"
                     @click.stop="toggleDialog"
                     v-has="['student']"
+                    :disabled="!userInternshipsLoading && userInternships.length > 0"
                 >
                     Zgłoś własne miejsce praktyk
                 </v-btn>
@@ -39,7 +40,7 @@
     import PageTitle from "../components/_Helpers/PageTitle";
     import StudentOffersList from "../components/Offers/Student/StudentOffersList";
     import TheStudentOfferApplicationsList from "../components/Offers/Student/TheStudentOfferApplicationsList";
-    import {mapActions} from "vuex";
+    import {mapActions, mapGetters} from "vuex";
     import CreateInternshipDialog from "../components/Offers/Student/CreateInternshipDialog";
 
     export default {
@@ -65,10 +66,18 @@
             }
         },
 
+        computed: {
+            ...mapGetters({
+                userInternships: 'user/internships',
+                userInternshipsLoading: 'user/internshipsLoading',
+            })
+        },
+
         methods: {
             ...mapActions({
                 setBreadcrumbs: 'helpers/setBreadcrumbs',
                 toggleDialog: 'helpers/toggleCreateInternshipDialog',
+                fetchUserInternships: 'user/fetchInternships',
             }),
         },
 
@@ -77,6 +86,12 @@
                 {text: 'Panel', to: {name: 'panel'}, exact: true},
                 {text: 'Oferty Praktyk', to: {name: 'offers'}, exact: true},
             ]);
+
+            this.fetchUserInternships().then(() => {
+
+            }).catch((e) => {
+
+            });
         }
     }
 </script>

@@ -51,7 +51,7 @@
                     <v-col cols="auto" class="d-flex justify-center align-center">
                         <menu-dots>
                             <template v-slot:items>
-                                <v-list-item class="cursor-pointer" v-if="forStudent" @click="apply(slug)">
+                                <v-list-item class="cursor-pointer" v-if="forStudent" @click="openConfirmApplicationDialog(slug)" :disabled="!canApply">
                                     <v-list-item-title>Aplikuj</v-list-item-title>
                                 </v-list-item>
                                 <v-list-item class="cursor-pointer" v-else>
@@ -71,18 +71,23 @@
 import CustomCard from "../_General/CustomCard";
 import MenuDots from "../_General/MenuDots";
 import {mapActions} from "vuex";
+import CustomConfirmDialog from "../_General/CustomConfirmDialog";
 
 export default {
     name: "OffersListRow",
-    components: {MenuDots, CustomCard},
-    props: ['name', 'slug', 'logoUrl', 'interview', 'companyName', 'address', 'dateRange', 'category', 'offer', 'forStudent'],
+    components: {CustomConfirmDialog, MenuDots, CustomCard},
+    props: ['name', 'slug', 'logoUrl', 'interview', 'companyName', 'address', 'dateRange', 'category', 'offer', 'forStudent', 'canApply'],
+
+    computed: {
+
+    },
 
     methods: {
         ...mapActions({
             setDialogArgs: 'helpers/setDialogArgs',
             toggleDialog: 'helpers/toggleDialog',
             applyToInternship: 'agreement/applyToInternship',
-            setSnackbar: 'snackbar/setSnackbar'
+            setSnackbar: 'snackbar/setSnackbar',
         }),
 
         openCreateAgreementDialog() {
@@ -90,13 +95,10 @@ export default {
             this.toggleDialog({key: 'DIALOG_FIELD_CREATE_AGREEMENT_FROM_OFFER', val: true});
         },
 
-        async apply(slug) {
-            await this.applyToInternship({slug: slug}).then(() => {
-                this.setSnackbar({message: 'Aplikacja na praktykę została wysłana!', color: 'success'});
-            }).catch((e) => {
-                this.setSnackbar({message: 'Coś poszło nie tak! Skontaktuj się administratorem serwisu!', color: 'error'});
-            });
-        }
+        openConfirmApplicationDialog(slug) {
+            this.setDialogArgs({key: 'DIALOG_FIELD_CONFIRM_INTERNSHIP_APPLICATION', val: [slug]});
+            this.toggleDialog({key: 'DIALOG_FIELD_CONFIRM_INTERNSHIP_APPLICATION', val: true});
+        },
     }
 }
 </script>

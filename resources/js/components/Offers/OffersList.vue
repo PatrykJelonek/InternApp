@@ -1,6 +1,15 @@
 <template>
     <v-container fluid class="pa-0">
         <create-agreement-dialog></create-agreement-dialog>
+        <custom-confirm-dialog
+            title="Aplikacja na praktykę"
+            :dialog-state="dialogs['DIALOG_FIELD_CONFIRM_INTERNSHIP_APPLICATION']"
+            :toggle-function="toggleCustomDialog"
+            :confirm-function="apply"
+            dialog-key="DIALOG_FIELD_CONFIRM_INTERNSHIP_APPLICATION"
+        >
+            Czy na pewno chcesz aplikować na tą praktykę?
+        </custom-confirm-dialog>
 
         <custom-card class="mb-5">
             <v-row no-gutters>
@@ -42,6 +51,7 @@
                             :slug="offer.slug"
                             :offer="offer"
                             :for-student="isStudent"
+                            :can-apply="!userInternshipsLoading && userInternships.length < 1"
                         ></offers-list-row>
                     </v-col>
                 </v-row>
@@ -83,10 +93,13 @@ import CustomCard from "../_General/CustomCard";
 import OfferCard from "./OfferCard";
 import OffersListRow from "./OffersListRow";
 import CreateInternshipDialog from "./Student/CreateInternshipDialog";
+import CustomConfirmDialog from "../_General/CustomConfirmDialog";
 
 export default {
     name: "OffersList",
-    components: {CreateInternshipDialog, OffersListRow, OfferCard, CustomCard, CreateAgreementDialog, ExpandCard},
+    components: {
+        CustomConfirmDialog,
+        CreateInternshipDialog, OffersListRow, OfferCard, CustomCard, CreateAgreementDialog, ExpandCard},
     data() {
         return {
             isStudent: true,
@@ -110,6 +123,10 @@ export default {
 
     computed: {
         ...mapGetters({
+            dialogs: 'helpers/dialogs',
+            dialogArgs: 'helpers/dialogsArgs',
+            userInternships: 'user/internships',
+            userInternshipsLoading: 'user/internshipsLoading',
             offers: 'offer/offers',
             offersLoading: 'offer/offersLoading',
             availableStudentOffers: 'university/availableOffers',
@@ -119,10 +136,14 @@ export default {
 
     methods: {
         ...mapActions({
+            setSnackbar: 'snackbar/setSnackbar',
             fetchOffers: 'offer/fetchOffers',
             toggleCreateAgreementDialog: 'helpers/toggleCreateAgreementDialog',
             toggleDialog: 'helpers/toggleCreateInternshipDialog',
-            fetchAvailableOffers: 'university/fetchAvailableOffers'
+            toggleCustomDialog: 'helpers/toggleDialog',
+            fetchAvailableOffers: 'university/fetchAvailableOffers',
+            fetchUserInternships: 'user/fetchInternships',
+            applyToInternship: 'agreement/applyToInternship',
         }),
 
         setSelectedOffer(offer) {
@@ -136,6 +157,17 @@ export default {
 
             return '---';
         },
+
+        async apply(slug) {
+            await this.applyToInternship({slug: this.dialogArgs['DIALOG_FIELD_CONFIRM_INTERNSHIP_APPLICATION'][0]}).then(() => {
+                this.setSnackbar({message: 'Aplikacja na praktykę została wysłana!', color: 'success'});
+            }).catch((e) => {
+                this.setSnackbar({message: 'Coś poszło nie tak! Skontaktuj się administratorem serwisu!', color: 'error'});
+            }).finally(() => {
+                this.toggleCustomDialog({key: 'DIALOG_FIELD_CONFIRM_INTERNSHIP_APPLICATION', val: false});
+                this.setDialogArgs({key: 'DIALOG_FIELD_CONFIRM_INTERNSHIP_APPLICATION', val: null});
+            });
+        }
     },
 
     created() {
@@ -144,6 +176,12 @@ export default {
         });
 
         this.fetchAvailableOffers().then(() => {
+
+        }).catch((e) => {
+
+        });
+
+        this.fetchUserInternships().then(() => {
 
         }).catch((e) => {
 

@@ -316,6 +316,7 @@ class StudentController extends Controller
     public function createStudentOwnInternship(CreateStudentOwnInternshipRequest $request)
     {
         $companyId = $request->input(self::REQUEST_FIELD_OWN_INTERNSHIP_COMPANY_ID);
+        $isCompanyDraft = empty($companyId);
 
         DB::beginTransaction();
         if (empty($companyId)) {
@@ -371,7 +372,7 @@ class StudentController extends Controller
 
         $agreementStatus = $this->agreementStatusRepository
             ->getStatusByName(
-                AgreementStatusConstants::STATUS_ACCEPTED
+                !$isCompanyDraft ? AgreementStatusConstants::STATUS_NEW : AgreementStatusConstants::STATUS_ACCEPTED
             );
 
         $randomUniversityWorkerId = $universityWorkers[array_rand($universityWorkers)]['id'];
@@ -410,6 +411,7 @@ class StudentController extends Controller
             }
         }
 
+        DB::rollBack();
         return \response(null, Response::HTTP_NOT_FOUND);
     }
 

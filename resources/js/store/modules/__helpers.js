@@ -20,6 +20,7 @@ export default {
             DIALOG_FIELD_CREATE_OWN_AGREEMENT: false,
             DIALOG_FIELD_CREATE_AGREEMENT_FROM_OFFER: false,
             DIALOG_FIELD_VERIFY_UNIVERSITY: false,
+            DIALOG_FIELD_CONFIRM_INTERNSHIP_APPLICATION: false,
         },
         dialogsArgs: {
             DIALOG_FIELD_ACTIVATE_AGREEMENT: null,
@@ -36,6 +37,7 @@ export default {
             DIALOG_FIELD_CREATE_OWN_AGREEMENT: null,
             DIALOG_FIELD_CREATE_AGREEMENT_FROM_OFFER: null,
             DIALOG_FIELD_VERIFY_UNIVERSITY: null,
+            DIALOG_FIELD_CONFIRM_INTERNSHIP_APPLICATION: null,
         },
         createInternshipDialog: false,
         createOfferDialog: false,
