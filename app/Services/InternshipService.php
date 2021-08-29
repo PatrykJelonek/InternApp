@@ -8,6 +8,7 @@
 
 namespace App\Services;
 
+use App\Constants\InternshipStatusConstants;
 use App\Models\Agreement;
 use App\Models\Internship;
 use App\Models\Student;
@@ -88,6 +89,34 @@ class InternshipService
     {
         $internship = $this->internshipRepository->getInternship($internshipId);
         $internship->internship_status_id = $statusId;
+
+        if ($internship->save()) {
+            return $internship;
+        }
+
+        return null;
+    }
+
+    public function createInternship(
+        int $agreementId,
+        ?int $offerId = null,
+        ?int $universitySupervisorId = null,
+        ?int $companySupervisorId = null,
+        ?string $interviewDate = null,
+        ?int $internshipStatusId = null
+    ): ?Internship {
+        $internshipStatusId = $internshipStatusId ?? $this->internshipRepository
+                ->getInternshipStatusByName(InternshipStatusConstants::STATUS_NEW)
+                ->id;
+
+        $internship = new Internship();
+        $internship->offer_id = $offerId;
+        $internship->agreement_id = $agreementId;
+        $internship->company_supervisor_id = $companySupervisorId;
+        $internship->university_supervisor_id = $universitySupervisorId;
+        $internship->interview_date = $interviewDate;
+        $internship->internship_status_id = $internshipStatusId;
+        $internship->freshTimestamp();
 
         if ($internship->save()) {
             return $internship;

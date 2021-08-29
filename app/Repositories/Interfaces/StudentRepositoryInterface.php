@@ -17,4 +17,6 @@ interface StudentRepositoryInterface extends DefaultRepositoryInterface
     public function getStudentByIndex(int $studentIndex);
 
     public function getStudentUniversities(int $userId);
+
+    public function getStudentByUserId(int $userId);
 }

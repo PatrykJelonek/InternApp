@@ -23,7 +23,8 @@
                                 </span>
                             </v-col>
                         </v-row>
-                        <v-row class="text-caption d-flex align-center align-content-center align-self-center" no-gutters>
+                        <v-row class="text-caption d-flex align-center align-content-center align-self-center"
+                               no-gutters>
                             <v-col cols="auto">
                                 {{ companyName }}
                             </v-col>
@@ -35,7 +36,7 @@
                                 <v-icon small class="mr-2">mdi-calendar-range</v-icon>
                                 {{ dateRange }}
                             </v-col>
-                            <v-col cols="auto" class="ml-3">
+                            <v-col cols="auto" class="ml-3" v-if="category">
                                 <v-icon small class="mr-2">mdi-tag</v-icon>
                                 <v-chip small outlined label>
                                     {{ category }}
@@ -50,11 +51,12 @@
                     <v-col cols="auto" class="d-flex justify-center align-center">
                         <menu-dots>
                             <template v-slot:items>
-<!--                                <v-list-item class="cursor-pointer">-->
-<!--                                    <v-list-item-title>Aplikuj</v-list-item-title>-->
-<!--                                </v-list-item>-->
-                                <v-list-item class="cursor-pointer">
-                                    <v-list-item-title @click="openCreateAgreementDialog">Utwórz umowę</v-list-item-title>
+                                <v-list-item class="cursor-pointer" v-if="forStudent" @click="apply(slug)">
+                                    <v-list-item-title>Aplikuj</v-list-item-title>
+                                </v-list-item>
+                                <v-list-item class="cursor-pointer" v-else>
+                                    <v-list-item-title @click="openCreateAgreementDialog">Utwórz umowę
+                                    </v-list-item-title>
                                 </v-list-item>
                             </template>
                         </menu-dots>
@@ -73,18 +75,27 @@ import {mapActions} from "vuex";
 export default {
     name: "OffersListRow",
     components: {MenuDots, CustomCard},
-    props: ['name', 'slug', 'logoUrl', 'interview', 'companyName', 'address', 'dateRange', 'category', 'offer'],
+    props: ['name', 'slug', 'logoUrl', 'interview', 'companyName', 'address', 'dateRange', 'category', 'offer', 'forStudent'],
 
     methods: {
         ...mapActions({
-           setDialogArgs: 'helpers/setDialogArgs',
-           toggleDialog: 'helpers/toggleDialog',
+            setDialogArgs: 'helpers/setDialogArgs',
+            toggleDialog: 'helpers/toggleDialog',
+            applyToInternship: 'agreement/applyToInternship',
+            setSnackbar: 'snackbar/setSnackbar'
         }),
 
-        openCreateAgreementDialog()
-        {
+        openCreateAgreementDialog() {
             this.setDialogArgs({key: 'DIALOG_FIELD_CREATE_AGREEMENT_FROM_OFFER', val: this.offer});
             this.toggleDialog({key: 'DIALOG_FIELD_CREATE_AGREEMENT_FROM_OFFER', val: true});
+        },
+
+        async apply(slug) {
+            await this.applyToInternship({slug: slug}).then(() => {
+                this.setSnackbar({message: 'Aplikacja na praktykę została wysłana!', color: 'success'});
+            }).catch((e) => {
+                this.setSnackbar({message: 'Coś poszło nie tak! Skontaktuj się administratorem serwisu!', color: 'error'});
+            });
         }
     }
 }

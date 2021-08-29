@@ -23,9 +23,12 @@
                         </router-link>
                     </template>
                     <template v-slot:item.company_supervisor.full_name="{ item }">
-                        <router-link :to="{name: 'user', params: {id: item.company_supervisor.id}}">
-                            {{ item.company_supervisor.full_name }}
-                        </router-link>
+                        <template v-if="item.company_supervisor">
+                            <router-link :to="{name: 'user', params: {id: item.company_supervisor.id}}">
+                                {{ item.company_supervisor.full_name }}
+                            </router-link>
+                        </template>
+                        <template v-else>Brak</template>
                     </template>
                     <template v-slot:item.agreement.date_from="{ item }">
                         {{ item.agreement.date_from }}
@@ -89,7 +92,7 @@ export default {
         return {
             show: true,
             headers: [
-                {text: 'Nazwa', value: 'offer.name'},
+                {text: 'Nazwa', value: 'agreement.name'},
                 {text: 'Opiekun z uczelni', value: 'university_supervisor.full_name'},
                 {text: 'Opiekun z firmy', value: 'company_supervisor.full_name'},
                 {text: 'Data rozpoczęcia', value:'agreement.date_from'},
@@ -122,7 +125,7 @@ export default {
         openChangeStatusDialog(item) {
             this.setDialogArgs({
                 key: 'DIALOG_FIELD_CHANGE_INTERNSHIP_STATUS', val: {
-                    name: item.offer.name,
+                    name: item.agreement.name,
                     id: item.id,
                 }
             })

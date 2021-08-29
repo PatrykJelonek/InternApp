@@ -10,7 +10,7 @@
             <!--        <the-internship-students-drawer v-if="!$vuetify.breakpoint.mobile"></the-internship-students-drawer>-->
             <page-title>
                 <template v-slot:default>
-                    {{ internship.offer.name }}
+                    {{ internship.agreement.name }}
                     <v-tooltip bottom color="component-background">
                         <template v-slot:activator="{ on, attrs }">
                             <v-chip
@@ -36,7 +36,7 @@
             <v-row>
                 <v-col cols="12" md="12" lg="12">
                     <the-internship-info-card
-                        :internship-name="internship.offer.name"
+                        :internship-name="internship.agreement.name"
                         :internship-start-date="internship.agreement.date_from"
                         :internship-end-date="internship.agreement.date_to"
                         :university-slug="internship.agreement.university.slug"
@@ -163,7 +163,7 @@ export default {
                 {text: 'Panel', to: {name: 'panel'}, exact: true},
                 {text: 'Praktyki i Staże', to: {name: 'admin'}, exact: true},
                 {
-                    text: this.internship.offer.name ?? '',
+                    text: this.internship.agreement.name ?? '',
                     to: {name: 'internship', params: {internshipId: this.internship.id}},
                     exact: true
                 },

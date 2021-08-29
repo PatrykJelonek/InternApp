@@ -10,11 +10,13 @@ use App\Http\Requests\StudentGetStudentUniversitiesRequest;
 use App\Models\Student;
 use App\Models\User;
 use App\Repositories\AgreementStatusRepository;
+use App\Repositories\InternshipRepository;
 use App\Repositories\StudentRepository;
 use App\Repositories\UniversityRepository;
 use App\Services\AgreementService;
 use App\Services\CityService;
 use App\Services\CompanyService;
+use App\Services\InternshipService;
 use App\Services\StudentService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -87,6 +89,16 @@ class StudentController extends Controller
     private $universityRepository;
 
     /**
+     * @var InternshipService
+     */
+    private $internshipService;
+
+    /**
+     * @var InternshipRepository
+     */
+    private $internshipRepository;
+
+    /**
      * StudentController constructor.
      *
      * @param StudentRepository         $studentRepository
@@ -96,6 +108,8 @@ class StudentController extends Controller
      * @param AgreementService          $agreementService
      * @param AgreementStatusRepository $agreementStatusRepository
      * @param UniversityRepository      $universityRepository
+     * @param InternshipService         $internshipService
+     * @param InternshipRepository      $internshipRepository
      */
     public function __construct(
         StudentRepository $studentRepository,
@@ -104,7 +118,9 @@ class StudentController extends Controller
         CityService $cityService,
         AgreementService $agreementService,
         AgreementStatusRepository $agreementStatusRepository,
-        UniversityRepository $universityRepository
+        UniversityRepository $universityRepository,
+        InternshipService $internshipService,
+        InternshipRepository $internshipRepository
     ) {
         $this->studentRepository = $studentRepository;
         $this->studentServices = $studentServices;
@@ -113,6 +129,8 @@ class StudentController extends Controller
         $this->agreementService = $agreementService;
         $this->agreementStatusRepository = $agreementStatusRepository;
         $this->universityRepository = $universityRepository;
+        $this->internshipService = $internshipService;
+        $this->internshipRepository = $internshipRepository;
     }
 
     /**
@@ -353,8 +371,10 @@ class StudentController extends Controller
 
         $agreementStatus = $this->agreementStatusRepository
             ->getStatusByName(
-                AgreementStatusConstants::STATUS_NEW
+                AgreementStatusConstants::STATUS_ACCEPTED
             );
+
+        $randomUniversityWorkerId = $universityWorkers[array_rand($universityWorkers)]['id'];
 
         $agreement = $this->agreementService->createAgreement(
             $request->input(self::REQUEST_FIELD_OWN_INTERNSHIP_AGREEMENT_NAME),
@@ -363,7 +383,7 @@ class StudentController extends Controller
             $request->input(self::REQUEST_FIELD_OWN_INTERNSHIP_AGREEMENT_PROGRAM),
             $companyId,
             $university->id,
-            $universityWorkers[array_rand($universityWorkers)]['id'],
+            $randomUniversityWorkerId,
             self::OWN_INTERNSHIP_AGREEMENT_DEFAULT_PLACES_NUMBER,
             $request->input(self::REQUEST_FIELD_OWN_INTERNSHIP_AGREEMENT_SCHEDULE),
             null,
@@ -374,8 +394,20 @@ class StudentController extends Controller
         );
 
         if (!is_null($agreement)) {
-            DB::commit();
-            return response($agreement, Response::HTTP_CREATED);
+            $internship = $this->internshipService->createInternship(
+                $agreement->id,
+                null,
+                $randomUniversityWorkerId,
+            );
+
+            $student = $this->studentRepository->getStudentByUserId(Auth::id());
+
+            if (!is_null($internship) && !is_null($student)) {
+                $internship->students()->attach($student->id);
+
+                DB::commit();
+                return response($internship, Response::HTTP_CREATED);
+            }
         }
 
         return \response(null, Response::HTTP_NOT_FOUND);

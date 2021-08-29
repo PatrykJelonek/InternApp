@@ -93,17 +93,17 @@
                                 </v-list-item>
                             </v-col>
                             <v-col cols="4">
-                                <v-list-item two-line>
-                                    <v-list-item-content>
+                                <v-list-item two-line v-if="agreement.offer">
+                                    <v-list-item-content >
                                         <v-list-item-title>Interview</v-list-item-title>
                                         <v-list-item-subtitle>
-                                            <v-chip small :color="agreement.offer.interview ? '#C8E6C9' : 'grey lighten-3'">
+                                            <v-chip  small :color="agreement.offer.interview ? '#C8E6C9' : 'grey lighten-3'">
                                                 {{ agreement.offer.interview ? 'Wymagane' : 'Niewymagane' }}
                                             </v-chip>
                                         </v-list-item-subtitle>
                                     </v-list-item-content>
                                 </v-list-item>
-                                <v-list-item two-line>
+                                <v-list-item two-line  v-if="agreement.offer">
                                     <v-list-item-content>
                                         <v-list-item-title>Kategoria</v-list-item-title>
                                         <v-list-item-subtitle>{{ agreement.offer.category.display_name }}</v-list-item-subtitle>

@@ -3,9 +3,11 @@ export default {
 
     state: {
         offer: '',
-        offerLoading: true,
+        offerLoading: false,
         offers: [],
-        offersLoading: true,
+        offersLoading: false,
+        offersForStudents: [],
+        offersForStudentsLoading: false,
         offerCategories: [],
         offerCategoriesLoading: false,
         offerStatuses: [],
@@ -27,6 +29,14 @@ export default {
 
         offersLoading: state => {
             return state.offersLoading;
+        },
+
+        offersForStudents: state => {
+            return state.offersForStudents;
+        },
+
+        offersForStudentsLoading: state => {
+            return state.offersForStudentsLoading;
         },
 
         offerCategories: state => {
@@ -71,6 +81,14 @@ export default {
             state.offersLoading = data;
         },
 
+        SET_OFFERS_FOR_STUDENTS(state, data) {
+            state.offersForStudents = data;
+        },
+
+        SET_OFFERS_FOR_STUDENTS_LOADING(state, data) {
+            state.offersForStudentsLoading = data;
+        },
+
         SET_OFFER(state, data) {
             state.offer = data;
         },
@@ -105,6 +123,26 @@ export default {
             } catch (e) {
                 commit('SET_OFFERS', []);
                 commit('SET_OFFERS_LOADING', false);
+            }
+        },
+
+
+        async fetchOffersForStudents({commit}) {
+            commit('SET_OFFERS_FOR_STUDENTS_LOADING', true);
+            try{
+                let response = await axios.get('/api/offers', {
+                    params: {
+                        categories: data.categories ?? null,
+                        statuses: data.statuses ?? null,
+                        onlyWithPlaces: data.onlyWithPlaces ?? null,
+                        limit: data.limit ?? null,
+                    }
+                });
+                commit('SET_OFFERS_FOR_STUDENTS', response.data);
+                commit('SET_OFFERS_FOR_STUDENTS_LOADING', false);
+            } catch (e) {
+                commit('SET_OFFERS_FOR_STUDENTS', []);
+                commit('SET_OFFERS_FOR_STUDENTS_LOADING', false);
             }
         },
 

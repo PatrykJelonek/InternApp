@@ -19,41 +19,52 @@ class UserRepository implements UserRepositoryInterface
 {
     public function getInternships(int $userId, array $status = null)
     {
-        $internships = null;
+        $internships = [];
         $user = User::find($userId);
 
         if ($user->hasRole(
             [RoleConstants::ROLE_UNIVERSITY_SUPERVISOR, RoleConstants::ROLE_COMPANY_SUPERVISOR]
         )) {
-            $internships = Internship::whereHas(
-                'status',
-                function (Builder $query) use ($status) {
-                    if (!empty($status)) {
-                        $query->where(['name' => $status]);
-                    }
-                }
-            )->where(
+            $model = Internship::where(
                 function (Builder $query) use ($userId) {
                     $query->where('university_supervisor_id', $userId)->orWhere('company_supervisor_id', $userId);
                 }
-            )->with(['agreement.company', 'offer', 'status'])->get();
+            )->with(['agreement.company', 'agreement.university', 'offer', 'status']);
+
+            if (!empty($status[0])) {
+                $model->whereHas(
+                    'status',
+                    function (Builder $query) use ($status) {
+                        if (!empty($status)) {
+                            $query->where(['name' => $status]);
+                        }
+                    }
+                );
+            }
+
+            $internships = $model->get();
         }
 
         if ($user->hasRole(RoleConstants::ROLE_STUDENT)) {
-            $internships = Internship::whereHas(
-                'status',
-                function (Builder $query) use ($status) {
-                    if (!empty($status)) {
-                        $query->where(['name' => $status]);
-                    }
-                }
-            )->whereHas(
+            $model = Internship::whereHas(
                 'students',
                 function (Builder $query) use ($userId) {
                     $query->where(['user_id' => $userId]);
                 }
-            )->with(['agreement.company', 'offer', 'status'])
-                ->get();
+            )->with(['agreement','agreement.company', 'agreement.university', 'offer', 'status']);
+
+            if (!empty($status[0])) {
+                $model->whereHas(
+                    'status',
+                    function (Builder $query) use ($status) {
+                        if (!empty($status)) {
+                            $query->where(['name' => $status]);
+                        }
+                    }
+                );
+            }
+
+            $internships = $model->get();
         }
 
 //        if (!Auth::user()->hasRole([RoleConstants::ROLE_UNIVERSITY_SUPERVISOR, RoleConstants::ROLE_COMPANY_SUPERVISOR, RoleConstants::ROLE_STUDENT])) {
@@ -117,22 +128,21 @@ class UserRepository implements UserRepositoryInterface
 
     public function getUserById(int $userId)
     {
-        return User::with(['universities','companies'])->find($userId);
+        return User::with(['universities', 'companies'])->find($userId);
     }
 
     public function getUserCompanyRoles(int $userId, $companySlug)
     {
         $userCompany = User::with(['companies'])->find($userId)->companies()->where(['slug' => $companySlug])->first();
         $pivotId = $userCompany->pivot->id;
-
         # TODO: Do dokończenia
     }
 
     public function getUserUniversityRoles(int $userId, $universitySlug)
     {
-        $userUniversity = User::with(['universities'])->find($userId)->universities()->where(['slug' => $universitySlug])->first();
+        $userUniversity = User::with(['universities'])->find($userId)->universities()->where(['slug' => $universitySlug]
+        )->first();
         $pivotId = $userUniversity->pivot->id;
-
         # TODO: Do dokończenia
     }
 

@@ -141,7 +141,7 @@ class StudentRepository implements StudentRepositoryInterface
             $agreements = [];
 
             foreach ($userUniversities as $university) {
-                $agreements[] = $university->agreements()->with(['offer', 'offer.category', 'offer.company.city']
+                $agreements[] = $university->agreements()->with(['offer', 'offer.category', 'company.city']
                 )->whereHas('status', function (Builder $query) {
                     $query->where(['name' => AgreementStatusConstants::STATUS_ACCEPTED]);
                 })->where(function (Builder $query) {
@@ -225,5 +225,10 @@ class StudentRepository implements StudentRepositoryInterface
         return University::whereHas('users', function ($query) use ($userId) {
             $query->where(['users.id' => $userId]);
         })->get();
+    }
+
+    public function getStudentByUserId(int $userId)
+    {
+        return Student::where(['user_id' => $userId])->first();
     }
 }

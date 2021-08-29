@@ -9,6 +9,7 @@
 namespace App\Services;
 
 use App\Constants\OfferStatusConstants;
+use App\Constants\RoleConstants;
 use App\Models\InternshipStudent;
 use App\Models\Offer;
 use App\Models\Student;
@@ -193,6 +194,8 @@ class StudentService
         $student->study_year = $studyYear;
         $student->specialization_id = $specializationId;
         $student->freshTimestamp();
+
+        Auth::user()->attachRole(RoleConstants::ROLE_STUDENT);
 
         if ($student->save()) {
             return $student;

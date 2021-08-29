@@ -125,10 +125,11 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     # Agreements
     Route::post('/agreements', 'Api\AgreementController@createAgreement');
     Route::get('/agreements/{slug}', 'Api\AgreementController@show');
-    Route::get('/agreements/{slug}/accept','Api\agreementController@accept');
-    Route::get('/agreements/{slug}/reject','Api\agreementController@reject');
-    Route::put('/agreements/{slug}/activate', 'Api\agreementController@activateAgreement');
-    Route::put('/agreements/{slug}/deactivate', 'Api\agreementController@deactivateAgreement');
+    Route::get('/agreements/{slug}/accept','Api\AgreementController@accept');
+    Route::get('/agreements/{slug}/reject','Api\AgreementController@reject');
+    Route::get('/agreements/{slug}/apply', 'Api\InternshipController@applyToInternship');
+    Route::put('/agreements/{slug}/activate', 'Api\AgreementController@activateAgreement');
+    Route::put('/agreements/{slug}/deactivate', 'Api\AgreementController@deactivateAgreement');
     Route::delete('/agreements/{slug}', 'Api\agreementController@deleteAgreement');
 
     # Internship Tasks
@@ -179,7 +180,7 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::post('/chats/{uuid}', 'Api\ChatController@sendMessage');
 
     # User
-    Route::get('/me/internships/{status?}', 'Api\UserController@getUserInternships')->where('status', \App\Constants\InternshipStatusConstants::STATUS_ACCEPTED.'|'.\App\Constants\InternshipStatusConstants::STATUS_NEW);
+    Route::get('/me/internships/{status?}', 'Api\UserController@getUserInternships');
     Route::get('/me/internships', 'Api\UserController@getUserInternships');
     Route::get('/me/universities', 'Api\UserUniversityController@index');
     Route::get('/me/universities/student', 'Api\StudentController@getStudentUniversities');

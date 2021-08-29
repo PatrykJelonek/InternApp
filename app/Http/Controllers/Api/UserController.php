@@ -8,6 +8,7 @@ use App\Constants\UserStatusConstants;
 use App\Events\UserCreated;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UserActivateUserRequest;
+use App\Http\Requests\UserGetUserInternshipRequest;
 use App\Http\Requests\UserResetPasswordRequest;
 use App\Http\Requests\UserShowRequest;
 use App\Http\Requests\UserStoreRequest;
@@ -208,14 +209,7 @@ class UserController extends Controller
     {
         $user = User::with('student.internships.offer')->where(["id" => auth()->id()])->first();
 
-        return Response(
-            [
-                'status' => 'success',
-                'data' => $user->student->internships,
-                'message' => null,
-            ],
-            Response::HTTP_OK
-        );
+        return Response($user->student->internships, Response::HTTP_OK);
     }
 
     public function getJournals()
@@ -264,19 +258,16 @@ class UserController extends Controller
     }
 
     /**
-     * @param string|null $status
+     * @param UserGetUserInternshipRequest $request
+     * @param string|null                  $status
      *
      * @return Response
      */
-    public function getUserInternships(string $status = null): Response
+    public function getUserInternships(UserGetUserInternshipRequest $request, string $status = null): Response
     {
         $internships = $this->userRepository->getInternships(Auth::user()->id, [$status]);
 
-        if (!is_null($internships)) {
-            return response($internships, Response::HTTP_OK);
-        }
-
-        return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
+        return response($internships, Response::HTTP_OK);
     }
 
     public function activateUser(UserActivateUserRequest $request, string $activationToken)

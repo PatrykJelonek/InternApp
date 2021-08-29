@@ -75,6 +75,10 @@ export default {
 
         deleteAgreement({commit}, {slug}) {
             return axios.delete(`/api/agreements/${slug}`);
-        }
+        },
+
+        applyToInternship({commit}, {slug}) {
+            return axios.get(`/api/agreements/${slug}/apply`);
+        },
     },
 }

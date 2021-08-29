@@ -60,7 +60,7 @@
                                             Wyświetl umowę
                                         </v-list-item-title>
                                     </v-list-item>
-                                    <v-list-item :to="{name: 'offer', params: {slug: item.offer.slug}}">
+                                    <v-list-item v-if="item.offer" :to="{name: 'offer', params: {slug: item.offer.slug}}">
                                         <v-list-item-title class="cursor-pointer">
                                             Wyświetl ofertę
                                         </v-list-item-title>

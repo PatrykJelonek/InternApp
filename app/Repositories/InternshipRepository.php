@@ -21,9 +21,30 @@ class InternshipRepository implements InternshipRepositoryInterface
      */
     public function getInternship($id)
     {
-        $with = ['agreement.university.city', 'agreement.company.city', 'universitySupervisor', 'companySupervisor', 'status'];
+        $with = [
+            'agreement.university.city',
+            'agreement.company.city',
+            'universitySupervisor',
+            'companySupervisor',
+            'status',
+        ];
 
         $internship = Internship::where('id', $id)->with($with)->first();
+
+        return $internship ?? null;
+    }
+
+    public function getInternshipByAgreementId(int $agreementId)
+    {
+        $internship = Internship::where(['agreement_id' => $agreementId])->with(
+            [
+                'agreement.university.city',
+                'agreement.company.city',
+                'universitySupervisor',
+                'companySupervisor',
+                'status',
+            ]
+        )->first();
 
         return $internship ?? null;
     }

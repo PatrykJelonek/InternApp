@@ -19,7 +19,7 @@ class AgreementRepository implements AgreementRepositoryInterface
 
     public function getAgreementBySlug(string $slug)
     {
-        return Agreement::with($this->with)->where('slug', $slug)->first();
+        return Agreement::with($this->with)->where(['slug' => $slug])->first();
     }
 
     public function all(bool $onlyActive)

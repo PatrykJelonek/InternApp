@@ -17,7 +17,7 @@
         </custom-card>
 
         <v-data-iterator
-            :items="offers"
+            :items="availableStudentOffers"
             item-key="id"
             :items-per-page="10"
             :loading="offersLoading"
@@ -34,14 +34,31 @@
                         <offers-list-row
                             :name="offer.name"
                             :address="offer.company.full_address"
-                            :category="offer.category.display_name"
+                            :category="offer.category ? offer.category.display_name : null"
                             :interview="offer.interview"
                             :company-name="offer.company.name"
                             :date-range="formatDate(offer.date_from) + ' - ' + formatDate(offer.date_to)"
                             :logo-url="offer.company.logo_url"
                             :slug="offer.slug"
                             :offer="offer"
+                            :for-student="isStudent"
                         ></offers-list-row>
+                    </v-col>
+                </v-row>
+            </template>
+
+            <template v-slot:no-data>
+                <v-row>
+                    <v-col cols="12" class="d-flex justify-center align-center">
+                        Niestety, ale Twoja uczelnia nie dodała jeszcze żadnych ofert praktyk!
+                    </v-col>
+                </v-row>
+            </template>
+
+            <template v-slot:no-results>
+                <v-row>
+                    <v-col cols="12" class="d-flex justify-center align-center pa-5">
+                        Niestety, ale Twoja uczelnia nie dodała jeszcze żadnych ofert praktyk!
                     </v-col>
                 </v-row>
             </template>
@@ -72,9 +89,11 @@ export default {
     components: {CreateInternshipDialog, OffersListRow, OfferCard, CustomCard, CreateAgreementDialog, ExpandCard},
     data() {
         return {
+            isStudent: true,
             search: null,
             show: true,
             selectedOffer: null,
+            allOffers: [],
             headers: [
                 {text: 'Nazwa', value: 'name'},
                 {text: 'Kategoria', value: 'category'},
@@ -93,6 +112,8 @@ export default {
         ...mapGetters({
             offers: 'offer/offers',
             offersLoading: 'offer/offersLoading',
+            availableStudentOffers: 'university/availableOffers',
+            availableStudentOffersLoading: 'university/availableOffersLoading'
         }),
     },
 
@@ -101,6 +122,7 @@ export default {
             fetchOffers: 'offer/fetchOffers',
             toggleCreateAgreementDialog: 'helpers/toggleCreateAgreementDialog',
             toggleDialog: 'helpers/toggleCreateInternshipDialog',
+            fetchAvailableOffers: 'university/fetchAvailableOffers'
         }),
 
         setSelectedOffer(offer) {
@@ -119,6 +141,12 @@ export default {
     created() {
         this.fetchOffers({categories: null, statuses: ['accepted'], onlyWithPlaces: true}).then(() => {
             this.isLoading = false;
+        });
+
+        this.fetchAvailableOffers().then(() => {
+
+        }).catch((e) => {
+
         });
     }
 }

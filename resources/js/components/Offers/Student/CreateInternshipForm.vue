@@ -161,7 +161,7 @@
                                                     label="Kod Pocztowy"
                                                     v-model="data.company.city.postcode"
                                                     @focusout="getCity(data.company.city.postcode)"
-                                                    v-on:input="postcodePattern"
+                                                    v-mask="'##-###'"
                                                     maxlength="6"
                                                     outlined
                                                     dense
@@ -207,13 +207,14 @@
                                             <validation-provider
                                                 v-slot="{ errors }"
                                                 vid="company.phone"
-                                                :rules="{ regexp: /([0-9]{3}-[0-9]{2,3}-[0-9]{2,9})/ }"
                                             >
                                                 <v-text-field
                                                     label="Telefon Firmowy"
                                                     v-model="data.company.phone"
                                                     outlined
                                                     dense
+                                                    prefix="+48"
+                                                    v-mask="'###-###-###'"
                                                     hide-details="auto"
                                                     :error-messages="errors"
                                                 ></v-text-field>

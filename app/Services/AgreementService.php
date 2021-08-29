@@ -173,4 +173,20 @@ class AgreementService
 
         return $agreement !== null && $agreement->delete();
     }
+
+
+    public function changeAgreementPlacesNumber($slug, $newPlacesNumber)
+    {
+        $agreement = $this->agreementRepository->getAgreementBySlug($slug);
+
+        if (!is_null($agreement)) {
+            $agreement->places_number = $newPlacesNumber;
+
+            if ($agreement->update()) {
+                return $agreement;
+            }
+        }
+
+        return null;
+    }
 }

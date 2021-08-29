@@ -11,25 +11,25 @@ export default {
         validationErrors: '',
         userUniversities: [],
         userCompanies: [],
-        userCompaniesLoading: true,
+        userCompaniesLoading: false,
         roles: [],
         journalEntries: [],
         internships: [],
-        internshipsLoading: [],
+        internshipsLoading: false,
         interns: [],
         newInternships: [],
-        newInternshipsLoading: true,
+        newInternshipsLoading: false,
         acceptedInternships: [],
-        acceptedInternshipsLoading: true,
-        userUniversitiesLoading: true,
+        acceptedInternshipsLoading: false,
+        userUniversitiesLoading: false,
         userMessages: [],
-        userMessagesLoading: true,
+        userMessagesLoading: false,
         user: null,
-        userLoading: true,
+        userLoading: false,
         userNotifications: [],
-        userNotificationsLoading: true,
+        userNotificationsLoading: false,
         userUnreadNotifications: [],
-        userUnreadNotificationsLoading: true,
+        userUnreadNotificationsLoading: false,
     },
 
     getters: {
@@ -326,11 +326,14 @@ export default {
         },
 
         async fetchInternships({ commit }) {
+            commit('SET_INTERNSHIPS_LOADING', true);
             try {
-                let response = await axios.get('/api/user/internships');
-                commit('SET_INTERNSHIPS', response.data.data);
+                let response = await axios.get('/api/me/internships');
+                commit('SET_INTERNSHIPS', response.data);
+                commit('SET_INTERNSHIPS_LOADING', false);
             } catch (e) {
                 commit('SET_INTERNSHIPS', []);
+                commit('SET_INTERNSHIPS_LOADING', false);
             }
         },
 
