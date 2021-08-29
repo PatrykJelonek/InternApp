@@ -12,6 +12,8 @@ export default {
         availableStudentOffersLoading: true,
         internshipApplications: [],
         internshipApplicationsLoading: true,
+        studentUniversities: [],
+        studentUniversitiesLoading: false,
     },
 
     getters: {
@@ -21,6 +23,14 @@ export default {
 
         students(state) {
             return state.students;
+        },
+
+        studentUniversities(state) {
+            return state.studentUniversities;
+        },
+
+        studentUniversitiesLoading(state) {
+            return state.studentUniversitiesLoading;
         },
 
         studentJournalEntries(state) {
@@ -51,6 +61,14 @@ export default {
     mutations: {
         SET_STUDENT(state, data) {
             state.student = data;
+        },
+
+        SET_STUDENT_UNIVERSITIES(state, data) {
+            state.studentUniversities = data;
+        },
+
+        SET_STUDENT_UNIVERSITIES_LOADING(state, data) {
+            state.studentUniversitiesLoading = data;
         },
 
         SET_STUDENTS(state, data) {
@@ -134,6 +152,18 @@ export default {
                 commit('SET_INTERNSHIP_APPLICATIONS', response.data);
             } catch (e) {
                 commit('SET_INTERNSHIP_APPLICATIONS_LOADING', false);
+            }
+        },
+
+        async fetchStudentUniversities({commit}) {
+            commit('SET_STUDENT_UNIVERSITIES_LOADING', false);
+            try {
+                let response = await axios.get(`/api/me/universities/student`);
+                commit('SET_STUDENT_UNIVERSITIES', response.data);
+                commit('SET_STUDENT_UNIVERSITIES_LOADING', false);
+            } catch (e) {
+                commit('SET_STUDENT_UNIVERSITIES', []);
+                commit('SET_STUDENT_UNIVERSITIES_LOADING', false);
             }
         },
 

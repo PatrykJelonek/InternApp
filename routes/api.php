@@ -182,6 +182,7 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::get('/me/internships/{status?}', 'Api\UserController@getUserInternships')->where('status', \App\Constants\InternshipStatusConstants::STATUS_ACCEPTED.'|'.\App\Constants\InternshipStatusConstants::STATUS_NEW);
     Route::get('/me/internships', 'Api\UserController@getUserInternships');
     Route::get('/me/universities', 'Api\UserUniversityController@index');
+    Route::get('/me/universities/student', 'Api\StudentController@getStudentUniversities');
     Route::get('/me/companies', 'Api\UserCompanyController@index');
     Route::get('/me/notifications', 'Api\NotificationController@index');
     Route::get('/me/notifications/unread', 'Api\NotificationController@getUnreadNotifications');

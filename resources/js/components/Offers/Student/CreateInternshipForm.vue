@@ -257,12 +257,12 @@
                                     <v-col cols="12">
                                         <validation-provider
                                             v-slot="{ errors }"
-                                            vid="offer.name"
+                                            vid="agreement.name"
                                             rules="required"
                                         >
                                             <v-text-field
                                                 label="Nazwa Praktyki"
-                                                v-model="data.offer.name"
+                                                v-model="data.agreement.name"
                                                 outlined
                                                 dense
                                                 hide-details="auto"
@@ -273,16 +273,16 @@
                                     <v-col cols="12">
                                         <validation-provider
                                             v-slot="{ errors }"
-                                            vid="offer.offerCategoryId"
+                                            vid="agreement.offerCategoryId"
                                             rules="required"
                                         >
                                             <v-select
-                                                label="Kategoria Praktyk"
-                                                v-model="data.offer.offerCategoryId"
-                                                :items="offerCategories"
-                                                item-text="display_name"
-                                                item-value="id"
-                                                :loading="offerCategoriesLoading"
+                                                label="Uczelnia"
+                                                v-model="data.agreement.universitySlug"
+                                                :items="studentUniversities"
+                                                item-text="name"
+                                                item-value="slug"
+                                                :loading="studentUniversitiesLoading"
                                                 outlined
                                                 dense
                                                 hide-details="auto"
@@ -293,12 +293,12 @@
                                     <v-col cols="12">
                                         <validation-provider
                                             v-slot="{ errors }"
-                                            vid="offer.program"
+                                            vid="agreement.program"
                                             rules="required"
                                         >
                                             <v-textarea
                                                 label="Program Praktyk"
-                                                v-model="data.offer.program"
+                                                v-model="data.agreement.program"
                                                 outlined
                                                 dense
                                                 hide-details="auto"
@@ -318,11 +318,11 @@
                                             <template v-slot:activator="{ on, attrs }">
                                                 <validation-provider
                                                     v-slot="{ errors }"
-                                                    vid="offer.dateFrom"
+                                                    vid="agreement.dateFrom"
                                                     rules="required"
                                                 >
                                                     <v-text-field
-                                                        v-model="data.offer.dateFrom"
+                                                        v-model="data.agreement.dateFrom"
                                                         label="Data Rozpoczęcia"
                                                         hide-details="auto"
                                                         :error-messages="errors"
@@ -338,7 +338,7 @@
                                                 :first-day-of-week="0"
                                                 locale="pl-pl"
                                                 no-title
-                                                v-model="data.offer.dateFrom"
+                                                v-model="data.agreement.dateFrom"
                                                 @input="dateFromPicker = false"
                                             ></v-date-picker>
                                         </v-menu>
@@ -355,11 +355,11 @@
                                             <template v-slot:activator="{ on, attrs }">
                                                 <validation-provider
                                                     v-slot="{ errors }"
-                                                    vid="offer.dateTo"
+                                                    vid="agreement.dateTo"
                                                     rules="required"
                                                 >
                                                     <v-text-field
-                                                        v-model="data.offer.dateTo"
+                                                        v-model="data.agreement.dateTo"
                                                         label="Data Zakończenia"
                                                         hide-details="auto"
                                                         :error-messages="errors"
@@ -375,7 +375,7 @@
                                                 :first-day-of-week="0"
                                                 locale="pl-pl"
                                                 no-title
-                                                v-model="data.offer.dateTo"
+                                                v-model="data.agreement.dateTo"
                                                 @input="dateToPicker = false"
                                             ></v-date-picker>
                                         </v-menu>
@@ -404,11 +404,11 @@
                                     <v-col cols="12">
                                         <validation-provider
                                             v-slot="{ errors }"
-                                            vid="offer.schedule"
+                                            vid="agreement.schedule"
                                         >
                                             <v-textarea
                                                 label="Harmonogram Praktyk"
-                                                v-model="data.offer.schedule"
+                                                v-model="data.agreement.schedule"
                                                 outlined
                                                 dense
                                                 hide-details="auto"
@@ -419,7 +419,7 @@
                                     <v-col cols="12">
                                         <validation-provider
                                             v-slot="{ errors }"
-                                            vid="offer.attachment"
+                                            vid="agreement.attachment"
                                         >
                                             <v-file-input
                                                 label="Załącznik"
@@ -523,9 +523,9 @@ export default {
                     website: null,
                     companyCategoryId: null,
                 },
-                offer: {
+                agreement: {
                     companyId: null,
-                    universityId: null,
+                    universitySlug: null,
                     name: null,
                     program: null,
                     schedule: null,
@@ -552,6 +552,8 @@ export default {
             companiesLoading: 'company/companiesLoading',
             offerCategories: 'offer/offerCategories',
             offerCategoriesLoading: 'offer/offerCategoriesLoading',
+            studentUniversities: 'student/studentUniversities',
+            studentUniversitiesLoading: 'student/studentUniversitiesLoading',
         }),
     },
 
@@ -563,7 +565,8 @@ export default {
             fetchCompanies: 'company/fetchCompanies',
             fetchCity: 'city/fetchCity',
             fetchOfferCategories: 'offer/fetchOfferCategories',
-            createStudentOwnInternship: 'student/createStudentOwnInternship'
+            createStudentOwnInternship: 'student/createStudentOwnInternship',
+            fetchStudentUniversities: 'student/fetchStudentUniversities'
         }),
 
         async submit() {
@@ -641,9 +644,9 @@ export default {
             const reader = new FileReader();
 
             reader.onload = (e) => {
-                this.data.offer.attachment.name = file.name;
-                this.data.offer.attachment.mime = file.type;
-                this.data.offer.attachment.content = Base64.encode(e.target.result);
+                this.data.agreement.attachment.name = file.name;
+                this.data.agreement.attachment.mime = file.type;
+                this.data.agreement.attachment.content = Base64.encode(e.target.result);
             };
 
             reader.readAsBinaryString(file);
@@ -667,6 +670,12 @@ export default {
         });
 
         this.fetchOfferCategories().then(() => {
+
+        }).catch((e) => {
+
+        });
+
+        this.fetchStudentUniversities().then(() => {
 
         }).catch((e) => {
 

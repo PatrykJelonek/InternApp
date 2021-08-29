@@ -83,6 +83,7 @@ class AgreementService
      * @param int|null    $offerId
      * @param bool|null   $isActive
      * @param string|null $signingDate
+     * @param int|null    $agreementStatusId
      *
      * @return Agreement|null
      */
@@ -102,7 +103,7 @@ class AgreementService
         ?string $signingDate = null,
         ?int $agreementStatusId = null
     ): ?Agreement {
-        $agreementStatus = $agreementStatusId ?? $this->agreementStatusRepository->getStatusByName(AgreementStatusConstants::STATUS_NEW);
+        $agreementStatus = $agreementStatusId ?? $this->agreementStatusRepository->getStatusByName(AgreementStatusConstants::STATUS_NEW)->id;
 
         $agreement = new Agreement();
         $agreement->name = $name;
@@ -117,7 +118,7 @@ class AgreementService
         $agreement->company_id = $companyId;
         $agreement->university_id = $universityId;
         $agreement->university_supervisor_id = $universitySupervisorId;
-        $agreement->agreement_status_id = $agreementStatus->id;
+        $agreement->agreement_status_id = $agreementStatus;
         $agreement->offer_id = $offerId ?? null;
         $agreement->user_id = Auth::id();
         $agreement->is_active = $isActive;

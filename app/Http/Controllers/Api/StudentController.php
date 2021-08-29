@@ -2,21 +2,55 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Constants\AgreementStatusConstants;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateStudentOwnInternshipRequest;
 use App\Http\Requests\StudentGetAvailableInternshipOffersRequest;
+use App\Http\Requests\StudentGetStudentUniversitiesRequest;
 use App\Models\Student;
 use App\Models\User;
+use App\Repositories\AgreementStatusRepository;
 use App\Repositories\StudentRepository;
+use App\Repositories\UniversityRepository;
+use App\Services\AgreementService;
+use App\Services\CityService;
+use App\Services\CompanyService;
 use App\Services\StudentService;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
 class StudentController extends Controller
 {
+    public const REQUEST_FIELD_OWN_INTERNSHIP_COMPANY_ID = 'company.id';
+    public const REQUEST_FIELD_OWN_INTERNSHIP_COMPANY_NAME = 'company.name';
+    public const REQUEST_FIELD_OWN_INTERNSHIP_COMPANY_STREET = 'company.street';
+    public const REQUEST_FIELD_OWN_INTERNSHIP_COMPANY_STREET_NUMBER = 'company.streetNumber';
+    public const REQUEST_FIELD_OWN_INTERNSHIP_COMPANY_EMAIL = 'company.email';
+    public const REQUEST_FIELD_OWN_INTERNSHIP_COMPANY_PHONE = 'company.phone';
+    public const REQUEST_FIELD_OWN_INTERNSHIP_COMPANY_WEBSITE = 'company.website';
+    public const REQUEST_FIELD_OWN_INTERNSHIP_COMPANY_DESCRIPTION = 'company.description';
+    public const REQUEST_FIELD_OWN_INTERNSHIP_COMPANY_CATEGORY_ID = 'company.companyCategoryId';
+    public const REQUEST_FIELD_OWN_INTERNSHIP_COMPANY_CITY_ID = 'company.city.id';
+    public const REQUEST_FIELD_OWN_INTERNSHIP_COMPANY_CITY_NAME = 'company.city.name';
+    public const REQUEST_FIELD_OWN_INTERNSHIP_COMPANY_CITY_POSTCODE = 'company.city.postcode';
+    public const REQUEST_FIELD_OWN_INTERNSHIP_AGREEMENT_NAME = 'agreement.name';
+    public const REQUEST_FIELD_OWN_INTERNSHIP_AGREEMENT_PROGRAM = 'agreement.program';
+    public const REQUEST_FIELD_OWN_INTERNSHIP_AGREEMENT_SCHEDULE = 'agreement.schedule';
+    public const REQUEST_FIELD_OWN_INTERNSHIP_AGREEMENT_CATEGORY_ID = 'agreement.offerCategoryId';
+    public const REQUEST_FIELD_OWN_INTERNSHIP_AGREEMENT_DATE_FROM = 'agreement.dateFrom';
+    public const REQUEST_FIELD_OWN_INTERNSHIP_AGREEMENT_DATE_TO = 'agreement.dateTo';
+    public const REQUEST_FIELD_OWN_INTERNSHIP_AGREEMENT_ATTACHMENTS = 'agreement.attachment';
+    public const REQUEST_FIELD_OWN_INTERNSHIP_AGREEMENT_UNIVERSITY_SLUG = 'agreement.universitySlug';
+    public const OWN_INTERNSHIP_COMPANY_DRAFT = true;
+    public const OWN_INTERNSHIP_COMPANY_VERIFIED = false;
+    public const OWN_INTERNSHIP_AGREEMENT_DEFAULT_PLACES_NUMBER = 1;
+    public const OWN_INTERNSHIP_AGREEMENT_IS_NOT_ACTIVE = false;
+
+
     /**
      * @var StudentRepository
      */
@@ -28,17 +62,57 @@ class StudentController extends Controller
     private $studentServices;
 
     /**
+     * @var CompanyService
+     */
+    private $companyService;
+
+    /**
+     * @var CityService
+     */
+    private $cityService;
+
+    /**
+     * @var AgreementService
+     */
+    private $agreementService;
+
+    /**
+     * @var AgreementStatusRepository
+     */
+    private $agreementStatusRepository;
+
+    /**
+     * @var UniversityRepository
+     */
+    private $universityRepository;
+
+    /**
      * StudentController constructor.
      *
-     * @param StudentRepository $studentRepository
-     * @param StudentService    $studentServices
+     * @param StudentRepository         $studentRepository
+     * @param StudentService            $studentServices
+     * @param CompanyService            $companyService
+     * @param CityService               $cityService
+     * @param AgreementService          $agreementService
+     * @param AgreementStatusRepository $agreementStatusRepository
+     * @param UniversityRepository      $universityRepository
      */
     public function __construct(
         StudentRepository $studentRepository,
-        StudentService $studentServices
+        StudentService $studentServices,
+        CompanyService $companyService,
+        CityService $cityService,
+        AgreementService $agreementService,
+        AgreementStatusRepository $agreementStatusRepository,
+        UniversityRepository $universityRepository
     ) {
         $this->studentRepository = $studentRepository;
         $this->studentServices = $studentServices;
+        $this->companyService = $companyService;
+        $this->cityService = $cityService;
+        $this->agreementService = $agreementService;
+        $this->agreementStatusRepository = $agreementStatusRepository;
+        $this->universityRepository = $universityRepository;
     }
 
     /**
@@ -223,11 +297,95 @@ class StudentController extends Controller
 
     public function createStudentOwnInternship(CreateStudentOwnInternshipRequest $request)
     {
-        $offer = $this->studentServices->createStudentOwnInternship($request->all());
-        if ($offer) {
-            return \response($offer, Response::HTTP_OK);
+        $companyId = $request->input(self::REQUEST_FIELD_OWN_INTERNSHIP_COMPANY_ID);
+
+        DB::beginTransaction();
+        if (empty($companyId)) {
+
+            $cityId = $request->input(self::REQUEST_FIELD_OWN_INTERNSHIP_COMPANY_CITY_ID);
+
+            if (empty($cityId)) {
+                $city = $this->cityService->createCity(
+                    $request->input(self::REQUEST_FIELD_OWN_INTERNSHIP_COMPANY_CITY_NAME),
+                    $request->input(self::REQUEST_FIELD_OWN_INTERNSHIP_COMPANY_CITY_POSTCODE)
+                );
+
+                if (is_null($city)) {
+                    DB::rollBack();
+                    return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
+                }
+
+                $cityId = $city->id;
+            }
+
+
+            $company = $this->companyService->createCompany(
+                $request->input(self::REQUEST_FIELD_OWN_INTERNSHIP_COMPANY_NAME),
+                $cityId,
+                $request->input(self::REQUEST_FIELD_OWN_INTERNSHIP_COMPANY_STREET),
+                $request->input(self::REQUEST_FIELD_OWN_INTERNSHIP_COMPANY_STREET_NUMBER),
+                $request->input(self::REQUEST_FIELD_OWN_INTERNSHIP_COMPANY_EMAIL),
+                $request->input(self::REQUEST_FIELD_OWN_INTERNSHIP_COMPANY_CATEGORY_ID),
+                $request->input(self::REQUEST_FIELD_OWN_INTERNSHIP_COMPANY_PHONE),
+                $request->input(self::REQUEST_FIELD_OWN_INTERNSHIP_COMPANY_WEBSITE),
+                $request->input(self::REQUEST_FIELD_OWN_INTERNSHIP_COMPANY_DESCRIPTION),
+                self::OWN_INTERNSHIP_COMPANY_VERIFIED,
+                Auth::user()->id,
+                self::OWN_INTERNSHIP_COMPANY_DRAFT,
+            );
+
+            if (is_null($company)) {
+                DB::rollBack();
+                return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
+            }
+
+            $companyId = $company->id;
+        }
+
+        $university = $this->universityRepository->getUniversityBySlug(
+            $request->input(self::REQUEST_FIELD_OWN_INTERNSHIP_AGREEMENT_UNIVERSITY_SLUG)
+        );
+
+        $universityWorkers = $this->universityRepository
+            ->getWorkers(
+                $request->input(self::REQUEST_FIELD_OWN_INTERNSHIP_AGREEMENT_UNIVERSITY_SLUG)
+            )->toArray();
+
+        $agreementStatus = $this->agreementStatusRepository
+            ->getStatusByName(
+                AgreementStatusConstants::STATUS_NEW
+            );
+
+        $agreement = $this->agreementService->createAgreement(
+            $request->input(self::REQUEST_FIELD_OWN_INTERNSHIP_AGREEMENT_NAME),
+            $request->input(self::REQUEST_FIELD_OWN_INTERNSHIP_AGREEMENT_DATE_FROM),
+            $request->input(self::REQUEST_FIELD_OWN_INTERNSHIP_AGREEMENT_DATE_TO),
+            $request->input(self::REQUEST_FIELD_OWN_INTERNSHIP_AGREEMENT_PROGRAM),
+            $companyId,
+            $university->id,
+            $universityWorkers[array_rand($universityWorkers)]['id'],
+            self::OWN_INTERNSHIP_AGREEMENT_DEFAULT_PLACES_NUMBER,
+            $request->input(self::REQUEST_FIELD_OWN_INTERNSHIP_AGREEMENT_SCHEDULE),
+            null,
+            null,
+            self::OWN_INTERNSHIP_AGREEMENT_IS_NOT_ACTIVE,
+            null,
+            $agreementStatus->id,
+        );
+
+        if (!is_null($agreement)) {
+            DB::commit();
+            return response($agreement, Response::HTTP_CREATED);
         }
 
         return \response(null, Response::HTTP_NOT_FOUND);
+    }
+
+    public function getStudentUniversities(StudentGetStudentUniversitiesRequest $request)
+    {
+        return response(
+            $this->studentRepository->getStudentUniversities(Auth::user()->id),
+            Response::HTTP_OK
+        );
     }
 }

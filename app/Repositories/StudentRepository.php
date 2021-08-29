@@ -3,10 +3,12 @@
 namespace App\Repositories;
 
 use App\Constants\AgreementStatusConstants;
+use App\Constants\RoleConstants;
 use App\Models\Company;
 use App\Models\JournalEntry;
 use App\Models\Student;
 use App\Models\StudentJournalEntry;
+use App\Models\University;
 use App\Models\User;
 use App\Notifications\JournalEntryCreated;
 use App\Repositories\Interfaces\StudentRepositoryInterface;
@@ -135,15 +137,20 @@ class StudentRepository implements StudentRepositoryInterface
     {
         $userUniversities = User::with(['universities.agreements'])->find($userId)->universities;
 
-        if(!empty($userUniversities)) {
+        if (!empty($userUniversities)) {
             $agreements = [];
 
             foreach ($userUniversities as $university) {
-                $agreements[] =  $university->agreements()->with(['offer','offer.category','offer.company.city'])->whereHas('status', function (Builder $query) {
+                $agreements[] = $university->agreements()->with(['offer', 'offer.category', 'offer.company.city']
+                )->whereHas('status', function (Builder $query) {
                     $query->where(['name' => AgreementStatusConstants::STATUS_ACCEPTED]);
                 })->where(function (Builder $query) {
                     $query->where('is_active', true)
-                        ->where('date_from','>', Carbon::today()->subDays(config('global.acceptableDifferenceDays'))->toDateString())
+                        ->where(
+                            'date_from',
+                            '>',
+                            Carbon::today()->subDays(config('global.acceptableDifferenceDays'))->toDateString()
+                        )
                         ->where('places_number', '>', '0');
                 })->get()->toArray();
             }
@@ -186,7 +193,7 @@ class StudentRepository implements StudentRepositoryInterface
 //                }
         DB::beginTransaction();
 
-        if(!empty($data['company']['id'])) {
+        if (!empty($data['company']['id'])) {
             $company = Company::find($data['company']['id']);
         } else {
             $company = new Company();
@@ -202,7 +209,6 @@ class StudentRepository implements StudentRepositoryInterface
             $company->company_category_id = $data['company'];
             $company->created_at = Carbon::today();
             $company->updated_at = Carbon::today();
-
         }
 
         dd($data);
@@ -210,6 +216,14 @@ class StudentRepository implements StudentRepositoryInterface
 
     public function getStudentByIndex(int $studentIndex)
     {
-        return Student::with(['user', 'specialization.field.faculty'])->where(['student_index' => $studentIndex])->first();
+        return Student::with(['user', 'specialization.field.faculty'])->where(['student_index' => $studentIndex]
+        )->first();
+    }
+
+    public function getStudentUniversities(int $userId)
+    {
+        return University::whereHas('users', function ($query) use ($userId) {
+            $query->where(['users.id' => $userId]);
+        })->get();
     }
 }
