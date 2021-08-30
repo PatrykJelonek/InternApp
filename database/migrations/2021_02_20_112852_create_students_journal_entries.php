@@ -19,7 +19,7 @@ class CreateStudentsJournalEntries extends Migration
             $table->foreign('student_id')->references('id')->on('students');
             $table->foreignId('journal_entry_id');
             $table->foreign('journal_entry_id')->references('id')->on('journal_entries');
-            $table->boolean('accepted');
+            $table->boolean('accepted')->default(false);
             $table->timestamps();
         });
     }

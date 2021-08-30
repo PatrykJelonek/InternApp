@@ -3,17 +3,35 @@ export default {
 
     state: {
         journalEntries: [],
+        journalEntryComments: [],
+        journalEntryCommentsLoading: false,
     },
 
     getters: {
         journalsEntries(state) {
             return state.journalEntries;
-        }
+        },
+
+        journalEntryComments(state) {
+            return state.journalEntryComments;
+        },
+
+        journalEntryCommentsLoading(state) {
+            return state.journalEntryCommentsLoading;
+        },
     },
 
     mutations: {
         SET_JOURNAL_ENTRIES(state, data) {
             state.journalEntries = data;
+        },
+
+        SET_JOURNAL_ENTRY_COMMENTS(state, data) {
+            state.journalEntryComments = data;
+        },
+
+        SET_JOURNAL_ENTRY_COMMENTS_LOADING(state, data) {
+            state.journalEntryCommentsLoading = data;
         },
 
         CONFIRM_JOURNAL_ENTRIES(state, data) {
@@ -49,6 +67,24 @@ export default {
                     `Błąd pobrania danych z endpoint'u /api/internships/{agreement}/students/{student}/journal-entries`,
                     {agreementId: agreementId, studentId: studentId, dump: e})
             }
+        },
+
+        async fetchJournalEntryComments({commit}, {internshipId, studentIndex, studentJournalEntryId}) {
+            commit('SET_JOURNAL_ENTRY_COMMENTS_LOADING', true);
+            try {
+                let response = await axios.get(`/api/internships/${internshipId}/students/${studentIndex}/journal-entries/${studentJournalEntryId}/comments`);
+                commit('SET_JOURNAL_ENTRY_COMMENTS', response.data);
+                commit('SET_JOURNAL_ENTRY_COMMENTS_LOADING', false);
+            } catch(e) {
+                commit('SET_JOURNAL_ENTRIES', []);
+                commit('SET_JOURNAL_ENTRY_COMMENTS_LOADING', false);
+            }
+        },
+
+        createStudentJournalEntryComment({commit}, {internshipId, studentIndex, studentJournalEntryId, content}) {
+          return axios.post(`/api/internships/${internshipId}/students/${studentIndex}/journal-entries/${studentJournalEntryId}/comments`, {
+              content: content,
+          })
         },
     },
 }

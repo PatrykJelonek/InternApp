@@ -43,7 +43,12 @@ class StudentRepository implements StudentRepositoryInterface
      */
     public function getStudentJournalEntries(int $internshipId, string $studentIndex)
     {
-        $student = $this->one($studentIndex);
+        $student = Student::where(['student_index' => $studentIndex])->whereHas(
+            'internships',
+            function (Builder $query) use ($internshipId) {
+                $query->where(['internships.id' => $internshipId]);
+            }
+        )->first();
 
         if (!empty($student)) {
             return $student->journalEntries()->whereHas('internship', function (Builder $query) use ($internshipId) {
@@ -165,32 +170,6 @@ class StudentRepository implements StudentRepositoryInterface
 
     public function createStudentOwnInternship($data)
     {
-//        company: {
-//        id: null,
-//                    name: null,
-//                    street: null,
-//                    streetNumber: null,
-//                    cityPostCode: null,
-//                    cityName: null,
-//                    cityId: null,
-//                    email: null,
-//                    phone: null,
-//                    website: null,
-//                    categoryId: null,
-//                },
-//        offer: {
-//        companyId: null,
-//                    universityId: null,
-//                    name: null,
-//                    program: null,
-//                    schedule: null,
-//                    categoryId: null,
-//                    attachments: null
-//                },
-//        agreement: {
-//        dateFrom: null,
-//                    dateTo: null,
-//                }
         DB::beginTransaction();
 
         if (!empty($data['company']['id'])) {

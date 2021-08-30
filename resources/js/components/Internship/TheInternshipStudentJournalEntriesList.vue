@@ -2,13 +2,17 @@
     <div>
         <template v-if="$route.params.studentIndex">
             <template v-if="studentJournalEntries.length > 0 && !loadingStudentJournalEntries">
-                <internship-student-journal-entries-list-item
-                    v-for="studentJournalEntry in studentJournalEntries"
-                    :key="studentJournalEntry.id"
-                    :internship-start-date="internshipStartDate"
-                    :journal-entry-date="studentJournalEntry.date"
-                    :content="studentJournalEntry.content"
-                ></internship-student-journal-entries-list-item>
+                <v-expansion-panels>
+                    <v-expansion-panel>
+                        <internship-student-journal-entries-list-item
+                            v-for="studentJournalEntry in studentJournalEntries"
+                            :key="studentJournalEntry.id"
+                            :internship-start-date="internshipStartDate"
+                            :journal-entry-date="studentJournalEntry.date"
+                            :content="studentJournalEntry.content"
+                        ></internship-student-journal-entries-list-item>
+                    </v-expansion-panel>
+                </v-expansion-panels>
             </template>
             <template v-else-if="loadingStudentJournalEntries">
                 <div class="d-flex justify-center mt-5">

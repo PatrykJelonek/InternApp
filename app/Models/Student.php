@@ -4,6 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Task;
+use App\Models\JournalEntry;
+use App\Models\Internship;
+use App\Models\User;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Student extends Model
 {
@@ -11,28 +17,43 @@ class Student extends Model
 
     protected $table = "students";
 
-    public function user()
+    /**
+     * @return HasOne
+     */
+    public function user(): HasOne
     {
-        return $this->hasOne('App\Models\User', 'id', 'user_id');
+        return $this->hasOne(User::class, 'id', 'user_id');
     }
 
-    public function internships()
+    /**
+     * @return BelongsToMany
+     */
+    public function internships(): BelongsToMany
     {
-        return $this->belongsToMany('App\Models\Internship','internships_students','student_id','internship_id');
+        return $this->belongsToMany(Internship::class, 'internships_students', 'student_id', 'internship_id');
     }
 
-    public function specialization()
+    /**
+     * @return mixed
+     */
+    public function specialization(): HasOne
     {
         return $this->hasOne(Specialization::class, 'id', 'specialization_id')->withTrashed();
     }
 
-    public function journalEntries()
+    /**
+     * @return BelongsToMany
+     */
+    public function journalEntries(): BelongsToMany
     {
-        return $this->belongsToMany('App\Models\JournalEntry','students_journal_entries','student_id','journal_entry_id');
+        return $this->belongsToMany(JournalEntry::class, 'students_journal_entries', 'student_id', 'journal_entry_id')->withPivot(['id']);
     }
 
-    public function tasks()
+    /**
+     * @return BelongsToMany
+     */
+    public function tasks(): BelongsToMany
     {
-        return $this->belongsToMany('App\Models\Task', 'students_tasks','student_id','task_id');
+        return $this->belongsToMany(Task::class, 'students_tasks', 'student_id', 'task_id');
     }
 }

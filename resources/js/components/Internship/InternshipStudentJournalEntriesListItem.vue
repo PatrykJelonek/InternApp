@@ -5,32 +5,12 @@
         class="mb-3"
         @click="cardOnClick"
     >
-        <v-list flat two-line color="transparent">
-            <v-list-item-group multiple>
-                <v-list-item :ripple="false">
-                    <v-list-item-content>
-                        <v-list-item-title class="text-m font-weight-bold">
-                            Dzień {{getInternshipDay(internshipStartDate, journalEntryDate)}}
-                        </v-list-item-title>
-                        <v-list-item-subtitle class="text-m">{{formatDate(journalEntryDate,'DD.MM.YYYY')}}</v-list-item-subtitle>
-                    </v-list-item-content>
-                </v-list-item>
-            </v-list-item-group>
-        </v-list>
-        <v-dialog
-            v-model="dialog"
-            max-width="600px"
-            class="mx-10"
-        >
-            <v-card
-                class="pa-1"
-                color="cardBackground"
-            >
-                <v-card-title>Abc</v-card-title>
-                <v-card-subtitle>Data: {{formatDate(journalEntryDate,'DD.MM.YYYY')}}</v-card-subtitle>
-                <v-card-text>{{content}}</v-card-text>
-            </v-card>
-        </v-dialog>
+        <v-expansion-panel-header>
+            adssdasd
+        </v-expansion-panel-header>
+        <v-expansion-panel-content>
+            asdas
+        </v-expansion-panel-content>
     </v-card>
 </template>
 

@@ -1,5 +1,9 @@
 <template>
     <custom-card :loading="loadingStudentJournalEntries">
+        <internship-create-journal-entry-comment-dialog
+            :internship-id="$route.params.internshipId"
+            :student-index="$route.params.studentIndex"
+        ></internship-create-journal-entry-comment-dialog>
         <the-internship-pdf-generate-dialog
             title="Pobierz dziennik praktyk"
             :subheader="`Dokument w formacie PDF zawierający dziennik praktyk studenta`"
@@ -35,9 +39,9 @@
 
         <v-expand-transition
             v-if="this.$route.params.studentIndex && !loadingStudentJournalEntries && studentJournalEntries.length > 0">
-            <v-row v-show="show">
+            <v-row v-show="show" no-gutters>
                 <v-col cols="12">
-                    <v-list nav color="card-background">
+                    <v-expansion-panels flat class="component-background" accordion>
                         <internship-student-journal-entry
                             v-for="studentJournalEntry in displayedJournalEntries"
                             :key="studentJournalEntry.id"
@@ -45,11 +49,13 @@
                             :status="studentJournalEntry.accepted"
                             :internship-start-date="internshipStartDate"
                             :journal-entry-date="studentJournalEntry.date"
+                            :id="studentJournalEntry.pivot.id"
                         ></internship-student-journal-entry>
-                    </v-list>
+                    </v-expansion-panels>
                 </v-col>
                 <v-col cols="12">
                     <v-pagination
+                        light
                         v-model="page"
                         :length="Math.ceil(studentJournalEntries.length/perPage)"
                         :total-visible="totalVisible"
@@ -77,10 +83,12 @@ import TheInternshipCreateStudentJournalEntryDialog from "./TheInternshipCreateS
 import CustomCard from "../_General/CustomCard";
 import CustomCardTitle from "../_General/CustomCardTitle";
 import TheInternshipPdfGenerateDialog from "./TheInternshipPdfGenerateDialog";
+import InternshipCreateJournalEntryCommentDialog from "./InternshipCreateJournalEntryCommentDialog";
 
 export default {
     name: "TheInternshipStudentJournalEntries",
     components: {
+        InternshipCreateJournalEntryCommentDialog,
         TheInternshipPdfGenerateDialog,
         CustomCardTitle,
         CustomCard, TheInternshipCreateStudentJournalEntryDialog, InternshipStudentJournalEntry

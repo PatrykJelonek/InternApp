@@ -4,6 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Offer;
+use App\Models\Agreement;
+use App\Models\InternshipStatus;
+use App\Models\JournalEntry;
+use App\Models\Task;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Internship extends Model
 {
@@ -11,43 +19,68 @@ class Internship extends Model
 
     protected $table = "internships";
 
-    public function offer()
+    /**
+     * @return HasOne
+     */
+    public function offer(): HasOne
     {
-        return $this->hasOne('App\Models\Offer','id', 'offer_id');
+        return $this->hasOne(Offer::class, 'id', 'offer_id');
     }
 
-    public function agreement()
+    /**
+     * @return HasOne
+     */
+    public function agreement(): HasOne
     {
-        return $this->hasOne('App\Models\Agreement','id', 'agreement_id');
+        return $this->hasOne(Agreement::class, 'id', 'agreement_id');
     }
 
-    public function students()
+    /**
+     * @return BelongsToMany
+     */
+    public function students(): BelongsToMany
     {
-        return $this->belongsToMany(Student::class,'internships_students','internship_id','student_id')->withPivot(['grade']);
+        return $this->belongsToMany(Student::class, 'internships_students', 'internship_id', 'student_id')
+            ->withPivot(['grade']);
     }
 
-    public function status()
+    /**
+     * @return HasOne
+     */
+    public function status(): HasOne
     {
-        return $this->hasOne('App\Models\InternshipStatus', 'id', 'internship_status_id');
+        return $this->hasOne(InternshipStatus::class, 'id', 'internship_status_id');
     }
 
-    public function universitySupervisor()
+    /**
+     * @return HasOne
+     */
+    public function universitySupervisor(): HasOne
     {
         return $this->hasOne(User::class, 'id', 'university_supervisor_id');
     }
 
-    public function companySupervisor()
+    /**
+     * @return HasOne
+     */
+    public function companySupervisor(): HasOne
     {
         return $this->hasOne(User::class, 'id', 'company_supervisor_id');
     }
 
-    public function journalEntries()
+    /**
+     * @return HasMany
+     */
+    public function journalEntries(): HasMany
     {
-        return $this->hasMany('App\Models\JournalEntry', 'internship_id', 'id');
+        return $this->hasMany(JournalEntry::class, 'internship_id', 'id');
     }
 
-    public function tasks()
+    /**
+     * @return HasMany
+     */
+    public function tasks(): HasMany
     {
-        return $this->hasMany('App\Models\Task','internship_id','id');
+        return $this->hasMany(Task::class, 'internship_id', 'id');
     }
 }

@@ -102,6 +102,7 @@ export default {
                 internship_id: null,
                 content: null,
                 students_ids: [],
+                accepted: false,
             }
         }
     },
@@ -141,6 +142,7 @@ export default {
                 internship_id: null,
                 content: null,
                 students_ids: [],
+                accepted: false,
             };
         },
 

@@ -15,6 +15,7 @@ use App\Repositories\Interfaces\ChatRepositoryInterface;
 use App\Repositories\Interfaces\CityRepositoryInterface;
 use App\Repositories\Interfaces\FacultyRepositoryInterface;
 use App\Repositories\Interfaces\InternshipRepositoryInterface;
+use App\Repositories\Interfaces\JournalRepositoryInterface;
 use App\Repositories\Interfaces\OfferCategoryRepositoryInterface;
 use App\Repositories\Interfaces\OfferRepositoryInterface;
 use App\Repositories\Interfaces\OfferStatusRepositoryInterface;
@@ -24,6 +25,7 @@ use App\Repositories\Interfaces\StudentRepositoryInterface;
 use App\Repositories\Interfaces\TasksRepositoryInterface;
 use App\Repositories\Interfaces\UserRepositoryInterface;
 use App\Repositories\InternshipRepository;
+use App\Repositories\JournalRepository;
 use App\Repositories\OfferCategoryRepository;
 use App\Repositories\OfferRepository;
 use App\Repositories\OfferStatusRepository;
@@ -58,6 +60,7 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(QuestionnairesRepositoryInterface::class, QuestionnairesRepository::class);
         $this->app->bind(FacultyRepositoryInterface::class, FacultyRepository::class);
         $this->app->bind(RoleRepositoryInterface::class, RoleRepository::class);
+        $this->app->bind(JournalRepositoryInterface::class, JournalRepository::class);
     }
 
     /**
