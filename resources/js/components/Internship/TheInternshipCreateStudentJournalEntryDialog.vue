@@ -143,6 +143,7 @@ export default {
             setSnackbar: 'snackbar/setSnackbar',
             addStudentJournalEntry: 'student/addStudentJournalEntry',
             toggleDialog: 'helpers/toggleDialog',
+            fetchStudentJournalEntries: 'student/fetchStudentJournalEntries',
         }),
 
         getStudentIdByStudentIndex(studentIndex) {
@@ -174,6 +175,14 @@ export default {
             }).then((journalEntry) => {
                 this.dialog = false;
                 this.clearJournalEntry();
+                this.fetchStudentJournalEntries({
+                    internshipId: this.$route.params.internshipId,
+                    studentIndex: this.$route.params.studentIndex
+                }).then(() => {
+
+                }).catch((e) => {
+                    console.error(e);
+                })
                 this.setSnackbar({message: 'Wpis został dodany!', color: 'success'});
                 this.addStudentJournalEntry(journalEntry);
             }).catch((e) => {

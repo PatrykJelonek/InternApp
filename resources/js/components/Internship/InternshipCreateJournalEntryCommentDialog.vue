@@ -68,6 +68,7 @@ export default {
             toggleDialog: 'helpers/toggleDialog',
             setDialogArgs: 'helpers/setDialogArgs',
             createStudentJournalEntryComment: 'journal/createStudentJournalEntryComment',
+            fetchStudentJournalEntries: 'student/fetchStudentJournalEntries',
         }),
 
         async submit() {
@@ -78,6 +79,10 @@ export default {
                 content: this.content,
             }).then(() => {
                 this.setSnackbar({message: 'Komentarz został dodany!', color: 'success'});
+                this.fetchStudentJournalEntries({
+                    internshipId: this.$route.params.internshipId,
+                    studentIndex: this.$route.params.studentIndex
+                });
             }).catch((e) => {
                 this.setSnackbar({message: 'Wystąpił problem podczas dodawania komentarza, \n skontaktuj się z administratorem!', color: 'error'});
             }).finally(() => {
@@ -87,9 +92,7 @@ export default {
         }
     },
 
-    created() {
 
-    }
 }
 </script>
 

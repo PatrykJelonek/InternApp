@@ -33,7 +33,7 @@
                     </v-btn>
                 </template>
             </page-title>
-            <v-row>
+            <v-row align="start">
                 <v-col cols="12" md="12" lg="12">
                     <the-internship-info-card
                         :internship-name="internship.agreement.name"

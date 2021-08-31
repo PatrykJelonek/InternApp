@@ -77,20 +77,22 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::get('/internships/{internship}/tasks', 'Api\TaskController@index');
 
     //NEW ENDPOINTS
-    //Route::get('/internships','Api\InternshipController@index');
     Route::get('/internships/statuses', 'Api\InternshipController@getInternshipStatuses');
     Route::get('/internships/{internship}','Api\InternshipController@show');
     Route::put('/internships/{internship}/summarize-internship','Api\InternshipController@summarizeInternship');
     Route::put('/internships/{id}/change-status','Api\InternshipController@changeInternshipStatus');
     Route::get('/internships/{internship}/students','Api\InternshipStudentController@index');
     Route::get('/internships/{internship}/students/{student}','Api\InternshipController@getInternshipStudent');
+    Route::get('/internships/{internship}/students/{student}/download', 'Api\InternshipController@downloadInternshipJournal');
     Route::put('/internships/{internship}/students/{student}/set-grade','Api\InternshipController@setInternshipStudentGrade');
     Route::get('/internships/{internship}/students/{student}/journal-entries', 'Api\StudentJournalEntryController@index');
     Route::post('/internships/{internship}/students/{student}/journal-entries', 'Api\StudentJournalEntryController@createJournalEntry');
     Route::get('/internships/{internship}/students/{student}/journal-entries/{journalEntry}','Api\JournalController@show');
-    Route::post('/internships/{internship}/students/{student}/journal-entries/{journalEntry}/comments','Api\StudentJournalEntryController@createJournalEntryComment');
-    Route::get('/internships/{internship}/students/{student}/journal-entries/{journalEntry}/comments','Api\StudentJournalEntryController@getStudentJournalEntryComments');
-//    Route::get('/users/{user_id}/internships/{internship_id}/journal_entries', '');
+    Route::delete('/internships/{internship}/students/{student}/journal-entries/{studentJournalEntry}','Api\StudentJournalEntryController@deleteStudentJournalEntry');
+    Route::put('/internships/{internship}/students/{student}/journal-entries/{studentJournalEntry}','Api\StudentJournalEntryController@updateStudentJournalEntry');
+    Route::post('/internships/{internship}/students/{student}/journal-entries/{studentJournalEntry}/comments','Api\StudentJournalEntryController@createJournalEntryComment');
+    Route::get('/internships/{internship}/students/{student}/journal-entries/{studentJournalEntry}/comments','Api\StudentJournalEntryController@getStudentJournalEntryComments');
+    Route::delete('/internships/{internship}/students/{student}/journal-entries/{studentJournalEntry}/comments/{comment}','Api\StudentJournalEntryController@deleteStudentJournalEntryComment');
 
     # New endpoints
     Route::get('/cities','Api\CityController@index');
@@ -138,8 +140,7 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::post('/internships', 'Api\InternshipController@store');
     Route::post('/internships/{internship}/tasks', 'Api\TaskController@store');
     Route::get('/internships/{internship}/students/{student}/tasks', 'Api\StudentTaskController@index');
-    Route::get('/internships/{internship}/students/{student}/download', 'Api\InternshipController@downloadInternshipJournal');
-    Route::post('/internships/{internship}/students/{student?}/tasks', 'Api\TaskController@store');
+    Route::post('/internships/{internship}/students/{student}/tasks', 'Api\TaskController@store');
     Route::get('/internships/{internship}/students/{student}/tasks/{task}', 'Api\TaskController@show');
 
     # Universities

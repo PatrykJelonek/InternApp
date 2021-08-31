@@ -3,16 +3,16 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StudentJournalEntryDeleteStudentJournalEntryCommentRequest;
 use App\Http\Requests\StudentJournalEntryCreateJournalEntryCommentRequest;
 use App\Http\Requests\StudentJournalEntryCreateJournalEntryRequest;
+use App\Http\Requests\StudentJournalEntryDeleteStudentJournalEntryRequest;
 use App\Http\Requests\StudentJournalEntryGetStudentJournalEntryCommentsRequest;
-use App\Http\Resources\Collections\JournalEntryCollection;
-use App\Http\Resources\JournalEntryResource;
+use App\Http\Requests\StudentJournalEntryUpdateStudentJournalEntryRequest;
 use App\Repositories\InternshipRepository;
 use App\Repositories\JournalRepository;
 use App\Repositories\StudentRepository;
 use App\Services\JournalService;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -89,16 +89,6 @@ class StudentJournalEntryController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param int                                          $internshipId
@@ -131,10 +121,10 @@ class StudentJournalEntryController extends Controller
                     ]);
                 }
             } else {
-                $student = $this->internshipRepository->getInternshipStudentByIndex($internshipId, $studentIndex);
-                $studentId = $student->id ?? null;
+                $internshipStudent = $this->internshipRepository->getInternshipStudentByIndex($internshipId, $studentIndex);
+                $studentId = $internshipStudent->student->id ?? null;
 
-                if (!empty($studentId)) {
+                if (empty($studentId)) {
                     $student = $this->studentRepository->getStudentByUserId(Auth::id());
                     $studentId = $student->id;
                 }
@@ -179,61 +169,53 @@ class StudentJournalEntryController extends Controller
         return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param int $id
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param int $id
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @param int                      $id
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param int $id
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
-
     public function getStudentJournalEntryComments(
         StudentJournalEntryGetStudentJournalEntryCommentsRequest $request,
         int $internshipId,
         string $studentIndex,
         int $studentJournalEntryId
     ) {
-        return response($this->journalRepository->getStudentJournalEntryComments($studentJournalEntryId), Response::HTTP_OK);
+        return response(
+            $this->journalRepository->getStudentJournalEntryComments($studentJournalEntryId),
+            Response::HTTP_OK
+        );
+    }
+
+    public function updateStudentJournalEntry(
+        StudentJournalEntryDeleteStudentJournalEntryRequest $request,
+        int $internshipId,
+        string $studentIndex,
+        int $studentJournalEntryId
+    ) {
+        $studentJournalEntry = $this->journalService->updateStudentJournalEntry(
+            $studentJournalEntryId,
+            $request->input(self::REQUEST_FIELD_JOURNAL_ENTRY_CONTENT),
+            $request->input(self::REQUEST_FIELD_JOURNAL_ENTRY_DATE)
+        );
+
+        if (!is_null($studentJournalEntry)) {
+            return response($studentJournalEntry, Response::HTTP_OK);
+        }
+
+        return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+
+    public function deleteStudentJournalEntry(
+        StudentJournalEntryUpdateStudentJournalEntryRequest $request,
+        int $internshipId,
+        string $studentIndex,
+        int $studentJournalEntryId
+    ) {
+        return response($this->journalService->deleteStudentJournalEntry($studentJournalEntryId));
+    }
+
+    public function deleteStudentJournalEntryComment(
+        StudentJournalEntryDeleteStudentJournalEntryCommentRequest $request,
+        int $internshipId,
+        string $studentIndex,
+        int $studentJournalEntryId,
+        int $commentId
+    ) {
+        return response($this->journalService->deleteComment($commentId));
     }
 }

@@ -36,10 +36,10 @@ export default {
 
         CONFIRM_JOURNAL_ENTRIES(state, data) {
             state.journalEntries.forEach((journalEntry) => {
-               data.forEach((id) => {
-                  if(journalEntry.id === id)
-                      journalEntry.accepted = 1;
-               });
+                data.forEach((id) => {
+                    if (journalEntry.id === id)
+                        journalEntry.accepted = 1;
+                });
             });
         },
     },
@@ -61,7 +61,7 @@ export default {
             try {
                 let response = await axios.get(`/api/internships/${agreementId}/students/${studentId}/journal-entries`);
                 commit('SET_JOURNAL_ENTRIES', response.data);
-            } catch(e) {
+            } catch (e) {
                 commit('SET_JOURNAL_ENTRIES', []);
                 console.error(
                     `Błąd pobrania danych z endpoint'u /api/internships/{agreement}/students/{student}/journal-entries`,
@@ -75,16 +75,30 @@ export default {
                 let response = await axios.get(`/api/internships/${internshipId}/students/${studentIndex}/journal-entries/${studentJournalEntryId}/comments`);
                 commit('SET_JOURNAL_ENTRY_COMMENTS', response.data);
                 commit('SET_JOURNAL_ENTRY_COMMENTS_LOADING', false);
-            } catch(e) {
+            } catch (e) {
                 commit('SET_JOURNAL_ENTRIES', []);
                 commit('SET_JOURNAL_ENTRY_COMMENTS_LOADING', false);
             }
         },
 
         createStudentJournalEntryComment({commit}, {internshipId, studentIndex, studentJournalEntryId, content}) {
-          return axios.post(`/api/internships/${internshipId}/students/${studentIndex}/journal-entries/${studentJournalEntryId}/comments`, {
-              content: content,
-          })
+            return axios.post(`/api/internships/${internshipId}/students/${studentIndex}/journal-entries/${studentJournalEntryId}/comments`, {
+                content: content,
+            })
+        },
+
+        deleteStudentJournalEntry({commit}, {internshipId, studentIndex, studentJournalEntryId}) {
+            return axios.delete(`/api/internships/${internshipId}/students/${studentIndex}/journal-entries/${studentJournalEntryId}`);
+        },
+
+        deleteStudentJournalEntryComment({commit}, {internshipId, studentIndex, studentJournalEntryId, commentId}) {
+            return axios.delete(`/api/internships/${internshipId}/students/${studentIndex}/journal-entries/${studentJournalEntryId}/comments/${commentId}`);
+        },
+
+        updateStudentJournalEntry({commit}, {internshipId, studentIndex, studentJournalEntryId, content}) {
+            return axios.put(`/api/internships/${internshipId}/students/${studentIndex}/journal-entries/${studentJournalEntryId}`, {
+                content: content
+            });
         },
     },
 }

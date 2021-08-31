@@ -8,6 +8,7 @@
 
 namespace App\Repositories;
 
+use App\Models\Comment;
 use App\Models\StudentJournalEntry;
 use App\Repositories\Interfaces\JournalRepositoryInterface;
 
@@ -32,6 +33,17 @@ class JournalRepository implements JournalRepositoryInterface
 
         if (!empty($studentJournalEntryComments)) {
             return $studentJournalEntryComments;
+        }
+
+        return null;
+    }
+
+    public function getStudentJournalEntryComment(int $commentId)
+    {
+        $studentJournalEntryComment = Comment::find($commentId);
+
+        if (!empty($studentJournalEntryComment)) {
+            return $studentJournalEntryComment;
         }
 
         return null;

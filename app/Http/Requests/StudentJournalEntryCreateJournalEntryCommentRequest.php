@@ -38,7 +38,7 @@ class StudentJournalEntryCreateJournalEntryCommentRequest extends FormRequest
             'students_ids' => 'nullable|array',
             'internship' => 'required|exists:App\Models\Internship,id',
             'student' => 'required|exists:App\Models\Student,student_index',
-            'journalEntry' => 'required|exists:App\Models\StudentJournalEntry,id',
+            'studentJournalEntry' => 'required|exists:App\Models\StudentJournalEntry,id',
         ];
     }
 
@@ -51,8 +51,8 @@ class StudentJournalEntryCreateJournalEntryCommentRequest extends FormRequest
             'internship.exists' => 'Nie istnieje praktyka o takim identyfikatorze!',
             'student.required' => 'Identyfikator studenta jest wymagany!',
             'student.exists' => 'Nie istnieje student o takim identyfikatorze!',
-            'journalEntry.required' => 'Identyfikator wpisu w dzienniku jest wymagany!',
-            'journalEntry.exists' => 'Nie istnieje wpis w dzienniku o takim identyfikatorze!',
+            'studentJournalEntry.required' => 'Identyfikator wpisu w dzienniku jest wymagany!',
+            'studentJournalEntry.exists' => 'Nie istnieje wpis w dzienniku o takim identyfikatorze!',
         ];
     }
 }

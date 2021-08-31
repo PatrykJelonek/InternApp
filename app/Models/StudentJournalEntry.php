@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use App\Models\Student;
 
 class StudentJournalEntry extends Model
 {
@@ -20,6 +19,14 @@ class StudentJournalEntry extends Model
     public function student(): BelongsTo
     {
         return $this->belongsTo(Student::class, 'student_id', 'id');
+    }
+
+    /**
+     * @return BelongsTo
+     */
+    public function journalEntry(): BelongsTo
+    {
+        return $this->belongsTo(JournalEntry::class, 'journal_entry_id', 'id');
     }
 
     /**

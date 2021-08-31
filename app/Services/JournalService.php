@@ -10,11 +10,27 @@ namespace App\Services;
 
 use App\Models\Comment;
 use App\Models\JournalEntry;
+use App\Models\StudentJournalEntry;
 use App\Models\Task;
+use App\Repositories\JournalRepository;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class JournalService
 {
+    /**
+     * @var JournalRepository
+     */
+    private $journalRepository;
+
+    /**
+     * @param JournalRepository $journalRepository
+     */
+    public function __construct(JournalRepository $journalRepository)
+    {
+        $this->journalRepository = $journalRepository;
+    }
+
     /**
      * @param int      $internshipId
      * @param string   $content
@@ -41,6 +57,44 @@ class JournalService
 
         if ($journalEntry->save()) {
             return $journalEntry;
+        }
+
+        return null;
+    }
+
+    public function deleteStudentJournalEntry(int $studentJournalEntryId): bool
+    {
+        $studentJournalEntry = $this->journalRepository->getStudentJournalEntryById($studentJournalEntryId);
+
+        if (!is_null($studentJournalEntry)) {
+            $studentJournalEntry->comments()->detach();
+        }
+
+        return $studentJournalEntry->delete() ?? false;
+    }
+
+    /**
+     * @param int         $studentJournalEntryId
+     * @param string      $content
+     * @param string|null $date
+     *
+     * @return JournalEntry|null
+     */
+    public function updateStudentJournalEntry(
+        int $studentJournalEntryId,
+        string $content,
+        ?string $date = null
+    ) : ?JournalEntry {
+        $studentJournalEntry = $this->journalRepository->getStudentJournalEntryById($studentJournalEntryId);
+        $journalEntry = $studentJournalEntry->journalEntry;
+
+        if (!is_null($studentJournalEntry)) {
+            $journalEntry->content = $content;
+            $journalEntry->date = $date ?? $journalEntry->date;
+
+            if ($journalEntry->update()) {
+                return $journalEntry;
+            }
         }
 
         return null;
@@ -95,5 +149,24 @@ class JournalService
         }
 
         return null;
+    }
+
+    public function deleteComment(int $commentId): bool
+    {
+        $comment = $this->journalRepository->getStudentJournalEntryComment($commentId);
+
+        if (!is_null($comment)) {
+            DB::beginTransaction();
+            $comment->studentJournalEntries()->detach();
+            $deleted = $comment->delete();
+
+            if ($deleted) {
+                DB::commit();
+            } else {
+                DB::rollBack();
+            }
+        }
+
+        return $deleted ?? false;
     }
 }

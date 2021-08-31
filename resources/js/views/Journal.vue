@@ -13,7 +13,7 @@
                 </v-card>
             </v-col>
         </v-row>
-        <v-row>
+        <v-row align="start">
             <v-col cols="12" lg="4">
                 <v-row>
                     <v-col cols="12">

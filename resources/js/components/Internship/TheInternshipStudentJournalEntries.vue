@@ -4,6 +4,29 @@
             :internship-id="$route.params.internshipId"
             :student-index="$route.params.studentIndex"
         ></internship-create-journal-entry-comment-dialog>
+        <internship-update-journal-entry-dialog
+            :internship-id="$route.params.internshipId"
+            :student-index="$route.params.studentIndex"
+            :model="dialogs['DIALOG_FIELD_CONFIRM_UPDATE_JOURNAL_ENTRIES']"
+        ></internship-update-journal-entry-dialog>
+        <custom-confirm-dialog
+            title="Usuń wpis w dzienniku"
+            :dialog-state="dialogs['DIALOG_FIELD_CONFIRM_DELETE_JOURNAL_ENTRY']"
+            :toggle-function="toggleDialog"
+            :confirm-function="deleteJournalEntry"
+            dialog-key="DIALOG_FIELD_CONFIRM_DELETE_JOURNAL_ENTRY"
+        >
+            Czy na pewno chcesz usunąć ten post?
+        </custom-confirm-dialog>
+        <custom-confirm-dialog
+            title="Usuń komentarz"
+            :dialog-state="dialogs['DIALOG_FIELD_CONFIRM_DELETE_JOURNAL_ENTRIES_COMMENT']"
+            :toggle-function="toggleDialog"
+            :confirm-function="deleteJournalEntryComment"
+            dialog-key="DIALOG_FIELD_CONFIRM_DELETE_JOURNAL_ENTRIES_COMMENT"
+        >
+            Czy na pewno chcesz usunąć ten komentarz?
+        </custom-confirm-dialog>
         <the-internship-pdf-generate-dialog
             title="Pobierz dziennik praktyk"
             :subheader="`Dokument w formacie PDF zawierający dziennik praktyk studenta`"
@@ -50,6 +73,7 @@
                             :internship-start-date="internshipStartDate"
                             :journal-entry-date="studentJournalEntry.date"
                             :id="studentJournalEntry.pivot.id"
+                            :user-id="studentJournalEntry.user_id"
                         ></internship-student-journal-entry>
                     </v-expansion-panels>
                 </v-col>
@@ -84,10 +108,14 @@ import CustomCard from "../_General/CustomCard";
 import CustomCardTitle from "../_General/CustomCardTitle";
 import TheInternshipPdfGenerateDialog from "./TheInternshipPdfGenerateDialog";
 import InternshipCreateJournalEntryCommentDialog from "./InternshipCreateJournalEntryCommentDialog";
+import CustomConfirmDialog from "../_General/CustomConfirmDialog";
+import InternshipUpdateJournalEntryDialog from "./InternshipUpdateJournalEntryDialog";
 
 export default {
     name: "TheInternshipStudentJournalEntries",
     components: {
+        InternshipUpdateJournalEntryDialog,
+        CustomConfirmDialog,
         InternshipCreateJournalEntryCommentDialog,
         TheInternshipPdfGenerateDialog,
         CustomCardTitle,
@@ -108,6 +136,7 @@ export default {
         ...mapGetters({
             internship: 'internship/internship',
             dialogs: 'helpers/dialogs',
+            dialogArgs: 'helpers/dialogsArgs',
             studentJournalEntries: 'student/studentJournalEntries',
             loadingStudentJournalEntries: 'student/loadingStudentJournalEntries',
         }),
@@ -119,11 +148,63 @@ export default {
 
     methods: {
         ...mapActions({
+            setSnackbar: 'snackbar/setSnackbar',
             toggleDialog: 'helpers/toggleDialog',
             downloadInternshipJournal: 'internship/downloadInternshipJournal',
             fetchStudentJournalEntries: 'student/fetchStudentJournalEntries',
             fetchInternshipStudent: 'internship/fetchInternshipStudent',
+            deleteStudentJournalEntry: 'journal/deleteStudentJournalEntry',
+            updateStudentJournalEntry: 'journal/updateStudentJournalEntry',
+            deleteStudentJournalEntryComment: 'journal/deleteStudentJournalEntryComment',
+            setDialogArgs: 'helpers/setDialogArgs',
         }),
+
+        deleteJournalEntryComment() {
+            this.deleteStudentJournalEntryComment({
+                internshipId: this.$route.params.internshipId,
+                studentIndex: this.$route.params.studentIndex,
+                studentJournalEntryId: this.dialogArgs['DIALOG_FIELD_CONFIRM_DELETE_JOURNAL_ENTRIES_COMMENT'].studentJournalEntryId,
+                commentId: this.dialogArgs['DIALOG_FIELD_CONFIRM_DELETE_JOURNAL_ENTRIES_COMMENT'].commentId
+            }).then((response) => {
+                if (response.data) {
+                    this.setSnackbar({message: 'Komentarz został usunięty!', color: 'success'});
+                    this.fetchStudentJournalEntries({
+                        internshipId: this.$route.params.internshipId,
+                        studentIndex: this.$route.params.studentIndex
+                    });
+                } else {
+                    this.setSnackbar({message: 'Nie udało się usunąć komentarza!', color: 'error'});
+                }
+            }).catch((e) => {
+                this.setSnackbar({message: 'Nie udało się usunąć komentarza!', color: 'error'});
+            }).finally(() => {
+                this.toggleDialog({key: 'DIALOG_FIELD_CONFIRM_DELETE_JOURNAL_ENTRIES_COMMENT', val: false});
+                this.setDialogArgs({key: 'DIALOG_FIELD_CONFIRM_DELETE_JOURNAL_ENTRIES_COMMENT', val: null});
+            });
+        },
+
+        deleteJournalEntry() {
+            this.deleteStudentJournalEntry({
+                internshipId: this.$route.params.internshipId,
+                studentIndex: this.$route.params.studentIndex,
+                studentJournalEntryId: this.dialogArgs['DIALOG_FIELD_CONFIRM_DELETE_JOURNAL_ENTRY'],
+            }).then((response) => {
+                if (response.data) {
+                    this.setSnackbar({message: 'Wpis został usunięty!', color: 'success'});
+                    this.fetchStudentJournalEntries({
+                        internshipId: this.$route.params.internshipId,
+                        studentIndex: this.$route.params.studentIndex
+                    });
+                } else {
+                    this.setSnackbar({message: 'Nie udało się usunąć wpisu!', color: 'error'});
+                }
+            }).catch((e) => {
+                this.setSnackbar({message: 'Nie udało się usunąć wpisu!', color: 'error'});
+            }).finally(() => {
+                this.toggleDialog({key: 'DIALOG_FIELD_CONFIRM_DELETE_JOURNAL_ENTRY', val: false});
+                this.setDialogArgs({key: 'DIALOG_FIELD_CONFIRM_DELETE_JOURNAL_ENTRY', val: null});
+            });
+        }
     },
 
     created() {

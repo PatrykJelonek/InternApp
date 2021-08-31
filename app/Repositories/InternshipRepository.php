@@ -93,12 +93,9 @@ class InternshipRepository implements InternshipRepositoryInterface
 
     public function getInternshipStudentByIndex(int $internshipId, string $studentIndex)
     {
-        return InternshipStudent::with(['student.user'])->whereHas(
-            'internship',
-            function (Builder $query) use ($internshipId) {
-                $query->where(['id' => $internshipId]);
-            }
-        )->whereHas(
+        return InternshipStudent::with(['student.user'])
+            ->where(['internship_id' => $internshipId])
+            ->whereHas(
             'student',
             function (Builder $query) use ($studentIndex) {
                 $query->where(['student_index' => $studentIndex]);
