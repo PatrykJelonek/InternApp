@@ -16,10 +16,15 @@
                             </template>
                         </custom-card-title>
                         <div class="pa-5">
-                            <pre class="text-body-2 text-pre-line ml-0">
-                        {{ content }}
-                    </pre>
+                            <pre class="text-body-2 text-pre-line ml-0">{{ content }}</pre>
                         </div>
+                        <custom-card-footer>
+                            <template v-slot:left>
+                                <v-chip small outlined :color="accepted ? 'primary' : ''" pill>
+                                    {{ accepted ? 'Potwierdzony' : 'Niepotwierdzony' }}
+                                </v-chip>
+                            </template>
+                        </custom-card-footer>
                     </custom-card>
                 </v-col>
 <!--                <v-col cols="12" class="mb-2 mt-5">-->
@@ -73,11 +78,12 @@ import {mapActions, mapGetters} from "vuex";
 import PageLoader from "../_General/PageLoader";
 import CustomCard from "../_General/CustomCard";
 import CustomCardTitle from "../_General/CustomCardTitle";
+import CustomCardFooter from "../_General/CustomCardFooter";
 
 export default {
     name: "InternshipStudentJournalEntry",
-    components: {CustomCardTitle, CustomCard, PageLoader},
-    props: ['content', 'status', 'internshipStartDate', 'journalEntryDate', 'id'],
+    components: {CustomCardFooter, CustomCardTitle, CustomCard, PageLoader},
+    props: ['content', 'status', 'internshipStartDate', 'journalEntryDate', 'id', 'accepted'],
 
     data() {
         return {

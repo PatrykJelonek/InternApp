@@ -1,7 +1,7 @@
 <template>
     <v-card
         elevation="0"
-        color="component-background"
+        :color="background ? background : 'component-background'"
         :class="compact ? '' : 'fill-height'"
         :loading="loading"
         :ripple="ripple"
@@ -16,7 +16,7 @@
 <script>
 export default {
     name: "CustomCard",
-    props: ['compact','loading','ripple'],
+    props: ['compact', 'loading', 'ripple', 'background'],
 
     data() {
         return {
