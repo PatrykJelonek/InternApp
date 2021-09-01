@@ -149,17 +149,22 @@ export default {
             createStudentJournalEntry: 'student/createStudentJournalEntry',
             setSnackbar: 'snackbar/setSnackbar',
             addStudentJournalEntry: 'student/addStudentJournalEntry',
-            createTask: 'internship/createTask'
+            createTask: 'internship/createTask',
+            fetchStudentTasks: 'student/fetchStudentTasks',
         }),
 
         async submit() {
             await this.createTask({
-                'internshipId': this.$route.params.internshipId,
-                'studentIndex': this.$route.params.studentIndex,
-                'task': this.task
+                internshipId: this.$route.params.internshipId,
+                studentIndex: this.$route.params.studentIndex,
+                task: this.task
             }).then((task) => {
                 this.dialog = false;
                 this.clearTask();
+                this.fetchStudentTasks({
+                    internshipId: this.$route.params.internshipId,
+                    studentIndex: this.$route.params.studentIndex,
+                })
                 this.setSnackbar({message: 'Zadanie zostało dodane!', color: 'success'});
             }).catch((e) => {
                 this.dialog = false;

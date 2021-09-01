@@ -100,5 +100,9 @@ export default {
                 content: content
             });
         },
+
+        acceptStudentJournalEntry({commit}, {internshipId, studentIndex, studentJournalEntryId}) {
+            return axios.put(`/api/internships/${internshipId}/students/${studentIndex}/journal-entries/${studentJournalEntryId}/accept`);
+        }
     },
 }

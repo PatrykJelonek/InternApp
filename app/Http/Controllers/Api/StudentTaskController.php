@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StudentTaskGetStudentTasksRequest;
 use App\Http\Resources\Collections\TaskCollection;
 use App\Repositories\StudentRepository;
 use Illuminate\Http\Request;
@@ -17,6 +18,7 @@ class StudentTaskController extends Controller
 
     /**
      * StudentTaskController constructor.
+     *
      * @param StudentRepository $studentRepository
      */
     public function __construct(StudentRepository $studentRepository)
@@ -27,16 +29,18 @@ class StudentTaskController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @param $internshipId
-     * @param $studentIndex
+     * @param StudentTaskGetStudentTasksRequest $request
+     * @param                                   $internshipId
+     * @param                                   $studentIndex
+     *
      * @return \Illuminate\Http\Response
      */
-    public function index($internshipId, $studentIndex)
+    public function getStudentTasks(StudentTaskGetStudentTasksRequest $request, $internshipId, $studentIndex): Response
     {
         $tasks = $this->studentRepository->getStudentTasks($studentIndex);
 
-        if(!empty($tasks)) {
-            return response(new TaskCollection($tasks), Response::HTTP_OK);
+        if (!empty($tasks)) {
+            return response($tasks, Response::HTTP_OK);
         }
 
         return response(null, Response::HTTP_NO_CONTENT);
@@ -55,7 +59,8 @@ class StudentTaskController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -66,7 +71,8 @@ class StudentTaskController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -77,7 +83,8 @@ class StudentTaskController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -88,8 +95,9 @@ class StudentTaskController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param \Illuminate\Http\Request $request
+     * @param int                      $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -100,7 +108,8 @@ class StudentTaskController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)

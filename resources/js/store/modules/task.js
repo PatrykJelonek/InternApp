@@ -43,6 +43,14 @@ export default {
             } catch (e) {
                 commit('SET_TASKS', []);
             }
-        }
+        },
+
+        deleteStudentTask({commit}, {internshipId, studentIndex, taskId}) {
+            return axios.delete(`/api/internships/${internshipId}/students/${studentIndex}/tasks/${taskId}`);
+        },
+
+        acceptStudentTask({commit}, {internshipId, studentIndex, taskId}) {
+            return axios.put(`/api/internships/${internshipId}/students/${studentIndex}/tasks/${taskId}/accept`);
+        },
     },
 }

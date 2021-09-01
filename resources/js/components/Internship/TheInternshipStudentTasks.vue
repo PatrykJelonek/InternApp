@@ -1,5 +1,14 @@
 <template>
     <custom-card :loading="loadingStudentTasks">
+        <custom-confirm-dialog
+            title="Usuń zadanie"
+            :dialog-state="dialogs['DIALOG_FIELD_CONFIRM_DELETE_JOURNAL_TASK']"
+            :toggle-function="toggleDialog"
+            :confirm-function="deleteJournalTask"
+            dialog-key="DIALOG_FIELD_CONFIRM_DELETE_JOURNAL_TASK"
+        >
+            Czy na pewno chcesz usunąć to zadanie?
+        </custom-confirm-dialog>
         <custom-card-title>
             <template v-slot:default>Zadania</template>
             <template v-slot:subheader>Lista zadań przypisanych do wybranego studenta.</template>
@@ -20,15 +29,19 @@
         <v-expand-transition v-if="this.$route.params.studentIndex && !loadingStudentTasks && studentTasks.length > 0">
             <v-row v-show="show">
                 <v-col cols="12">
-                    <v-list nav color="card-background">
+                    <v-expansion-panels flat class="component-background" accordion>
                         <internship-student-task
                             v-for="task in displayedTasks"
                             :key="task.id"
                             :name="task.name"
                             :description="task.description"
-                            :done="task.done"
+                            :done="task.pivot.done_at"
+                            :user-id="task.user_id"
+                            :id="task.id"
+                            :internship-id="$route.params.internshipId"
+                            :student-index="$route.params.studentIndex"
                         ></internship-student-task>
-                    </v-list>
+                    </v-expansion-panels>
                 </v-col>
                 <v-col cols="12" v-if="studentTasks.length > perPage">
                     <v-pagination
@@ -58,10 +71,18 @@ import InternshipStudentTask from "./InternshipStudentTask";
 import TheInternshipCreateStudentTaskDialog from "./TheInternshipCreateStudentTaskDialog";
 import CustomCard from "../_General/CustomCard";
 import CustomCardTitle from "../_General/CustomCardTitle";
+import CustomConfirmDialog from "../_General/CustomConfirmDialog";
 
 export default {
     name: "TheInternshipStudentTasks",
-    components: {CustomCardTitle, CustomCard, TheInternshipCreateStudentTaskDialog, InternshipStudentTask},
+    components: {
+        CustomConfirmDialog,
+        CustomCardTitle,
+        CustomCard,
+        TheInternshipCreateStudentTaskDialog,
+        InternshipStudentTask
+    },
+
     data() {
         return {
             show: true,
@@ -73,6 +94,8 @@ export default {
 
     computed: {
         ...mapGetters({
+            dialogs: 'helpers/dialogs',
+            dialogsArgs: 'helpers/dialogsArgs',
             internship: 'internship/internship',
             studentTasks: 'student/studentTasks',
             loadingStudentTasks: 'student/loadingStudentTasks',
@@ -85,8 +108,31 @@ export default {
 
     methods: {
         ...mapActions({
-            fetchStudentTasks: 'student/fetchStudentTasks'
+            fetchStudentTasks: 'student/fetchStudentTasks',
+            toggleDialog: 'helpers/toggleDialog',
+            setDialogArgs: 'helpers/setDialogArgs',
+            deleteStudentTask: 'task/deleteStudentTask',
+            setSnackbar: 'snackbar/setSnackbar',
         }),
+
+        deleteJournalTask() {
+            this.deleteStudentTask({
+                internshipId: this.$route.params.internshipId,
+                studentIndex: this.$route.params.studentIndex,
+                taskId: this.dialogsArgs.DIALOG_FIELD_CONFIRM_DELETE_JOURNAL_TASK,
+            }).then(() => {
+                this.setSnackbar({message: 'Zadanie zostało usunięte!', color: 'success'});
+                this.fetchStudentTasks({
+                    internshipId: this.$route.params.internshipId,
+                    studentIndex: this.$route.params.studentIndex
+                });
+            }).catch((e) => {
+                this.setSnackbar({message: 'Nie udało się usunąć zadania!', color: 'error'});
+            }).finally(() => {
+                this.setDialogArgs({key: 'DIALOG_FIELD_CONFIRM_DELETE_JOURNAL_TASK', val: null});
+                this.toggleDialog({key: 'DIALOG_FIELD_CONFIRM_DELETE_JOURNAL_TASK', val: false});
+            })
+        }
     },
 
     created() {

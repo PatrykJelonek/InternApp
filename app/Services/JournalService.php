@@ -13,6 +13,8 @@ use App\Models\JournalEntry;
 use App\Models\StudentJournalEntry;
 use App\Models\Task;
 use App\Repositories\JournalRepository;
+use App\Repositories\TaskRepository;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -24,11 +26,18 @@ class JournalService
     private $journalRepository;
 
     /**
-     * @param JournalRepository $journalRepository
+     * @var TaskRepository
      */
-    public function __construct(JournalRepository $journalRepository)
+    private $taskRepository;
+
+    /**
+     * @param JournalRepository $journalRepository
+     * @param TaskRepository    $taskRepository
+     */
+    public function __construct(JournalRepository $journalRepository, TaskRepository $taskRepository)
     {
         $this->journalRepository = $journalRepository;
+        $this->taskRepository = $taskRepository;
     }
 
     /**
@@ -65,12 +74,22 @@ class JournalService
     public function deleteStudentJournalEntry(int $studentJournalEntryId): bool
     {
         $studentJournalEntry = $this->journalRepository->getStudentJournalEntryById($studentJournalEntryId);
+        $isDeleted = false;
 
         if (!is_null($studentJournalEntry)) {
+            $numberOfJournalEntryStudents = count($studentJournalEntry->journalEntry->students);
+            $journalEntry = $studentJournalEntry->journalEntry;
+
             $studentJournalEntry->comments()->detach();
+            $isDeleted = $studentJournalEntry->delete();
+
+            if ($isDeleted && $numberOfJournalEntryStudents < 2)
+            {
+                $isDeleted = $journalEntry->delete();
+            }
         }
 
-        return $studentJournalEntry->delete() ?? false;
+        return $isDeleted;
     }
 
     /**
@@ -84,7 +103,7 @@ class JournalService
         int $studentJournalEntryId,
         string $content,
         ?string $date = null
-    ) : ?JournalEntry {
+    ): ?JournalEntry {
         $studentJournalEntry = $this->journalRepository->getStudentJournalEntryById($studentJournalEntryId);
         $journalEntry = $studentJournalEntry->journalEntry;
 
@@ -94,6 +113,21 @@ class JournalService
 
             if ($journalEntry->update()) {
                 return $journalEntry;
+            }
+        }
+
+        return null;
+    }
+
+    public function acceptStudentJournalEntry(int $studentJournalEntryId)
+    {
+        $studentJournalEntry = $this->journalRepository->getStudentJournalEntryById($studentJournalEntryId);
+
+        if (!is_null($studentJournalEntry)) {
+            $studentJournalEntry->accepted = true;
+
+            if ($studentJournalEntry->update()) {
+                return $studentJournalEntry;
             }
         }
 
@@ -121,11 +155,50 @@ class JournalService
         $task->description = $description;
         $task->internship_id = $internshipId;
         $task->user_id = $userId ?? Auth::id();
-        $task->done_at = $done_at;
+        $task->done_at = !empty($done_at) ? $done_at : null;
         $task->freshTimestamp();
 
         if ($task->save()) {
             return $task;
+        }
+
+        return null;
+    }
+
+    public function deleteStudentTask(int $taskId, int $studentId): bool
+    {
+        $studentTask = $this->taskRepository->getStudentTask($taskId, $studentId);
+        $taskDeleted = false;
+
+        DB::beginTransaction();
+        if (!is_null($studentTask)) {
+            $task = $studentTask->task;
+            $taskDeleted = $studentTask->delete();
+
+            if (count($task->students) < 2) {
+                $taskDeleted = $task->delete();
+            }
+        }
+
+        if ($taskDeleted) {
+            DB::commit();
+        } else {
+            DB::rollBack();
+        }
+
+        return $taskDeleted;
+    }
+
+    public function acceptStudentTask(int $taskId, int $studentId)
+    {
+        $studentTask = $this->taskRepository->getStudentTask($taskId, $studentId);
+
+        if (!is_null($studentTask)) {
+            $studentTask->done_at = Carbon::today();
+
+            if ($studentTask->update()) {
+                return $studentTask;
+            }
         }
 
         return null;

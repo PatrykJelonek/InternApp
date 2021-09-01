@@ -34,6 +34,6 @@ class Task extends Model
      */
     public function students(): BelongsToMany
     {
-        return $this->belongsToMany(Student::class, 'students_tasks', 'taks_id', 'student_id');
+        return $this->belongsToMany(Student::class, 'students_tasks', 'task_id', 'student_id');
     }
 }

@@ -25,6 +25,7 @@ export default {
             DIALOG_FIELD_CONFIRM_DELETE_JOURNAL_ENTRY: false,
             DIALOG_FIELD_CONFIRM_UPDATE_JOURNAL_ENTRIES: false,
             DIALOG_FIELD_CONFIRM_DELETE_JOURNAL_ENTRIES_COMMENT: false,
+            DIALOG_FIELD_CONFIRM_DELETE_JOURNAL_TASK: false,
         },
         dialogsArgs: {
             DIALOG_FIELD_ACTIVATE_AGREEMENT: null,
@@ -46,6 +47,7 @@ export default {
             DIALOG_FIELD_CONFIRM_DELETE_JOURNAL_ENTRY: null,
             DIALOG_FIELD_CONFIRM_UPDATE_JOURNAL_ENTRIES: null,
             DIALOG_FIELD_CONFIRM_DELETE_JOURNAL_ENTRIES_COMMENT: null,
+            DIALOG_FIELD_CONFIRM_DELETE_JOURNAL_TASK: null,
         },
         createInternshipDialog: false,
         createOfferDialog: false,

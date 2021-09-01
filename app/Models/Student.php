@@ -46,7 +46,7 @@ class Student extends Model
      */
     public function journalEntries(): BelongsToMany
     {
-        return $this->belongsToMany(JournalEntry::class, 'students_journal_entries', 'student_id', 'journal_entry_id')->withPivot(['id']);
+        return $this->belongsToMany(JournalEntry::class, 'students_journal_entries', 'student_id', 'journal_entry_id')->withPivot(['id','accepted']);
     }
 
     /**
@@ -54,6 +54,6 @@ class Student extends Model
      */
     public function tasks(): BelongsToMany
     {
-        return $this->belongsToMany(Task::class, 'students_tasks', 'student_id', 'task_id');
+        return $this->belongsToMany(Task::class, 'students_tasks', 'student_id', 'task_id')->withPivot(['done_at']);
     }
 }

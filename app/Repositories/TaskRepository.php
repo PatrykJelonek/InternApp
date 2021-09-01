@@ -21,7 +21,7 @@ class TaskRepository implements TasksRepositoryInterface
         return Task::all();
     }
 
-    public function one(int $id)
+    public function getTaskById(int $id)
     {
         return Task::find($id);
     }
@@ -96,5 +96,10 @@ class TaskRepository implements TasksRepositoryInterface
         }
 
         return null;
+    }
+
+    public function getStudentTask(int $taskId, int $studentId)
+    {
+        return StudentTask::with(['task.students'])->where(['task_id' => $taskId, 'student_id' => $studentId])->first();
     }
 }

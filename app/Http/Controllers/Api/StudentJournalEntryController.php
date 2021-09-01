@@ -3,6 +3,9 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StudentJournalEntryAcceptStudentJournalEntryRequest;
+use App\Http\Requests\StudentJournalEntryAcceptStudentTaskRequest;
+use App\Http\Requests\StudentJournalEntryCreateStudentTaskRequest;
 use App\Http\Requests\StudentJournalEntryDeleteStudentJournalEntryCommentRequest;
 use App\Http\Requests\StudentJournalEntryCreateJournalEntryCommentRequest;
 use App\Http\Requests\StudentJournalEntryCreateJournalEntryRequest;
@@ -28,6 +31,11 @@ class StudentJournalEntryController extends Controller
 
     protected const REQUEST_FIELD_JOURNAL_ENTRY_COMMENT_CONTENT = 'content';
     protected const REQUEST_FIELD_JOURNAL_ENTRY_COMMENT_STUDENT_IDS = 'students_ids';
+
+    protected const REQUEST_FIELD_TASK_NAME = 'name';
+    protected const REQUEST_FIELD_TASK_DESCRIPTION = 'description';
+    protected const REQUEST_FIELD_TASK_DONE = 'done';
+    protected const REQUEST_FIELD_TASK_STUDENT_IDS = 'students_ids';
 
     /**
      * @var StudentRepository
@@ -121,7 +129,10 @@ class StudentJournalEntryController extends Controller
                     ]);
                 }
             } else {
-                $internshipStudent = $this->internshipRepository->getInternshipStudentByIndex($internshipId, $studentIndex);
+                $internshipStudent = $this->internshipRepository->getInternshipStudentByIndex(
+                    $internshipId,
+                    $studentIndex
+                );
                 $studentId = $internshipStudent->student->id ?? null;
 
                 if (empty($studentId)) {
@@ -139,6 +150,101 @@ class StudentJournalEntryController extends Controller
         }
 
         DB::rollBack();
+        return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+
+    public function acceptStudentJournalEntry(
+        StudentJournalEntryAcceptStudentJournalEntryRequest $request,
+        int $internshipId,
+        string $studentIndex,
+        int $studentJournalEntryId
+    ) {
+        $acceptedJournalEntry = $this->journalService->acceptStudentJournalEntry($studentJournalEntryId);
+
+        if (!is_null($acceptedJournalEntry)) {
+            return response($acceptedJournalEntry, Response::HTTP_OK);
+        }
+
+        return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+
+    public function createStudentTask(
+        StudentJournalEntryCreateStudentTaskRequest $request,
+        int $internshipId,
+        string $studentIndex
+    ) {
+        DB::beginTransaction();
+        $task = $this->journalService->createTask(
+            $request->input(self::REQUEST_FIELD_TASK_NAME),
+            $request->input(self::REQUEST_FIELD_TASK_DESCRIPTION),
+            $internshipId,
+            $request->input(self::REQUEST_FIELD_TASK_DONE) ?? false,
+            Auth::id()
+        );
+
+
+        if (!is_null($task)) {
+            if (!empty($request->input(self::REQUEST_FIELD_TASK_STUDENT_IDS))) {
+                $task->students()->attach($request->input(self::REQUEST_FIELD_TASK_STUDENT_IDS), [
+                    'done_at' => $task->done_at ?? null,
+                ]);
+            } else {
+                $internshipStudent = $this->internshipRepository
+                    ->getInternshipStudentByIndex($internshipId, $studentIndex);
+
+                if (!is_null($internshipStudent)) {
+                    $task->students()->attach($internshipStudent->student->id, [
+                        'done_at' => $task->done_at ?? null,
+                    ]);
+                }
+            }
+
+            DB::commit();
+            return response($task, Response::HTTP_CREATED);
+        }
+
+        DB::rollBack();
+        return response(null, Response::HTTP_BAD_REQUEST);
+    }
+
+    public function deleteStudentTask(
+        StudentJournalEntryAcceptStudentTaskRequest $request,
+        int $internshipId,
+        string $studentIndex,
+        int $taksId
+    ) {
+        $internshipStudent = $this->internshipRepository->getInternshipStudentByIndex($internshipId, $studentIndex);
+
+        DB::beginTransaction();
+        if (!is_null($internshipStudent)) {
+            $isDeletedStudentTask = $this->journalService->deleteStudentTask($taksId, $internshipStudent->student->id);
+
+            if ($isDeletedStudentTask) {
+                DB::commit();
+                return response(null, Response::HTTP_OK);
+            }
+        }
+
+        DB::rollBack();
+        return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+
+    public function acceptStudentTask(
+        StudentJournalEntryAcceptStudentTaskRequest $request,
+        int $internshipId,
+        string $studentIndex,
+        int $taksId
+    ) {
+        $internshipStudent = $this->internshipRepository->getInternshipStudentByIndex($internshipId, $studentIndex);
+
+        if (!is_null($internshipStudent)) {
+            $acceptedTask = $this->journalService->acceptStudentTask($taksId, $internshipStudent->student->id);
+
+            if (!is_null($acceptedTask)) {
+                return response($acceptedTask, Response::HTTP_OK);
+            }
+        }
+
         return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 

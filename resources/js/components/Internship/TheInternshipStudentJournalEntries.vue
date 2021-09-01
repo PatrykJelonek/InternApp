@@ -69,11 +69,13 @@
                             v-for="studentJournalEntry in displayedJournalEntries"
                             :key="studentJournalEntry.id"
                             :content="studentJournalEntry.content"
-                            :status="studentJournalEntry.accepted"
+                            :accepted="studentJournalEntry.pivot.accepted"
                             :internship-start-date="internshipStartDate"
                             :journal-entry-date="studentJournalEntry.date"
                             :id="studentJournalEntry.pivot.id"
                             :user-id="studentJournalEntry.user_id"
+                            :internship-id="$route.params.internshipId"
+                            :student-index="$route.params.studentIndex"
                         ></internship-student-journal-entry>
                     </v-expansion-panels>
                 </v-col>
@@ -204,7 +206,11 @@ export default {
                 this.toggleDialog({key: 'DIALOG_FIELD_CONFIRM_DELETE_JOURNAL_ENTRY', val: false});
                 this.setDialogArgs({key: 'DIALOG_FIELD_CONFIRM_DELETE_JOURNAL_ENTRY', val: null});
             });
-        }
+        },
+
+        deleteJournalTask() {
+
+        },
     },
 
     created() {

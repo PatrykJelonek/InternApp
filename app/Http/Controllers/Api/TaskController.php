@@ -98,7 +98,7 @@ class TaskController extends Controller
      */
     public function show($taskId)
     {
-        $task = $this->taskRepository->one($taskId);
+        $task = $this->taskRepository->getTaskById($taskId);
 
         if (!$this->taskService->isAuthor($task, Auth::user())) {
             abort(403);

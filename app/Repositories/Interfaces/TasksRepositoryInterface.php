@@ -17,4 +17,6 @@ interface TasksRepositoryInterface extends DefaultRepositoryInterface
     public function create(array $data, int $internshipId, ?int $studentId = null);
 
     public function linkTaskWithStudent(int $taskId, int $studentId, bool $done): ?StudentTask;
+
+    public function getStudentTask(int $taskId, int $studentId);
 }

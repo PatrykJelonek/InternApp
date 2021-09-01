@@ -1,18 +1,27 @@
 <template>
     <v-expansion-panel @change="downloadComments">
         <v-expansion-panel-header color="component-background" class="text-subtitle-1">
-            Dzień {{ getInternshipDay(internshipStartDate, journalEntryDate) }}
+            <v-row no-gutters>
+                <v-col cols="12">
+                    Dzień {{ getInternshipDay(internshipStartDate, journalEntryDate) }}
+
+                </v-col>
+                <v-col cols="12">
+                    <span class="text--disabled text-body-2">{{ content.substr(0, 80) }}...</span>
+                </v-col>
+            </v-row>
         </v-expansion-panel-header>
         <v-expansion-panel-content
             :color="$vuetify.theme.dark ? 'component-background lighten-1' : 'component-background darken-1'"
-            class="px-2">
+            class="px-2"
+        >
             <v-row no-gutters class="pa-1 py-5">
                 <v-col cols="12" class="mb-3">
                     <custom-card>
                         <custom-card-title>
                             <template v-slot:default>Treść wpisu</template>
                             <template v-slot:actions>
-                                <v-btn-toggle dense color="transparent">
+                                <v-btn-toggle dense background-color="transparent" borderless>
                                     <v-btn
                                         color="secondary"
                                         small
@@ -24,7 +33,6 @@
                                     </v-btn>
                                     <v-btn color="secondary" small outlined @click="deleteJournalEntry">Usuń</v-btn>
                                 </v-btn-toggle>
-
                             </template>
                         </custom-card-title>
                         <div class="pa-5">
@@ -33,8 +41,21 @@
                         <custom-card-footer>
                             <template v-slot:left>
                                 <v-chip small outlined :color="accepted ? 'primary' : ''" pill>
-                                    {{ accepted ? 'Potwierdzony' : 'Niepotwierdzony' }}
+                                    {{ accepted ? 'Wpis potwierdzony' : 'Wpis niepotwierdzony' }}
                                 </v-chip>
+                            </template>
+                            <template v-slot:right>
+                                <v-btn-toggle borderless background-color="transparent">
+                                    <v-btn
+                                        color="secondary"
+                                        small
+                                        outlined
+                                        @click="acceptJournalEntry"
+                                        v-if="!accepted && userId === user.id"
+                                    >
+                                        Akceptuj wpis
+                                    </v-btn>
+                                </v-btn-toggle>
                             </template>
                         </custom-card-footer>
                     </custom-card>
@@ -53,6 +74,7 @@
                                 <template v-if="!journalEntryCommentsLoading && comments.length > 0">
                                     <v-list-item
                                         v-for="(comment, index) in comments"
+                                        :key="index"
                                         class="rounded"
                                         :class="$vuetify.theme.dark ? 'component-background lighten-'+index%2 : 'component-background darken-'+index%2"
                                     >
@@ -110,7 +132,7 @@ import CustomCardFooter from "../_General/CustomCardFooter";
 export default {
     name: "InternshipStudentJournalEntry",
     components: {CustomCardFooter, CustomCardTitle, CustomCard, PageLoader},
-    props: ['content', 'status', 'internshipStartDate', 'journalEntryDate', 'id', 'accepted', 'userId'],
+    props: ['content', 'status', 'internshipStartDate', 'journalEntryDate', 'id', 'accepted', 'userId', 'internshipId', 'studentIndex'],
 
     data() {
         return {
@@ -137,6 +159,7 @@ export default {
             deleteStudentJournalEntry: 'journal/deleteStudentJournalEntry',
             updateStudentJournalEntry: 'journal/updateStudentJournalEntry',
             deleteStudentJournalEntryComment: 'journal/deleteStudentJournalEntryComment',
+            acceptStudentJournalEntry: 'journal/acceptStudentJournalEntry',
         }),
 
         getInternshipDay: (internshipStartDate, journalEntryDate) => {
@@ -144,6 +167,7 @@ export default {
         },
 
         downloadComments() {
+            this.comments = [];
             this.fetchJournalEntryComments({
                     internshipId: this.$route.params.internshipId,
                     studentIndex: this.$route.params.studentIndex,
@@ -182,6 +206,19 @@ export default {
         openCreateCommentDialog() {
             this.toggleDialog({key: 'DIALOG_FIELD_CREATE_JOURNAL_ENTRY_COMMENT', val: true});
             this.setDialogArgs({key: 'DIALOG_FIELD_CREATE_JOURNAL_ENTRY_COMMENT', val: this.id});
+        },
+
+        acceptJournalEntry() {
+            this.acceptStudentJournalEntry({
+                internshipId: this.internshipId,
+                studentIndex: this.studentIndex,
+                studentJournalEntryId: this.id
+            }).then(() => {
+                this.setSnackbar({message: 'Wpis został zaakceptowany!', color: 'success'})
+                this.accepted = true;
+            }).catch((e) => {
+                this.setSnackbar({message: 'Nie udało się zaakceptować wpisu!', color: 'error'})
+            });
         }
     }
 }

@@ -17,7 +17,7 @@ class JournalRepository implements JournalRepositoryInterface
 
     public function getStudentJournalEntryById(int $studentJournalEntryId)
     {
-        $studentJournalEntry = StudentJournalEntry::find($studentJournalEntryId);
+        $studentJournalEntry = StudentJournalEntry::with(['journalEntry.students'])->find($studentJournalEntryId);
 
         if (!empty($studentJournalEntry)) {
             return $studentJournalEntry;
