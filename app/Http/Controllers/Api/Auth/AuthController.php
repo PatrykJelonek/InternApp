@@ -39,7 +39,7 @@ class AuthController extends Controller
             return response('Użytkownik nie został uwierzytelniony!', Response::HTTP_UNAUTHORIZED);
         }
 
-        $userInformation = User::with(['roles', 'permissions','universities','companies'])
+        $userInformation = User::with(['roles', 'permissions','universities','companies','student'])
             ->where('email', $request->input(self::REQUEST_FIELD_EMAIL))
             ->first();
 
@@ -52,7 +52,7 @@ class AuthController extends Controller
 
     public function me()
     {
-        $user = User::with(['roles', 'permissions', 'universities','companies'])->find(auth()->id());
+        $user = User::with(['roles', 'permissions', 'universities','companies', 'student'])->find(auth()->id());
         return response([
             'status' => 'success',
             'data' => $user,

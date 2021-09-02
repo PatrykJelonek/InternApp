@@ -12,7 +12,7 @@ class JournalEntry extends Model
 {
     protected $table = "journal_entries";
 
-    protected $appends = ['formatted_update_at'];
+    protected $appends = ['formatted_updated_at', 'formatted_created_at'];
 
     public function internship(): BelongsTo
     {
@@ -29,7 +29,12 @@ class JournalEntry extends Model
         return $this->belongsToMany(Student::class, 'students_journal_entries', 'journal_entry_id', 'student_id');
     }
 
-    public function getFormattedUpdateAtAttribute(): string
+    public function getFormattedCreatedAtAttribute(): string
+    {
+        return Carbon::parse($this->updated_at)->format('d.m.Y');
+    }
+
+    public function getFormattedUpdatedAtAttribute(): string
     {
         return Carbon::parse($this->updated_at)->format('d.m.Y');
     }

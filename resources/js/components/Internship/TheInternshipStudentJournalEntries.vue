@@ -38,7 +38,7 @@
 
         <custom-card-title>
             <template v-slot:default>Wpisy</template>
-            <template v-slot:subheader>Lista wpisów wybranego studenta.</template>
+            <template v-slot:subheader>Lista wpisów studenta.</template>
             <template v-slot:actions>
                 <v-btn
                     color="transparent"
@@ -64,7 +64,7 @@
             v-if="this.$route.params.studentIndex && !loadingStudentJournalEntries && studentJournalEntries.length > 0">
             <v-row v-show="show" no-gutters>
                 <v-col cols="12">
-                    <v-expansion-panels flat class="component-background" accordion>
+                    <v-expansion-panels flat class="component-background py-2" accordion>
                         <internship-student-journal-entry
                             v-for="studentJournalEntry in displayedJournalEntries"
                             :key="studentJournalEntry.id"
@@ -79,7 +79,7 @@
                         ></internship-student-journal-entry>
                     </v-expansion-panels>
                 </v-col>
-                <v-col cols="12">
+                <v-col cols="12" v-if="studentJournalEntries.length > perPage">
                     <v-pagination
                         light
                         v-model="page"

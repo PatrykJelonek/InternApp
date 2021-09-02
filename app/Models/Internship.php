@@ -9,6 +9,7 @@ use App\Models\Agreement;
 use App\Models\InternshipStatus;
 use App\Models\JournalEntry;
 use App\Models\Task;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -27,12 +28,10 @@ class Internship extends Model
         return $this->hasOne(Offer::class, 'id', 'offer_id');
     }
 
-    /**
-     * @return HasOne
-     */
-    public function agreement(): HasOne
+
+    public function agreement(): BelongsTo
     {
-        return $this->hasOne(Agreement::class, 'id', 'agreement_id');
+        return $this->belongsTo(Agreement::class, 'agreement_id', 'id');
     }
 
     /**

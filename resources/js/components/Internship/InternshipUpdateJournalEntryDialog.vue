@@ -2,8 +2,8 @@
     <v-dialog max-width="600" v-model="model">
         <custom-card>
             <custom-card-title>
-                <template v-slot:default>Nowy komentarz</template>
-                <template v-slot:subheader>Formularz dodawania komentarza do wpisu w dzienniku.</template>
+                <template v-slot:default>Edytuj wpis</template>
+                <template v-slot:subheader>Formularz edycji wpisu w dzienniku.</template>
                 <template v-slot:actions>
                     <v-btn icon @click="toggleDialog({key: 'DIALOG_FIELD_CONFIRM_UPDATE_JOURNAL_ENTRIES', val: false})">
                         <v-icon>mdi-close</v-icon>
@@ -67,6 +67,8 @@ export default {
             toggleDialog: 'helpers/toggleDialog',
             setDialogArgs: 'helpers/setDialogArgs',
             updateStudentJournalEntry: 'journal/updateStudentJournalEntry',
+            setSnackbar: 'snackbar/setSnackbar',
+            fetchStudentJournalEntries: 'student/fetchStudentJournalEntries'
         }),
 
         submit() {
@@ -78,9 +80,13 @@ export default {
                     content: this.content,
                 }
             ).then((response) => {
-
+                this.snackbar({message: 'Wpis został zmodyfikowany!', color: 'success'});
+                this.fetchStudentJournalEntries({
+                    internshipId: this.internshipId,
+                    studentIndex: this.studentIndex,
+                })
             }).catch((e) => {
-
+                this.snackbar({message: 'Nie udało się zmodyfikować wpisu!', color: 'error'});
             }).finally(() => {
                 this.toggleDialog({key: 'DIALOG_FIELD_CONFIRM_UPDATE_JOURNAL_ENTRIES', val: false});
                 this.setDialogArgs({key: 'DIALOG_FIELD_CONFIRM_UPDATE_JOURNAL_ENTRIES', val: false});

@@ -492,6 +492,19 @@ router.afterEach((to, from) => {
     if (to.name !== 'chat' && from.name !== 'chats') {
         store.commit('helpers/SET_BREADCRUMBS', []);
     }
+
+    if(to.name === 'internship') {
+        let user = store.getters["auth/user"];
+
+        if (user.student.student_index) {
+            router.push({
+                name: 'internship-student', params: {
+                    internshipId: to.params.internshipId,
+                    studentIndex: user.student.student_index,
+                }
+            });
+        }
+    }
 });
 
 router.beforeEach((to, from, next) => {

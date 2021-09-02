@@ -21,6 +21,7 @@ class UserRepository implements UserRepositoryInterface
     {
         $internships = [];
         $user = User::find($userId);
+        $with = ['agreement','agreement.company', 'agreement.university', 'offer', 'status'];
 
         if ($user->hasRole(
             [RoleConstants::ROLE_UNIVERSITY_SUPERVISOR, RoleConstants::ROLE_COMPANY_SUPERVISOR]
@@ -29,7 +30,9 @@ class UserRepository implements UserRepositoryInterface
                 function (Builder $query) use ($userId) {
                     $query->where('university_supervisor_id', $userId)->orWhere('company_supervisor_id', $userId);
                 }
-            )->with(['agreement.company', 'agreement.university', 'offer', 'status']);
+            )->with($with);
+
+            $model->whereHas('agreement');
 
             if (!empty($status[0])) {
                 $model->whereHas(
@@ -51,7 +54,7 @@ class UserRepository implements UserRepositoryInterface
                 function (Builder $query) use ($userId) {
                     $query->where(['user_id' => $userId]);
                 }
-            )->with(['agreement','agreement.company', 'agreement.university', 'offer', 'status']);
+            )->with($with);
 
             if (!empty($status[0])) {
                 $model->whereHas(
@@ -70,6 +73,8 @@ class UserRepository implements UserRepositoryInterface
 //        if (!Auth::user()->hasRole([RoleConstants::ROLE_UNIVERSITY_SUPERVISOR, RoleConstants::ROLE_COMPANY_SUPERVISOR, RoleConstants::ROLE_STUDENT])) {
 //            $internships = User::find($currentUserId)->universities()->agreements()->internships()->get();
 //        }
+
+        clock()->info('asd', $internships->toArray());
 
         return $internships;
     }

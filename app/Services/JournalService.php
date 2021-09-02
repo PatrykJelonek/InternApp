@@ -110,6 +110,7 @@ class JournalService
         if (!is_null($studentJournalEntry)) {
             $journalEntry->content = $content;
             $journalEntry->date = $date ?? $journalEntry->date;
+            $journalEntry->accepted = false;
 
             if ($journalEntry->update()) {
                 return $journalEntry;

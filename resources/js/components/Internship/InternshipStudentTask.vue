@@ -1,12 +1,12 @@
 <template>
     <v-expansion-panel>
-        <v-expansion-panel-header color="component-background" class="text-subtitle-1">
+        <v-expansion-panel-header color="component-background" class="text-subtitle-1 px-5 py-2">
             <v-row no-gutters>
                 <v-col cols="12">
                     {{ name }}
                 </v-col>
                 <v-col cols="12">
-                    <span class="text--disabled text-body-2">{{ description.substr(0, 80) }}...</span>
+                    <span class="text--disabled text-body-2">{{ description.substr(0, 40) }}...</span>
                 </v-col>
             </v-row>
         </v-expansion-panel-header>

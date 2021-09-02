@@ -11,7 +11,7 @@
         </custom-confirm-dialog>
         <custom-card-title>
             <template v-slot:default>Zadania</template>
-            <template v-slot:subheader>Lista zadań przypisanych do wybranego studenta.</template>
+            <template v-slot:subheader>Lista zadań przypisanych do studenta.</template>
             <template v-slot:actions>
                 <the-internship-create-student-task-dialog
                     v-if="$route.params.studentIndex && !internship.status.name.includes('ended_by_company', 'ended_by_university' , 'ended')"
@@ -27,9 +27,9 @@
         </custom-card-title>
 
         <v-expand-transition v-if="this.$route.params.studentIndex && !loadingStudentTasks && studentTasks.length > 0">
-            <v-row v-show="show">
+            <v-row v-show="show" no-gutters>
                 <v-col cols="12">
-                    <v-expansion-panels flat class="component-background" accordion>
+                    <v-expansion-panels flat class="component-background py-2" accordion>
                         <internship-student-task
                             v-for="task in displayedTasks"
                             :key="task.id"
