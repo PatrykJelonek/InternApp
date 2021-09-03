@@ -312,7 +312,16 @@ class StudentJournalEntryController extends Controller
         string $studentIndex,
         int $studentJournalEntryId
     ) {
-        return response($this->journalService->deleteStudentJournalEntry($studentJournalEntryId));
+        DB::beginTransaction();
+        $isJournalEntryDeleted = $this->journalService->deleteStudentJournalEntry($studentJournalEntryId);
+
+        if ($isJournalEntryDeleted) {
+            DB::commit();
+            return response(null, Response::HTTP_OK);
+        }
+
+        DB::rollBack();
+        return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
     public function deleteStudentJournalEntryComment(
@@ -322,6 +331,10 @@ class StudentJournalEntryController extends Controller
         int $studentJournalEntryId,
         int $commentId
     ) {
-        return response($this->journalService->deleteComment($commentId));
+        return response(
+            null,
+            $this->journalService->deleteComment($commentId) ?
+                Response::HTTP_OK : Response::HTTP_INTERNAL_SERVER_ERROR
+        );
     }
 }

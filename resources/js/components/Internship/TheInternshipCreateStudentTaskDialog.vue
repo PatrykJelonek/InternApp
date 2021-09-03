@@ -54,21 +54,6 @@
                             </validation-provider>
                         </v-col>
                     </v-row>
-                    <v-row v-has="['admin','company_supervisor','university_supervisor']" no-gutters>
-                        <v-col cols="12">
-                            <validation-provider v-slot="{ errors }" vid="done" rules="required">
-                                <v-switch
-                                    v-model="task.done"
-                                    label="Wykonane"
-                                    :ripple="false"
-                                    flat
-                                    inset
-                                    hide-details="auto"
-                                    :error-messages="errors"
-                                ></v-switch>
-                            </validation-provider>
-                        </v-col>
-                    </v-row>
                     <v-row v-has="['admin','university_worker','company_worker']">
                         <v-col cols="12">
                             <validation-provider v-slot="{ errors }" vid="students_ids" rules="required">
@@ -88,6 +73,21 @@
                                     hide-details="auto"
                                     :error-messages="errors"
                                 ></v-select>
+                            </validation-provider>
+                        </v-col>
+                    </v-row>
+                    <v-row v-has="['admin','company_supervisor','university_supervisor']" no-gutters>
+                        <v-col cols="12"  class="pl-2">
+                            <validation-provider v-slot="{ errors }" vid="done" rules="required">
+                                <v-switch
+                                    v-model="task.done"
+                                    label="Wykonane"
+                                    :ripple="false"
+                                    flat
+                                    inset
+                                    hide-details="auto"
+                                    :error-messages="errors"
+                                ></v-switch>
                             </validation-provider>
                         </v-col>
                     </v-row>

@@ -50,6 +50,7 @@
                 <v-col
                     cols="12"
                     class="my-2"
+                    v-has="['admin','university_worker','university_owner','university_supervisor','deanery_worker']"
                 >
                     <the-internship-students></the-internship-students>
                 </v-col>
