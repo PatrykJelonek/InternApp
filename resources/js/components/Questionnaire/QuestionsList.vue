@@ -94,7 +94,7 @@ export default {
             await this.$refs.observer.validate().then((isValid) => {
                 if (isValid) {
                     this.addQuestionnaireAnswers({
-                        id: this.$route.params.id,
+                        id: this.questionnaireId,
                         answers: this.answers
                     }).then((response) => {
                         this.setSnackbar({message: 'Odpowiedzi zostały zapisane!', color: 'success'});

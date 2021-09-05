@@ -2,16 +2,16 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Laratrust\Contracts\Ownable;
-use App\Models\Internship;
-use App\Models\User;
 
 class Task extends Model
 {
     protected $table = "tasks";
+
+    protected $appends = ['formatted_created_at'];
 
     /**
      * @return BelongsTo
@@ -35,5 +35,10 @@ class Task extends Model
     public function students(): BelongsToMany
     {
         return $this->belongsToMany(Student::class, 'students_tasks', 'task_id', 'student_id');
+    }
+
+    public function getFormattedCreatedAtAttribute(): string
+    {
+        return Carbon::parse($this->created_at)->format('d.m.Y');
     }
 }

@@ -3,14 +3,14 @@
         title="Odpowiedzi"
         :description="'Lista odpowiedzi na pytania z ankiety ' + questionnaire.name"
     >
-        <custom-card-title>
+        <custom-card-title class="mb-2">
             <template v-slot:default>Odpowiedzi</template>
             <template v-slot:subheader>Lista odpowiedzi na pytania z ankiety {{ questionnaire.name }}</template>
         </custom-card-title>
 
-        <v-row class="pa-5" v-if="questionnaireAnswers.length > 0">
+        <v-row class="px-5 py-2" v-if="questionnaireAnswers" no-gutters>
             <v-col cols="12" v-for="(questionnaireAnswersGroup, session_uuid) in questionnaireAnswers"
-                   :key="session_uuid">
+                   :key="session_uuid" class="mb-2">
                 <v-row class="d-flex align-center">
                     <v-col cols="auto" class="d-flex flex-column">
                         <v-row>
@@ -45,7 +45,7 @@
                     </v-col>
                 </v-row>
                 <v-expand-transition>
-                    <v-row v-if="isExpanded.includes(session_uuid)">
+                    <v-row v-if="isExpanded.includes(session_uuid)" class="mb-5">
                         <v-col cols="12" v-for="(answer, index) in questionnaireAnswersGroup" :key="answer.id"
                                class="d-flex flex-column py-1 rounded "
                                v-bind:class="index % 2 === 0 ? 'component-background lighten-1' : ''">
@@ -99,8 +99,9 @@ export default {
     },
 
     created() {
-        this.fetchQuestionnaireAnswers(this.$route.params.questionnaireId).then((response) => {
 
+        this.fetchQuestionnaireAnswers(this.$route.params.questionnaireId).then((response) => {
+            console.log(this.questionnaireAnswers.length);
         }).catch((e) => {
             console.log(e.response)
         });

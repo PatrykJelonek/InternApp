@@ -35,6 +35,7 @@ use Illuminate\Support\Facades\Auth;
 class InternshipController extends Controller
 {
     public const REQUEST_FIELD_APPLY_TO_INTERNSHIP_AGREEMENT_SLUG = 'agreementSlug';
+    public const REQUEST_FIELD_STUDENT_GRADE = 'grade';
 
     /**
      * @var InternshipRepository
@@ -275,6 +276,7 @@ class InternshipController extends Controller
         string $studentIndex
     ) {
         $studentJournal = $this->studentRepository->getStudentJournalEntries($internshipId, $studentIndex);
+        $studentTasks = $this->studentRepository->getStudentTasks($studentIndex);
         $internship = $this->internshipRepository->getInternship($internshipId);
         $student = $this->studentRepository->getStudentByIndex($studentIndex);
         $internshipStudent = $this->internshipRepository->getInternshipStudentByIndex($internshipId, $studentIndex);
@@ -286,6 +288,7 @@ class InternshipController extends Controller
                 'internship' => $internship,
                 'student' => $student,
                 'internshipStudent' => $internshipStudent,
+                'studentTasks' => $studentTasks,
             ]
         );
 
@@ -356,8 +359,8 @@ class InternshipController extends Controller
         int $internshipId,
         string $studentIndex
     ) {
-        $internshipStudentId = $this->internshipRepository->getInternshipStudentByIndex($internshipId, $studentIndex)->id;
-        $student = $this->studentService->addGrade($internshipStudentId, $request->input('grade'));
+        $internshipStudentId = $this->internshipRepository->getInternshipStudentByIndex($internshipId, $studentIndex)->student->id;
+        $student = $this->studentService->addGrade($internshipStudentId, $request->input(self::REQUEST_FIELD_STUDENT_GRADE));
 
         if (!is_null($student)) {
             return response($student, Response::HTTP_OK);

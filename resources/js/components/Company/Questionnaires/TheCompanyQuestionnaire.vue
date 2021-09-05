@@ -15,7 +15,7 @@
                     </v-btn>
                 </template>
             </page-title>
-            <v-row>
+            <v-row align="start">
                 <v-col cols="12" lg="6">
                     <expand-card
                         title="Pytania"

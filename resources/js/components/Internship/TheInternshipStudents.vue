@@ -10,7 +10,7 @@
                 <v-btn
                     outlined
                     color="primary"
-                    v-if="!internshipStudentLoading && internship.status.name === 'ended_by_company' && internshipStudent != null && $route.params.studentIndex"
+                    v-if="!internshipStudentLoading && internship.status.name === 'ended_by_company' && internshipStudent.student.student_index != null && $route.params.studentIndex"
                     @click="toggleDialog({key: 'DIALOG_FIELD_RATE_STUDENT', val: true})"
                 >
                     {{ internshipStudent.grade ? 'Zmień ocenę' : 'Wystaw ocenę' }}

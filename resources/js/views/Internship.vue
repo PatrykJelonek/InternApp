@@ -28,7 +28,6 @@
                         color="primary"
                         outlined
                         @click="toggleDialog({key: 'DIALOG_FIELD_INTERNSHIP_SUMMARY', val: true})"
-                        v-has="['admin','university_worker','university_owner','university_supervisor','deanery_worker']"
                     >
                         Zakończ praktykę
                     </v-btn>
@@ -50,7 +49,6 @@
                 <v-col
                     cols="12"
                     class="my-2"
-                    v-has="['admin','university_worker','university_owner','university_supervisor','deanery_worker']"
                 >
                     <the-internship-students></the-internship-students>
                 </v-col>

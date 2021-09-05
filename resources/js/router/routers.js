@@ -417,7 +417,7 @@ const router = new VueRouter({
                     component: Questionnaire,
                 },
                 {
-                    path: '/panel/questionnaires/:questionnaireId',
+                    path: '/panel/questionnaires/:questionnaireId/edit',
                     name: 'edit-questionnaire',
                     component: TheCompanyQuestionnaire
                 },

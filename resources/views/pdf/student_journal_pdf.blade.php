@@ -190,7 +190,7 @@
                 @if (count($journalEntires ?? []) > 0)
                     @foreach($journalEntires as $journalEntry)
                         <tr>
-                            <td>{{ $journalEntry->formatted_update_at ?? '' }}</td>
+                            <td>{{ $journalEntry->formatted_date ?? '' }}</td>
                             <td>{{ $journalEntry->content ?? '' }}</td>
                             <td>{{ $journalEntry->user->full_name ?? '' }}</td>
                         </tr>
@@ -199,6 +199,45 @@
                     <tr>
                         <td colspan="3" class="text-center pa-5">Brak wpisów w dzienniku!</td>
                     </tr>
+                @endif
+            </table>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <h2 class="subtitle">Zadania: </h2>
+            <hr>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <table class="journal-entries-table">
+                <tr>
+                    <th>Data</th>
+                    <th>Treść</th>
+                    <th>Autor</th>
+                </tr>
+                @if (count($studentTasks ?? []) > 0)
+                    @foreach($studentTasks as $studentTask)
+                        <tr>
+                            <td>{{ $studentTask->formatted_created_at ?? '' }}</td>
+                            <td>
+                                <div class="row">
+                                    <div class="col-12">
+                                        <b>{{ $studentTask->name ?? '' }}</b>
+                                    </div>
+                                </div>
+                                <div class="row" style="margin-top: 5px;">
+                                    <div class="col-12">
+                                        {{ $studentTask->description ?? '' }}
+                                    </div>
+                                </div>
+                            </td>
+                            <td>{{ $studentTask->user->full_name ?? '' }}</td>
+                        </tr>
+                    @endforeach
                 @endif
             </table>
         </div>

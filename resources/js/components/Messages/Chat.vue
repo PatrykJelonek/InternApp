@@ -30,8 +30,8 @@
                             <v-col cols="12" class="pa-5s">
                                 <v-virtual-scroll
                                     :items="messages"
-                                    item-height="110"
-                                    height="750"
+                                    item-height="180"
+                                    height="350"
                                     id="virtualScroll"
                                 >
                                     <template v-slot:default="{index, item}">
@@ -59,7 +59,7 @@
                 <v-card color="card-background">
                     <v-form>
                         <v-row no-gutters>
-                            <v-col cols="11">
+                            <v-col cols="10">
                                 <v-text-field
                                     v-model="message"
                                     solo
@@ -68,7 +68,7 @@
                                     hide-details
                                 ></v-text-field>
                             </v-col>
-                            <v-col cols="1" class="d-flex justify-center align-self-center">
+                            <v-col cols="2" class="d-flex justify-end align-self-center pr-2">
                                 <v-btn outlined color="primary" @click="submit">
                                     Wyślij
                                 </v-btn>

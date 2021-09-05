@@ -251,7 +251,7 @@ class QuestionnairesService
         ];
     }
 
-    public function addQuestionnaireAnswers(array $answers, ?int $userId = null): array
+    public function addQuestionnaireAnswers(array $answers, int $questionnaireId, ?int $userId = null): array
     {
         $insertedAnswers = [];
         $sessionUuid = Str::uuid();
@@ -273,11 +273,11 @@ class QuestionnairesService
             }
         }
 
-        $questionnaireAuthor = $this->repository->getQuestionnaireAuthor($answers[0]['questionnaireQuestionId']);
+        $questionnaireAuthor = $this->repository->getQuestionnaireAuthor($questionnaireId);
         $questionnaireAuthor->notify(
             new QuestionnaireAnswersAddedNotification(
                 User::find($userId ?? Auth::id()),
-                Questionnaire::find($answers[0]['questionnaireQuestionId'])
+                Questionnaire::find($questionnaireId)
             )
         );
 

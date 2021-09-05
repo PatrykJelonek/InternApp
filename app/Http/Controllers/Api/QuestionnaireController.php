@@ -24,6 +24,11 @@ use Illuminate\Http\Response;
 
 class QuestionnaireController extends Controller
 {
+    public const REQUEST_FIELD_QUESTIONNAIRE_NAME = 'name';
+    public const REQUEST_FIELD_QUESTIONNAIRE_DESCRIPTION = 'description';
+    public const REQUEST_FIELD_QUESTIONNAIRE_ANSWERS = 'answers';
+    public const REQUEST_FIELD_QUESTIONNAIRE_ANSWERS_AUTHOR_USER_ID = 'userId';
+
     /**
      * @var QuestionnairesRepository
      */
@@ -123,8 +128,8 @@ class QuestionnaireController extends Controller
     public function createQuestionnaire(CreateQuestionnaireRequest $request)
     {
         $result = $this->questionnairesService->createQuestionnaire(
-            $request->input('name'),
-            $request->input('description')
+            $request->input(self::REQUEST_FIELD_QUESTIONNAIRE_NAME),
+            $request->input(self::REQUEST_FIELD_QUESTIONNAIRE_DESCRIPTION)
         );
 
         if ($result !== null) {
@@ -252,8 +257,9 @@ class QuestionnaireController extends Controller
     public function addQuestionnaireAnswers(AddAnswersRequest $request, int $questionnaireId)
     {
         $result = $this->questionnairesService->addQuestionnaireAnswers(
-            $request->input('answers'),
-            $request->input('userId')
+            $request->input(self::REQUEST_FIELD_QUESTIONNAIRE_ANSWERS),
+            $questionnaireId,
+            $request->input(self::REQUEST_FIELD_QUESTIONNAIRE_ANSWERS_AUTHOR_USER_ID)
         );
 
         if (!empty($result)) {

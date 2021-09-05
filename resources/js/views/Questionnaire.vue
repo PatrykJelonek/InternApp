@@ -31,7 +31,7 @@ export default {
     },
 
     created() {
-        this.fetchQuestionnaire(this.$route.params.id).then((response) => {
+        this.fetchQuestionnaire(this.$route.params.questionnaireId).then((response) => {
             this.setBreadcrumbs([
                 {text: 'Panel', to: {name: 'panel'}, exact: true},
                 {text: 'Ankiety', to: {name: 'questionnaires'}, exact: true},

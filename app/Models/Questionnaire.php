@@ -8,6 +8,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\User;
+use App\Models\University;
+use App\Models\Company;
+use App\Models\Role;
+use App\Models\QuestionnaireQuestion;
 
 class Questionnaire extends Model
 {
@@ -18,26 +23,26 @@ class Questionnaire extends Model
 
     public function questions(): HasMany
     {
-        return $this->hasMany('App\Models\QuestionnaireQuestion', 'questionnaire_id', 'id');
+        return $this->hasMany(QuestionnaireQuestion::class, 'questionnaire_id', 'id');
     }
 
     public function roles(): BelongsToMany
     {
-        return $this->belongsToMany('App\Models\Role', 'questionnaires_roles', 'questionnaire_id','role_id');
+        return $this->belongsToMany(Role::class, 'questionnaires_roles', 'questionnaire_id', 'role_id');
     }
 
     public function company():  BelongsTo
     {
-        return $this->belongsTo('App\Models\Company','company_id', 'id');
+        return $this->belongsTo(Company::class, 'company_id', 'id');
     }
 
     public function university():  BelongsTo
     {
-        return $this->belongsTo('App\Models\University','university_id', 'id');
+        return $this->belongsTo(University::class, 'university_id', 'id');
     }
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo('App\Models\User', 'user_id', 'id');
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 }
