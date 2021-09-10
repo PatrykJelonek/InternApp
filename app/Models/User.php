@@ -11,6 +11,14 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Notifications\Notifiable;
 use Laratrust\Traits\LaratrustUserTrait;
 use Tymon\JWTAuth\Contracts\JWTSubject;
+use App\Models\University;
+use App\Models\Internship;
+use App\Models\JournalEntry;
+use App\Models\Permission;
+use App\Models\Student;
+use App\Models\UserStatus;
+use App\Models\Company;
+use App\Models\Message;
 
 class User extends Model implements AuthenticatableContract, JWTSubject, CanResetPassword
 {
@@ -30,12 +38,12 @@ class User extends Model implements AuthenticatableContract, JWTSubject, CanRese
 
     public function status()
     {
-        return $this->hasOne('App\Models\UserStatus','id','user_status_id');
+        return $this->hasOne(UserStatus::class, 'id', 'user_status_id');
     }
 
     public function student()
     {
-        return $this->hasOne('App\Models\Student', 'user_id', 'id');
+        return $this->hasOne(Student::class, 'user_id', 'id');
     }
 
     /**
@@ -48,27 +56,27 @@ class User extends Model implements AuthenticatableContract, JWTSubject, CanRese
 
     public function permissions()
     {
-        return $this->belongsToMany('App\Models\Permission', 'users_permissions', 'user_id', 'permission_id');
+        return $this->belongsToMany(Permission::class, 'users_permissions', 'user_id', 'permission_id');
     }
 
     public function journals()
     {
-        return $this->hasMany('App\Models\JournalEntry', 'user_id', 'id');
+        return $this->hasMany(JournalEntry::class, 'user_id', 'id');
     }
 
     public function companySupervisorInternships()
     {
-        return $this->hasMany('App\Models\Internship', 'company_supervisor_id', 'id');
+        return $this->hasMany(Internship::class, 'company_supervisor_id', 'id');
     }
 
     public function universitySupervisorInternships()
     {
-        return $this->hasMany('App\Models\Internship', 'university_supervisor_id', 'id');
+        return $this->hasMany(Internship::class, 'university_supervisor_id', 'id');
     }
 
     public function universities()
     {
-          return $this->belongsToMany('App\Models\University', 'users_universities', 'user_id', 'university_id')->with(['city','type'])->withPivot(['active', 'verified']);
+          return $this->belongsToMany(University::class, 'users_universities', 'user_id', 'university_id')->with(['city','type'])->withPivot(['active', 'verified']);
     }
 
     public function universitiesWithRoles()
@@ -83,17 +91,17 @@ class User extends Model implements AuthenticatableContract, JWTSubject, CanRese
 
     public function companies()
     {
-        return $this->belongsToMany('App\Models\Company', 'users_companies', 'user_id', 'company_id')->with(['city', 'category']);
+        return $this->belongsToMany(Company::class, 'users_companies', 'user_id', 'company_id')->with(['city', 'category']);
     }
 
     public function messagesSender()
     {
-        return $this->hasMany('App\Models\Message','from_user_id','id');
+        return $this->hasMany(Message::class, 'from_user_id', 'id');
     }
 
     public function messagesReceiver()
     {
-        return $this->hasMany('App\Models\Message','to_user_id', 'id');
+        return $this->hasMany(Message::class, 'to_user_id', 'id');
     }
 
     public function getJWTIdentifier()

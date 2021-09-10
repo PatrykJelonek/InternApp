@@ -4,7 +4,6 @@
             <v-col cols="12">
                 <expand-card
                     title="Wiadomości"
-                    description="abc"
                     :expand="false"
                 >
                     <div class="my-5">

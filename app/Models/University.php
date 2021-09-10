@@ -18,35 +18,40 @@ class University extends Model
 
     public function type()
     {
-        return $this->belongsTo('App\Models\UniversityType', 'university_type_id', 'id');
+        return $this->belongsTo(UniversityType::class, 'university_type_id', 'id');
     }
 
     public function city()
     {
-        return $this->belongsTo('App\Models\City');
+        return $this->belongsTo(City::class);
     }
 
     public function users()
     {
-        return $this->belongsToMany('App\Models\User', 'users_universities', 'university_id', 'user_id')->withPivot(
+        return $this->belongsToMany(User::class, 'users_universities', 'university_id', 'user_id')->withPivot(
             ['id', 'active']
         );
     }
 
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
+    }
+
     public function faculties()
     {
-        return $this->hasMany('App\Models\Faculty', 'university_id', 'id');
+        return $this->hasMany(Faculty::class, 'university_id', 'id');
     }
 
     public function agreements()
     {
-        return $this->hasMany('App\Models\Agreement', 'university_id', 'id');
+        return $this->hasMany(Agreement::class, 'university_id', 'id');
     }
 
     public function questionnaires()
     {
         return $this->belongsToMany(
-            'App\Models\Questionnaire',
+            Questionnaire::class,
             'universities_questionnaires',
             'university_id',
             'questionnaire_id'

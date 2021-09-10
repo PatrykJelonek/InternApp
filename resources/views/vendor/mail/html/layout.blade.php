@@ -9,6 +9,7 @@
 @media only screen and (max-width: 600px) {
 .inner-body {
 width: 100% !important;
+    margin-top: 100px;
 }
 
 .footer {
@@ -33,7 +34,7 @@ width: 100% !important;
 
 <!-- Email Body -->
 <tr>
-<td class="body" width="100%" cellpadding="0" cellspacing="0">
+<td class="body" width="100%" cellpadding="0" cellspacing="0" style="margin-top:100px">
 <table class="inner-body" align="center" width="570" cellpadding="0" cellspacing="0" role="presentation">
 <!-- Body content -->
 <tr>

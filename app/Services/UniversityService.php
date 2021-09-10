@@ -14,6 +14,7 @@ use App\Repositories\UniversityRepository;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
@@ -166,7 +167,8 @@ class UniversityService
         return null;
     }
 
-    public function verifyUniversity(string $slug) {
+    public function verifyUniversity(string $slug)
+    {
         $university = $this->universityRepository->getUniversityBySlug($slug);
         $university->verified = 1;
 
@@ -174,6 +176,35 @@ class UniversityService
             return $university;
         }
 
+        return null;
+    }
+
+    /**
+     * @param string $slug
+     *
+     * @return null|University
+     */
+    public function rejectUniversity(string $slug): ?University
+    {
+        $university = $this->universityRepository->getUniversityBySlug($slug);
+        $universityAuthor = $university->user;
+
+        DB::beginTransaction();
+        if (!is_null($university) && !is_null($universityAuthor)) {
+            $userUniversityRole = $this->universityRepository->getUsersUniversitiesRoles($universityAuthor->id, $university->id);
+
+            if (!is_null($userUniversityRole)) {
+                $userUniversityRole->delete();
+                $university->users()->detach($universityAuthor->id);
+
+                if ($university->delete()) {
+                    DB::commit();
+                    return $university;
+                }
+            }
+        }
+
+        DB::rollBack();
         return null;
     }
 }

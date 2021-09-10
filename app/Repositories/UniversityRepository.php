@@ -15,6 +15,8 @@ use App\Models\Internship;
 use App\Models\Questionnaire;
 use App\Models\University;
 use App\Models\User;
+use App\Models\UserUniversity;
+use App\Models\UserUniversityRole;
 use App\Repositories\Interfaces\UniversityRepositoryInterface;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
@@ -133,7 +135,7 @@ class UniversityRepository implements UniversityRepositoryInterface
                         RoleConstants::ROLE_UNIVERSITY_WORKER,
                         RoleConstants::ROLE_UNIVERSITY_OWNER,
                         RoleConstants::ROLE_UNIVERSITY_DEANERY_WORKER,
-                        RoleConstants::ROLE_UNIVERSITY_SUPERVISOR
+                        RoleConstants::ROLE_UNIVERSITY_SUPERVISOR,
                     ]);
                 });
             }
@@ -238,5 +240,39 @@ class UniversityRepository implements UniversityRepositoryInterface
         return University::with(['city', 'type'])
             ->where(['verified' => 0])
             ->get();
+    }
+
+    /**
+     * @param int $userId
+     * @param int $universityId
+     *
+     * @return null|UserUniversityRole
+     */
+    public function getUsersUniversitiesRoles(int $userId, int $universityId): ?UserUniversityRole
+    {
+        $userUniversities = $this->getUserUniversities($userId, $universityId);
+
+        if (is_null($userUniversities)) {
+            return null;
+        }
+
+        /** @var UserUniversity $userUniversities */
+        return UserUniversityRole::where(['user_university_id' => $userUniversities->id])->first();
+    }
+
+    /**
+     * @param int $userId
+     * @param int $universityId
+     *
+     * @return null|UserUniversity
+     */
+    public function getUserUniversities(int $userId, int $universityId): ?UserUniversity
+    {
+        return UserUniversity::where(
+            [
+                'user_id' => $userId,
+                'university_id' => $universityId,
+            ]
+        )->first();
     }
 }

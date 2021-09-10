@@ -547,6 +547,12 @@ export default {
 
         verifyUniversity({commit}, {slug}) {
             return axios.post(`/api/admin/universities/${slug}/verify`);
+        },
+
+        rejectUniversity({commit}, {slug, reason}) {
+            return axios.post(`/api/admin/universities/${slug}/reject`, {
+                    reason: reason
+            });
         }
     },
 };

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Constants\AgreementStatusConstants;
 use App\Constants\RoleConstants;
+use App\Events\UniversityRejected;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UniversityAddStudentToUniversityRequest;
 use App\Http\Requests\UniversityAddUserToUniversityRequest;
@@ -21,6 +22,7 @@ use App\Http\Requests\UniversityGetUniversitiesToVerificationRequest;
 use App\Http\Requests\UniversityGetUniversityQuestionnairesRequest;
 use App\Http\Requests\UniversityGetUniversityRequest;
 use App\Http\Requests\UniversityInternshipsRequest;
+use App\Http\Requests\UniversityRejectUniversityRequest;
 use App\Http\Requests\UniversityStudentsRequest;
 use App\Http\Requests\UniversityUpdateUniversityFacultyFieldRequest;
 use App\Http\Requests\UniversityUpdateUniversityFacultyFieldSpecializationRequest;
@@ -83,6 +85,8 @@ class UniversityController extends Controller
     public const REQUEST_FIELD_OWN_AGREEMENT_CONTENT = 'agreement.content';
     public const REQUEST_FIELD_OWN_AGREEMENT_ACTIVE = 'agreement.active';
     public const REQUEST_FIELD_OWN_AGREEMENT_SIGNING_DATE = 'agreement.signingDate';
+
+    public const REQUEST_FIELD_REJECT_UNIVERSITY_REASON = 'reason';
 
     /**
      * @var UniversityRepository
@@ -715,7 +719,6 @@ class UniversityController extends Controller
                 $university->logo_url = $path;
 
                 if ($university->update()) {
-
                     if (!empty($oldAvatarPath)) {
                         Storage::delete($oldAvatarPath);
                     }
@@ -956,7 +959,7 @@ class UniversityController extends Controller
                 $userId ?? Auth::id(),
                 $request->input('index'),
                 $request->input('semester'),
-                 floor($request->input('semester') / 2),
+                floor($request->input('semester') / 2),
                 $request->input('specializationId')
             );
 
@@ -1039,15 +1042,33 @@ class UniversityController extends Controller
         return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
-    public function getUniversitiesToVerification(UniversityGetUniversitiesToVerificationRequest $request) {
+    public function getUniversitiesToVerification(UniversityGetUniversitiesToVerificationRequest $request)
+    {
         return response($this->universityRepository->getUniversitiesToVerification(), Response::HTTP_OK);
     }
 
-    public function verifyUniversity(UniversityVerifyUniversityRequest $request, string $slug) {
+    public function verifyUniversity(UniversityVerifyUniversityRequest $request, string $slug)
+    {
         $verifiedUniversity = $this->universityService->verifyUniversity($slug);
 
         if (!is_null($verifiedUniversity)) {
             return response($verifiedUniversity, Response::HTTP_OK);
+        }
+
+        return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+
+    public function rejectUniversity(UniversityRejectUniversityRequest $request, string $slug)
+    {
+        $rejectedUniversity = $this->universityService->rejectUniversity($slug);
+
+        if (!is_null($rejectedUniversity)) {
+            UniversityRejected::dispatch(
+                $rejectedUniversity->user,
+                $rejectedUniversity,
+                $request->input(self::REQUEST_FIELD_REJECT_UNIVERSITY_REASON)
+            );
+            return response($rejectedUniversity, Response::HTTP_OK);
         }
 
         return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);

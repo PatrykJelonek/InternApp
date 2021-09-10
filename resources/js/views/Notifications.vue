@@ -17,8 +17,6 @@
                 <v-card-actions class="d-flex justify-end pa-2">
                     <v-btn-toggle dense background-color="transparent" active-class="primary--text" mandatory>
                         <v-btn small class="text--disabled" :value="true" outlined>Wszystkie</v-btn>
-                        <v-btn small class="text--disabled" outlined>Nieprzeczytane</v-btn>
-                        <v-btn small class="text--disabled" outlined>Przeczytane</v-btn>
                     </v-btn-toggle>
                 </v-card-actions>
             </v-card-title>

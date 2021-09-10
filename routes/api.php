@@ -233,8 +233,10 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     # Admin
     Route::get('/admin/universities/verification', 'Api\UniversityController@getUniversitiesToVerification');
     Route::post('/admin/universities/{slug}/verify', 'Api\UniversityController@verifyUniversity');
+    Route::post('/admin/universities/{slug}/reject', 'Api\UniversityController@rejectUniversity');
     Route::get('/admin/companies/verification', 'Api\CompanyController@getCompaniesToVerification');
     Route::post('/admin/companies/{slug}/verify', 'Api\CompanyController@verifyCompany');
+    Route::post('/admin/companies/{slug}/reject', 'Api\CompanyController@rejectCompany');
 
 
     Route::get('/me', [
