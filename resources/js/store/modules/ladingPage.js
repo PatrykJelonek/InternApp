@@ -30,7 +30,7 @@ export default {
         async fetchOffers({commit}) {
             commit('SET_OFFERS_LOADING', true);
             try{
-                let response = await axios.get('/api/helpers/offers');
+                let response = await axios.get('http://localhost/api/helpers/offers');
                 commit('SET_OFFERS', response.data);
                 commit('SET_OFFERS_LOADING', false);
             } catch (e) {
