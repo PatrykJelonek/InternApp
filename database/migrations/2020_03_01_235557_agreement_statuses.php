@@ -17,7 +17,7 @@ class AgreementStatuses extends Migration
             'agreement_statuses',
             function (Blueprint $table) {
                 $table->id();
-                $table->string('name', 16)->unique();
+                $table->string('name', 64)->unique();
                 $table->string('description', 64)->nullable();
                 $table->string('display_name', 128);
                 $table->string('hex_color', 7)->nullable();
