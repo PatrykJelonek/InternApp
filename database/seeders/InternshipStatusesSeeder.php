@@ -19,6 +19,7 @@ class InternshipStatusesSeeder extends Seeder
             DB::table('internship_statuses')->insert([
                 'name' => $STATUS,
                 'display_name' => InternshipStatusConstants::STATUSES_DISPLAY_NAME[$STATUS],
+                'group' => InternshipStatusConstants::STATUSES_GROUP[$STATUS],
                 'created_at' => date('Y-m-d H:i:s')
             ]);
         }
