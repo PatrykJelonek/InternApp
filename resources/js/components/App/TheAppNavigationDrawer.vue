@@ -460,6 +460,12 @@
                     </v-list-item-icon>
                     <v-list-item-title>Uczelnie</v-list-item-title>
                 </v-list-item>
+                <v-list-item link :to="{name: 'admin-companies'}" exact>
+                    <v-list-item-icon class="mr-2">
+                        <v-icon dense>mdi-briefcase-outline</v-icon>
+                    </v-list-item-icon>
+                    <v-list-item-title>Uczelnie</v-list-item-title>
+                </v-list-item>
                 <v-list-item link :to="{name: 'admin-users'}" exact>
                     <v-list-item-icon class="mr-2">
                         <v-icon dense>mdi-account-group-outline</v-icon>

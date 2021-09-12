@@ -17,6 +17,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
@@ -25,7 +26,7 @@ class CompanyService
     /**
      * @var CompanyRepository
      */
-    private $repository;
+    private $companyRepository;
 
     /**
      * CompanyService constructor.
@@ -34,7 +35,7 @@ class CompanyService
      */
     public function __construct(CompanyRepository $repository)
     {
-        $this->repository = $repository;
+        $this->companyRepository = $repository;
     }
 
     public function updateCompanyData(
@@ -44,7 +45,7 @@ class CompanyService
         string $website = null,
         string $description = null
     ) {
-        $company = $this->repository->getCompanyBySlug($slug);
+        $company = $this->companyRepository->getCompanyBySlug($slug);
 
         if ($company !== null) {
             $company->email = $email ?? $company->email;
@@ -87,7 +88,7 @@ class CompanyService
             }
         )->first();
 
-        $company = $this->repository->getCompanyBySlug($slug);
+        $company = $this->companyRepository->getCompanyBySlug($slug);
 
         if ($user !== null && $company !== null) {
             $user->companies()->detach([$company->id]);
@@ -125,7 +126,7 @@ class CompanyService
             }
         )->first();
 
-        $company = $this->repository->getCompanyBySlug($slug);
+        $company = $this->companyRepository->getCompanyBySlug($slug);
 
         if ($user !== null && $company !== null) {
             if ($user->companies()->updateExistingPivot(
@@ -330,6 +331,45 @@ class CompanyService
             ]
         );
 
+        return null;
+    }
+
+    public function verifyCompany(string $slug)
+    {
+        $company = $this->companyRepository->getCompanyBySlug($slug);
+
+        if (!is_null($company)) {
+            $company->verified = true;
+
+            if ($company->save()) {
+                return $company;
+            }
+        }
+
+        return null;
+    }
+
+    public function rejectCompany(string $slug)
+    {
+        $company = $this->companyRepository->getCompanyBySlug($slug);
+        $companyAuthor = !is_null($company) ? $company->user : null;
+
+        DB::beginTransaction();
+        if (!is_null($company) && !is_null($companyAuthor)) {
+            $userCompanyRole = $this->companyRepository->getUsersCompaniesRoles($companyAuthor->id, $company->id);
+
+            if (!is_null($userCompanyRole)) {
+                $userCompanyRole->delete();
+                $company->users()->detach($companyAuthor->id);
+
+                if ($company->delete()) {
+                    DB::commit();
+                    return $company;
+                }
+            }
+        }
+
+        DB::rollBack();
         return null;
     }
 }

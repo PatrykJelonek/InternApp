@@ -8,7 +8,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class UniversityRejectedMail extends Mailable
+class UniversityRejectedMail extends Mailable implements ShouldQueue
 {
     use Queueable, SerializesModels;
 
@@ -33,6 +33,7 @@ class UniversityRejectedMail extends Mailable
     {
         $this->university = $university;
         $this->reason = $reason;
+        $this->subject = "Twoja prośba o dodanie uczelni $university->name została odrzucona!";
     }
 
     /**

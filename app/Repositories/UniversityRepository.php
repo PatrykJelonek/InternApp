@@ -33,7 +33,7 @@ class UniversityRepository implements UniversityRepositoryInterface
      */
     public function getUniversityBySlug(string $slug)
     {
-        $university = University::where('slug', $slug)->with(['type', 'city', 'faculties'])->first();
+        $university = University::where('slug', $slug)->with(['type', 'city', 'faculties','user'])->first();
 
         if (!empty($university)) {
             return $university;

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Constants\AgreementStatusConstants;
 use App\Constants\RoleConstants;
 use App\Events\UniversityRejected;
+use App\Events\UniversityVerified;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UniversityAddStudentToUniversityRequest;
 use App\Http\Requests\UniversityAddUserToUniversityRequest;
@@ -1047,18 +1048,34 @@ class UniversityController extends Controller
         return response($this->universityRepository->getUniversitiesToVerification(), Response::HTTP_OK);
     }
 
-    public function verifyUniversity(UniversityVerifyUniversityRequest $request, string $slug)
+    /**
+     * @param UniversityVerifyUniversityRequest $request
+     * @param string                            $slug
+     *
+     * @return Response
+     */
+    public function verifyUniversity(UniversityVerifyUniversityRequest $request, string $slug): Response
     {
         $verifiedUniversity = $this->universityService->verifyUniversity($slug);
 
         if (!is_null($verifiedUniversity)) {
+            UniversityVerified::dispatch(
+                $verifiedUniversity->user,
+                $verifiedUniversity
+            );
             return response($verifiedUniversity, Response::HTTP_OK);
         }
 
         return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
-    public function rejectUniversity(UniversityRejectUniversityRequest $request, string $slug)
+    /**
+     * @param UniversityRejectUniversityRequest $request
+     * @param string                            $slug
+     *
+     * @return Response
+     */
+    public function rejectUniversity(UniversityRejectUniversityRequest $request, string $slug): Response
     {
         $rejectedUniversity = $this->universityService->rejectUniversity($slug);
 

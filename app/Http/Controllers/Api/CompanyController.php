@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Constants\RoleConstants;
+use App\Events\CompanyRejected;
+use App\Events\CompanyVerified;
 use App\Http\Requests\CompanyAcceptCompanyWorkerRequest;
 use App\Http\Requests\CompanyAddWorkerToCompanyRequest;
 use App\Http\Requests\CompanyCreateCompanyQuestionnaireRequest as CreateQuestionnaireRequest;
@@ -10,9 +12,11 @@ use App\Http\Requests\CompanyCreateCompanyRequest;
 use App\Http\Requests\CompanyDeleteCompanyWorkerRequest;
 use App\Http\Requests\CompanyGetCompanyQuestionnairesRequest;
 use App\Http\Requests\CompanyOffersRequest;
+use App\Http\Requests\CompanyRejectCompanyRequest;
 use App\Http\Requests\CompanyShowRequest;
 use App\Http\Requests\CompanyUpdateCompanyDataRequest as UpdateDataRequest;
 use App\Http\Requests\CompanyUpdateCompanyLogoRequest as UpdateLogoRequest;
+use App\Http\Requests\CompanyVerifyCompanyRequest;
 use App\Http\Requests\GetCompanyWorkersRequest;
 use App\Http\Requests\UniversityCreateOwnAgreementRequest;
 use App\Models\Company;
@@ -613,6 +617,48 @@ class CompanyController extends Controller
         );
 
         DB::rollBack();
+        return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+
+    /**
+     * @param CompanyVerifyCompanyRequest $request
+     * @param string                      $slug
+     *
+     * @return Response
+     */
+    public function verifyCompany(CompanyVerifyCompanyRequest $request, string $slug): Response
+    {
+        $verifiedCompany = $this->companyService->verifyCompany($slug);
+
+        if (!is_null($verifiedCompany)) {
+            CompanyVerified::dispatch(
+                $verifiedCompany->user,
+                $verifiedCompany
+            );
+            return response($verifiedCompany, Response::HTTP_OK);
+        }
+
+        return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+
+    /**
+     * @param CompanyRejectCompanyRequest $request
+     * @param string                      $slug
+     *
+     * @return Response
+     */
+    public function rejectCompany(CompanyRejectCompanyRequest $request, string $slug): Response
+    {
+        $rejectedCompany = $this->companyService->rejectCompany($slug);
+
+        if (!is_null($rejectedCompany)) {
+            CompanyRejected::dispatch(
+                $rejectedCompany->user,
+                $rejectedCompany
+            );
+            return response($rejectedCompany, Response::HTTP_OK);
+        }
+
         return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 }

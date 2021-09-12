@@ -10,5 +10,6 @@ namespace App\Constants;
 
 class Constants
 {
-    public const QUEUE_EMAILS_NAME = 'emails';
+    public const QUEUE_NAME_EMAILS = 'emails';
+    public const QUEUE_NAME_NOTIFICATIONS = 'notifications';
 }

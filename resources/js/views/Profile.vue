@@ -24,7 +24,7 @@
                                       style="top: 100px; border: 8px solid white;">
                                 <v-img
                                     :src="'/'+user.avatar_url"
-                                       :alt="user.first_name + ' ' + user.last_name + ' avatar'"
+                                    :alt="user.first_name + ' ' + user.last_name + ' avatar'"
                                 ></v-img>
                             </v-avatar>
                         </v-card-title>
