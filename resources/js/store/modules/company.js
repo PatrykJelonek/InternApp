@@ -19,6 +19,8 @@ export default {
         companiesLoading: false,
         companiesToVerification: [],
         companiesToVerificationLoading: false,
+        verifiedCompanies: [],
+        verifiedCompaniesLoading: false,
         interns: [],
     },
 
@@ -93,6 +95,14 @@ export default {
 
         companiesToVerificationLoading(state) {
             return state.companiesToVerificationLoading;
+        },
+
+        verifiedCompanies(state) {
+            return state.verifiedCompanies;
+        },
+
+        verifiedCompaniesLoading(state) {
+            return state.verifiedCompaniesLoading;
         },
     },
 
@@ -175,6 +185,14 @@ export default {
 
         SET_COMPANIES_TO_VERIFICATION_LOADING(state, data) {
             state.companiesToVerificationLoading = data;
+        },
+
+        SET_VERIFIED_COMPANIES(state, data) {
+            state.verifiedCompanies = data;
+        },
+
+        SET_VERIFIED_COMPANIES_LOADING(state, data) {
+            state.verifiedCompaniesLoading = data;
         },
     },
 
@@ -337,12 +355,24 @@ export default {
         async fetchCompaniesToVerification({commit}) {
             commit('SET_COMPANIES_TO_VERIFICATION_LOADING', true);
             try {
-                let response = await axios.get(`/api/admin/companies/verification`);
+                let response = await axios.get(`/api/admin/companies/unverified`);
                 commit('SET_COMPANIES_TO_VERIFICATION', response.data);
                 commit('SET_COMPANIES_TO_VERIFICATION_LOADING', false);
             } catch (e) {
                 commit('SET_COMPANIES_TO_VERIFICATION', []);
                 commit('SET_COMPANIES_TO_VERIFICATION_LOADING', false);
+            }
+        },
+
+        async fetchVerifiedCompanies({commit}) {
+            commit('SET_VERIFIED_COMPANIES_LOADING', true);
+            try {
+                let response = await axios.get(`/api/admin/companies/verified`);
+                commit('SET_VERIFIED_COMPANIES', response.data);
+                commit('SET_VERIFIED_COMPANIES_LOADING', false);
+            } catch (e) {
+                commit('SET_COMPANIES_TO_VERIFICATION', []);
+                commit('SET_VERIFIED_COMPANIES_LOADING', false);
             }
         },
     },

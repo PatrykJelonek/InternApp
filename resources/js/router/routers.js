@@ -72,7 +72,8 @@ import TheAdminUniversitiesVerification
     from "../components/Admin/Universities/UniversitiesVerification/TheAdminUniversitiesVerification";
 import TheAdminCompanies from "../components/Admin/Companies/TheAdminCompanies";
 import TheAdminCompaniesToVerification
-    from "../components/Admin/Companies/Verification/TheAdminCompaniesToVerification";
+    from "../components/Admin/Companies/Unverified/TheAdminCompaniesToVerification";
+import TheAdminCompaniesVerified from "../components/Admin/Companies/Verified/TheAdminCompaniesVerified";
 
 Vue.use(VueRouter);
 
@@ -463,13 +464,18 @@ const router = new VueRouter({
                         },
                         {
                             path: 'companies',
-                            name: 'admin-companies',
                             component: TheAdminCompanies,
                             meta: {have: ['admin']},
                             children: [
                                 {
-                                    path: 'verification',
-                                    name: 'admin-companies-verification',
+                                    path: '',
+                                    name: 'admin-companies',
+                                    component: TheAdminCompaniesVerified,
+                                    meta: {have: ['admin']},
+                                },
+                                {
+                                    path: 'unverified',
+                                    name: 'admin-companies-unverified',
                                     component: TheAdminCompaniesToVerification,
                                     meta: {have: ['admin']},
                                 }

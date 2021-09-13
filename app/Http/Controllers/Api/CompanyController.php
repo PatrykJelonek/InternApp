@@ -10,6 +10,7 @@ use App\Http\Requests\CompanyAddWorkerToCompanyRequest;
 use App\Http\Requests\CompanyCreateCompanyQuestionnaireRequest as CreateQuestionnaireRequest;
 use App\Http\Requests\CompanyCreateCompanyRequest;
 use App\Http\Requests\CompanyDeleteCompanyWorkerRequest;
+use App\Http\Requests\CompanyGetAllVerifiedCompaniesRequest;
 use App\Http\Requests\CompanyGetCompaniesToVerificationRequest;
 use App\Http\Requests\CompanyGetCompanyQuestionnairesRequest;
 use App\Http\Requests\CompanyOffersRequest;
@@ -56,6 +57,7 @@ class CompanyController extends Controller
     public const USER_NOT_VERIFIED = false;
     public const USER_ACCEPTED = true;
     public const USER_NOT_ACCEPTED = false;
+
     /**
      * @var CompanyRepository
      */
@@ -666,5 +668,10 @@ class CompanyController extends Controller
     public function getCompaniesToVerification(CompanyGetCompaniesToVerificationRequest $request): Response
     {
         return response($this->companyRepository->getCompaniesToVerification(), Response::HTTP_OK);
+    }
+
+    public function getAllVerifiedCompanies(CompanyGetAllVerifiedCompaniesRequest $request): Response
+    {
+        return response($this->companyRepository->getAllVerifiedCompanies(), Response::HTTP_OK);
     }
 }

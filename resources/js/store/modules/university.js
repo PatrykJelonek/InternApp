@@ -445,7 +445,7 @@ export default {
         async fetchUniversitiesToVerification({commit}) {
             commit('SET_UNIVERSITIES_TO_VERIFICATION_LOADING', true);
             try {
-                let response = await axios.get(`/api/admin/universities/verification`);
+                let response = await axios.get(`/api/admin/universities/unverified`);
                 commit('SET_UNIVERSITIES_TO_VERIFICATION', response.data);
                 commit('SET_UNIVERSITIES_TO_VERIFICATION_LOADING', false);
             } catch (e) {

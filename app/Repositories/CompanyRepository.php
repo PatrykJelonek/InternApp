@@ -218,7 +218,14 @@ class CompanyRepository implements CompanyRepositoryInterface
     public function getCompaniesToVerification()
     {
         return Company::with(['city', 'type'])
-            ->where(['verified' => 0])
+            ->where(['verified' => false])
+            ->get();
+    }
+
+    public function getAllVerifiedCompanies()
+    {
+        return Company::with(['city','type','user'])
+            ->where(['verified' => true])
             ->get();
     }
 }

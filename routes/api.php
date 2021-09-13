@@ -231,12 +231,12 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::post('/test', 'Api\TestController@testPost');
 
     # Admin
-    Route::get('/admin/universities', 'Api\UniversityController@getUniversities');
-    Route::get('/admin/universities/verification', 'Api\UniversityController@getUniversitiesToVerification');
+    Route::get('/admin/universities/verified', 'Api\UniversityController@getAllVerifiedUniversities');
+    Route::get('/admin/universities/unverified', 'Api\UniversityController@getUniversitiesToVerification');
     Route::post('/admin/universities/{slug}/verify', 'Api\UniversityController@verifyUniversity');
     Route::post('/admin/universities/{slug}/reject', 'Api\UniversityController@rejectUniversity');
-    Route::get('/admin/companies', 'Api\CompanyController@getCompanies');
-    Route::get('/admin/companies/verification', 'Api\CompanyController@getCompaniesToVerification');
+    Route::get('/admin/companies/verified', 'Api\CompanyController@getAllVerifiedCompanies');
+    Route::get('/admin/companies/unverified', 'Api\CompanyController@getCompaniesToVerification');
     Route::post('/admin/companies/{slug}/verify', 'Api\CompanyController@verifyCompany');
     Route::post('/admin/companies/{slug}/reject', 'Api\CompanyController@rejectCompany');
 

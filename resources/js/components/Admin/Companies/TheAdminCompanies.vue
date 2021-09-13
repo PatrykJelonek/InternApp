@@ -4,32 +4,29 @@
             <template v-slot:default>Firmy</template>
             <template v-slot:subheader>Lista firm w serwisie</template>
             <template v-slot:actions>
-                <v-btn-toggle>
+                <v-btn-toggle
+                    background-color="transparent"
+                    borderless
+                >
                     <v-btn
                         small
-                        :to="{name: 'admin-companies'}" exact
+                        exact
+                        :to="{name: 'admin-companies'}"
                     >
-                        Wszystkie
+                        Zweryfikowane
                     </v-btn>
                     <v-btn
                         small
-                        :to="{name: 'admin-companies-verification'}" exact
+                        exact
+                        :to="{name: 'admin-companies-unverified'}"
                     >
-                        Do weryfikacji
+                        Niezweryfikowane
                     </v-btn>
                 </v-btn-toggle>
             </template>
         </page-title>
 
         <v-row no-gutters>
-            <v-col cols="12">
-                <custom-card>
-
-                </custom-card>
-            </v-col>
-        </v-row>
-
-        <v-row no-gutters class="pt-10">
             <v-col cols="12">
                 <router-view></router-view>
             </v-col>
