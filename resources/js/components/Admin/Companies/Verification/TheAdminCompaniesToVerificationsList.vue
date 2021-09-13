@@ -35,7 +35,7 @@
                 no-results-text="Niestety, nie znaleziono szukanej firmy!"
                 loading-text="Pobieranie listy firm do weryfikacji..."
                 :search="search"
-                :loading="companiesToVerification"
+                :loading="companiesToVerificationLoading"
             >
                 <template v-slot:item.actions="{ item }">
                     <v-menu offset-y>
@@ -94,14 +94,14 @@ export default {
             selectedUniversity: null,
             reason: null,
         }
-    }
+    },
 
     computed: {
         ...mapGetters({
             dialogs: 'helpers/dialogs',
             dialogArgs: 'helpers/dialogsArgs',
-            companiesToVerification: 'university/universitiesToVerification',
-            companiesToVerificationLoading: 'university/universitiesToVerificationLoading',
+            companiesToVerification: 'company/companiesToVerification',
+            companiesToVerificationLoading: 'company/companiesToVerificationLoading',
         }),
     },
 
@@ -109,7 +109,7 @@ export default {
         ...mapActions({
             toggleDialog: 'helpers/toggleDialog',
             setDialogArgs: 'helpers/setDialogArgs',
-            fetchCompaniesToVerification: 'university/fetchUniversitiesToVerification',
+            fetchCompaniesToVerification: 'company/fetchCompaniesToVerification',
             verifyCompany: 'university/verifyUniversity',
             rejectCompany: 'university/rejectUniversity',
             setSnackbar: 'snackbar/setSnackbar',

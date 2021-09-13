@@ -16,7 +16,9 @@ export default {
         companyWorkers: [],
         companyWorkersLoading: false,
         companies: [],
-        companiesLoading: [],
+        companiesLoading: false,
+        companiesToVerification: [],
+        companiesToVerificationLoading: false,
         interns: [],
     },
 
@@ -83,7 +85,15 @@ export default {
 
         companiesLoading(state) {
             return state.companiesLoading;
-        }
+        },
+
+        companiesToVerification(state) {
+            return state.companiesToVerification;
+        },
+
+        companiesToVerificationLoading(state) {
+            return state.companiesToVerificationLoading;
+        },
     },
 
     mutations: {
@@ -157,7 +167,15 @@ export default {
 
         SET_COMPANIES_LOADING(state, data) {
             state.companiesLoading = data;
-        }
+        },
+
+        SET_COMPANIES_TO_VERIFICATION(state, data) {
+            state.companiesToVerification = data;
+        },
+
+        SET_COMPANIES_TO_VERIFICATION_LOADING(state, data) {
+            state.companiesToVerificationLoading = data;
+        },
     },
 
     actions: {
@@ -304,6 +322,28 @@ export default {
             return axios.post(`/api/companies/${slug}/workers/${userId}`, {
                 accessCode: accessCode,
             });
-        }
+        },
+
+        verifyCompany({commit}, {slug}) {
+            return axios.post(`/api/admin/companies/${slug}/verify`);
+        },
+
+        rejectCompany({commit}, {slug, reason}) {
+            return axios.post(`/api/admin/companies/${slug}/reject`, {
+                reason: reason
+            });
+        },
+
+        async fetchCompaniesToVerification({commit}) {
+            commit('SET_COMPANIES_TO_VERIFICATION_LOADING', true);
+            try {
+                let response = await axios.get(`/api/admin/companies/verification`);
+                commit('SET_COMPANIES_TO_VERIFICATION', response.data);
+                commit('SET_COMPANIES_TO_VERIFICATION_LOADING', false);
+            } catch (e) {
+                commit('SET_COMPANIES_TO_VERIFICATION', []);
+                commit('SET_COMPANIES_TO_VERIFICATION_LOADING', false);
+            }
+        },
     },
 }

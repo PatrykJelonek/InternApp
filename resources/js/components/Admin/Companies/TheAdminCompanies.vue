@@ -3,15 +3,28 @@
         <page-title>
             <template v-slot:default>Firmy</template>
             <template v-slot:subheader>Lista firm w serwisie</template>
+            <template v-slot:actions>
+                <v-btn-toggle>
+                    <v-btn
+                        small
+                        :to="{name: 'admin-companies'}" exact
+                    >
+                        Wszystkie
+                    </v-btn>
+                    <v-btn
+                        small
+                        :to="{name: 'admin-companies-verification'}" exact
+                    >
+                        Do weryfikacji
+                    </v-btn>
+                </v-btn-toggle>
+            </template>
         </page-title>
 
         <v-row no-gutters>
             <v-col cols="12">
                 <custom-card>
-                    <v-tabs background-color="transparent">
-                        <v-tab :to="{name: 'admin-companies'}" exact>Wszystkie</v-tab>
-                        <v-tab :to="{name: 'admin-companies-verification'}" exact>Do weryfikacji</v-tab>
-                    </v-tabs>
+
                 </custom-card>
             </v-col>
         </v-row>

@@ -10,6 +10,7 @@ use App\Http\Requests\CompanyAddWorkerToCompanyRequest;
 use App\Http\Requests\CompanyCreateCompanyQuestionnaireRequest as CreateQuestionnaireRequest;
 use App\Http\Requests\CompanyCreateCompanyRequest;
 use App\Http\Requests\CompanyDeleteCompanyWorkerRequest;
+use App\Http\Requests\CompanyGetCompaniesToVerificationRequest;
 use App\Http\Requests\CompanyGetCompanyQuestionnairesRequest;
 use App\Http\Requests\CompanyOffersRequest;
 use App\Http\Requests\CompanyRejectCompanyRequest;
@@ -660,5 +661,10 @@ class CompanyController extends Controller
         }
 
         return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+
+    public function getCompaniesToVerification(CompanyGetCompaniesToVerificationRequest $request): Response
+    {
+        return response($this->companyRepository->getCompaniesToVerification(), Response::HTTP_OK);
     }
 }
