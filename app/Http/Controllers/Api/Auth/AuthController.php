@@ -26,7 +26,7 @@ class AuthController extends Controller
     private const USER_STATUS_ACTIVE = 1;
     private const TOKEN_TYPE_BEARER = 'bearer';
 
-    # Metoda do logowania
+    # Metoda do logowania użytkownika w serwisie
     public function login(AuthLoginRequest $request)
     {
         $token = auth()->attempt(
