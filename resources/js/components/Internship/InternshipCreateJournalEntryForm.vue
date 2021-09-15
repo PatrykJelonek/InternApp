@@ -125,7 +125,6 @@ export default {
 
         getStudentIdByStudentIndex(studentIndex) {
             if (this.internshipStudents.length > 0) {
-                console.log(this.internshipStudents);
                 this.internshipStudents.forEach((student) => {
 
                     if (student.student_index === studentIndex) {

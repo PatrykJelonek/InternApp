@@ -81,7 +81,6 @@ export default {
 
     methods: {
         getPercentOfInternship(internshipStartDate, internshipEndDate) {
-            console.log(moment(internshipStartDate).format('DD.MM.YYYY'));
             this.allInternshipDays = (moment(internshipEndDate).diff(moment(internshipStartDate), 'days')) + 1;
             this.internshipsDaysToToday = (moment().diff(moment(internshipStartDate), 'days')) + 1;
 

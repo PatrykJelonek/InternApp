@@ -7,7 +7,14 @@
                 <template v-slot:default>Ankiety</template>
                 <template v-slot:subheader>Lista ankiet uczelni {{ university.name }}</template>
                 <template v-slot:actions>
-                    <v-btn color="primary" outlined @click="toggleCreateQuestionnaireDialog(true)">Dodaj Ankietę</v-btn>
+                    <v-btn
+                        color="primary"
+                        outlined
+                        @click="toggleCreateQuestionnaireDialog(true)"
+                        v-has-university-role="['deanery_worker','university_owner','university_supervisor']"
+                    >
+                        Dodaj Ankietę
+                    </v-btn>
                 </template>
             </page-title>
 
@@ -52,7 +59,7 @@
                                     <v-list dense color="component-background" class="cursor-pointer">
                                         <v-list-item
                                             @click="$router.push({name: 'edit-questionnaire', params: {slug: $route.params.slug, questionnaireId: item.id}})">
-                                            <v-list-item-title>
+                                            <v-list-item-title v-has-university-role="['deanery_worker','university_owner','university_supervisor']">
                                                 Edytuj ankietę
                                             </v-list-item-title>
                                         </v-list-item>

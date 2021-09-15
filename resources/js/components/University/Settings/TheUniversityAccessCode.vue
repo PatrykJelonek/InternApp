@@ -3,7 +3,7 @@
         <custom-card-title>
             <template v-slot:default>Kod dostępu</template>
             <template v-slot:actions>
-                <v-btn icon @click="generateAccessCode">
+                <v-btn icon @click="generateAccessCode" v-has-university-role="['deanery_worker','university_owner']">
                     <v-icon>mdi-cached</v-icon>
                 </v-btn>
             </template>

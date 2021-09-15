@@ -55,18 +55,18 @@ const has = function (roles) {
     return true;
 };
 
-const hasUniversityRole = function (roles) {
+export const hasUniversityRole = function (roles, allowEmpty = false) {
     const currentUser = store.getters['auth/user'];
     const currentUniversity = store.getters['university/university'];
 
     if (roles) {
-        if (!currentUser || !currentUser.universities_with_roles || roles.length < 1) return false;
+        if (!currentUser || !currentUser.universities_with_roles || !currentUniversity || roles.length < 1) return false;
         let hasRole = false;
 
         currentUser.universities_with_roles.forEach((universityWithRoles) => {
             if (universityWithRoles.university_id === currentUniversity.id) {
                 roles.forEach(role => {
-                    hasRole = universityWithRoles.roles.map(role => role['name']).includes(role);
+                    hasRole = hasRole ? true : universityWithRoles.roles.map(role => role['name']).includes(role);
                 });
             }
         });
@@ -74,21 +74,21 @@ const hasUniversityRole = function (roles) {
         return hasRole;
     }
 
-    return true;
+    return allowEmpty;
 };
 
-const hasCompanyRole = function (roles) {
+export const hasCompanyRole = function (roles, allowEmpty = false) {
     const currentUser = store.getters['auth/user'];
     const currentCompany = store.getters['company/company'];
 
     if (roles) {
-        if (!currentUser || !currentUser.companies_with_roles || roles.length < 1) return false;
+        if (!currentUser || !currentUser.companies_with_roles || !currentCompany || roles.length < 1) return false;
         let hasRole = false;
 
         currentUser.companies_with_roles.forEach((companyWithRoles) => {
            if (companyWithRoles.company_id === currentCompany.id) {
                roles.forEach(role => {
-                   hasRole = companyWithRoles.roles.map(role => role['name']).includes(role);
+                   hasRole = hasRole ? true : companyWithRoles.roles.map(role => role['name']).includes(role);
                });
            }
         });
@@ -96,5 +96,5 @@ const hasCompanyRole = function (roles) {
         return hasRole;
     }
 
-    return true;
+    return allowEmpty;
 };

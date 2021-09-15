@@ -70,7 +70,6 @@
                     this.$store.dispatch('user/fetchUserUniversities');
                     this.dialog = false;
                 }).catch((e) => {
-                    console.log(e.response);
                     this.$refs.observer.setErrors({
                         accessCode: [e.response.data.message],
                     });

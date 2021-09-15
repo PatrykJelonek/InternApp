@@ -7,7 +7,14 @@
                 <template v-slot:default>Ankiety</template>
                 <template v-slot:subheader>Lista ankiet firmy {{ company.name }}</template>
                 <template v-slot:actions>
-                    <v-btn color="primary" outlined @click="toggleCreateQuestionnaireDialog(true)">Dodaj Ankietę</v-btn>
+                    <v-btn
+                        outlined
+                        color="primary"
+                        @click="toggleCreateQuestionnaireDialog(true)"
+                        v-has-company-role="['company_owner', 'company_manager', 'company_supervisor']"
+                    >
+                        Dodaj Ankietę
+                    </v-btn>
                 </template>
             </page-title>
 
@@ -116,7 +123,9 @@ export default {
             {text: 'Ankiety', to: {name: 'company-questionnaires'}, exact: true},
         ]);
 
-        this.fetchQuestionnaires(this.$route.params.slug).then(() => {}).catch((error) => {});
+        this.fetchQuestionnaires(this.$route.params.slug).then(() => {
+        }).catch((error) => {
+        });
     }
 }
 </script>

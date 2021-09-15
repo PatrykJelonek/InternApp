@@ -134,7 +134,6 @@ export default {
                 this.setSnackbar({message: 'Firma została zweryfikowana!', color: 'success'});
                 this.fetchCompaniesToVerification();
             }).catch((e) => {
-                console.log(e);
                 this.setSnackbar({message: 'Ups, coś poszło nie tak!', color: 'error'});
             }).finally(() => {
                 this.toggleDialog({key: 'DIALOG_FIELD_VERIFY_COMPANY', val: false});
@@ -149,7 +148,6 @@ export default {
                 this.setSnackbar({message: 'Firma została odrzucona!', color: 'success'});
                 this.fetchCompaniesToVerification();
             }).catch((e) => {
-                console.log(e);
                 this.setSnackbar({message: 'Ups, coś poszło nie tak!', color: 'error'});
             }).finally(() => {
                 this.toggleDialog({key: 'DIALOG_FIELD_REJECT_COMPANY', val: false});

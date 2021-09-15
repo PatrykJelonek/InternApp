@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use App\Constants\AgreementStatusConstants;
 use App\Constants\RoleConstants;
+use App\Events\StudentRejected;
+use App\Events\StudentVerified;
 use App\Events\UniversityRejected;
 use App\Events\UniversityVerified;
 use App\Http\Controllers\Controller;
@@ -23,12 +25,14 @@ use App\Http\Requests\UniversityGetUniversitiesToVerificationRequest;
 use App\Http\Requests\UniversityGetUniversityQuestionnairesRequest;
 use App\Http\Requests\UniversityGetUniversityRequest;
 use App\Http\Requests\UniversityInternshipsRequest;
+use App\Http\Requests\UniversityRejectStudentInUniversityRequest;
 use App\Http\Requests\UniversityRejectUniversityRequest;
 use App\Http\Requests\UniversityStudentsRequest;
 use App\Http\Requests\UniversityUpdateUniversityFacultyFieldRequest;
 use App\Http\Requests\UniversityUpdateUniversityFacultyFieldSpecializationRequest;
 use App\Http\Requests\UniversityUpdateUniversityFacultyRequest;
 use App\Http\Requests\UniversityUpdateUniversityLogoRequest as UpdateLogoRequest;
+use App\Http\Requests\UniversityVerifyStudentInUniversityRequest;
 use App\Http\Requests\UniversityVerifyUniversityRequest;
 use App\Http\Requests\UniversityVerifyUniversityWorkerRequest;
 use App\Http\Requests\UniversityWorkersRequest;
@@ -88,6 +92,7 @@ class UniversityController extends Controller
     public const REQUEST_FIELD_OWN_AGREEMENT_SIGNING_DATE = 'agreement.signingDate';
 
     public const REQUEST_FIELD_REJECT_UNIVERSITY_REASON = 'reason';
+    public const REQUEST_FIELD_REJECT_STUDENT_REASON = 'reason';
 
     /**
      * @var UniversityRepository
@@ -1086,6 +1091,45 @@ class UniversityController extends Controller
                 $request->input(self::REQUEST_FIELD_REJECT_UNIVERSITY_REASON)
             );
             return response($rejectedUniversity, Response::HTTP_OK);
+        }
+
+        return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+
+    public function verifyStudentInUniversity(
+        UniversityVerifyStudentInUniversityRequest $request,
+        string $slug,
+        int $userId
+    ) {
+        $verifiedStudent = $this->universityService->verifyStudentInUniversity($slug, $userId);
+        $university = $this->universityRepository->getUniversityBySlug($slug);
+
+        if (!is_null($verifiedStudent) && !is_null($university)) {
+            StudentVerified::dispatch(
+                $verifiedStudent,
+                $university
+            );
+            return response($verifiedStudent, Response::HTTP_OK);
+        }
+
+        return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+
+    public function rejectStudentInUniversity(
+        UniversityRejectStudentInUniversityRequest $request,
+        string $slug,
+        int $userId
+    ) {
+        $rejectedStudent = $this->universityService->rejectStudentInUniversity($slug, $userId);
+        $university = $this->universityRepository->getUniversityBySlug($slug);
+
+        if (!is_null($rejectedStudent) && !is_null($university)) {
+            StudentRejected::dispatch(
+                $rejectedStudent,
+                $university,
+                $request->input(self::REQUEST_FIELD_REJECT_UNIVERSITY_REASON)
+            );
+            return response($rejectedStudent, Response::HTTP_OK);
         }
 
         return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);

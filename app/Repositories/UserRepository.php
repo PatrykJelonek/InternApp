@@ -74,8 +74,6 @@ class UserRepository implements UserRepositoryInterface
 //            $internships = User::find($currentUserId)->universities()->agreements()->internships()->get();
 //        }
 
-        clock()->info('asd', $internships->toArray());
-
         return $internships;
     }
 

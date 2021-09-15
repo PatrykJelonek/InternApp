@@ -14,6 +14,7 @@
                                 outlined
                                 hide-details
                                 dense
+                                :disabled="!hasUniversityRole(['deanery_worker','university_owner'])"
                             ></v-text-field>
                         </v-col>
                         <v-col cols="12">
@@ -23,6 +24,7 @@
                                 outlined
                                 hide-details
                                 dense
+                                :disabled="!hasUniversityRole(['deanery_worker','university_owner'])"
                             ></v-text-field>
                         </v-col>
                         <v-col cols="12">
@@ -32,12 +34,19 @@
                                 outlined
                                 hide-details
                                 dense
+                                :disabled="!hasUniversityRole(['deanery_worker','university_owner'])"
                             ></v-text-field>
                         </v-col>
                     </v-row>
                     <v-row>
                         <v-col cols="12" class="d-flex justify-end">
-                            <v-btn outlined color="primary">Zapisz</v-btn>
+                            <v-btn
+                                outlined
+                                color="primary"
+                                v-has-university-role="['deanery_worker','university_owner']"
+                            >
+                                Zapisz
+                            </v-btn>
                         </v-col>
                     </v-row>
                 </v-form>
@@ -51,6 +60,7 @@ import {mapActions, mapGetters} from "vuex";
 import moment from "moment";
 import CustomCard from "../../_General/CustomCard";
 import CustomCardTitle from "../../_General/CustomCardTitle";
+import {hasUniversityRole} from "../../../plugins/acl";
 
 export default {
     name: "TheUniversitySettingsForm",
@@ -69,6 +79,8 @@ export default {
     },
 
     methods: {
+        hasUniversityRole,
+
         ...mapActions({}),
 
         formatDate(date) {

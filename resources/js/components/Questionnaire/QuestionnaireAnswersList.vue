@@ -101,9 +101,9 @@ export default {
     created() {
 
         this.fetchQuestionnaireAnswers(this.$route.params.questionnaireId).then((response) => {
-            console.log(this.questionnaireAnswers.length);
+
         }).catch((e) => {
-            console.log(e.response)
+
         });
     },
 }

@@ -8,7 +8,7 @@
             :dialog-state="deleteCompanyWorkerDialog"
             :toggle-function="toggleDeleteCompanyWorkerDialog"
             :confirm-function="deleteWorker"
-            :confirm-function-args="[selectedWorkerId]"
+            :confirm-function-args="[]"
             title="Usuń pracownika"
         >
             Czy chcesz usunąć tego pracownika z firmy?
@@ -17,7 +17,7 @@
             :dialog-state="acceptCompanyWorkerDialog"
             :toggle-function="toggleAcceptCompanyWorkerDialog"
             :confirm-function="acceptWorker"
-            :confirm-function-args="[selectedWorkerId]"
+            :confirm-function-args="[]"
             title="Akceptuj pracownika"
         >
             Czy chcesz zaakceptować tego pracownika jako pracownika firmy?
@@ -111,6 +111,7 @@
                                         <v-list-item
                                             class="cursor-pointer"
                                             @click="toggleAcceptCompanyWorkerDialog(true)"
+                                            v-has-company-role="['company_owner', 'company_manager']"
                                         >
                                             <v-list-item-content>
                                                 <v-list-item-title>Akceptuj pracownika</v-list-item-title>
@@ -119,9 +120,10 @@
                                         <v-list-item
                                             class="cursor-pointer"
                                             @click="toggleDeleteCompanyWorkerDialog(true)"
+                                            v-has-company-role="['company_owner', 'company_manager']"
                                         >
                                             <v-list-item-content>
-                                                <v-list-item-title>Usuń pracownika</v-list-item-title>
+                                                <v-list-item-title>Odrzuć pracownika</v-list-item-title>
                                             </v-list-item-content>
                                         </v-list-item>
                                     </template>
@@ -131,17 +133,17 @@
                                                 <v-list-item-title>Wyświetl profil</v-list-item-title>
                                             </v-list-item-content>
                                         </v-list-item>
-                                        <v-list-item>
+                                        <v-list-item v-has-company-role="['company_owner', 'company_manager']">
                                             <v-list-item-content>
                                                 <v-list-item-title>Zmień rolę</v-list-item-title>
                                             </v-list-item-content>
                                         </v-list-item>
-                                        <v-list-item v-if="!item.companies_with_roles[0].active">
+                                        <v-list-item v-if="!item.companies_with_roles[0].active && hasCompanyRole(['company_owner', 'company_manager'])">
                                             <v-list-item-content>
                                                 <v-list-item-title>Aktywuj</v-list-item-title>
                                             </v-list-item-content>
                                         </v-list-item>
-                                        <v-list-item v-else>
+                                        <v-list-item v-else-if="item.companies_with_roles[0].active && hasCompanyRole(['company_owner', 'company_manager'])">
                                             <v-list-item-content>
                                                 <v-list-item-title>Dezaktywuj</v-list-item-title>
                                             </v-list-item-content>
@@ -163,6 +165,7 @@ import PageTitle from "../../_Helpers/PageTitle";
 import CustomCard from "../../_General/CustomCard";
 import CustomConfirmDialog from "../../_General/CustomConfirmDialog";
 import CustomCardTitle from "../../_General/CustomCardTitle";
+import {hasCompanyRole} from "../../../plugins/acl";
 
 export default {
     name: "TheCompanyWorkers",
@@ -193,6 +196,8 @@ export default {
     },
 
     methods: {
+        hasCompanyRole,
+
         ...mapActions({
             setBreadcrumbs: 'helpers/setBreadcrumbs',
             fetchCompanyWorkers: 'company/fetchCompanyWorkers',

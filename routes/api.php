@@ -155,6 +155,8 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::put('/universities/{slug}/workers/{userId}/verify','Api\UniversityController@verifyUniversityWorker');
     Route::get('/universities/{slug}/students','Api\UniversityController@getStudents');
     Route::post('/universities/{slug}/students/{userId}','Api\UniversityController@addStudentToUniversity');
+    Route::post('/universities/{slug}/students/{userId}/verify','Api\UniversityController@verifyStudentInUniversity');
+    Route::post('/universities/{slug}/students/{userId}/reject','Api\UniversityController@rejectStudentInUniversity');
     Route::get('/universities/{slug}/agreements','Api\UniversityController@getAgreements');
     Route::post('/universities/{slug}/agreements','Api\UniversityController@createOwnAgreement');
     Route::get('/universities/{slug}/internships','Api\UniversityController@getInternships2');

@@ -551,8 +551,18 @@ export default {
 
         rejectUniversity({commit}, {slug, reason}) {
             return axios.post(`/api/admin/universities/${slug}/reject`, {
-                    reason: reason
+                reason: reason
             });
-        }
+        },
+
+        verifyStudentInUniversity({commit}, {slug, userId}) {
+            return axios.post(`/api/universities/${slug}/students/${userId}/verify`);
+        },
+
+        rejectStudentInUniversity({commit}, {slug, userId, reason}) {
+            return axios.post(`/api/universities/${slug}/students/${userId}/reject`, {
+                reason: reason,
+            });
+        },
     },
 };

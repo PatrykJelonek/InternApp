@@ -326,7 +326,6 @@ export default {
                         this.agreement = null;
                     }).catch((e) => {
                         if (e.response.status === 422) {
-                            console.log(e.response.data.errors);
                             this.$refs.observer.setErrors(e.response.data.errors);
                         }
 

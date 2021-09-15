@@ -641,7 +641,6 @@ export default {
         },
 
         createBase64(file) {
-            console.log(file);
             const reader = new FileReader();
 
             reader.onload = (e) => {

@@ -10,8 +10,11 @@
         >
             Czy na pewno chcesz zweryfikować tego pracownika?
         </custom-confirm-dialog>
-        <select-roles-dialog :groups="['university']" :submit-function="changeRoles"
-                             :existent-roles-id="selectedWorkerRolesIds"></select-roles-dialog>
+        <select-roles-dialog
+            :groups="['university']"
+            :submit-function="changeRoles"
+            :existent-roles-id="selectedWorkerRolesIds"
+        ></select-roles-dialog>
         <custom-card-title>
             <template v-slot:default>Lista pracowników</template>
         </custom-card-title>
@@ -83,15 +86,15 @@
                                 </v-btn>
                             </template>
                             <v-list dense color="component-background" class="cursor-pointer">
-                                <template  v-if="!item.universities_with_roles[0].verified">
+                                <template v-if="!item.universities_with_roles[0].verified" v-has-university-role="['deanery_worker','university_owner']">
                                     <v-list-item>
                                         <v-list-item-title @click="openVerifyWorkerDialog(item)">
-                                            Zweryfikuj
+                                            Akceptuj pracownika
                                         </v-list-item-title>
                                     </v-list-item>
                                     <v-list-item>
                                         <v-list-item-title @click="openVerifyWorkerDialog(item)">
-                                            Odrzuć
+                                            Odrzuć pracownika
                                         </v-list-item-title>
                                     </v-list-item>
                                 </template>
@@ -102,23 +105,23 @@
                                             Wyświetl profil
                                         </v-list-item-title>
                                     </v-list-item>
-                                    <v-list-item>
+                                    <v-list-item v-has-university-role="['deanery_worker','university_owner']">
                                         <v-list-item-title @click="openChangeRoleDialog(item)">
                                             Zmień role
                                         </v-list-item-title>
                                     </v-list-item>
-                                    <v-list-item>
+                                    <v-list-item v-has-university-role="['deanery_worker','university_owner']">
                                         <v-list-item-title
                                             v-if="!item.universities_with_roles[0].active"
                                             @click="$router.push({name: 'user', params: {id: item.id}})"
                                         >
-                                            Aktywuj
+                                            Aktywuj pracownika
                                         </v-list-item-title>
                                         <v-list-item-title
                                             v-else
                                             @click="$router.push({name: 'user', params: {id: item.id}})"
                                         >
-                                            Dezaktywuj
+                                            Dezaktywuj pracownika
                                         </v-list-item-title>
                                     </v-list-item>
                                 </template>

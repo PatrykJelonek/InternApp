@@ -99,7 +99,6 @@ export default {
                     }).then((response) => {
                         this.setSnackbar({message: 'Odpowiedzi zostały zapisane!', color: 'success'});
                     }).catch((e) => {
-                        console.log(e.response);
                         if (e.response.status === 422) {
                             this.$refs.observer.setErrors(e.response.data.errors);
                         } else {

@@ -36,7 +36,14 @@
             <v-row no-gutters>
                 <v-col cols="12" class="d-flex justify-space-between px-5 py-2">
                     <v-btn text color="secondary" @click="closeDialog">Anuluj</v-btn>
-                    <v-btn outlined color="primary" @click="changeStatus">Zapisz</v-btn>
+                    <v-btn
+                        outlined
+                        color="primary"
+                        @click="changeStatus"
+                        :disabled="!hasUniversityRole(['deanery_worker','university_owner']) && selectedStatus"
+                    >
+                        Zapisz
+                    </v-btn>
                 </v-col>
             </v-row>
         </custom-card>
@@ -47,6 +54,7 @@
 import CustomCard from "../../_General/CustomCard";
 import CustomCardTitle from "../../_General/CustomCardTitle";
 import {mapActions, mapGetters, mapState} from "vuex";
+import {hasUniversityRole} from "../../../plugins/acl";
 
 export default {
     name: "TheUniversityInternshipChangeStatusDialog",
@@ -72,6 +80,8 @@ export default {
     },
 
     methods: {
+        hasUniversityRole,
+
         ...mapActions({
             setSnackbar: 'snackbar/setSnackbar',
             fetchInternshipStatuses: 'internship/fetchInternshipStatuses',

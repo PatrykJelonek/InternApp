@@ -32,6 +32,7 @@
                                 accept="image/jpeg,image/png"
                                 @change="setLogoPreview"
                                 prepend-icon=""
+                                :disabled="!hasUniversityRole(['deanery_worker','university_owner'])"
                             ></v-file-input>
                         </validation-provider>
                     </validation-observer>
@@ -41,8 +42,8 @@
                 <v-btn
                     color="primary"
                     outlined
-                    :disabled="logo === null"
                     @click="submit"
+                    :disabled="logo === null || !hasUniversityRole(['deanery_worker','university_owner'])"
                 >
                     Zapisz
                 </v-btn>
@@ -56,6 +57,7 @@ import CustomCardTitle from "../../_General/CustomCardTitle";
 import CustomCard from "../../_General/CustomCard";
 import {ValidationObserver, ValidationProvider} from "vee-validate";
 import {mapActions, mapGetters} from "vuex";
+import {hasUniversityRole} from "../../../plugins/acl";
 
 export default {
     name: "TheUniversityChangeLogo",
@@ -81,6 +83,8 @@ export default {
     },
 
     methods: {
+        hasUniversityRole,
+
         ...mapActions({
             setSnackbar: 'snackbar/setSnackbar',
             updateUniversityLogo: 'university/updateUniversityLogo'

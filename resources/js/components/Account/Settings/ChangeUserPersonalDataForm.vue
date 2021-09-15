@@ -106,7 +106,6 @@ export default {
         },
 
         async submit() {
-            console.log("asdasd");
             await this.updateUserData(this.userData).then(() => {
                 this.setSnackbar({message: 'Dane zostały zmienione!', color: 'success'});
             }).catch((e) => {

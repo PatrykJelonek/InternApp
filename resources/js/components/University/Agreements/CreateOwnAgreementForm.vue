@@ -640,7 +640,6 @@ export default {
                                 if (isValid) {
                                     this.stepOneErrors = false;
                                     this.stepOneCompleted = true;
-                                    console.log('asd 1');
                                 } else {
                                     this.stepOneErrors = true;
                                     this.setCreateOwnAgreementStepper(1);
@@ -657,7 +656,6 @@ export default {
                             if (isValid) {
                                 this.stepTwoErrors = false;
                                 this.stepTwoCompleted = true;
-                                console.log('asd 2');
                             } else {
                                 this.stepTwoErrors = true;
                                 this.setCreateOwnAgreementStepper(2);
@@ -669,7 +667,6 @@ export default {
                             if (isValid) {
                                 this.stepThreeErrors = false;
                                 this.stepThreeCompleted = true;
-                                console.log('asd 2');
                             } else {
                                 this.stepThreeErrors = true;
                                 this.setCreateOwnAgreementStepper(3);
@@ -686,7 +683,6 @@ export default {
                     this.setSnackbar({message: "Umowa została dodana!", color: 'success'});
                 }).catch((e) => {
                     if (e.response.status === 422) {
-                        console.log(e.response.data.errors);
                         this.$refs.observerStepOne.setErrors(e.response.data.errors);
                         this.$refs.observerStepTwo.setErrors(e.response.data.errors);
                         this.$refs.observerStepThree.setErrors(e.response.data.errors);

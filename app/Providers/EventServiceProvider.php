@@ -4,12 +4,16 @@ namespace App\Providers;
 
 use App\Events\CompanyRejected;
 use App\Events\CompanyVerified;
+use App\Events\StudentRejected;
+use App\Events\StudentVerified;
 use App\Events\UniversityRejected;
 use App\Events\UniversityVerified;
 use App\Events\UserCreated;
 use App\Listeners\SendActivationEmail;
 use App\Listeners\SendCompanyRejectedNotification;
 use App\Listeners\SendCompanyVerifiedNotification;
+use App\Listeners\SendStudentRejectedNotification;
+use App\Listeners\SendStudentVerifiedNotification;
 use App\Listeners\SendUniversityRejectedNotification;
 use App\Listeners\SendUniversityVerifiedNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -28,22 +32,28 @@ class EventServiceProvider extends ServiceProvider
 //            SendEmailVerificationNotification::class,
 //        ],
         StudentRegistered::class => [
-            SendStudentRegisteredNotificationEmail::class
+            SendStudentRegisteredNotificationEmail::class,
         ],
         UserCreated::class => [
-            SendActivationEmail::class
+            SendActivationEmail::class,
         ],
         UniversityRejected::class => [
-            SendUniversityRejectedNotification::class
+            SendUniversityRejectedNotification::class,
         ],
         UniversityVerified::class => [
-            SendUniversityVerifiedNotification::class
+            SendUniversityVerifiedNotification::class,
         ],
         CompanyRejected::class => [
-            SendCompanyRejectedNotification::class
+            SendCompanyRejectedNotification::class,
         ],
         CompanyVerified::class => [
-            SendCompanyVerifiedNotification::class
+            SendCompanyVerifiedNotification::class,
+        ],
+        StudentVerified::class => [
+            SendStudentVerifiedNotification::class,
+        ],
+        StudentRejected::class => [
+            SendStudentRejectedNotification::class,
         ],
     ];
 

@@ -244,7 +244,6 @@
                 await this.createAgreement(this.agreement).then(() => {
                     this.$router.replace('/offers');
                 }).catch((e) => {
-                    console.log(e.response.data);
                     if(e.response.status == 422) {
                         this.$refs.observer.setErrors(e.response.data.errors);
                     }

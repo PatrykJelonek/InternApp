@@ -23,6 +23,7 @@
                                         :error-messages="errors"
                                         label="Email"
                                         @change="checkDataIsChanged"
+                                        :disabled="!hasCompanyRole(['company_owner', 'company_manager'])"
                                     ></v-text-field>
                                 </validation-provider>
                             </v-col>
@@ -40,6 +41,7 @@
                                         :error-messages="errors"
                                         label="Numer kontaktowy"
                                         @change="checkDataIsChanged"
+                                        :disabled="!hasCompanyRole(['company_owner', 'company_manager'])"
                                     ></v-text-field>
                                 </validation-provider>
                             </v-col>
@@ -57,6 +59,7 @@
                                         :error-messages="errors"
                                         label="Strona internetowa"
                                         @change="checkDataIsChanged"
+                                        :disabled="!hasCompanyRole(['company_owner', 'company_manager'])"
                                     ></v-text-field>
                                 </validation-provider>
                             </v-col>
@@ -75,6 +78,7 @@
                                         label="Opis firmy"
                                         height="100px"
                                         @change="checkDataIsChanged"
+                                        :disabled="!hasCompanyRole(['company_owner', 'company_manager'])"
                                     ></v-textarea>
                                 </validation-provider>
                             </v-col>
@@ -82,8 +86,8 @@
                                 <v-btn
                                     color="primary"
                                     outlined
-                                    :disabled="!isDataChanged"
                                     @click="submit"
+                                    :disabled="!isDataChanged || !hasCompanyRole(['company_owner', 'company_manager'])"
                                 >
                                     Zapisz
                                 </v-btn>
@@ -101,6 +105,7 @@ import CustomCard from "../../_General/CustomCard";
 import CustomCardTitle from "../../_General/CustomCardTitle";
 import {setInteractionMode, ValidationProvider, ValidationObserver, extend} from "vee-validate";
 import {mapActions, mapGetters} from "vuex";
+import {hasCompanyRole, hasUniversityRole} from "../../../plugins/acl";
 
 setInteractionMode('eager');
 
@@ -132,6 +137,9 @@ export default {
     },
 
     methods: {
+        hasCompanyRole,
+        hasUniversityRole,
+
         ...mapActions({
             updateCompanyData: 'company/updateCompanyData',
             setSnackbar: 'snackbar/setSnackbar'
@@ -151,7 +159,6 @@ export default {
                         this.setSnackbar({message: 'Dane zostały zmienione!', color: 'success'});
                     }).catch((e) => {
                         if (e.response.status === 422) {
-                            console.log(e.response.data.errors);
                             this.$refs.observer.setErrors(e.response.data.errors);
                         }
 

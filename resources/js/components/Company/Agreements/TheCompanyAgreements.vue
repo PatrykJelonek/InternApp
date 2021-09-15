@@ -60,16 +60,30 @@
                                             Wyświetl umowę
                                         </v-list-item-title>
                                     </v-list-item>
-                                    <v-list-item v-if="item.offer" :to="{name: 'offer', params: {slug: item.offer.slug}}">
+                                    <v-list-item
+                                        v-if="item.offer"
+                                        :to="{name: 'offer', params: {slug: item.offer.slug}}"
+                                    >
                                         <v-list-item-title class="cursor-pointer">
                                             Wyświetl ofertę
                                         </v-list-item-title>
                                     </v-list-item>
-                                    <v-divider v-if="item.status.group === 'new'"></v-divider>
-                                    <v-list-item v-if="item.status.group === 'new'" @click="accept(item)">
+                                    <v-divider
+                                        v-if="item.status.group === 'new'"
+                                        v-has-company-role="['company_owner']"
+                                    ></v-divider>
+                                    <v-list-item
+                                        @click="accept(item)"
+                                        v-if="item.status.group === 'new'"
+                                        v-has-company-role="['company_owner','company_manager']"
+                                    >
                                         <v-list-item-title class="cursor-pointer">Akceptuj</v-list-item-title>
                                     </v-list-item>
-                                    <v-list-item v-if="item.status.group === 'new'" @click="reject(item)">
+                                    <v-list-item
+                                        @click="reject(item)"
+                                        v-if="item.status.group === 'new'"
+                                        v-has-company-role="['company_owner','company_manager']"
+                                    >
                                         <v-list-item-title class="cursor-pointer">Odrzuć</v-list-item-title>
                                     </v-list-item>
                                 </v-list>
@@ -152,7 +166,11 @@ export default {
     created() {
         this.setBreadcrumbs([
             {text: 'Panel', to: {name: 'panel'}, exact: true},
-            {text: this.company.name ?? 'Firma', to: {name: 'company', params: {slug: this.$route.params.slug}}, exact: true},
+            {
+                text: this.company.name ?? 'Firma',
+                to: {name: 'company', params: {slug: this.$route.params.slug}},
+                exact: true
+            },
             {text: 'Umowy', to: {name: 'company-agreements'}, exact: true},
         ])
 

@@ -10,6 +10,7 @@ namespace App\Services;
 
 use App\Models\University;
 use App\Models\UserUniversity;
+use App\Repositories\StudentRepository;
 use App\Repositories\UniversityRepository;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
@@ -26,11 +27,18 @@ class UniversityService
     private $universityRepository;
 
     /**
-     * @param UniversityRepository $universityRepository
+     * @var StudentRepository
      */
-    public function __construct(UniversityRepository $universityRepository)
+    private $studentRepository;
+
+    /**
+     * @param UniversityRepository $universityRepository
+     * @param StudentRepository    $studentRepository
+     */
+    public function __construct(UniversityRepository $universityRepository, StudentRepository $studentRepository)
     {
         $this->universityRepository = $universityRepository;
+        $this->studentRepository = $studentRepository;
     }
 
     /**
@@ -191,7 +199,10 @@ class UniversityService
 
         DB::beginTransaction();
         if (!is_null($university) && !is_null($universityAuthor)) {
-            $userUniversityRole = $this->universityRepository->getUsersUniversitiesRoles($universityAuthor->id, $university->id);
+            $userUniversityRole = $this->universityRepository->getUsersUniversitiesRoles(
+                $universityAuthor->id,
+                $university->id
+            );
 
             if (!is_null($userUniversityRole)) {
                 $userUniversityRole->delete();
@@ -200,6 +211,53 @@ class UniversityService
                 if ($university->delete()) {
                     DB::commit();
                     return $university;
+                }
+            }
+        }
+
+        DB::rollBack();
+        return null;
+    }
+
+    public function verifyStudentInUniversity(string $slug, int $userId)
+    {
+        $university = $this->universityRepository->getUniversityBySlug($slug);
+        $student = $this->studentRepository->getStudentByUserId($userId);
+
+        if (!is_null($university) && !is_null($student)) {
+            $userUniversity = $this->universityRepository->getUserUniversities($userId, $university->id);
+
+            if (!is_null($userUniversity)) {
+                $userUniversity->verified = true;
+
+                if ($userUniversity->update()) {
+                    return $student;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    public function rejectStudentInUniversity(string $slug, int $userId)
+    {
+        $university = $this->universityRepository->getUniversityBySlug($slug);
+        $student = $this->studentRepository->getStudentByUserId($userId);
+
+        DB::beginTransaction();
+        if (!is_null($university) && !is_null($student)) {
+            $userUniversity = $this->universityRepository->getUserUniversities($userId, $university->id);
+
+            if (!is_null($userUniversity)) {
+                $userUniversityRole = $this->universityRepository->getUsersUniversitiesRoles($userId, $university->id);
+
+                if (!is_null($userUniversityRole) &&
+                    $userUniversityRole->delete() &&
+                    $userUniversity->delete() &&
+                    $student->delete()
+                ) {
+                    DB::commit();
+                    return $student;
                 }
             }
         }

@@ -205,7 +205,6 @@
                     this.setSnackbar({message: 'Firma została dodana!', color: 'success'});
                 }).catch((e) => {
                     if(e.response.status == 422) {
-                        console.log(e.response.data.errors);
                         this.$refs.observer.setErrors(e.response.data.errors);
                     }
                 });

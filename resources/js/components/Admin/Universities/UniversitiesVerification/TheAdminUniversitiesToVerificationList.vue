@@ -131,7 +131,6 @@ export default {
                 this.setSnackbar({message: 'Uczelnia została zweryfikowana!', color: 'success'});
                 this.fetchUniversitiesToVerification();
            }).catch((e) => {
-               console.log(e);
                this.setSnackbar({message: 'Ups, coś poszło nie tak!', color: 'error'});
            }).finally(() => {
                this.toggleDialog({key: 'DIALOG_FIELD_VERIFY_UNIVERSITY', val: false});
@@ -146,7 +145,6 @@ export default {
                 this.setSnackbar({message: 'Uczelnia została odrzucona!', color: 'success'});
                 this.fetchUniversitiesToVerification();
             }).catch((e) => {
-                console.log(e);
                 this.setSnackbar({message: 'Ups, coś poszło nie tak!', color: 'error'});
             }).finally(() => {
                 this.toggleDialog({key: 'DIALOG_FIELD_REJECT_UNIVERSITY', val: false});

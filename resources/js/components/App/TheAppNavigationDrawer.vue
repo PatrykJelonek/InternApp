@@ -214,6 +214,7 @@
                         nudge-right="10"
                         :open-on-hover="navigationDrawer"
                         content-class="tooltip-background"
+                        v-if="hasUniversityRole(['university_owner', 'deanery_worker'])"
                     >
                         <template v-slot:activator="{ on, attrs }">
                             <v-list-item
@@ -386,6 +387,7 @@
                         nudge-right="10"
                         :open-on-hover="navigationDrawer"
                         content-class="tooltip-background"
+                        v-if="hasCompanyRole(['company_owner', 'company_manager'])"
                     >
                         <template v-slot:activator="{ on, attrs }">
                             <v-list-item
@@ -508,6 +510,7 @@
 
 <script>
 import {mapActions, mapGetters} from "vuex";
+import {hasCompanyRole, hasUniversityRole} from "../../plugins/acl";
 
 export default {
     name: "TheAppNavigationDrawer",
@@ -517,6 +520,9 @@ export default {
     },
 
     methods: {
+        hasCompanyRole,
+        hasUniversityRole,
+
         ...mapActions({
             setSelectedUniversity: 'helpers/setSelectedUniversity',
             setSelectedCompany: 'helpers/setSelectedCompany',
