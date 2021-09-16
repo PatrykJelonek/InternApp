@@ -76,7 +76,7 @@
                                         hide-details="auto"
                                         :error-messages="errors"
                                         label="Opis firmy"
-                                        height="100px"
+                                        height="155px"
                                         @change="checkDataIsChanged"
                                         :disabled="!hasCompanyRole(['company_owner', 'company_manager'])"
                                     ></v-textarea>

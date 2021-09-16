@@ -301,6 +301,7 @@ export default {
             fetchOfferCategories: 'offer/fetchOfferCategories',
             fetchCompanyWorkers: 'company/fetchCompanyWorkers',
             toggleCreateOfferDialog: 'helpers/toggleCreateOfferDialog',
+            fetchCompanyOffers: 'company/fetchCompanyOffers',
             createOffer: 'offer/createOffer',
         }),
 
@@ -315,10 +316,12 @@ export default {
                     this.createOffer(this.offer).then((offer) => {
                         this.setSnackbar({message: 'Oferta została dodana!', color: 'success'});
                         this.toggleCreateOfferDialog(false);
-                        this.$store.commit('company/UNSHIFT_COMPANY_OFFER', offer.data);
+                        this.fetchCompanyOffers(this.company.slug);
                     }).catch((e) => {
                         if (e.response !== undefined && e.response.status === 422) {
                             this.$refs.observer.setErrors(e.response.data.errors);
+                        } else {
+                            this.toggleCreateOfferDialog(false);
                         }
                     });
                 }

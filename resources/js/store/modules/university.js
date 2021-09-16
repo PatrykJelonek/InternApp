@@ -531,6 +531,12 @@ export default {
             });
         },
 
+        rejectUniversityWorker({commit}, {slug, userId, reason}) {
+            return axios.put(`/api/universities/${slug}/workers/${userId}/reject`, {
+                reason: reason
+            });
+        },
+
         addWorkerToUniversity({commit}, {slug, userId, accessCode}) {
             return axios.post(`/api/universities/${slug}/workers/${userId}`, {
                 accessCode: accessCode,

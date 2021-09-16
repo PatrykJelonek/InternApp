@@ -7,6 +7,7 @@ use App\Events\CompanyRejected;
 use App\Events\CompanyVerified;
 use App\Http\Requests\CompanyAcceptCompanyWorkerRequest;
 use App\Http\Requests\CompanyAddWorkerToCompanyRequest;
+use App\Http\Requests\CompanyChangeCompanyWorkerRolesRequest;
 use App\Http\Requests\CompanyCreateCompanyQuestionnaireRequest as CreateQuestionnaireRequest;
 use App\Http\Requests\CompanyCreateCompanyRequest;
 use App\Http\Requests\CompanyDeleteCompanyWorkerRequest;
@@ -284,34 +285,20 @@ class CompanyController extends Controller
         }
     }
 
-    public function setNewAccessCode(Request $request)
+    public function setNewAccessCode(Request $request, string $slug)
     {
         //TODO: Będzie trzeba to zabezpieczyć
-        $company = Company::find($request->input("id"));
+        $company = $this->companyRepository->getCompanyBySlug($slug);
 
-        if (isset($company)) {
+        if (!is_null($company)) {
             $company->access_code = $this->generateUniqueRandomAccessCode();
 
             if ($company->save()) {
-                return response(
-                    [
-                        'status' => 'success',
-                        'data' => $company->access_code,
-                        'message' => null,
-                    ],
-                    Response::HTTP_OK
-                );
+                return response($company, Response::HTTP_OK);
             }
         }
 
-        return response(
-            [
-                'status' => 'error',
-                'data' => null,
-                'message' => 'New access code has been not generate!',
-            ],
-            Response::HTTP_NOT_MODIFIED
-        );
+        return response(null, Response::HTTP_NOT_MODIFIED);
     }
 
     /**
@@ -673,5 +660,19 @@ class CompanyController extends Controller
     public function getAllVerifiedCompanies(CompanyGetAllVerifiedCompaniesRequest $request): Response
     {
         return response($this->companyRepository->getAllVerifiedCompanies(), Response::HTTP_OK);
+    }
+
+    public function changeCompanyWorkerRoles(CompanyChangeCompanyWorkerRolesRequest $request, $slug, $userId)
+    {
+        try {
+            $this->companyService->changeCompanyWorkerRoles(
+                $request->input('userCompanyId'),
+                $request->input('rolesIds')
+            );
+
+            return response(null, Response::HTTP_OK);
+        } catch (\Exception $e) {
+            return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 }

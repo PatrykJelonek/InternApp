@@ -12,7 +12,9 @@ use App\Constants\RoleConstants;
 use App\Models\Company;
 use App\Models\User;
 use App\Models\UserCompany;
+use App\Models\UserUniversity;
 use App\Repositories\CompanyRepository;
+use App\Repositories\UserRepository;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -29,13 +31,20 @@ class CompanyService
     private $companyRepository;
 
     /**
+     * @var UserRepository
+     */
+    private $userRepository;
+
+    /**
      * CompanyService constructor.
      *
      * @param CompanyRepository $repository
+     * @param UserRepository    $userRepository
      */
-    public function __construct(CompanyRepository $repository)
+    public function __construct(CompanyRepository $repository, UserRepository $userRepository)
     {
         $this->companyRepository = $repository;
+        $this->userRepository = $userRepository;
     }
 
     public function updateCompanyData(
@@ -173,9 +182,11 @@ class CompanyService
      * @param string|null $phone
      * @param string|null $website
      * @param string|null $description
-     * @param string|null $logoUrl
+     * @param bool|null   $verified
      * @param int|null    $userId
      * @param bool|null   $draft
+     *
+     * @param string|null $logoUrl
      *
      * @return Company|null
      */
@@ -371,5 +382,15 @@ class CompanyService
 
         DB::rollBack();
         return null;
+    }
+
+    public function changeCompanyWorkerRoles(int $userCompanyId, array $rolesIds)
+    {
+        try {
+            $userCompany = UserCompany::find($userCompanyId);
+            $userCompany->roles()->sync($rolesIds);
+        } catch (\Exception $e) {
+            throw new \Exception('Nie udało się dodać roli!');
+        }
     }
 }

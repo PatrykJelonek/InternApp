@@ -12,6 +12,7 @@ use App\Models\University;
 use App\Models\UserUniversity;
 use App\Repositories\StudentRepository;
 use App\Repositories\UniversityRepository;
+use App\Repositories\UserRepository;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
@@ -32,13 +33,23 @@ class UniversityService
     private $studentRepository;
 
     /**
+     * @var UserRepository
+     */
+    private $userRepository;
+
+    /**
      * @param UniversityRepository $universityRepository
      * @param StudentRepository    $studentRepository
+     * @param UserRepository       $userRepository
      */
-    public function __construct(UniversityRepository $universityRepository, StudentRepository $studentRepository)
-    {
+    public function __construct(
+        UniversityRepository $universityRepository,
+        StudentRepository $studentRepository,
+        UserRepository $userRepository
+    ) {
         $this->universityRepository = $universityRepository;
         $this->studentRepository = $studentRepository;
+        $this->userRepository = $userRepository;
     }
 
     /**
@@ -57,20 +68,52 @@ class UniversityService
         }
     }
 
-    public function verifyUniversityWorker(int $userUniversityId): bool
+    public function verifyUniversityWorker(string $slug, int $userId)
     {
-        try {
-            $userUniversity = UserUniversity::find($userUniversityId);
-            $userUniversity->verified = true;
+        $university = $this->universityRepository->getUniversityBySlug($slug);
 
-            if ($userUniversity->save()) {
-                return true;
+        if (!is_null($university)) {
+            $userUniversity = $this->universityRepository->getUserUniversity($userId, $university->id);
+
+            if (!is_null($userUniversity)) {
+                $userUniversity->verified = true;
+
+                if ($userUniversity->save()) {
+                    return $userUniversity->user;
+                }
             }
-
-            throw new \Exception("Nie udało się zweryfikować pracownika!");
-        } catch (\Exception $e) {
-            throw new \Exception('Nie udało się zweryfikować pracownika!');
         }
+
+        return null;
+    }
+
+    public function rejectUniversityWorker(string $slug, int $userId)
+    {
+        $university = $this->universityRepository->getUniversityBySlug($slug);
+
+        DB::beginTransaction();
+        if (!is_null($university)) {
+            $universityWorker = $this->userRepository->getUserById($userId);
+            $userUniversityRoles = $this->universityRepository->getUsersUniversitiesRoles($userId, $university->id);
+
+            if (!is_null($universityWorker) && !is_null($userUniversityRoles)) {
+                $isAllUserUniversityRolesDeleted = true;
+
+                foreach ($userUniversityRoles as $userUniversityRole) {
+                    $isAllUserUniversityRolesDeleted = $userUniversityRole->delete();
+                }
+
+                if ($isAllUserUniversityRolesDeleted) {
+                    $university->users()->detach($userId);
+                }
+
+                DB::commit();
+                return $universityWorker;
+            }
+        }
+
+        DB::rollBack();
+        return null;
     }
 
     /**
@@ -225,7 +268,7 @@ class UniversityService
         $student = $this->studentRepository->getStudentByUserId($userId);
 
         if (!is_null($university) && !is_null($student)) {
-            $userUniversity = $this->universityRepository->getUserUniversities($userId, $university->id);
+            $userUniversity = $this->universityRepository->getUserUniversity($userId, $university->id);
 
             if (!is_null($userUniversity)) {
                 $userUniversity->verified = true;
@@ -246,7 +289,7 @@ class UniversityService
 
         DB::beginTransaction();
         if (!is_null($university) && !is_null($student)) {
-            $userUniversity = $this->universityRepository->getUserUniversities($userId, $university->id);
+            $userUniversity = $this->universityRepository->getUserUniversity($userId, $university->id);
 
             if (!is_null($userUniversity)) {
                 $userUniversityRole = $this->universityRepository->getUsersUniversitiesRoles($userId, $university->id);

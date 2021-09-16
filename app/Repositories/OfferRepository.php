@@ -193,29 +193,30 @@ class OfferRepository implements OfferRepositoryInterface
     {
         $offer = $this->getOfferBySlug($slug);
 
-        switch ($offer->first()->status->name) {
-            case OfferStatusConstants::STATUS_DRAFT_NEW:
-                $offerStatus = $this->offerStatusRepository->getOfferStatusByName(
-                    OfferStatusConstants::STATUS_DRAFT_REJECTED
-                );
-                break;
-            case OfferStatusConstants::STATUS_STUDENT_NEW:
-                $offerStatus = $this->offerStatusRepository->getOfferStatusByName(
-                    OfferStatusConstants::STATUS_STUDENT_REJECTED
-                );
-                break;
-            default:
-                $offerStatus = $this->offerStatusRepository->getOfferStatusByName(
-                    OfferStatusConstants::STATUS_REJECTED
-                );
-                break;
-        }
+        if (!is_null($offer)) {
+            switch ($offer->first()->status->name) {
+                case OfferStatusConstants::STATUS_DRAFT_NEW:
+                    $offerStatus = $this->offerStatusRepository->getOfferStatusByName(
+                        OfferStatusConstants::STATUS_DRAFT_REJECTED
+                    );
+                    break;
+                case OfferStatusConstants::STATUS_STUDENT_NEW:
+                    $offerStatus = $this->offerStatusRepository->getOfferStatusByName(
+                        OfferStatusConstants::STATUS_STUDENT_REJECTED
+                    );
+                    break;
+                default:
+                    $offerStatus = $this->offerStatusRepository->getOfferStatusByName(
+                        OfferStatusConstants::STATUS_REJECTED
+                    );
+                    break;
+            }
 
-        $offer = Offer::with(['category', 'status', 'supervisor'])->find($offer->first()->id);
-        $offer->offer_status_id = $offerStatus->id;
+            $offer->offer_status_id = $offerStatus->id;
 
-        if ($offer->save()) {
-            return $offer;
+            if ($offer->save()) {
+                return $offer;
+            }
         }
 
         return null;

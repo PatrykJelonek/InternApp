@@ -120,11 +120,13 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::get('/companies/{slug}/workers','Api\CompanyController@getCompanyWorkers');
     Route::delete('/companies/{slug}/workers/{userId}','Api\CompanyController@deleteCompanyWorker');
     Route::post('/companies/{slug}/workers/{userId}','Api\CompanyController@addWorkerToCompany');
+    Route::put('/companies/{slug}/workers/{userId}/change-roles','Api\CompanyController@changeCompanyWorkerRoles');
     Route::put('/companies/{slug}/workers/{userId}/accept','Api\CompanyController@acceptCompanyWorker');
     Route::get('/companies/{slug}/agreements','Api\CompanyController@getAgreements');
     Route::get('/companies/{slug}/questionnaires','Api\CompanyController@getCompanyQuestionnaires');
     Route::post('/companies/{slug}/questionnaires','Api\CompanyController@createCompanyQuestionnaire');
     Route::post('/companies/{slug}/settings/logo', 'Api\CompanyController@updateCompanyLogo');
+    Route::get('/companies/{slug}/settings/generate-code', 'Api\CompanyController@setNewAccessCode');
 
     # Offers
     Route::get('/offers','Api\OfferController@index');
@@ -132,8 +134,8 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::get('/offers/statuses', 'Api\OfferStatusController@index');
     Route::get('/offers/categories', 'Api\OfferCategoryController@index');
     Route::get('/offers/{slug}','Api\OfferController@show');
-    Route::get('/offers/{slug}/accept','Api\OfferController@accept');
-    Route::get('/offers/{slug}/reject','Api\OfferController@reject');
+    Route::put('/offers/{slug}/accept','Api\OfferController@accept');
+    Route::put('/offers/{slug}/reject','Api\OfferController@reject');
 
     # Agreements
     Route::post('/agreements', 'Api\AgreementController@createAgreement');
@@ -153,6 +155,7 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::post('/universities/{slug}/workers/{userId}','Api\UniversityController@addWorkerToUniversity');
     Route::put('/universities/{slug}/workers/{userId}/change-roles','Api\UniversityController@changeUniversityWorkerRoles');
     Route::put('/universities/{slug}/workers/{userId}/verify','Api\UniversityController@verifyUniversityWorker');
+    Route::put('/universities/{slug}/workers/{userId}/reject','Api\UniversityController@rejectUniversityWorker');
     Route::get('/universities/{slug}/students','Api\UniversityController@getStudents');
     Route::post('/universities/{slug}/students/{userId}','Api\UniversityController@addStudentToUniversity');
     Route::post('/universities/{slug}/students/{userId}/verify','Api\UniversityController@verifyStudentInUniversity');

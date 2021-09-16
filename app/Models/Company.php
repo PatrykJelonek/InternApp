@@ -42,7 +42,7 @@ class Company extends Model
 
     protected $table = "companies";
 
-    protected $hidden = ['city_id', 'company_category_id', 'access_code'];
+    protected $hidden = ['city_id', 'company_category_id'];
 
     protected $appends = ['full_address', 'draft_name', 'draft_email'];
 

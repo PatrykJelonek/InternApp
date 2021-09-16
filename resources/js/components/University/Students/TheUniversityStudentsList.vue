@@ -18,13 +18,22 @@
             :dialog-state="dialogs['DIALOG_FIELD_REJECT_STUDENT']"
             :toggle-function="toggleDialog"
         >
-            <v-textarea
-                outlined
-                v-model="reason"
-                label="Powód odrzucenia"
-                required
-                hide-details="auto"
-            ></v-textarea>
+            <validation-observer ref="observer" v-slot="{ validate }">
+                <validation-provider
+                    vid="reason"
+                    rules="required"
+                    v-slot="{ errors }"
+                >
+                    <v-textarea
+                        outlined
+                        v-model="reason"
+                        label="Powód odrzucenia"
+                        required
+                        hide-details="auto"
+                        :error-messages="errors"
+                    ></v-textarea>
+                </validation-provider>
+            </validation-observer>
         </custom-confirm-dialog>
 
         <custom-card-title>
@@ -125,10 +134,13 @@ import CustomCardTitle from "../../_General/CustomCardTitle";
 import moment from "moment";
 import {hasUniversityRole} from "../../../plugins/acl";
 import CustomConfirmDialog from "../../_General/CustomConfirmDialog";
+import {setInteractionMode, ValidationProvider, ValidationObserver} from "vee-validate";
+
+setInteractionMode('eager');
 
 export default {
     name: "TheUniversityStudentsList",
-    components: {CustomConfirmDialog, CustomCardTitle, CustomCard},
+    components: {CustomConfirmDialog, CustomCardTitle, CustomCard, ValidationProvider, ValidationObserver},
 
     props: ['search'],
 
@@ -184,9 +196,12 @@ export default {
         },
 
         openRejectStudentDialog(item) {
-            this.setDialogArgs({key: 'DIALOG_FIELD_REJECT_STUDENT', val: {
+            this.reason = null;
+            this.setDialogArgs({
+                key: 'DIALOG_FIELD_REJECT_STUDENT', val: {
                     userId: item.id
-                }});
+                }
+            });
             this.toggleDialog({key: 'DIALOG_FIELD_REJECT_STUDENT', val: true});
         },
 
@@ -199,20 +214,31 @@ export default {
                 this.fetchStudents(this.$route.params.slug);
             }).catch(() => {
                 this.setSnackbar({message: 'Ups... Coś poszło nie tak!', color: 'error'});
+            }).finally(() => {
+                this.toggleDialog({key: 'DIALOG_FIELD_VERIFY_STUDENT', val: false});
+                this.setDialogArgs({key: 'DIALOG_FIELD_VERIFY_STUDENT', val: null});
             });
         },
 
-        rejectStudent() {
-            this.rejectStudentInUniversity({
-                slug: this.university.slug,
-                userId: this.dialogsArgs['DIALOG_FIELD_REJECT_STUDENT'].userId,
-                reason: this.reason
-            }).then(() => {
-                this.setSnackbar({message: 'Student został odrzucony!', color: 'success'});
-                this.fetchStudents(this.$route.params.slug);
-            }).catch(() => {
-                this.setSnackbar({message: 'Ups... Coś poszło nie tak!', color: 'error'});
-            });
+        async rejectStudent() {
+            await this.$refs.observer.validate().then((isValid) => {
+                if (isValid) {
+                    this.rejectStudentInUniversity({
+                        slug: this.university.slug,
+                        userId: this.dialogsArgs['DIALOG_FIELD_REJECT_STUDENT'].userId,
+                        reason: this.reason
+                    }).then(() => {
+                        this.setSnackbar({message: 'Student został odrzucony!', color: 'success'});
+                        this.fetchStudents(this.$route.params.slug);
+                    }).catch(() => {
+                        this.setSnackbar({message: 'Ups... Coś poszło nie tak!', color: 'error'});
+                    }).finally(() => {
+                        this.reason = null;
+                        this.toggleDialog({key: 'DIALOG_FIELD_REJECT_STUDENT', val: false});
+                        this.setDialogArgs({key: 'DIALOG_FIELD_REJECT_STUDENT', val: null});
+                    });
+                }
+            })
         }
     },
 

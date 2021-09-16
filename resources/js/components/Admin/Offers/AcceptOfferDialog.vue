@@ -3,29 +3,25 @@
         v-model="acceptOfferDialog"
         width="600"
     >
-        <custom-card
-            title="Akceptuj Ofertę"
-            :expand="false"
-        >
+        <custom-card>
             <custom-card-title>
                 <template v-slot:default>Akceptuj ofertę</template>
+                <template v-slot:subheader>Czy chcesz zaakceptować ofertę <strong>{{ name }}</strong>?</template>
+                <template v-slot:actions>
+                    <v-btn icon @click="toggleAcceptDialog(false)">
+                        <v-icon>mdi-close</v-icon>
+                    </v-btn>
+                </template>
             </custom-card-title>
-            <v-row no-gutters class="pa-5">
-                <v-col cols="12">
-                    Czy chcesz akceptować ofertę <strong>{{ name }}</strong>?
-                </v-col>
-            </v-row>
-            <v-divider></v-divider>
-            <v-card-actions>
-                <v-row>
-                    <v-col cols="6">
-                        <v-btn text @click="toggleAcceptDialog(false)" class="text--secondary">Anuluj</v-btn>
-                    </v-col>
-                    <v-col cols="6" class="text-right">
-                        <v-btn outlined @click="accept" color="primary">Akceptuj</v-btn>
-                    </v-col>
-                </v-row>
-            </v-card-actions>
+
+            <custom-card-footer>
+                <template v-slot:left>
+                    <v-btn text @click="toggleAcceptDialog(false)" class="text--secondary">Anuluj</v-btn>
+                </template>
+                <template v-slot:right>
+                    <v-btn outlined @click="accept" color="primary">Akceptuj</v-btn>
+                </template>
+            </custom-card-footer>
         </custom-card>
     </v-dialog>
 </template>
@@ -35,12 +31,13 @@ import ExpandCard from "../../_Helpers/ExpandCard";
 import {mapActions, mapGetters} from "vuex";
 import CustomCard from "../../_General/CustomCard";
 import CustomCardTitle from "../../_General/CustomCardTitle";
+import CustomCardFooter from "../../_General/CustomCardFooter";
 
 export default {
     name: "AcceptOfferDialog",
     props: ['name', 'slug'],
 
-    components: {CustomCardTitle, CustomCard, ExpandCard},
+    components: {CustomCardFooter, CustomCardTitle, CustomCard, ExpandCard},
 
     data() {
         return {
@@ -58,13 +55,17 @@ export default {
         ...mapActions({
             toggleAcceptDialog: 'helpers/toggleAcceptOfferDialog',
             acceptOffer: 'offer/acceptOffer',
-            setSnackbar: 'snackbar/setSnackbar'
+            setSnackbar: 'snackbar/setSnackbar',
+            fetchOffers: 'offer/fetchOffers',
+            fetchNumberOfNewOffers: 'statistic/fetchNumberOfNewOffers',
         }),
 
         accept() {
             this.acceptOffer(this.slug).then(() => {
                 this.toggleAcceptDialog(false);
                 this.setSnackbar({message: 'Oferta została zaakceptowana!', color: 'success'});
+                this.fetchNumberOfNewOffers();
+                this.fetchOffers({categories: null, statuses: ['new']});
             }).catch((e) => {
                 this.toggleAcceptDialog(false);
                 this.setSnackbar({message: 'Oferta nie została zaakceptowana!', color: 'error'});

@@ -248,16 +248,15 @@ class UniversityRepository implements UniversityRepositoryInterface
      *
      * @return null|UserUniversityRole
      */
-    public function getUsersUniversitiesRoles(int $userId, int $universityId): ?UserUniversityRole
+    public function getUsersUniversitiesRoles(int $userId, int $universityId)
     {
-        $userUniversities = $this->getUserUniversities($userId, $universityId);
+        $userUniversities = $this->getUserUniversity($userId, $universityId);
 
         if (is_null($userUniversities)) {
             return null;
         }
 
-        /** @var UserUniversity $userUniversities */
-        return UserUniversityRole::where(['user_university_id' => $userUniversities->id])->first();
+        return UserUniversityRole::where(['user_university_id' => $userUniversities->id])->get();
     }
 
     /**
@@ -266,13 +265,13 @@ class UniversityRepository implements UniversityRepositoryInterface
      *
      * @return null|UserUniversity
      */
-    public function getUserUniversities(int $userId, int $universityId): ?UserUniversity
+    public function getUserUniversity(int $userId, int $universityId): ?UserUniversity
     {
         return UserUniversity::where(
             [
                 'user_id' => $userId,
                 'university_id' => $universityId,
             ]
-        )->first();
+        )->with(['user'])->first();
     }
 }

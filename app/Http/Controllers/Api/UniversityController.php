@@ -8,6 +8,8 @@ use App\Events\StudentRejected;
 use App\Events\StudentVerified;
 use App\Events\UniversityRejected;
 use App\Events\UniversityVerified;
+use App\Events\UniversityWorkerRejected;
+use App\Events\UniversityWorkerVerified;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UniversityAddStudentToUniversityRequest;
 use App\Http\Requests\UniversityAddUserToUniversityRequest;
@@ -27,6 +29,7 @@ use App\Http\Requests\UniversityGetUniversityRequest;
 use App\Http\Requests\UniversityInternshipsRequest;
 use App\Http\Requests\UniversityRejectStudentInUniversityRequest;
 use App\Http\Requests\UniversityRejectUniversityRequest;
+use App\Http\Requests\UniversityRejectUniversityWorkerRequest;
 use App\Http\Requests\UniversityStudentsRequest;
 use App\Http\Requests\UniversityUpdateUniversityFacultyFieldRequest;
 use App\Http\Requests\UniversityUpdateUniversityFacultyFieldSpecializationRequest;
@@ -93,6 +96,7 @@ class UniversityController extends Controller
 
     public const REQUEST_FIELD_REJECT_UNIVERSITY_REASON = 'reason';
     public const REQUEST_FIELD_REJECT_STUDENT_REASON = 'reason';
+    public const REQUEST_FIELD_REJECT_UNIVERSITY_WORKER_REASON = 'reason';
 
     /**
      * @var UniversityRepository
@@ -882,14 +886,38 @@ class UniversityController extends Controller
         }
     }
 
-    public function verifyUniversityWorker(UniversityVerifyUniversityWorkerRequest $request)
+    public function verifyUniversityWorker(UniversityVerifyUniversityWorkerRequest $request,  string $slug, int $userId)
     {
-        try {
-            $this->universityService->verifyUniversityWorker($request->input('userUniversityId'));
-            return response(null, Response::HTTP_OK);
-        } catch (\Exception $e) {
-            return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
+        $universityWorker = $this->universityService->verifyUniversityWorker($slug, $userId);
+        $university = $this->universityRepository->getUniversityBySlug($slug);
+
+        if (!is_null($university) && !is_null($universityWorker)) {
+            UniversityWorkerVerified::dispatch(
+                $university,
+                $universityWorker,
+            );
+
+            return response($universityWorker, Response::HTTP_OK);
         }
+
+        return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+
+    public function rejectUniversityWorker(UniversityRejectUniversityWorkerRequest $request, string $slug, int $userId)
+    {
+        $universityWorker = $this->universityService->rejectUniversityWorker($slug, $userId);
+        $university = $this->universityRepository->getUniversityBySlug($slug);
+
+        if (!is_null($universityWorker) && !is_null($university)) {
+            UniversityWorkerRejected::dispatch(
+                $university,
+                $universityWorker,
+                $request->input(self::REQUEST_FIELD_REJECT_UNIVERSITY_WORKER_REASON)
+            );
+            return response($universityWorker, Response::HTTP_OK);
+        }
+
+        return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
     public function getUniversities()

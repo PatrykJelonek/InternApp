@@ -22,6 +22,7 @@ export default {
         verifiedCompanies: [],
         verifiedCompaniesLoading: false,
         interns: [],
+        codeLoading: false,
     },
 
     getters: {
@@ -43,6 +44,10 @@ export default {
 
         company(state) {
             return state.company;
+        },
+
+        codeLoading(state) {
+            return state.codeLoading;
         },
 
         companyLoading(state) {
@@ -132,7 +137,7 @@ export default {
         },
 
         SET_CODE(state, code) {
-            state.selectedCompany.access_code = code;
+            state.company.access_code = code;
         },
 
         SET_COMPANY_OFFERS(state, data) {
@@ -193,6 +198,10 @@ export default {
 
         SET_VERIFIED_COMPANIES_LOADING(state, data) {
             state.verifiedCompaniesLoading = data;
+        },
+
+        SET_CODE_LOADING(state, data) {
+            state.codeLoading = data;
         },
     },
 
@@ -299,14 +308,15 @@ export default {
             commit('SET_SELECTED_COMPANY_ID', id);
         },
 
-        async generateCode({commit}, id) {
+        async generateCode({commit}, {slug}) {
+            commit('SET_CODE_LOADING', true);
             try {
-                let response = await axios.post('/api/company/generate-code', {
-                    id: id
-                });
-                commit('SET_CODE', response.data.data);
+                let response = await axios.get(`/api/companies/${slug}/settings/generate-code`);
+                commit('SET_CODE', response.data.access_code);
+                commit('SET_CODE_LOADING', false);
             } catch (e) {
-                commit('SET_CODE', e.response.data.message);
+                commit('SET_CODE', null);
+                commit('SET_CODE_LOADING', false);
             }
         },
 
@@ -374,6 +384,13 @@ export default {
                 commit('SET_COMPANIES_TO_VERIFICATION', []);
                 commit('SET_VERIFIED_COMPANIES_LOADING', false);
             }
+        },
+
+        changeCompanyWorkerRoles({commit}, {slug, userId, userCompanyId, rolesIds}) {
+            return axios.put(`/api/companies/${slug}/workers/${userId}/change-roles`, {
+                userCompanyId: userCompanyId,
+                rolesIds: rolesIds
+            });
         },
     },
 }

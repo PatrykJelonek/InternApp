@@ -10,18 +10,21 @@
             :confirm-function="deleteWorker"
             :confirm-function-args="[]"
             title="Usuń pracownika"
-        >
-            Czy chcesz usunąć tego pracownika z firmy?
-        </custom-confirm-dialog>
+            subheader="Czy chcesz usunąć tego pracownika z firmy?"
+        ></custom-confirm-dialog>
         <custom-confirm-dialog
             :dialog-state="acceptCompanyWorkerDialog"
             :toggle-function="toggleAcceptCompanyWorkerDialog"
             :confirm-function="acceptWorker"
             :confirm-function-args="[]"
             title="Akceptuj pracownika"
-        >
-            Czy chcesz zaakceptować tego pracownika jako pracownika firmy?
-        </custom-confirm-dialog>
+            subheader="Czy chcesz zaakceptować tego pracownika jako pracownika firmy?"
+        ></custom-confirm-dialog>
+        <select-roles-dialog
+            :groups="['company']"
+            :submit-function="changeRoles"
+            :existent-roles-id="selectedWorkerRolesIds"
+        ></select-roles-dialog>
 
         <v-row no-gutters>
             <v-col cols="12">
@@ -134,7 +137,7 @@
                                             </v-list-item-content>
                                         </v-list-item>
                                         <v-list-item v-has-company-role="['company_owner', 'company_manager']">
-                                            <v-list-item-content>
+                                            <v-list-item-content @click="openChangeRoleDialog(item)">
                                                 <v-list-item-title>Zmień rolę</v-list-item-title>
                                             </v-list-item-content>
                                         </v-list-item>
@@ -166,15 +169,17 @@ import CustomCard from "../../_General/CustomCard";
 import CustomConfirmDialog from "../../_General/CustomConfirmDialog";
 import CustomCardTitle from "../../_General/CustomCardTitle";
 import {hasCompanyRole} from "../../../plugins/acl";
+import SelectRolesDialog from "../../Roles/SelectRolesDialog";
 
 export default {
     name: "TheCompanyWorkers",
-    components: {CustomCardTitle, CustomConfirmDialog, CustomCard, PageTitle},
+    components: {SelectRolesDialog, CustomCardTitle, CustomConfirmDialog, CustomCard, PageTitle},
 
     data() {
         return {
             search: null,
             selectedWorker: null,
+            selectedWorkerRolesIds: [],
             headers: [
                 {text: "Imie i nazwisko", value: 'full_name', align: 'left'},
                 {text: "Role", value: 'roles', align: 'left'},
@@ -201,11 +206,13 @@ export default {
         ...mapActions({
             setBreadcrumbs: 'helpers/setBreadcrumbs',
             fetchCompanyWorkers: 'company/fetchCompanyWorkers',
+            changeCompanyWorkerRoles: 'company/changeCompanyWorkerRoles',
             toggleDeleteCompanyWorkerDialog: 'helpers/toggleDeleteCompanyWorkerDialog',
             toggleAcceptCompanyWorkerDialog: 'helpers/toggleAcceptCompanyWorkerDialog',
             acceptCompanyWorker: 'company/acceptCompanyWorker',
             deleteCompanyWorker: 'company/deleteCompanyWorker',
-            setSnackbar: 'snackbar/setSnackbar'
+            setSnackbar: 'snackbar/setSnackbar',
+            toggleDialog: 'helpers/toggleDialog'
         }),
 
         deleteWorker(userId) {
@@ -236,7 +243,31 @@ export default {
                 });
                 this.toggleAcceptCompanyWorkerDialog(false);
             });
-        }
+        },
+
+        openChangeRoleDialog(item) {
+            this.selectedItem = item;
+            this.selectedWorkerRolesIds = item.companies_with_roles[0].roles.map((role) => {
+                return role.id;
+            });
+            this.toggleDialog({key: 'DIALOG_FIELD_SELECT_ROLES', val: true});
+        },
+
+        changeRoles(rolesIds) {
+            this.changeCompanyWorkerRoles({
+                slug: this.$route.params.slug,
+                userId: this.selectedItem.id,
+                userCompanyId: this.selectedItem.companies_with_roles[0].id,
+                rolesIds: rolesIds
+            }).then((response) => {
+                this.setSnackbar({message: 'Role zostały zmienione!', color: 'success'});
+                this.fetchCompanyWorkers(this.$route.params.slug);
+            }).catch((e) => {
+                this.setSnackbar({message: 'Nie udało się zmienić ról!', color: 'error'});
+            }).finally(() => {
+                this.toggleDialog({key: 'DIALOG_FIELD_SELECT_ROLES', val: false});
+            });
+        },
     },
 
     created() {

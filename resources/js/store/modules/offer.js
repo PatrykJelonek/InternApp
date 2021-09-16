@@ -99,7 +99,7 @@ export default {
 
         SET_OFFER_STATUS(state, data) {
             state.offers.forEach((offer) => {
-                if(offer.id === data.id) {
+                if (offer.id === data.id) {
                     offer.status = data.status;
                 }
             })
@@ -109,7 +109,7 @@ export default {
     actions: {
         async fetchOffers({commit}, data = null) {
             commit('SET_OFFERS_LOADING', true);
-            try{
+            try {
                 let response = await axios.get('/api/offers', {
                     params: {
                         categories: data.categories ?? null,
@@ -129,7 +129,7 @@ export default {
 
         async fetchOffersForStudents({commit}) {
             commit('SET_OFFERS_FOR_STUDENTS_LOADING', true);
-            try{
+            try {
                 let response = await axios.get('/api/offers', {
                     params: {
                         categories: data.categories ?? null,
@@ -148,7 +148,7 @@ export default {
 
         async fetchOffer({commit}, slug) {
             commit('SET_OFFER_LOADING', true);
-            try{
+            try {
                 let response = await axios.get(`/api/offers/${slug}`);
                 commit('SET_OFFER', response.data);
                 commit('SET_OFFER_LOADING', false);
@@ -160,7 +160,7 @@ export default {
 
         async fetchOfferCategories({commit}) {
             commit('SET_OFFER_CATEGORIES_LOADING', true);
-            try{
+            try {
                 let response = await axios.get('/api/offers/categories');
                 commit('SET_OFFER_CATEGORIES', response.data);
                 commit('SET_OFFER_CATEGORIES_LOADING', false);
@@ -172,7 +172,7 @@ export default {
 
         async fetchOfferStatuses({commit}) {
             commit('SET_OFFER_STATUSES_LOADING', true);
-            try{
+            try {
                 let response = await axios.get('/api/offers/statuses');
                 commit('SET_OFFER_STATUSES', response.data);
                 commit('SET_OFFER_STATUSES_LOADING', false);
@@ -183,25 +183,23 @@ export default {
         },
 
         createOffer({commit}, offer) {
-            return axios.post('/api/offers', offer, {
-                headers: {
-                    'content-type': 'multipart/form-data'
-                }
-            });
+            return axios.post('/api/offers', offer);
         },
 
         async acceptOffer({commit}, slug) {
-            try{
-                let response = await axios.get(`/api/offers/${slug}/accept`);
+            try {
+                let response = await axios.put(`/api/offers/${slug}/accept`);
                 commit('SET_OFFER_STATUS', response.data);
             } catch (e) {
 
             }
         },
 
-        async rejectOffer({commit}, slug) {
-            try{
-                let response = await axios.get(`/api/offers/${slug}/reject`);
+        async rejectOffer({commit}, {slug, reason}) {
+            try {
+                let response = await axios.put(`/api/offers/${slug}/reject`, {
+                    reason: reason,
+                });
                 commit('SET_OFFER_STATUS', response.data);
             } catch (e) {
 

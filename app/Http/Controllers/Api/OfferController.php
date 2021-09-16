@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Events\OfferAccepted;
+use App\Events\OfferRejected;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ChangeOfferStatusRequest;
 use App\Http\Requests\OfferIndexRequest;
@@ -29,6 +31,7 @@ class OfferController extends Controller
     public const REQUEST_FIELD_OFFER_DATE_FROM = 'dateFrom';
     public const REQUEST_FIELD_OFFER_DATE_TO = 'dateTo';
     public const REQUEST_FIELD_OFFER_ATTACHMENTS = 'attachments';
+    public const REQUEST_FIELD_REJECT_OFFER_REASON = 'reason';
 
     /**
      * @var OfferService
@@ -186,6 +189,9 @@ class OfferController extends Controller
         $offer = $this->offerRepository->acceptOfferBySlug($slug);
 
         if (!empty($offer)) {
+            OfferAccepted::dispatch(
+                $offer
+            );
             return response($offer, Response::HTTP_OK);
         }
 
@@ -197,6 +203,10 @@ class OfferController extends Controller
         $offer = $this->offerRepository->rejectOfferBySlug($slug);
 
         if (!empty($offer)) {
+            OfferRejected::dispatch(
+                $offer,
+                $request->input(self::REQUEST_FIELD_REJECT_OFFER_REASON)
+            );
             return response($offer, Response::HTTP_OK);
         }
 
