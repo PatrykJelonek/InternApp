@@ -23,6 +23,7 @@
                 v-model="reason"
                 label="Powód odrzucenia"
                 required
+                hide-details="auto"
             ></v-textarea>
         </custom-confirm-dialog>
 
