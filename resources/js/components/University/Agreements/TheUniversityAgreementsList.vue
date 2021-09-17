@@ -106,6 +106,11 @@
                                     </v-btn>
                                 </template>
                                 <v-list dense color="component-background">
+                                    <v-list-item>
+                                        <v-list-item-title @click="$router.push({name: 'agreement', params: {slug: item.slug}})">
+                                            Wyświetl umowę
+                                        </v-list-item-title>
+                                    </v-list-item>
                                     <v-list-item
                                         v-if="item.is_active"
                                         v-has-university-role="['deanery_worker','university_owner']"

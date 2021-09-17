@@ -15,7 +15,7 @@ use Illuminate\Support\Str;
 
 class AgreementRepository implements AgreementRepositoryInterface
 {
-    private $with = ['offer.category', 'university', 'company', 'status','company.city', 'supervisor'];
+    private $with = ['offer.category', 'university', 'company', 'status','company.city', 'supervisor', 'attachments'];
 
     public function getAgreementBySlug(string $slug)
     {

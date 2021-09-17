@@ -51,10 +51,10 @@
                     <v-col cols="auto" class="d-flex justify-center align-center">
                         <menu-dots>
                             <template v-slot:items>
-                                <v-list-item class="cursor-pointer" v-if="forStudent" @click="openConfirmApplicationDialog(slug)" :disabled="!canApply">
+                                <v-list-item class="cursor-pointer" @click="openConfirmApplicationDialog(slug)" :disabled="!canApply">
                                     <v-list-item-title>Aplikuj</v-list-item-title>
                                 </v-list-item>
-                                <v-list-item class="cursor-pointer" v-else>
+                                <v-list-item class="cursor-pointer">
                                     <v-list-item-title @click="openCreateAgreementDialog">Utwórz umowę
                                     </v-list-item-title>
                                 </v-list-item>

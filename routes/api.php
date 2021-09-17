@@ -245,6 +245,8 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::post('/admin/companies/{slug}/verify', 'Api\CompanyController@verifyCompany');
     Route::post('/admin/companies/{slug}/reject', 'Api\CompanyController@rejectCompany');
 
+    Route::get('/attachments/{path}', 'Api\AttachmentController@downloadAttachment');
+
 
     Route::get('/me', [
         'as' => 'login.me',

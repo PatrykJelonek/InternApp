@@ -142,6 +142,20 @@
                         </v-row>
                     </custom-card>
                 </v-col>
+                <v-col cols="12">
+                    <custom-card>
+                        <custom-card-title>
+                            <template v-slot:default>Załączniki</template>
+                            <template v-slot:subheader>Lista załączników oferty</template>
+                        </custom-card-title>
+
+                        <v-row no-gutters>
+                            <v-col cols="12" class="pa-5">
+                                <attachments :attachments="offer.attachments"></attachments>
+                            </v-col>
+                        </v-row>
+                    </custom-card>
+                </v-col>
             </v-row>
 
         </template>
@@ -165,10 +179,12 @@ import moment from "moment";
 import CreateAgreementDialog from "../components/Agreements/CreateAgreementDialog";
 import CustomCard from "../components/_General/CustomCard";
 import CustomCardTitle from "../components/_General/CustomCardTitle";
+import Attachments from "../components/_General/Attachments";
 
 export default {
     name: "Offer",
     components: {
+        Attachments,
         CustomCardTitle,
         CustomCard, CreateAgreementDialog, ExpandCard, PageLoader, PageTitle, PageDetailsHeader},
     data() {

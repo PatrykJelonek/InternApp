@@ -199,29 +199,38 @@
                 <v-col cols="12">
                     <validation-provider
                         v-slot="{ errors }"
-                        vid="attachments"
+                        vid="attachment"
                     >
                         <v-file-input
                             label="Załącznik"
-                            v-model="attachmentsFiles"
+                            v-model="offer.attachment"
                             outlined
                             show-size
                             hide-details
-                            multiple
+                            small-chips
                             prepend-icon=""
                             :error-messages="errors"
+                            accept=".pdf,.docx"
                         ></v-file-input>
                     </validation-provider>
                 </v-col>
                 <v-col cols="12">
-                    <v-switch
-                        v-model="offer.interview"
-                        inset
-                        hide-details
-                        dense
-                        class="mt-0"
-                        label="Rozmowa kwalifikacyjna jest wymagana."
-                    ></v-switch>
+                    <validation-provider
+                        v-slot="{ errors }"
+                        vid="interview"
+                    >
+                        <v-switch
+                            v-model="offer.interview"
+                            inset
+                            hide-details
+                            dense
+                            class="mt-0"
+                            label="Rozmowa kwalifikacyjna jest wymagana."
+                            :error-messages="errors"
+                            :true-value="1"
+                            :false-value="0"
+                        ></v-switch>
+                    </validation-provider>
                 </v-col>
             </v-row>
             <custom-card-footer>
@@ -267,17 +276,18 @@ export default {
             dateToPicker: null,
             offer: {
                 companyId: null,
-                name: null,
+                name: '',
                 placesNumber: 1,
-                program: null,
-                schedule: null,
+                program: '',
+                schedule: '',
                 offerCategoryId: null,
                 companySupervisorId: null,
                 dateFrom: null,
                 dateTo: null,
-                interview: false,
-                attachments: []
+                interview: 0,
+                attachment: null,
             },
+            attachment: null,
             attachmentsFiles: [],
             tempBase64File: null,
         }
@@ -309,11 +319,13 @@ export default {
             await this.$refs.observer.validate().then((value) => {
                 if (value) {
                     this.submitLoading = true;
-
                     let formData = new FormData();
-                    formData.append('attachments', this.attachmentsFiles);
 
-                    this.createOffer(this.offer).then((offer) => {
+                    for (const prop in this.offer) {
+                        formData.append(prop, this.offer[prop]);
+                    }
+
+                    this.createOffer(formData).then((offer) => {
                         this.setSnackbar({message: 'Oferta została dodana!', color: 'success'});
                         this.toggleCreateOfferDialog(false);
                         this.fetchCompanyOffers(this.company.slug);

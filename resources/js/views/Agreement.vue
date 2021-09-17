@@ -139,6 +139,20 @@
                     </v-row>
                 </expand-card>
             </v-col>
+            <v-col cols="12" xl="6">
+                <custom-card>
+                    <custom-card-title>
+                        <template v-slot:default>Załączniki</template>
+                        <template v-slot:subheader>Lista załączników oferty</template>
+                    </custom-card-title>
+
+                    <v-row no-gutters>
+                        <v-col cols="12" class="pa-5">
+                            <attachments :attachments="agreement.attachments"></attachments>
+                        </v-col>
+                    </v-row>
+                </custom-card>
+            </v-col>
         </v-row>
         <v-row v-else class="text-center">
             <v-col cols="12">
@@ -155,10 +169,13 @@
     import PageTitle from "../components/_Helpers/PageTitle";
     import moment from "moment";
     import ApplyInternshipDialog from "../components/Offers/Student/ApplyInternshipDialog";
+    import CustomCard from "../components/_General/CustomCard";
+    import CustomCardTitle from "../components/_General/CustomCardTitle";
+    import Attachments from "../components/_General/Attachments";
     export default {
         name: "Agreement",
 
-        components: {ApplyInternshipDialog, PageTitle, PageLoader, ExpandCard},
+        components: {Attachments, CustomCardTitle, CustomCard, ApplyInternshipDialog, PageTitle, PageLoader, ExpandCard},
 
         data() {
             return {

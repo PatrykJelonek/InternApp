@@ -19,7 +19,7 @@ use Illuminate\Support\Str;
 
 class OfferRepository implements OfferRepositoryInterface
 {
-    private $with = ['category', 'status', 'supervisor', 'company', 'company.city'];
+    private $with = ['category', 'status', 'supervisor', 'company', 'company.city', 'attachments'];
 
     /**
      * @var OfferCategoryRepository

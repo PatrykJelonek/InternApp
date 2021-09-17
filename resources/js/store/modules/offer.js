@@ -183,7 +183,11 @@ export default {
         },
 
         createOffer({commit}, offer) {
-            return axios.post('/api/offers', offer);
+            return axios.post('/api/offers', offer, {
+                headers: {
+                    'content-type': 'multipart/form-data'
+                }
+            });
         },
 
         async acceptOffer({commit}, slug) {

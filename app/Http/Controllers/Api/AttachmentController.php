@@ -6,6 +6,7 @@ use App\Models\Attachment;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Storage;
 
 class AttachmentController extends Controller
 {
@@ -141,5 +142,14 @@ class AttachmentController extends Controller
             return response("Attachment has been deleted!", Response::HTTP_OK);
         else
             return response("Attachment has not been deleted!", Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+
+    public function downloadAttachment(string $path)
+    {
+        $attachment = Attachment::where(['path' => $path])->first();
+
+        return response()->download($attachment->path, $attachment->name, [
+            'Content-Type' => $attachment->mime
+        ]);
     }
 }

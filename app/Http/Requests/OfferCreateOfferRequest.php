@@ -35,6 +35,7 @@ class OfferCreateOfferRequest extends FormRequest
             'dateTo' => 'required|date|after:dateFrom',
             'interview' => 'sometimes|boolean',
             'companyId' => 'required|exists:App\Models\Company,id',
+            'attachment' => 'nullable|file|mimes:pdf,docx'
         ];
     }
 

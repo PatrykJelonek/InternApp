@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Models\OfferCategory;
 use App\Models\OfferStatus;
 use App\Models\Internship;
+use Ratchet\App;
 
 class Offer extends Model
 {
@@ -45,6 +46,11 @@ class Offer extends Model
     {
         return $this->hasMany(Internship::class, 'offer_id', 'id');
 
+    }
+
+    public function attachments()
+    {
+        return $this->belongsToMany(Attachment::class,'offers_attachments', 'offer_id', 'attachment_id');
     }
 
     public function scopeWithPlaces($query)
