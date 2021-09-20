@@ -13,21 +13,23 @@ export default {
         universityTypes: [],
         universityUsers: [],
         universityAgreements: [],
+        universityOffers: [],
+        universityOffersLoading: false,
         internships: [],
-        internshipsLoading: true,
+        internshipsLoading: false,
         students: [],
         studentsLoading: false,
         university: null,
-        universityLoading: true,
+        universityLoading: false,
         workers: [],
         workersLoading: false,
         agreements: [],
-        agreementsLoading: true,
+        agreementsLoading: false,
         faculties: [],
-        facultiesLoading: true,
+        facultiesLoading: false,
         codeLoading: false,
         availableStudentOffers: [],
-        availableStudentOffersLoading: true,
+        availableStudentOffersLoading: false,
         facultiesTreeView: [],
     },
 
@@ -130,7 +132,15 @@ export default {
 
         facultiesTreeView(state) {
             return state.facultiesTreeView;
-        }
+        },
+
+        universityOffers(state) {
+            return state.universityOffers;
+        },
+
+        universityOffersLoading(state) {
+            return state.universityOffersLoading;
+        },
     },
 
     mutations: {
@@ -294,7 +304,15 @@ export default {
 
                 return internship;
             });
-        }
+        },
+
+        SET_UNIVERSITY_OFFERS(state, data) {
+            state.universityOffers = data;
+        },
+
+        SET_UNIVERSITY_OFFERS_LOADING(state, data) {
+            state.universityOffersLoading = data;
+        },
     },
 
     actions: {
@@ -569,6 +587,18 @@ export default {
             return axios.post(`/api/universities/${slug}/students/${userId}/reject`, {
                 reason: reason,
             });
+        },
+
+        async fetchUniversityOffers({commit}, {slug}) {
+            commit('SET_UNIVERSITY_OFFERS_LOADING', true);
+            try {
+                let response = await axios.get(`/api/universities/${slug}/offers`);
+                commit('SET_UNIVERSITY_OFFERS', response.data);
+                commit('SET_UNIVERSITY_OFFERS_LOADING', false);
+            } catch (e) {
+                commit('SET_UNIVERSITIES', []);
+                commit('SET_UNIVERSITY_OFFERS_LOADING', false);
+            }
         },
     },
 };

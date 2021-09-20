@@ -151,6 +151,7 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::get('/universities', 'Api\UniversityController@getUniversities');
     Route::post('/universities', 'Api\UniversityController@createUniversity');
     Route::get('/universities/{slug}', 'Api\UniversityController@getUniversity');
+    Route::get('/universities/{slug}/offers', 'Api\UniversityController@getUniversityOffers');
     Route::get('/universities/{slug}/workers','Api\UniversityController@getWorkers');
     Route::post('/universities/{slug}/workers/{userId}','Api\UniversityController@addWorkerToUniversity');
     Route::put('/universities/{slug}/workers/{userId}/change-roles','Api\UniversityController@changeUniversityWorkerRoles');

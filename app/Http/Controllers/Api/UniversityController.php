@@ -24,6 +24,7 @@ use App\Http\Requests\UniversityCreateUniversityQuestionnaireRequest;
 use App\Http\Requests\RoleGetAvailableRolesByGroupRequest;
 use App\Http\Requests\UniversityCreateUniversityRequest;
 use App\Http\Requests\UniversityGetUniversitiesToVerificationRequest;
+use App\Http\Requests\UniversityGetUniversityOffersRequest;
 use App\Http\Requests\UniversityGetUniversityQuestionnairesRequest;
 use App\Http\Requests\UniversityGetUniversityRequest;
 use App\Http\Requests\UniversityInternshipsRequest;
@@ -1161,6 +1162,11 @@ class UniversityController extends Controller
         }
 
         return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+
+    public function getUniversityOffers(UniversityGetUniversityOffersRequest $request, string $slug)
+    {
+        return response($this->universityRepository->getUniversityOffers($slug), Response::HTTP_OK);
     }
 
     /**

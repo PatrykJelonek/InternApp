@@ -9,19 +9,19 @@
                     outlined
                     color="primary"
                     @click.stop="toggleDialog"
-                    v-has="['student']"
+                    v-has-university-role="['student']"
                     :disabled="!userInternshipsLoading && userInternships.length > 0"
                 >
                     Zgłoś własne miejsce praktyk
                 </v-btn>
             </template>
         </page-title>
-        <v-row v-has="['student']">
+        <v-row v-has-university-role="['student']">
             <v-col cols="12">
                 <v-card elevation="0" color="card-background">
                     <v-tabs background-color="card-background">
-                        <v-tab v-has="['student']" :to="{name: 'offers'}" exact>Dostępne oferty</v-tab>
-                        <v-tab v-has="['student']" :to="{name: 'internship-applications'}" exact>Aplikacje na praktyki</v-tab>
+                        <v-tab v-has-university-role="['student']" :to="{name: 'offers'}" exact>Dostępne oferty</v-tab>
+                        <v-tab v-has-university-role="['student']" :to="{name: 'internship-applications'}" exact>Aplikacje na praktyki</v-tab>
                     </v-tabs>
                 </v-card>
             </v-col>

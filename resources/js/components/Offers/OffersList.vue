@@ -26,10 +26,10 @@
         </custom-card>
 
         <v-data-iterator
-            :items="availableStudentOffers"
+            :items="hasUniversityRole(['student']) ? universityOffers : offers"
             item-key="id"
             :items-per-page="10"
-            :loading="offersLoading"
+            :loading="hasUniversityRole(['student']) ? universityOffersLoading : offersLoading"
             locale="pl-PL"
             :search="search"
         >
@@ -44,14 +44,14 @@
                             :name="offer.name"
                             :address="offer.company.full_address"
                             :category="offer.category ? offer.category.display_name : null"
-                            :interview="offer.interview"
-                            :company-name="offer.company.name"
+                            :interview="hasUniversityRole(['student']) ? offer.offer.interview : offer.interview"
+                            :company-name="offer.company.draft_name"
                             :date-range="formatDate(offer.date_from) + ' - ' + formatDate(offer.date_to)"
                             :logo-url="offer.company.logo_url"
-                            :slug="offer.slug"
+                            :slug="hasUniversityRole(['student']) ? offer.offer.slug : offer.slug"
                             :offer="offer"
                             :for-student="isStudent"
-                            :can-apply="!userInternshipsLoading && userInternships.length < 1"
+                            :can-apply="hasUniversityRole(['student'])"
                         ></offers-list-row>
                     </v-col>
                 </v-row>
@@ -94,6 +94,7 @@ import OfferCard from "./OfferCard";
 import OffersListRow from "./OffersListRow";
 import CreateInternshipDialog from "./Student/CreateInternshipDialog";
 import CustomConfirmDialog from "../_General/CustomConfirmDialog";
+import {hasUniversityRole} from "../../plugins/acl";
 
 export default {
     name: "OffersList",
@@ -123,6 +124,7 @@ export default {
 
     computed: {
         ...mapGetters({
+            user: 'auth/user',
             dialogs: 'helpers/dialogs',
             dialogArgs: 'helpers/dialogsArgs',
             userInternships: 'user/internships',
@@ -130,11 +132,16 @@ export default {
             offers: 'offer/offers',
             offersLoading: 'offer/offersLoading',
             availableStudentOffers: 'university/availableOffers',
-            availableStudentOffersLoading: 'university/availableOffersLoading'
+            availableStudentOffersLoading: 'university/availableOffersLoading',
+            universityOffers: 'university/universityOffers',
+            universityOffersLoading: 'university/universityOffersLoading',
+            university: 'university/university'
         }),
     },
 
     methods: {
+        hasUniversityRole,
+
         ...mapActions({
             setSnackbar: 'snackbar/setSnackbar',
             fetchOffers: 'offer/fetchOffers',
@@ -144,6 +151,7 @@ export default {
             fetchAvailableOffers: 'university/fetchAvailableOffers',
             fetchUserInternships: 'user/fetchInternships',
             applyToInternship: 'agreement/applyToInternship',
+            fetchUniversityOffers: 'university/fetchUniversityOffers'
         }),
 
         setSelectedOffer(offer) {
@@ -159,33 +167,33 @@ export default {
         },
 
         async apply(slug) {
-            await this.applyToInternship({slug: this.dialogArgs['DIALOG_FIELD_CONFIRM_INTERNSHIP_APPLICATION'][0]}).then(() => {
-                this.setSnackbar({message: 'Aplikacja na praktykę została wysłana!', color: 'success'});
-            }).catch((e) => {
-                this.setSnackbar({message: 'Coś poszło nie tak! Skontaktuj się administratorem serwisu!', color: 'error'});
-            }).finally(() => {
-                this.toggleCustomDialog({key: 'DIALOG_FIELD_CONFIRM_INTERNSHIP_APPLICATION', val: false});
-                this.setDialogArgs({key: 'DIALOG_FIELD_CONFIRM_INTERNSHIP_APPLICATION', val: null});
-            });
+            if (slug) {
+                await this.applyToInternship({slug: this.dialogArgs['DIALOG_FIELD_CONFIRM_INTERNSHIP_APPLICATION'][0]}).then(() => {
+                    this.setSnackbar({message: 'Aplikacja na praktykę została wysłana!', color: 'success'});
+                }).catch((e) => {
+                    this.setSnackbar({message: 'Coś poszło nie tak! Skontaktuj się administratorem serwisu!', color: 'error'});
+                }).finally(() => {
+                    this.toggleCustomDialog({key: 'DIALOG_FIELD_CONFIRM_INTERNSHIP_APPLICATION', val: false});
+                    this.setDialogArgs({key: 'DIALOG_FIELD_CONFIRM_INTERNSHIP_APPLICATION', val: null});
+                });
+            }
         }
     },
 
     created() {
-        this.fetchOffers({categories: null, statuses: ['accepted'], onlyWithPlaces: true}).then(() => {
-            this.isLoading = false;
-        });
+        if (hasUniversityRole(['student'])) {
+            if (this.university && this.university.slug) {
+                this.fetchUniversityOffers({slug: this.university.slug}).then(() => {
 
-        this.fetchAvailableOffers().then(() => {
+                }).catch(() => {
 
-        }).catch((e) => {
-
-        });
-
-        this.fetchUserInternships().then(() => {
-
-        }).catch((e) => {
-
-        });
+                });
+            }
+        } else {
+            this.fetchOffers({categories: null, statuses: ['accepted'], onlyWithPlaces: true}).then(() => {
+                this.isLoading = false;
+            });
+        }
     }
 }
 </script>

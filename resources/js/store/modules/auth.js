@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import store from "../index";
 
 export default {
     namespaced: true,
@@ -29,6 +30,14 @@ export default {
 
         SET_USER (state, data) {
             state.user = data;
+
+            let universityFromStorage = JSON.parse(localStorage.getItem('SELECTED_UNIVERSITY'));
+
+            if (universityFromStorage) {
+                store.commit( 'university/SET_UNIVERSITY', universityFromStorage);
+            } else if (data.universities.length > 0) {
+                store.dispatch('university/fetchUniversity', [data.universities[0].slug]);
+            }
         },
 
         CHANGE_USER_DATA (state, data) {

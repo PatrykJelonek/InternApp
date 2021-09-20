@@ -2,6 +2,7 @@
     <v-select
         v-model="localSelectedUniversity"
         :items="user.universities"
+        v-if="user.universities.length > 0"
         item-text="name"
         item-value="slug"
         return-object
@@ -31,6 +32,7 @@ export default {
 
     computed: {
         ...mapGetters({
+            university: 'university/university',
             user: 'auth/user',
             userUniversities: 'user/userUniversities',
             selectedUniversity: 'helpers/selectedUniversity',
@@ -39,24 +41,32 @@ export default {
 
     created() {
         if (this.selectedUniversity === undefined || this.selectedUniversity === null) {
+            // this.fetchUniversity(this.localSelectedUniversity.slug);
             this.setSelectedUniversity(this.user.universities[0]);
             this.localSelectedUniversity = this.user.universities[0];
         } else {
             this.localSelectedUniversity = this.selectedUniversity;
+            // this.fetchUniversity(this.localSelectedUniversity.slug);
         }
     },
 
     methods: {
         ...mapActions({
             setSelectedUniversity: 'helpers/setSelectedUniversity',
-            fetchUniversity: 'university/fetchUniversity'
+            fetchUniversity: 'university/fetchUniversity',
+            fetchUniversityOffers: 'university/fetchUniversityOffers',
         }),
 
         changeUniversity() {
             if (this.selectedUniversity.slug !== this.localSelectedUniversity.slug) {
                 this.setSelectedUniversity(this.localSelectedUniversity);
-                this.$router.push({name: this.getRouteName(), params: {slug: this.localSelectedUniversity.slug}})
                 this.fetchUniversity(this.localSelectedUniversity.slug);
+
+                if (this.$route.name.match(/offers-*[a-z]*/g)) {
+                    this.fetchUniversityOffers({slug: this.localSelectedUniversity.slug});
+                } else {
+                    this.$router.push({name: this.getRouteName(), params: {slug: this.localSelectedUniversity.slug}})
+                }
             }
         },
 
@@ -67,7 +77,7 @@ export default {
                 return 'university';
             }
         }
-    }
+    },
 }
 </script>
 

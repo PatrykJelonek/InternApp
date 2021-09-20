@@ -8,6 +8,7 @@
 
 namespace App\Repositories;
 
+use App\Constants\AgreementStatusConstants;
 use App\Constants\RoleConstants;
 use App\Models\Agreement;
 use App\Models\Faculty;
@@ -33,7 +34,7 @@ class UniversityRepository implements UniversityRepositoryInterface
      */
     public function getUniversityBySlug(string $slug)
     {
-        $university = University::where('slug', $slug)->with(['type', 'city', 'faculties','user'])->first();
+        $university = University::where('slug', $slug)->with(['type', 'city', 'faculties', 'user'])->first();
 
         if (!empty($university)) {
             return $university;
@@ -273,5 +274,24 @@ class UniversityRepository implements UniversityRepositoryInterface
                 'university_id' => $universityId,
             ]
         )->with(['user'])->first();
+    }
+
+    public function getUniversityOffers(string $slug)
+    {
+        return Agreement::with(
+            [
+                'university' => function ($query) use ($slug) {
+                    $query->where(['slug' => $slug]);
+                },
+                'company',
+                'offer',
+                'status' => function ($query) {
+                    $query->name = AgreementStatusConstants::STATUS_ACCEPTED;
+                },
+            ]
+        )->where(['is_active' => true])
+            ->where(['date_from', '>=', Carbon::today()])
+            ->where(['places_number', '>', '0'])
+            ->get();
     }
 }

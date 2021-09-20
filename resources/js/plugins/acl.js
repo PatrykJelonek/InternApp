@@ -57,7 +57,21 @@ const has = function (roles) {
 
 export const hasUniversityRole = function (roles, allowEmpty = false) {
     const currentUser = store.getters['auth/user'];
-    const currentUniversity = store.getters['university/university'];
+    let currentUniversity = store.getters['university/university'];
+console.log(currentUniversity.id);
+    // if (!currentUniversity) {
+    //     let universityFromStorage = JSON.parse(localStorage.getItem('SELECTED_UNIVERSITY'));
+    //
+    //     if (universityFromStorage) {
+    //         store.commit( 'university/SET_UNIVERSITY', [universityFromStorage]);
+    //         console.log('2222s');
+    //         currentUniversity = store.getters['university/university'];
+    //     } else if (currentUser.universities.length > 0) {
+    //         store.dispatch('university/fetchUniversity', [currentUser.universities[0].slug]);
+    //         console.log('asdasd');
+    //         currentUniversity = store.getters['university/university'];
+    //     }
+    // }
 
     if (roles) {
         if (!currentUser || !currentUser.universities_with_roles || !currentUniversity || roles.length < 1) return false;
@@ -86,11 +100,11 @@ export const hasCompanyRole = function (roles, allowEmpty = false) {
         let hasRole = false;
 
         currentUser.companies_with_roles.forEach((companyWithRoles) => {
-           if (companyWithRoles.company_id === currentCompany.id) {
-               roles.forEach(role => {
-                   hasRole = hasRole ? true : companyWithRoles.roles.map(role => role['name']).includes(role);
-               });
-           }
+            if (companyWithRoles.company_id === currentCompany.id) {
+                roles.forEach(role => {
+                    hasRole = hasRole ? true : companyWithRoles.roles.map(role => role['name']).includes(role);
+                });
+            }
         });
 
         return hasRole;
