@@ -91,6 +91,15 @@ export default {
             });
         },
 
+        async me({commit}) {
+            try {
+                let response = await axios.get('/api/me');
+                commit('SET_USER', response.data.data);
+            } catch (e) {
+
+            }
+        },
+
         updateUserData({commit}, data) {
             return axios.put(`/api/me/personal-data`, data);
         },

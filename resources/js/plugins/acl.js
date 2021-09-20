@@ -58,7 +58,7 @@ const has = function (roles) {
 export const hasUniversityRole = function (roles, allowEmpty = false) {
     const currentUser = store.getters['auth/user'];
     let currentUniversity = store.getters['university/university'];
-console.log(currentUniversity.id);
+    console.log(currentUniversity.id);
     // if (!currentUniversity) {
     //     let universityFromStorage = JSON.parse(localStorage.getItem('SELECTED_UNIVERSITY'));
     //

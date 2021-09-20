@@ -15,7 +15,7 @@ export default {
         roles: [],
         journalEntries: [],
         internships: [],
-        internshipsLoading: false,
+        internshipsLoading: true,
         interns: [],
         newInternships: [],
         newInternshipsLoading: false,

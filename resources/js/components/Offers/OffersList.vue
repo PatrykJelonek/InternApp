@@ -52,6 +52,7 @@
                             :offer="offer"
                             :for-student="isStudent"
                             :can-apply="hasUniversityRole(['student'])"
+                            :can-create-agreement="hasUniversityRole(['deanery_worker','university_owner'])"
                         ></offers-list-row>
                     </v-col>
                 </v-row>
@@ -100,7 +101,8 @@ export default {
     name: "OffersList",
     components: {
         CustomConfirmDialog,
-        CreateInternshipDialog, OffersListRow, OfferCard, CustomCard, CreateAgreementDialog, ExpandCard},
+        CreateInternshipDialog, OffersListRow, OfferCard, CustomCard, CreateAgreementDialog, ExpandCard
+    },
     data() {
         return {
             isStudent: true,
@@ -171,7 +173,10 @@ export default {
                 await this.applyToInternship({slug: this.dialogArgs['DIALOG_FIELD_CONFIRM_INTERNSHIP_APPLICATION'][0]}).then(() => {
                     this.setSnackbar({message: 'Aplikacja na praktykę została wysłana!', color: 'success'});
                 }).catch((e) => {
-                    this.setSnackbar({message: 'Coś poszło nie tak! Skontaktuj się administratorem serwisu!', color: 'error'});
+                    this.setSnackbar({
+                        message: 'Coś poszło nie tak! Skontaktuj się administratorem serwisu!',
+                        color: 'error'
+                    });
                 }).finally(() => {
                     this.toggleCustomDialog({key: 'DIALOG_FIELD_CONFIRM_INTERNSHIP_APPLICATION', val: false});
                     this.setDialogArgs({key: 'DIALOG_FIELD_CONFIRM_INTERNSHIP_APPLICATION', val: null});

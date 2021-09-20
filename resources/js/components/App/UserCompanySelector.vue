@@ -11,6 +11,7 @@
         class="ml-5"
         style="max-width: 300px"
         hide-details
+        v-if="user.companies.length > 0"
     ></v-select>
 </template>
 
@@ -34,7 +35,7 @@ export default {
     },
 
     created() {
-        if (this.selectedCompany === null) {
+        if (this.selectedCompany === null || this.selectedCompany === undefined) {
             this.setSelectedCompany(this.user.companies[0]);
             this.localSelectedCompany = this.user.companies[0];
         } else {

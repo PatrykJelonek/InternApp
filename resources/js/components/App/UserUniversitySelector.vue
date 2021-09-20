@@ -41,12 +41,10 @@ export default {
 
     created() {
         if (this.selectedUniversity === undefined || this.selectedUniversity === null) {
-            // this.fetchUniversity(this.localSelectedUniversity.slug);
             this.setSelectedUniversity(this.user.universities[0]);
             this.localSelectedUniversity = this.user.universities[0];
         } else {
             this.localSelectedUniversity = this.selectedUniversity;
-            // this.fetchUniversity(this.localSelectedUniversity.slug);
         }
     },
 

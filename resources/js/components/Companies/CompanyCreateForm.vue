@@ -193,18 +193,21 @@
                 setSnackbar: 'snackbar/setSnackbar',
                 fetchCompanyCategories: 'company/fetchCompanyCategories',
                 fetchCities: 'city/fetchCities',
-                createCompany: 'company/createCompany'
+                createCompany: 'company/createCompany',
+                setSelectedCompany: 'helpers/setSelectedCompany',
+                fetchMe: 'auth/me',
             }),
 
             async submit() {
                 this.$refs.observer.validate();
 
                 await this.createCompany(this.company).then((res) => {
-                    this.updateUserData();
+                    this.fetchMe();
                     this.$router.push({name: 'company', params: {slug: res.data.slug}});
+                    this.setSelectedCompany(res.data);
                     this.setSnackbar({message: 'Firma została dodana!', color: 'success'});
                 }).catch((e) => {
-                    if(e.response.status == 422) {
+                    if(e.response.status === 422) {
                         this.$refs.observer.setErrors(e.response.data.errors);
                     }
                 });
