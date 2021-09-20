@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Requests\AttachmentDownloadAttachmentRequest;
 use App\Models\Attachment;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -144,12 +145,23 @@ class AttachmentController extends Controller
             return response("Attachment has not been deleted!", Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
-    public function downloadAttachment(string $path)
+    public function downloadAttachment(AttachmentDownloadAttachmentRequest $request, string $name)
     {
-        $attachment = Attachment::where(['path' => $path])->first();
+        $path = Attachment::where(['name' => $name])->first();
 
-        return response()->download($attachment->path, $attachment->name, [
-            'Content-Type' => $attachment->mime
-        ]);
+        if ($path) {
+            $attachment = Storage::get($path->path);
+
+            clock()->info('aaaaa', [
+                'a' => base64_encode($attachment),
+            ]);
+
+            if (!is_null($attachment)) {
+                return response(base64_encode($attachment), Response::HTTP_OK);
+            }
+        }
+
+
+        return response(null, Response::HTTP_NOT_FOUND);
     }
 }

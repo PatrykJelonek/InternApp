@@ -47,6 +47,7 @@
                 nudge-right="10"
                 :open-on-hover="navigationDrawer"
                 content-class="tooltip-background"
+                v-if="(user.companies.length > 0 || user.universities.length > 0) || hasRole(['admin'])"
             >
                 <template v-slot:activator="{ on, attrs }">
                     <v-list-item
@@ -104,6 +105,7 @@
                         nudge-right="10"
                         :open-on-hover="navigationDrawer"
                         content-class="tooltip-background"
+                        v-has-university-role="['deanery_worker','university_owner']"
                     >
                         <template v-slot:activator="{ on, attrs }">
                             <v-list-item
@@ -126,6 +128,7 @@
                         nudge-right="10"
                         :open-on-hover="navigationDrawer"
                         content-class="tooltip-background"
+                        v-has-university-role="['deanery_worker','university_owner','university_worker','university_supervisor']"
                     >
                         <template v-slot:activator="{ on, attrs }">
                             <v-list-item
@@ -148,6 +151,7 @@
                         nudge-right="10"
                         :open-on-hover="navigationDrawer"
                         content-class="tooltip-background"
+                        v-has-university-role="['deanery_worker','university_owner','university_worker','university_supervisor']"
                     >
                         <template v-slot:activator="{ on, attrs }">
                             <v-list-item
@@ -170,6 +174,7 @@
                         nudge-right="10"
                         :open-on-hover="navigationDrawer"
                         content-class="tooltip-background"
+                        v-has-university-role="['deanery_worker','university_owner']"
                     >
                         <template v-slot:activator="{ on, attrs }">
                             <v-list-item
@@ -192,6 +197,7 @@
                         nudge-right="10"
                         :open-on-hover="navigationDrawer"
                         content-class="tooltip-background"
+                        v-has-university-role="['deanery_worker','university_owner','university_worker','university_supervisor']"
                     >
                         <template v-slot:activator="{ on, attrs }">
                             <v-list-item
@@ -299,6 +305,7 @@
                         nudge-right="10"
                         :open-on-hover="navigationDrawer"
                         content-class="tooltip-background"
+                        v-has-company-role="['company_owner','company_manager']"
                     >
                         <template v-slot:activator="{ on, attrs }">
                             <v-list-item
@@ -321,6 +328,7 @@
                         nudge-right="10"
                         :open-on-hover="navigationDrawer"
                         content-class="tooltip-background"
+                        v-has-company-role="['company_owner','company_manager']"
                     >
                         <template v-slot:activator="{ on, attrs }">
                             <v-list-item
@@ -343,6 +351,7 @@
                         nudge-right="10"
                         :open-on-hover="navigationDrawer"
                         content-class="tooltip-background"
+                        v-has-company-role="['company_owner','company_manager']"
                     >
                         <template v-slot:activator="{ on, attrs }">
                             <v-list-item
@@ -365,6 +374,7 @@
                         nudge-right="10"
                         :open-on-hover="navigationDrawer"
                         content-class="tooltip-background"
+                        v-has-company-role="['company_owner','company_manager','company_worker','company_supervisor']"
                     >
                         <template v-slot:activator="{ on, attrs }">
                             <v-list-item
@@ -510,7 +520,7 @@
 
 <script>
 import {mapActions, mapGetters} from "vuex";
-import {hasCompanyRole, hasUniversityRole} from "../../plugins/acl";
+import {hasCompanyRole, hasUniversityRole, hasRole} from "../../plugins/acl";
 
 export default {
     name: "TheAppNavigationDrawer",
@@ -522,6 +532,7 @@ export default {
     methods: {
         hasCompanyRole,
         hasUniversityRole,
+        hasRole,
 
         ...mapActions({
             setSelectedUniversity: 'helpers/setSelectedUniversity',

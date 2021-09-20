@@ -10,7 +10,7 @@
                     color="primary"
                     @click.stop="toggleDialog"
                     v-has-university-role="['student']"
-                    :disabled="!userInternshipsLoading || userInternships.length > 0"
+                    :disabled="!userInternshipsLoading && userInternships.length < 0"
                 >
                     Zgłoś własne miejsce praktyk
                 </v-btn>
@@ -70,6 +70,8 @@
             ...mapGetters({
                 userInternships: 'user/internships',
                 userInternshipsLoading: 'user/internshipsLoading',
+                universityOffers: 'university/universityOffers',
+                universityOffersLoading: 'university/universityOffersLoading'
             })
         },
 

@@ -424,7 +424,7 @@
                                         >
                                             <v-file-input
                                                 label="Załącznik"
-                                                v-model="fileInput"
+                                                v-model="data.agreement.attachment"
                                                 outlined
                                                 show-size
                                                 dense
@@ -533,11 +533,7 @@ export default {
                     offerCategoryId: null,
                     dateFrom: null,
                     dateTo: null,
-                    attachment: {
-                        content: null,
-                        name: null,
-                        mime: null,
-                    },
+                    attachment: null,
                 },
             }
         }
@@ -555,6 +551,7 @@ export default {
             offerCategoriesLoading: 'offer/offerCategoriesLoading',
             studentUniversities: 'student/studentUniversities',
             studentUniversitiesLoading: 'student/studentUniversitiesLoading',
+            selectedUniversity: 'university/selectedUniversity',
         }),
     },
 

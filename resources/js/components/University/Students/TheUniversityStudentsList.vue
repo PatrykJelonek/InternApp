@@ -56,27 +56,32 @@
                     <template v-slot:item.full_name="{ item }">
                         {{ item.full_name }}
                     </template>
+                    <template v-slot:item.student.student_index="{item}">
+                        {{ item.student ? item.student.student_index : '-' }}
+                    </template>
                     <template v-slot:item.student.semester="{ item }">
-                        {{ `${item.student.semester} Semestr` }}
+                        {{ item.student ? `${item.student.semester} Semestr` : '-' }}
                     </template>
                     <template v-slot:item.student.study_year="{ item }">
-                        {{ `${item.student.study_year} Rok` }}
+                        {{ item.student ? `${item.student.study_year} Rok` : '-' }}
                     </template>
                     <template v-slot:item.student.specialization.name="{ item }">
-                        <v-tooltip right color="tooltip-background" v-if="item.student.specialization.deleted_at">
+                        <v-tooltip right color="tooltip-background"
+                                   v-if="item.student && item.student.specialization.deleted_at"
+                        >
                             <template v-slot:activator="{ on, attrs }">
                                  <span
                                      v-bind="attrs"
                                      v-on="on"
                                      :class="item.student.specialization.deleted_at ? 'text--disabled' : ''"
-                                 >{{ item.student.specialization.name }}</span>
+                                 >{{ item.student ? item.student.specialization.name : '-' }}</span>
                             </template>
                             <span class="text-caption">{{
                                     `Usunięty ${formatDate(item.student.specialization.deleted_at)}`
                                 }}</span>
                         </v-tooltip>
                         <template v-else>
-                            {{ item.student.specialization.name }}
+                            {{ item.student ? item.student.specialization.name : '-' }}
                         </template>
                     </template>
                     <template v-slot:item.universities_with_roles.verified="{ item }">

@@ -3,7 +3,7 @@ import store from "../store";
 
 Vue.directive('has', {
     inserted: function (el, binding, vnode) {
-        if (!has(binding.value)) {
+        if (!hasRole(binding.value)) {
             vnode.elm.parentElement.removeChild(vnode.elm);
         }
     },
@@ -44,7 +44,7 @@ const can = (permissions) => {
     return true;
 }
 
-const has = function (roles) {
+export const hasRole = function (roles) {
     const currentUser = store.getters['auth/user'];
 
     if (roles) {

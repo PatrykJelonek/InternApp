@@ -6,7 +6,7 @@
                 class="mr-5 cursor-pointer"
                 v-for="attachment in attachments"
                 :key="attachment.id"
-                @click="downloadAttachment({path: attachment.path})"
+                @click="downloadAttachment({path: attachment.name})"
             >
                 <v-tooltip bottom>
                     <template v-slot:activator="{ on, attrs }">
@@ -15,7 +15,9 @@
                             v-on="on"
                         >
                             <div class="d-flex justify-center align-center">
-                                <v-icon x-large dense>mdi-file-document-outline</v-icon>
+                                <v-btn icon @click="download(attachment.name)">
+                                    <v-icon x-large dense>mdi-file-document-outline</v-icon>
+                                </v-btn>
                             </div>
                             <span class="d-flex justify-center align-center text-body-2">
                             {{ `${attachment.name.substr(0, 15)}...` }}
@@ -44,7 +46,21 @@ export default {
     methods: {
         ...mapActions({
             downloadAttachment: 'helpers/downloadAttachment'
-        })
+        }),
+
+        download(name) {
+           this.downloadAttachment({name: name}).then(response => {
+               let a = document.createElement('a');
+
+               a.href = `data:application/pdf;base64,${response.data}`;
+               a.download = name;
+               a.click();
+            }).catch((e) => {
+
+            });
+
+            return null;
+        }
     }
 }
 </script>

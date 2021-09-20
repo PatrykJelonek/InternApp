@@ -483,8 +483,8 @@ export default {
             commit('SET_CREATE_OWN_AGREEMENT_STEPPER', value);
         },
 
-        downloadAttachment({commit}, {path}) {
-            return axios.get(`/api/attachments/${path}`);
-        }
+        downloadAttachment({commit}, {name}) {
+            return axios.get(`/api/attachments/${name}`);
+        },
     },
 }

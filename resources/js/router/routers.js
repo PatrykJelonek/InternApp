@@ -74,6 +74,7 @@ import TheAdminCompanies from "../components/Admin/Companies/TheAdminCompanies";
 import TheAdminCompaniesToVerification
     from "../components/Admin/Companies/Unverified/TheAdminCompaniesToVerification";
 import TheAdminCompaniesVerified from "../components/Admin/Companies/Verified/TheAdminCompaniesVerified";
+import {hasRole as aclHasRole} from "../plugins/acl";
 
 Vue.use(VueRouter);
 
@@ -317,7 +318,15 @@ const router = new VueRouter({
                             meta: {title: 'Aplikacje na Praktyki'},
                             component: TheStudentOfferApplicationsList
                         }
-                    ]
+                    ],
+                    beforeEnter: (to, from, next) => {
+                        let currentUser = store.getters['auth/user'];
+                        if ((currentUser && (currentUser.universities.length > 0 || currentUser.companies.length > 0)) ||  aclHasRole(['admin'])) {
+                            next();
+                        } else {
+                            next({name: 'panel'});
+                        }
+                    },
                 },
                 {
                     path: '/create-offer',
@@ -516,7 +525,7 @@ router.afterEach((to, from) => {
         store.commit('helpers/SET_BREADCRUMBS', []);
     }
 
-    if(to.name === 'internship') {
+    if (to.name === 'internship') {
         let user = store.getters["auth/user"];
 
         if (user.student.student_index) {
