@@ -32,6 +32,7 @@ use App\Http\Requests\UniversityRejectStudentInUniversityRequest;
 use App\Http\Requests\UniversityRejectUniversityRequest;
 use App\Http\Requests\UniversityRejectUniversityWorkerRequest;
 use App\Http\Requests\UniversityStudentsRequest;
+use App\Http\Requests\UniversityUpdateUniversityDataRequest;
 use App\Http\Requests\UniversityUpdateUniversityFacultyFieldRequest;
 use App\Http\Requests\UniversityUpdateUniversityFacultyFieldSpecializationRequest;
 use App\Http\Requests\UniversityUpdateUniversityFacultyRequest;
@@ -98,6 +99,9 @@ class UniversityController extends Controller
     public const REQUEST_FIELD_REJECT_UNIVERSITY_REASON = 'reason';
     public const REQUEST_FIELD_REJECT_STUDENT_REASON = 'reason';
     public const REQUEST_FIELD_REJECT_UNIVERSITY_WORKER_REASON = 'reason';
+    public const REQUEST_FIELD_UPDATE_UNIVERSITY_DATA_EMAIL = 'email';
+    public const REQUEST_FIELD_UPDATE_UNIVERSITY_DATA_WEBSITE = 'website';
+    public const REQUEST_FIELD_UPDATE_UNIVERSITY_DATA_PHONE = 'phone';
 
     /**
      * @var UniversityRepository
@@ -887,7 +891,7 @@ class UniversityController extends Controller
         }
     }
 
-    public function verifyUniversityWorker(UniversityVerifyUniversityWorkerRequest $request,  string $slug, int $userId)
+    public function verifyUniversityWorker(UniversityVerifyUniversityWorkerRequest $request, string $slug, int $userId)
     {
         $universityWorker = $this->universityService->verifyUniversityWorker($slug, $userId);
         $university = $this->universityRepository->getUniversityBySlug($slug);
@@ -1167,6 +1171,22 @@ class UniversityController extends Controller
     public function getUniversityOffers(UniversityGetUniversityOffersRequest $request, string $slug)
     {
         return response($this->universityRepository->getUniversityOffers($slug), Response::HTTP_OK);
+    }
+
+    public function updateUniversityData(UniversityUpdateUniversityDataRequest $request, string $slug)
+    {
+        $updatedUniversity = $this->universityService->updateUniversityData(
+            $slug,
+            $request->input(self::REQUEST_FIELD_UPDATE_UNIVERSITY_DATA_EMAIL),
+            $request->input(self::REQUEST_FIELD_UPDATE_UNIVERSITY_DATA_WEBSITE),
+            $request->input(self::REQUEST_FIELD_UPDATE_UNIVERSITY_DATA_PHONE),
+        );
+
+        if (!is_null($updatedUniversity)) {
+            return response($updatedUniversity, Response::HTTP_OK);
+        }
+
+        return \response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
     /**

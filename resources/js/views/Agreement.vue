@@ -5,7 +5,7 @@
         <page-title v-if="!agreementLoading">
             <template v-slot:default>{{ agreement.name }}</template>
             <template v-slot:actions v-if="agreement.places_number > 0">
-                <v-btn color="primary" outlined @click="toggleApplyInternshipDialog(true)">Aplikuj</v-btn>
+                <v-btn color="primary" v-has="['student']" outlined @click="toggleApplyInternshipDialog(true)">Aplikuj</v-btn>
             </template>
         </page-title>
 
@@ -191,7 +191,9 @@ export default {
     components: {Attachments, CustomCardTitle, CustomCard, ApplyInternshipDialog, PageTitle, PageLoader, ExpandCard},
 
     data() {
-        return {}
+        return {
+            send: false,
+        }
     },
 
     computed: {

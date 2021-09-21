@@ -151,6 +151,7 @@ Route::group(['middleware' => ['jwt.verify']], function() {
     Route::get('/universities', 'Api\UniversityController@getUniversities');
     Route::post('/universities', 'Api\UniversityController@createUniversity');
     Route::get('/universities/{slug}', 'Api\UniversityController@getUniversity');
+    Route::put('/universities/{slug}', 'Api\UniversityController@updateUniversityData');
     Route::get('/universities/{slug}/offers', 'Api\UniversityController@getUniversityOffers');
     Route::get('/universities/{slug}/workers','Api\UniversityController@getWorkers');
     Route::post('/universities/{slug}/workers/{userId}','Api\UniversityController@addWorkerToUniversity');
@@ -181,6 +182,7 @@ Route::group(['middleware' => ['jwt.verify']], function() {
 
     # Student
     Route::post('/students/internships', 'Api\StudentController@createStudentOwnInternship');
+    Route::post('/students/internships/{internshipId}/attachments', 'Api\StudentController@storeStudentInternshipAttachment');
 
     # Users
     Route::get('/users/{id}', 'Api\UserController@show');

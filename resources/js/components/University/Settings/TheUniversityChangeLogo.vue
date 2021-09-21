@@ -104,7 +104,7 @@ export default {
             let formData = new FormData();
             formData.append('logo', this.logo);
 
-            this.updateCompanyLogo({slug: this.$route.params.slug, data: formData}).then((response) => {
+            this.updateUniversityLogo({slug: this.$route.params.slug, data: formData}).then((response) => {
                 this.setSnackbar({message: 'Logo zostało zmienione!', color: 'success'});
             });
         }

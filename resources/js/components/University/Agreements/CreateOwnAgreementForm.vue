@@ -484,12 +484,32 @@
                 </v-stepper-content>
             </v-stepper-items>
         </v-stepper>
+        <custom-card-footer>
+            <template v-slot:left v-if="createOwnAgreementStepper > 1 && createOwnAgreementStepper < 4">
+                <v-btn outlined color="secondary" @click="setCreateOwnAgreementStepper(createOwnAgreementStepper - 1);">
+                    Cofnij
+                </v-btn>
+            </template>
+            <template v-slot:right>
+                <template v-if="createOwnAgreementStepper === 3">
+                    <v-btn outlined color="primary" @click="send">
+                        Wyślij
+                    </v-btn>
+                </template>
+                <template v-else-if="createOwnAgreementStepper > 0 && createOwnAgreementStepper < 3">
+                    <v-btn outlined color="primary" @click="setCreateOwnAgreementStepper(createOwnAgreementStepper + 1);">
+                        Dalej
+                    </v-btn>
+                </template>
+            </template>
+        </custom-card-footer>
     </v-container>
 </template>
 
 <script>
 import {mapActions, mapGetters} from "vuex";
 import {setInteractionMode, ValidationProvider, ValidationObserver, extend} from "vee-validate";
+import CustomCardFooter from "../../_General/CustomCardFooter";
 
 export default {
     name: "CreateOwnAgreementForm",
@@ -497,6 +517,7 @@ export default {
     props: ['step'],
 
     components: {
+        CustomCardFooter,
         ValidationProvider,
         ValidationObserver
     },
@@ -602,6 +623,27 @@ export default {
                 })
             }
         },
+
+        async send()
+        {
+            console.log('adsasdadadas');
+            this.$store.commit('helpers/SET_CREATE_OWN_AGREEMENT_LOADING', true);
+            await this.createOwnAgreement({slug: this.$route.params.slug, data: this.data}).then(() => {
+                this.$store.commit('helpers/SET_CREATE_OWN_AGREEMENT_LOADING', false);
+                this.fetchUniversityAgreements(this.$route.params.slug);
+                this.toggleDialog({key: 'DIALOG_FIELD_CREATE_OWN_AGREEMENT', val: false});
+                this.setSnackbar({message: "Umowa została dodana!", color: 'success'});
+            }).catch((e) => {
+                if (e.response.status === 422) {
+                    this.$refs.observerStepOne.setErrors(e.response.data.errors);
+                    this.$refs.observerStepTwo.setErrors(e.response.data.errors);
+                    this.$refs.observerStepThree.setErrors(e.response.data.errors);
+                    this.setCreateOwnAgreementStepper(1);
+                }
+
+                this.$store.commit('helpers/SET_CREATE_OWN_AGREEMENT_LOADING', false);
+            });
+        }
     },
 
     created() {
@@ -674,20 +716,6 @@ export default {
                         });
                         break;
                 }
-            }
-
-            if (newVal === 4) {
-                this.createOwnAgreement({slug: this.$route.params.slug, data: this.data}).then(() => {
-                    this.fetchUniversityAgreements(this.$route.params.slug);
-                    this.toggleDialog({key: 'DIALOG_FIELD_CREATE_OWN_AGREEMENT', val: false});
-                    this.setSnackbar({message: "Umowa została dodana!", color: 'success'});
-                }).catch((e) => {
-                    if (e.response.status === 422) {
-                        this.$refs.observerStepOne.setErrors(e.response.data.errors);
-                        this.$refs.observerStepTwo.setErrors(e.response.data.errors);
-                        this.$refs.observerStepThree.setErrors(e.response.data.errors);
-                    }
-                });
             }
         }
     }

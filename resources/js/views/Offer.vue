@@ -10,17 +10,10 @@
                     <v-btn
                         outlined
                         color="primary"
+                        v-has="['deanery_worker','university_owner']"
                         @click="toggleCreateAgreementDialog(true)"
                     >
                         Dodaj umowę
-                    </v-btn>
-                    <v-btn
-                        outlined
-                        color="primary"
-                        v-has="['student']"
-                        @click="toggleCreateAgreementDialog(true)"
-                    >
-                        Aplikuj
                     </v-btn>
                 </template>
             </page-title>
@@ -197,6 +190,7 @@ export default {
         ...mapGetters({
             offer: 'offer/offer',
             offerLoading: 'offer/offerLoading',
+            userInternships: 'user/internships',
         }),
     },
 
@@ -205,6 +199,7 @@ export default {
             setBreadcrumbs: 'helpers/setBreadcrumbs',
             fetchOffer: 'offer/fetchOffer',
             toggleCreateAgreementDialog: 'helpers/toggleCreateAgreementDialog',
+            fetchUserInternships: 'user/fetchInternships',
         }),
 
         toCompany() {
@@ -221,6 +216,12 @@ export default {
     },
 
     created() {
+        this.fetchUserInternships().then(() => {
+
+        }).catch((e) => {
+
+        });
+
         this.fetchOffer(this.$route.params.slug).then(() => {
             this.setBreadcrumbs([
                 {text: 'Panel', to: {name: 'panel'}, exact: true},

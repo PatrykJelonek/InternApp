@@ -105,7 +105,7 @@
                         nudge-right="10"
                         :open-on-hover="navigationDrawer"
                         content-class="tooltip-background"
-                        v-has-university-role="['deanery_worker','university_owner']"
+                        v-if="hasUniversityRole(['deanery_worker','university_owner'])"
                     >
                         <template v-slot:activator="{ on, attrs }">
                             <v-list-item
@@ -128,7 +128,7 @@
                         nudge-right="10"
                         :open-on-hover="navigationDrawer"
                         content-class="tooltip-background"
-                        v-has-university-role="['deanery_worker','university_owner','university_worker','university_supervisor']"
+                        v-if="hasUniversityRole(['deanery_worker','university_owner','university_worker','university_supervisor'])"
                     >
                         <template v-slot:activator="{ on, attrs }">
                             <v-list-item
@@ -151,7 +151,7 @@
                         nudge-right="10"
                         :open-on-hover="navigationDrawer"
                         content-class="tooltip-background"
-                        v-has-university-role="['deanery_worker','university_owner','university_worker','university_supervisor']"
+                        v-if="hasUniversityRole(['deanery_worker','university_owner','university_worker','university_supervisor'])"
                     >
                         <template v-slot:activator="{ on, attrs }">
                             <v-list-item
@@ -174,7 +174,7 @@
                         nudge-right="10"
                         :open-on-hover="navigationDrawer"
                         content-class="tooltip-background"
-                        v-has-university-role="['deanery_worker','university_owner']"
+                        v-if="hasUniversityRole(['deanery_worker','university_owner'])"
                     >
                         <template v-slot:activator="{ on, attrs }">
                             <v-list-item
@@ -197,7 +197,7 @@
                         nudge-right="10"
                         :open-on-hover="navigationDrawer"
                         content-class="tooltip-background"
-                        v-has-university-role="['deanery_worker','university_owner','university_worker','university_supervisor']"
+                        v-if="hasUniversityRole(['deanery_worker','university_owner','university_worker','university_supervisor'])"
                     >
                         <template v-slot:activator="{ on, attrs }">
                             <v-list-item
@@ -305,7 +305,7 @@
                         nudge-right="10"
                         :open-on-hover="navigationDrawer"
                         content-class="tooltip-background"
-                        v-has-company-role="['company_owner','company_manager']"
+                        v-if="hasCompanyRole(['company_owner','company_manager'])"
                     >
                         <template v-slot:activator="{ on, attrs }">
                             <v-list-item
@@ -328,7 +328,7 @@
                         nudge-right="10"
                         :open-on-hover="navigationDrawer"
                         content-class="tooltip-background"
-                        v-has-company-role="['company_owner','company_manager']"
+                        v-if="hasCompanyRole(['company_owner','company_manager'])"
                     >
                         <template v-slot:activator="{ on, attrs }">
                             <v-list-item
@@ -351,7 +351,7 @@
                         nudge-right="10"
                         :open-on-hover="navigationDrawer"
                         content-class="tooltip-background"
-                        v-has-company-role="['company_owner','company_manager']"
+                        v-if="hasCompanyRole(['company_owner','company_manager'])"
                     >
                         <template v-slot:activator="{ on, attrs }">
                             <v-list-item
@@ -374,7 +374,7 @@
                         nudge-right="10"
                         :open-on-hover="navigationDrawer"
                         content-class="tooltip-background"
-                        v-has-company-role="['company_owner','company_manager','company_worker','company_supervisor']"
+                        v-if="hasCompanyRole(['company_owner','company_manager','company_worker','company_supervisor'])"
                     >
                         <template v-slot:activator="{ on, attrs }">
                             <v-list-item

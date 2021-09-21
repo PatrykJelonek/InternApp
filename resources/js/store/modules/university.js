@@ -600,5 +600,13 @@ export default {
                 commit('SET_UNIVERSITY_OFFERS_LOADING', false);
             }
         },
+
+        updateUniversityData({commit}, {slug, email, website, phone}) {
+            return axios.put(`/api/universities/${slug}/`, {
+                email: email,
+                website: website,
+                phone: phone
+            })
+        }
     },
 };

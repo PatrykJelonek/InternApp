@@ -88,6 +88,7 @@ export default {
         selectedUniversity: null,
         breadcrumbs: [],
         createOwnAgreementStepper: 1,
+        createOwnAgreementLoading: false,
     },
 
     getters: {
@@ -205,6 +206,10 @@ export default {
 
         createOwnAgreementStepper(state) {
             return state.createOwnAgreementStepper;
+        },
+
+        createOwnAgreementLoading(state) {
+            return state.createOwnAgreementLoading;
         },
     },
 
@@ -339,6 +344,10 @@ export default {
 
         SET_CREATE_OWN_AGREEMENT_STEPPER(state, val) {
             state.createOwnAgreementStepper = val;
+        },
+
+        SET_CREATE_OWN_AGREEMENT_LOADING(state, val) {
+            state.createOwnAgreementLoading = val;
         },
     },
 

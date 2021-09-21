@@ -29,7 +29,7 @@
             :items="hasUniversityRole(['student']) ? universityOffers : offers"
             item-key="id"
             :items-per-page="10"
-            :loading="hasUniversityRole(['student']) ? universityOffersLoading : offersLoading"
+            :loading="universityOffersLoading || offersLoading"
             locale="pl-PL"
             :search="search"
         >
@@ -51,7 +51,7 @@
                             :slug="hasUniversityRole(['student']) ? offer.offer.slug : offer.slug"
                             :offer="offer"
                             :for-student="isStudent"
-                            :can-apply="hasUniversityRole(['student'])"
+                            :can-apply="hasUniversityRole(['student']) && userInternships.length < 1"
                             :can-create-agreement="hasUniversityRole(['deanery_worker','university_owner'])"
                         ></offers-list-row>
                     </v-col>
@@ -168,25 +168,24 @@ export default {
             return '---';
         },
 
-        async apply(slug) {
-            if (slug) {
-                await this.applyToInternship({slug: this.dialogArgs['DIALOG_FIELD_CONFIRM_INTERNSHIP_APPLICATION'][0]}).then(() => {
-                    this.setSnackbar({message: 'Aplikacja na praktykę została wysłana!', color: 'success'});
-                }).catch((e) => {
-                    this.setSnackbar({
-                        message: 'Coś poszło nie tak! Skontaktuj się administratorem serwisu!',
-                        color: 'error'
-                    });
-                }).finally(() => {
-                    this.toggleCustomDialog({key: 'DIALOG_FIELD_CONFIRM_INTERNSHIP_APPLICATION', val: false});
-                    this.setDialogArgs({key: 'DIALOG_FIELD_CONFIRM_INTERNSHIP_APPLICATION', val: null});
+        async apply() {
+            await this.applyToInternship({slug: this.dialogArgs['DIALOG_FIELD_CONFIRM_INTERNSHIP_APPLICATION'][0]}).then(() => {
+                this.setSnackbar({message: 'Aplikacja na praktykę została wysłana!', color: 'success'});
+            }).catch((e) => {
+                this.setSnackbar({
+                    message: 'Coś poszło nie tak! Skontaktuj się administratorem serwisu!',
+                    color: 'error'
                 });
-            }
+            }).finally(() => {
+                this.toggleCustomDialog({key: 'DIALOG_FIELD_CONFIRM_INTERNSHIP_APPLICATION', val: false});
+                this.setDialogArgs({key: 'DIALOG_FIELD_CONFIRM_INTERNSHIP_APPLICATION', val: null});
+            });
         }
     },
 
     created() {
         if (hasUniversityRole(['student'])) {
+            this.fetchUserInternships();
             if (this.university && this.university.slug) {
                 this.fetchUniversityOffers({slug: this.university.slug}).then(() => {
 

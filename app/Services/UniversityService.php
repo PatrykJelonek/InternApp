@@ -308,4 +308,21 @@ class UniversityService
         DB::rollBack();
         return null;
     }
+
+    public function updateUniversityData(string $slug, string $email, string $website, string $phone)
+    {
+        $university = $this->universityRepository->getUniversityBySlug($slug);
+
+        if (!is_null($university)) {
+            $university->email = $email;
+            $university->website = $website;
+            $university->phone = $phone;
+            $university->freshTimestamp();
+            if ($university->update()) {
+                return $university;
+            }
+        }
+
+        return null;
+    }
 }

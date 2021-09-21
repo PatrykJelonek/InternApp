@@ -10,7 +10,7 @@
                     color="primary"
                     @click.stop="toggleDialog"
                     v-has-university-role="['student']"
-                    :disabled="!userInternshipsLoading && userInternships.length < 0"
+                    :disabled="userInternships.length > 0"
                 >
                     Zgłoś własne miejsce praktyk
                 </v-btn>

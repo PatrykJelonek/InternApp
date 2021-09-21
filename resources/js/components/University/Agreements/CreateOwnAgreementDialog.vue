@@ -6,7 +6,7 @@
         @click:outside="closeDialog"
         :fullscreen="this.$vuetify.breakpoint.smAndDown"
     >
-        <custom-card>
+        <custom-card :loading="createOwnAgreementLoading">
             <custom-card-title>
                 <template v-slot:default>Dodaj umowę</template>
                 <template v-slot:subheader>Formularz dodawania umowy własnej</template>
@@ -25,26 +25,6 @@
                     <create-own-agreement-form :step="step"></create-own-agreement-form>
                 </v-col>
             </v-row>
-
-            <custom-card-footer>
-                <template v-slot:left v-if="createOwnAgreementStepper > 1">
-                    <v-btn outlined color="secondary" @click="setCreateOwnAgreementStepper(createOwnAgreementStepper - 1);">
-                        Cofnij
-                    </v-btn>
-                </template>
-                <template v-slot:right>
-                    <template v-if="createOwnAgreementStepper === 3">
-                        <v-btn outlined color="primary" @click="setCreateOwnAgreementStepper(4);">
-                            Dodaj
-                        </v-btn>
-                    </template>
-                    <template v-else>
-                        <v-btn outlined color="primary" @click="setCreateOwnAgreementStepper(createOwnAgreementStepper + 1);">
-                            Dalej
-                        </v-btn>
-                    </template>
-                </template>
-            </custom-card-footer>
         </custom-card>
     </v-dialog>
 </template>
@@ -71,6 +51,7 @@ export default {
         ...mapGetters({
             dialogs: 'helpers/dialogs',
             createOwnAgreementStepper: 'helpers/createOwnAgreementStepper',
+            createOwnAgreementLoading: 'helpers/createOwnAgreementLoading'
         }),
     },
 
