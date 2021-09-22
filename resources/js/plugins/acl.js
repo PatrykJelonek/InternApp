@@ -55,45 +55,66 @@ export const hasRole = function (roles) {
     return true;
 };
 
-export const hasUniversityRole = function (roles, allowEmpty = false) {
+export const hasUniversityRole = function (roles, allowEmpty = false, checkUserActivate = true, checkUserVerified = true) {
     const currentUser = store.getters['auth/user'];
     let currentUniversity = store.getters['university/university'];
 
     if (roles) {
         if (!currentUser || !currentUser.universities_with_roles || !currentUniversity || roles.length < 1) return false;
         let hasRole = false;
+        let isActive = false;
+        let isVerified = false;
 
         currentUser.universities_with_roles.forEach((universityWithRoles) => {
             if (universityWithRoles.university_id === currentUniversity.id) {
+
+                if (universityWithRoles.active) {
+                    isActive = true;
+                }
+
+                if (universityWithRoles.verified) {
+                    isVerified = true;
+                }
                 roles.forEach(role => {
                     hasRole = hasRole ? true : universityWithRoles.roles.map(role => role['name']).includes(role);
                 });
             }
         });
-
-        return hasRole;
+        console.log(isActive, isVerified);
+        return hasRole && (checkUserActivate ? isActive : true) && (checkUserVerified ? isVerified : true);
     }
 
     return allowEmpty;
 };
 
-export const hasCompanyRole = function (roles, allowEmpty = false) {
+export const hasCompanyRole = function (roles, allowEmpty = false, checkUserActivate = true, checkUserVerified = true) {
     const currentUser = store.getters['auth/user'];
     const currentCompany = store.getters['company/company'];
 
     if (roles) {
         if (!currentUser || !currentUser.companies_with_roles || !currentCompany || roles.length < 1) return false;
         let hasRole = false;
+        let isActive = false;
+        let isVerified = false;
 
         currentUser.companies_with_roles.forEach((companyWithRoles) => {
             if (companyWithRoles.company_id === currentCompany.id) {
+                if (companyWithRoles.active) {
+                    isActive = true;
+                }
+
+                if (companyWithRoles.verified) {
+                    isVerified = true;
+                }
+
+
                 roles.forEach(role => {
                     hasRole = hasRole ? true : companyWithRoles.roles.map(role => role['name']).includes(role);
                 });
             }
         });
 
-        return hasRole;
+        return hasRole && (checkUserActivate ? isActive : true) && (checkUserVerified ? isVerified : true);
     }
 
     return allowEmpty;

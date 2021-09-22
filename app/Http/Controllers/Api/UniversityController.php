@@ -11,6 +11,7 @@ use App\Events\UniversityVerified;
 use App\Events\UniversityWorkerRejected;
 use App\Events\UniversityWorkerVerified;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UniversityActivateUniversityWorkerRequest;
 use App\Http\Requests\UniversityAddStudentToUniversityRequest;
 use App\Http\Requests\UniversityAddUserToUniversityRequest;
 use App\Http\Requests\UniversityAddWorkerToUniversityRequest;
@@ -23,6 +24,7 @@ use App\Http\Requests\UniversityCreateUniversityFacultyRequest as CreateFacultyR
 use App\Http\Requests\UniversityCreateUniversityQuestionnaireRequest;
 use App\Http\Requests\RoleGetAvailableRolesByGroupRequest;
 use App\Http\Requests\UniversityCreateUniversityRequest;
+use App\Http\Requests\UniversityDeactivateUniversityWorkerRequest;
 use App\Http\Requests\UniversityGetUniversitiesToVerificationRequest;
 use App\Http\Requests\UniversityGetUniversityOffersRequest;
 use App\Http\Requests\UniversityGetUniversityQuestionnairesRequest;
@@ -1201,5 +1203,27 @@ class UniversityController extends Controller
         } while (count(University::where('access_code', $randomAccessCode)->get()) > 0);
 
         return $randomAccessCode;
+    }
+
+    public function activateUniversityWorker(UniversityActivateUniversityWorkerRequest $request, string $slug, int $userId)
+    {
+        $activatedUserUniversity = $this->universityService->activateUniversityWorker($slug, $userId);
+
+        if (!is_null($activatedUserUniversity)) {
+            return response($activatedUserUniversity, Response::HTTP_OK);
+        }
+
+        return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+
+    public function deactivateUniversityWorker(UniversityDeactivateUniversityWorkerRequest $request, string $slug, int $userId)
+    {
+        $deactivatedUserUniversity = $this->universityService->deactivateUniversityWorker($slug, $userId);
+
+        if (!is_null($deactivatedUserUniversity)) {
+            return response($deactivatedUserUniversity, Response::HTTP_OK);
+        }
+
+        return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 }

@@ -6,10 +6,13 @@ use App\Constants\RoleConstants;
 use App\Events\CompanyRejected;
 use App\Events\CompanyVerified;
 use App\Http\Requests\CompanyAcceptCompanyWorkerRequest;
+use App\Http\Requests\CompanyActivateCompanyWorkerRequest;
 use App\Http\Requests\CompanyAddWorkerToCompanyRequest;
 use App\Http\Requests\CompanyChangeCompanyWorkerRolesRequest;
 use App\Http\Requests\CompanyCreateCompanyQuestionnaireRequest as CreateQuestionnaireRequest;
 use App\Http\Requests\CompanyCreateCompanyRequest;
+use App\Http\Requests\CompanyDeactivateCompanyWorkerDataRequest;
+use App\Http\Requests\CompanyDeactivateCompanyWorkerRequest;
 use App\Http\Requests\CompanyDeleteCompanyWorkerRequest;
 use App\Http\Requests\CompanyGetAllVerifiedCompaniesRequest;
 use App\Http\Requests\CompanyGetCompaniesToVerificationRequest;
@@ -674,5 +677,27 @@ class CompanyController extends Controller
         } catch (\Exception $e) {
             return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
         }
+    }
+
+    public function activateCompanyWorker(CompanyActivateCompanyWorkerRequest $request, string $slug, int $userId)
+    {
+        $activatedUserCompany = $this->companyService->activateCompanyWorker($slug, $userId);
+
+        if (!is_null($activatedUserCompany)) {
+            return response($activatedUserCompany, Response::HTTP_OK);
+        }
+
+        return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+
+    public function deactivateCompanyWorker(CompanyDeactivateCompanyWorkerRequest $request, string $slug, int $userId)
+    {
+        $deactivatedUserCompany = $this->companyService->deactivateCompanyWorker($slug, $userId);
+
+        if (!is_null($deactivatedUserCompany)) {
+            return response($deactivatedUserCompany, Response::HTTP_OK);
+        }
+
+        return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 }

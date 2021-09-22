@@ -1,6 +1,22 @@
 <template>
     <custom-card>
         <custom-confirm-dialog
+            title="Aktywuj pracownika"
+            subheader="Czy na pewno chcesz aktywować tego pracownika?"
+            :dialog-state="dialogs['DIALOG_FIELD_ACTIVATE_UNIVERSITY_WORKER']"
+            :toggle-function="toggleDialog"
+            :confirm-function="activate"
+            dialog-key="DIALOG_FIELD_DEACTIVATE_UNIVERSITY_WORKER"
+        ></custom-confirm-dialog>
+        <custom-confirm-dialog
+            title="Dezaktywuj pracownika"
+            subheader="Czy na pewno chcesz dezaktywować tego pracownika?"
+            :dialog-state="dialogs['DIALOG_FIELD_DEACTIVATE_UNIVERSITY_WORKER']"
+            :toggle-function="toggleDialog"
+            :confirm-function="deactivate"
+            dialog-key="DIALOG_FIELD_DEACTIVATE_UNIVERSITY_WORKER"
+        ></custom-confirm-dialog>
+        <custom-confirm-dialog
             title="Akceptuj pracownika"
             subheader="Czy na pewno chcesz zaakceptować tego pracownika?"
             :confirm-function="verifyWorker"
@@ -116,7 +132,7 @@
                                           v-has-university-role="['deanery_worker','university_owner']">
                                     <v-list-item>
                                         <v-list-item-title @click="openVerifyWorkerDialog(item)">
-                                            Akceptuj pracownika
+                                            Weryfikuj pracownika
                                         </v-list-item-title>
                                     </v-list-item>
                                     <v-list-item>
@@ -137,16 +153,16 @@
                                             Zmień role
                                         </v-list-item-title>
                                     </v-list-item>
-                                    <v-list-item v-has-university-role="['deanery_worker','university_owner']">
+                                    <v-list-item v-if="hasUniversityRole(['deanery_worker','university_owner']) && item.id !== user.id">
                                         <v-list-item-title
                                             v-if="!item.universities_with_roles[0].active"
-                                            @click="$router.push({name: 'user', params: {id: item.id}})"
+                                            @click="openActivateDialog(item)"
                                         >
                                             Aktywuj pracownika
                                         </v-list-item-title>
                                         <v-list-item-title
                                             v-else
-                                            @click="$router.push({name: 'user', params: {id: item.id}})"
+                                            @click="openDeactivateDialog(item)"
                                         >
                                             Dezaktywuj pracownika
                                         </v-list-item-title>
@@ -169,6 +185,7 @@ import CustomCardTitle from "../../_General/CustomCardTitle";
 import SelectRolesDialog from "../../Roles/SelectRolesDialog";
 import CustomConfirmDialog from "../../_General/CustomConfirmDialog";
 import {setInteractionMode, ValidationProvider, ValidationObserver} from "vee-validate";
+import {hasUniversityRole} from "../../../plugins/acl";
 
 setInteractionMode('eager');
 
@@ -203,6 +220,7 @@ export default {
 
     computed: {
         ...mapGetters({
+            user: 'auth/user',
             university: 'university/university',
             workers: 'university/workers',
             workersLoading: 'university/workersLoading',
@@ -212,6 +230,8 @@ export default {
     },
 
     methods: {
+        hasUniversityRole,
+
         ...mapActions({
             setSnackbar: 'snackbar/setSnackbar',
             fetchWorkers: 'university/fetchWorkers',
@@ -220,6 +240,8 @@ export default {
             changeUniversityWorkerRoles: 'university/changeUniversityWorkerRoles',
             verifyUniversityWorker: 'university/verifyUniversityWorker',
             rejectUniversityWorker: 'university/rejectUniversityWorker',
+            activeUniversityWorker: 'university/activeUniversityWorker',
+            deactivateUniversityWorker: 'university/deactivateUniversityWorker',
         }),
 
         openChangeRoleDialog(item) {
@@ -302,6 +324,52 @@ export default {
                         }
                     });
                 }
+            });
+        },
+
+        openActivateDialog(item) {
+            this.setDialogArgs({
+                key: 'DIALOG_FIELD_ACTIVATE_UNIVERSITY_WORKER', val: {
+                    userId: item.id
+                }
+            });
+            this.toggleDialog({key: 'DIALOG_FIELD_ACTIVATE_UNIVERSITY_WORKER', val: true});
+        },
+
+        openDeactivateDialog(item) {
+            this.setDialogArgs({
+                key: 'DIALOG_FIELD_DEACTIVATE_UNIVERSITY_WORKER', val: {
+                    userId: item.id
+                }
+            });
+            this.toggleDialog({key: 'DIALOG_FIELD_DEACTIVATE_UNIVERSITY_WORKER', val: true});
+        },
+
+        async activate() {
+            await this.activeUniversityWorker({
+                slug: this.$route.params.slug,
+                userId: this.dialogsArgs.DIALOG_FIELD_ACTIVATE_UNIVERSITY_WORKER.userId,
+            }).then(() => {
+                this.setSnackbar({message: 'Pracownik został aktywowany!', color: 'success'});
+                this.fetchWorkers(this.$route.params.slug);
+            }).catch((e) => {
+                this.setSnackbar({message: 'Nie udało się aktywować pracownika!', color: 'error'});
+            }).finally(() => {
+                this.toggleDialog({key: 'DIALOG_FIELD_ACTIVATE_UNIVERSITY_WORKER', val: false});
+            });
+        },
+
+        async deactivate() {
+            await this.deactivateUniversityWorker({
+                slug: this.$route.params.slug,
+                userId: this.dialogsArgs.DIALOG_FIELD_DEACTIVATE_UNIVERSITY_WORKER.userId,
+            }).then(() => {
+                this.setSnackbar({message: 'Pracownik został dezaktywowany!', color: 'success'});
+                this.fetchWorkers(this.$route.params.slug);
+            }).catch((e) => {
+                this.setSnackbar({message: 'Nie udało się dezaktywować pracownika!', color: 'error'});
+            }).finally(() => {
+                this.toggleDialog({key: 'DIALOG_FIELD_DEACTIVATE_UNIVERSITY_WORKER', val: false});
             });
         }
     },

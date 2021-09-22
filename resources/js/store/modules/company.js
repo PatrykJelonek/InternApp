@@ -392,5 +392,13 @@ export default {
                 rolesIds: rolesIds
             });
         },
+
+        activeCompanyWorker({commit}, {slug, userId}) {
+            return axios.put(`/api/companies/${slug}/workers/${userId}/activate`);
+        },
+
+        deactivateCompanyWorker({commit}, {slug, userId}) {
+            return axios.put(`/api/companies/${slug}/workers/${userId}/deactivate`);
+        }
     },
 }

@@ -9,6 +9,8 @@
 namespace App\Services;
 
 use App\Constants\RoleConstants;
+use App\Http\Requests\CompanyActivateCompanyWorkerRequest;
+use App\Http\Requests\CompanyDeactivateCompanyWorkerRequest;
 use App\Models\Company;
 use App\Models\User;
 use App\Models\UserCompany;
@@ -141,7 +143,7 @@ class CompanyService
             if ($user->companies()->updateExistingPivot(
                 $company->id,
                 [
-                    'active' => true,
+                    'verified' => true,
                 ]
             )) {
                 Log::channel('user')->info(
@@ -156,6 +158,8 @@ class CompanyService
                     ]
                 );
             }
+
+            return true;
         }
 
         Log::channel('user')->error(
@@ -392,5 +396,45 @@ class CompanyService
         } catch (\Exception $e) {
             throw new \Exception('Nie udało się dodać roli!');
         }
+    }
+
+    public function activateCompanyWorker(string $slug, int $userId)
+    {
+        $company = $this->companyRepository->getCompanyBySlug($slug);
+
+        if (!is_null($company)) {
+            $userCompany = UserCompany::where(['company_id' => $company->id, 'user_id' => $userId])->first();
+
+            if (!is_null($userCompany)) {
+                $userCompany->active = true;
+                $userCompany->freshTimestamp();
+
+                if ($userCompany->update()) {
+                    return $userCompany;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    public function deactivateCompanyWorker(string $slug, int $userId)
+    {
+        $company = $this->companyRepository->getCompanyBySlug($slug);
+
+        if (!is_null($company)) {
+            $userCompany = UserCompany::where(['company_id' => $company->id, 'user_id' => $userId])->first();
+
+            if (!is_null($userCompany)) {
+                $userCompany->active = false;
+                $userCompany->freshTimestamp();
+
+                if ($userCompany->update()) {
+                    return $userCompany;
+                }
+            }
+        }
+
+        return null;
     }
 }

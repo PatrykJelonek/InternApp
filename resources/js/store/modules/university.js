@@ -607,6 +607,14 @@ export default {
                 website: website,
                 phone: phone
             })
+        },
+
+        activeUniversityWorker({commit}, {slug, userId}) {
+            return axios.put(`/api/universities/${slug}/workers/${userId}/activate`);
+        },
+
+        deactivateUniversityWorker({commit}, {slug, userId}) {
+            return axios.put(`/api/universities/${slug}/workers/${userId}/deactivate`);
         }
     },
 };

@@ -325,4 +325,44 @@ class UniversityService
 
         return null;
     }
+
+    public function activateUniversityWorker(string $slug, int $userId)
+    {
+        $university = $this->universityRepository->getUniversityBySlug($slug);
+
+        if (!is_null($university)) {
+            $userUniversity = UserUniversity::where(['university_id' => $university->id, 'user_id' => $userId])->first();
+
+            if (!is_null($userUniversity)) {
+                $userUniversity->active = true;
+                $userUniversity->freshTimestamp();
+
+                if ($userUniversity->update()) {
+                    return $userUniversity;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    public function deactivateUniversityWorker(string $slug, int $userId)
+    {
+        $university = $this->universityRepository->getUniversityBySlug($slug);
+
+        if (!is_null($university)) {
+            $userUniversity = UserUniversity::where(['university_id' => $university->id, 'user_id' => $userId])->first();
+
+            if (!is_null($userUniversity)) {
+                $userUniversity->active = false;
+                $userUniversity->freshTimestamp();
+
+                if ($userUniversity->update()) {
+                    return $userUniversity;
+                }
+            }
+        }
+
+        return null;
+    }
 }
