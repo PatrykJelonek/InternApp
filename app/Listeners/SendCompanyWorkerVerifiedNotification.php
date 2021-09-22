@@ -4,6 +4,7 @@ namespace App\Listeners;
 
 use App\Events\CompanyWorkerVerified;
 use App\Events\UniversityWorkerVerified;
+use App\Mail\CompanyWorkerVerifiedMail;
 use App\Mail\UniversityWorkerVerifiedMail;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
@@ -29,6 +30,6 @@ class SendCompanyWorkerVerifiedNotification implements ShouldQueue
      */
     public function handle(CompanyWorkerVerified $event)
     {
-        Mail::to($event->user)->send(new UniversityWorkerVerifiedMail($event->company, $event->user));
+        Mail::to($event->user)->send(new CompanyWorkerVerifiedMail($event->company, $event->user));
     }
 }

@@ -4,6 +4,7 @@ namespace App\Listeners;
 
 use App\Events\CompanyWorkerRejected;
 use App\Events\UniversityWorkerRejected;
+use App\Mail\CompanyWorkerRejectedMail;
 use App\Mail\UniversityWorkerRejectedMail;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
@@ -31,7 +32,7 @@ class SendCompanyWorkerRejectedNotification implements ShouldQueue
     public function handle(CompanyWorkerRejected $event)
     {
         Mail::to($event->user)->send(
-            new UniversityWorkerRejectedMail($event->company, $event->user, $event->reason)
+            new CompanyWorkerRejectedMail($event->company, $event->user, $event->reason)
         );
     }
 }

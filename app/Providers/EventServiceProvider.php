@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use App\Events\CompanyRejected;
 use App\Events\CompanyVerified;
+use App\Events\CompanyWorkerRejected;
+use App\Events\CompanyWorkerVerified;
 use App\Events\OfferAccepted;
 use App\Events\OfferRejected;
 use App\Events\StudentRejected;
@@ -16,6 +18,8 @@ use App\Events\UserCreated;
 use App\Listeners\SendActivationEmail;
 use App\Listeners\SendCompanyRejectedNotification;
 use App\Listeners\SendCompanyVerifiedNotification;
+use App\Listeners\SendCompanyWorkerRejectedNotification;
+use App\Listeners\SendCompanyWorkerVerifiedNotification;
 use App\Listeners\SendOfferAcceptedNotification;
 use App\Listeners\SendOfferRejectedNotification;
 use App\Listeners\SendStudentRejectedNotification;
@@ -68,6 +72,12 @@ class EventServiceProvider extends ServiceProvider
         ],
         UniversityWorkerRejected::class => [
             SendUniversityWorkerRejectedNotification::class,
+        ],
+        CompanyWorkerVerified::class => [
+            SendCompanyWorkerVerifiedNotification::class,
+        ],
+        CompanyWorkerRejected::class => [
+            SendCompanyWorkerRejectedNotification::class,
         ],
         OfferAccepted::class => [
             SendOfferAcceptedNotification::class

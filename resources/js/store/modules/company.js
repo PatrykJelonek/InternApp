@@ -342,8 +342,10 @@ export default {
             return axios.put(`/api/companies/${slug}/workers/${userId}/accept`);
         },
 
-        deleteCompanyWorker({commit}, {slug, userId}) {
-            return axios.delete(`/api/companies/${slug}/workers/${userId}`);
+        deleteCompanyWorker({commit}, {slug, userId, reason}) {
+            return axios.put(`/api/companies/${slug}/workers/${userId}/reject`, {
+                reason: reason
+            });
         },
 
         addWorkerToCompany({commit}, {slug, userId, accessCode}) {

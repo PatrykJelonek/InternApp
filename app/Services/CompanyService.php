@@ -102,16 +102,20 @@ class CompanyService
         $company = $this->companyRepository->getCompanyBySlug($slug);
 
         if ($user !== null && $company !== null) {
-            $user->companies()->detach([$company->id]);
-            Log::channel('user')->info(
-                'Użytkownik został usunięty z firmy!',
-                [
-                    'user_id' => Auth::id(),
-                    'company_id' => $company->id,
-                    'deleted_user_id' => $user->id,
-                ]
-            );
-            return true;
+            $userCompaniesRoles = $this->companyRepository->getUsersCompaniesRoles($userId, $company->id);
+
+            if (!is_null($userCompaniesRoles) && $userCompaniesRoles->delete()) {
+                $user->companies()->detach([$company->id]);
+                Log::channel('user')->info(
+                    'Użytkownik został usunięty z firmy!',
+                    [
+                        'user_id' => Auth::id(),
+                        'company_id' => $company->id,
+                        'deleted_user_id' => $user->id,
+                    ]
+                );
+                return true;
+            }
         }
 
         Log::channel('user')->error(

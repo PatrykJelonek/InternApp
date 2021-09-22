@@ -27,7 +27,24 @@
             :confirm-function-args="[selectedWorkerId]"
             title="Usuń pracownika"
             subheader="Czy chcesz usunąć tego pracownika z firmy?"
-        ></custom-confirm-dialog>
+        >
+            <validation-observer ref="observer" v-slot="{ validate }">
+                <validation-provider
+                    vid="reason"
+                    rules="required"
+                    v-slot="{ errors }"
+                >
+                    <v-textarea
+                        outlined
+                        v-model="reason"
+                        label="Powód odrzucenia"
+                        required
+                        hide-details="auto"
+                        :error-messages="errors"
+                    ></v-textarea>
+                </validation-provider>
+            </validation-observer>
+        </custom-confirm-dialog>
         <custom-confirm-dialog
             :dialog-state="acceptCompanyWorkerDialog"
             :toggle-function="toggleAcceptCompanyWorkerDialog"
@@ -194,10 +211,19 @@ import CustomConfirmDialog from "../../_General/CustomConfirmDialog";
 import CustomCardTitle from "../../_General/CustomCardTitle";
 import {hasCompanyRole} from "../../../plugins/acl";
 import SelectRolesDialog from "../../Roles/SelectRolesDialog";
+import {extend, ValidationObserver, ValidationProvider} from "vee-validate";
 
 export default {
     name: "TheCompanyWorkers",
-    components: {SelectRolesDialog, CustomCardTitle, CustomConfirmDialog, CustomCard, PageTitle},
+    components: {
+        SelectRolesDialog,
+        CustomCardTitle,
+        CustomConfirmDialog,
+        CustomCard,
+        PageTitle,
+        ValidationObserver,
+        ValidationProvider
+    },
 
     data() {
         return {
@@ -206,6 +232,7 @@ export default {
             selectedWorkerId: null,
             selectedWorkerFullName: null,
             selectedWorkerRolesIds: [],
+            reason: null,
             headers: [
                 {text: "Imie i nazwisko", value: 'full_name', align: 'left'},
                 {text: "Role", value: 'roles', align: 'left'},
@@ -247,23 +274,33 @@ export default {
             deactivateCompanyWorker: 'company/deactivateCompanyWorker'
         }),
 
-        deleteWorker(userId) {
-            this.deleteCompanyWorker({slug: this.$route.params.slug, userId: userId}).then((response) => {
-                this.toggleDeleteCompanyWorkerDialog(false);
-                this.fetchCompanyWorkers(this.$route.params.slug);
-                this.setSnackbar({message: 'Użytkownik został usunięty z listy pracowników!', color: 'success'});
-            }).catch((e) => {
-                this.toggleDeleteCompanyWorkerDialog(false);
-                this.setSnackbar({
-                    message: 'Wystąpił problem z usunięciem użytkownika z listy pracowników!',
-                    color: 'error'
-                });
+        async deleteWorker(userId) {
+            await this.$refs.observer.validate().then((isValid) => {
+                if (isValid) {
+                    this.deleteCompanyWorker({
+                        slug: this.$route.params.slug,
+                        userId: userId,
+                        reason: this.reason
+                    }).then((response) => {
+                        this.toggleDeleteCompanyWorkerDialog(false);
+                        this.fetchCompanyWorkers(this.$route.params.slug);
+                        this.setSnackbar({
+                            message: 'Użytkownik został usunięty z listy pracowników!',
+                            color: 'success'
+                        });
+                    }).catch((e) => {
+                        this.toggleDeleteCompanyWorkerDialog(false);
+                        this.setSnackbar({
+                            message: 'Wystąpił problem z usunięciem użytkownika z listy pracowników!',
+                            color: 'error'
+                        });
+                    });
+                }
             });
-
         },
 
-        acceptWorker(userId) {
-            this.acceptCompanyWorker({slug: this.$route.params.slug, userId: userId}).then((response) => {
+        async acceptWorker(userId) {
+            await this.acceptCompanyWorker({slug: this.$route.params.slug, userId: userId}).then((response) => {
                 this.setSnackbar({
                     message: 'Użytkownik został zaakceptowany jako pracownik tej firmy!',
                     color: 'success'
