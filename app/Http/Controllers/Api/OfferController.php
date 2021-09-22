@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Events\OfferAccepted;
+use App\Events\OfferRejected;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ChangeOfferStatusRequest;
 use App\Http\Requests\OfferIndexRequest;
@@ -9,10 +11,15 @@ use App\Http\Requests\OfferCreateOfferRequest;
 use App\Models\Offer;
 use App\Models\OfferStatus;
 use App\Repositories\OfferRepository;
+use App\Services\AttachmentService;
 use App\Services\OfferService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use Psy\Util\Str;
 
 class OfferController extends Controller
 {
@@ -28,7 +35,8 @@ class OfferController extends Controller
     public const REQUEST_FIELD_OFFER_INTERVIEW = 'interview';
     public const REQUEST_FIELD_OFFER_DATE_FROM = 'dateFrom';
     public const REQUEST_FIELD_OFFER_DATE_TO = 'dateTo';
-    public const REQUEST_FIELD_OFFER_ATTACHMENTS = 'attachments';
+    public const REQUEST_FIELD_OFFER_ATTACHMENTS = 'attachment';
+    public const REQUEST_FIELD_REJECT_OFFER_REASON = 'reason';
 
     /**
      * @var OfferService
@@ -41,15 +49,25 @@ class OfferController extends Controller
     private $offerRepository;
 
     /**
+     * @var AttachmentService
+     */
+    private $attachmentService;
+
+    /**
      * OfferController constructor.
      *
-     * @param OfferService    $offerService
-     * @param OfferRepository $offerRepository
+     * @param OfferService      $offerService
+     * @param OfferRepository   $offerRepository
+     * @param AttachmentService $attachmentService
      */
-    public function __construct(OfferService $offerService, OfferRepository $offerRepository)
-    {
+    public function __construct(
+        OfferService $offerService,
+        OfferRepository $offerRepository,
+        AttachmentService $attachmentService
+    ) {
         $this->offerService = $offerService;
         $this->offerRepository = $offerRepository;
+        $this->attachmentService = $attachmentService;
     }
 
     /**
@@ -112,7 +130,31 @@ class OfferController extends Controller
         );
 
         if (!is_null($offer)) {
-            DB::commit();
+            if ($request->file(self::REQUEST_FIELD_OFFER_ATTACHMENTS) !== null) {
+                $filename = "zalacznik_do_" . \Illuminate\Support\Str::slug(
+                        $request->input(
+                            self::REQUEST_FIELD_OFFER_NAME
+                        ) . Carbon::today()->format('h_i_d_m_Y')
+                    ) . '.' . $request->file(self::REQUEST_FIELD_OFFER_ATTACHMENTS)->getClientOriginalExtension();
+
+                $path = $request->file(self::REQUEST_FIELD_OFFER_ATTACHMENTS)->storeAs('offers', $filename);
+                $attachment = $this->attachmentService->storeAttachments(
+                    $filename,
+                    $request->file(self::REQUEST_FIELD_OFFER_ATTACHMENTS)->getMimeType(),
+                    $path,
+                    Auth::id()
+                );
+
+                if (!is_null($attachment)) {
+                    $offer->attachments()->attach($attachment->id);
+
+                    DB::commit();
+                    return response($offer, Response::HTTP_CREATED);
+                }
+
+                Storage::delete($path);
+            }
+
             return response($offer, Response::HTTP_CREATED);
         }
 
@@ -186,6 +228,9 @@ class OfferController extends Controller
         $offer = $this->offerRepository->acceptOfferBySlug($slug);
 
         if (!empty($offer)) {
+            OfferAccepted::dispatch(
+                $offer
+            );
             return response($offer, Response::HTTP_OK);
         }
 
@@ -197,6 +242,10 @@ class OfferController extends Controller
         $offer = $this->offerRepository->rejectOfferBySlug($slug);
 
         if (!empty($offer)) {
+            OfferRejected::dispatch(
+                $offer,
+                $request->input(self::REQUEST_FIELD_REJECT_OFFER_REASON)
+            );
             return response($offer, Response::HTTP_OK);
         }
 

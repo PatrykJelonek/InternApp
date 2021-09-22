@@ -14,10 +14,14 @@ use App\Repositories\AgreementRepository;
 use App\Repositories\OfferRepository;
 use App\Repositories\UniversityRepository;
 use App\Services\AgreementService;
+use App\Services\AttachmentService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class AgreementController extends Controller
 {
@@ -34,6 +38,7 @@ class AgreementController extends Controller
     public const REQUEST_FIELD_AGREEMENT_OFFER_ID = 'offerId';
     public const REQUEST_FIELD_AGREEMENT_CONTENT = 'content';
     public const REQUEST_FIELD_AGREEMENT_UNIVERSITY_SLUG = 'universitySlug';
+    public const REQUEST_FIELD_AGREEMENT_ATTACHMENT = 'attachment';
 
     /**
      * @var AgreementService
@@ -56,23 +61,31 @@ class AgreementController extends Controller
     private $offerRepository;
 
     /**
+     * @var AttachmentService
+     */
+    private $attachmentService;
+
+    /**
      * AgreementController constructor.
      *
      * @param AgreementService     $agreementService
      * @param AgreementRepository  $agreementRepository
      * @param UniversityRepository $universityRepository
      * @param OfferRepository      $offerRepository
+     * @param AttachmentService    $attachmentService
      */
     public function __construct(
         AgreementService $agreementService,
         AgreementRepository $agreementRepository,
         UniversityRepository $universityRepository,
-        OfferRepository $offerRepository
+        OfferRepository $offerRepository,
+        AttachmentService $attachmentService
     ) {
         $this->agreementService = $agreementService;
         $this->agreementRepository = $agreementRepository;
         $this->universityRepository = $universityRepository;
         $this->offerRepository = $offerRepository;
+        $this->attachmentService = $attachmentService;
     }
 
     /**
@@ -150,7 +163,9 @@ class AgreementController extends Controller
                 $request->input(self::REQUEST_FIELD_AGREEMENT_OFFER_ID)
             );
 
-            $newOfferPlacesNumber = $offer->places_number - $request->input(self::REQUEST_FIELD_AGREEMENT_PLACES_NUMBER);
+            $newOfferPlacesNumber = $offer->places_number - $request->input(
+                    self::REQUEST_FIELD_AGREEMENT_PLACES_NUMBER
+                );
             $isOfferPlacesNumberChanged = $this->offerRepository
                 ->changeOfferPlacesNumber(
                     $offer->id,
@@ -158,6 +173,31 @@ class AgreementController extends Controller
                 );
 
             if ($isOfferPlacesNumberChanged && !is_null($agreement)) {
+                if ($request->file(self::REQUEST_FIELD_AGREEMENT_ATTACHMENT) !== null) {
+                    $filename = "zalacznik_do_" . Str::slug(
+                            $request->input(
+                                self::REQUEST_FIELD_AGREEMENT_NAME
+                            ) . Carbon::today()->format('h_i_d_m_Y')
+                        ) . '.' . $request->file(self::REQUEST_FIELD_AGREEMENT_ATTACHMENT)->getClientOriginalExtension();
+
+                    $path = $request->file(self::REQUEST_FIELD_AGREEMENT_ATTACHMENT)->storeAs('agreements', $filename);
+                    $attachment = $this->attachmentService->storeAttachments(
+                        $filename,
+                        $request->file(self::REQUEST_FIELD_AGREEMENT_ATTACHMENT)->getMimeType(),
+                        $path,
+                        Auth::id()
+                    );
+
+                    if (!is_null($attachment)) {
+                        $agreement->attachments()->attach($attachment);
+
+                        DB::commit();
+                        return response($agreement, Response::HTTP_CREATED);
+                    }
+
+                    Storage::delete($path);
+                }
+
                 DB::commit();
                 return response($agreement, Response::HTTP_CREATED);
             }

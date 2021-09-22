@@ -227,16 +227,16 @@
                 <v-col cols="12">
                     <validation-provider
                         v-slot="{ errors }"
-                        vid="attachments"
+                        vid="attachment"
                     >
                         <v-file-input
                             label="Załącznik"
-                            v-model="attachmentsFiles"
+                            v-model="agreement.attachment"
                             outlined
                             show-size
                             hide-details
                             dense
-                            multiple
+                            small-chips
                             prepend-icon=""
                             :error-messages="errors"
                         ></v-file-input>
@@ -291,7 +291,7 @@ export default {
                 universitySupervisorId: null,
                 offerId: null,
                 userId: null,
-                attachments: [],
+                attachment: [],
                 placesNumber: null,
                 offerPlacesNumber: null,
             },
@@ -310,6 +310,7 @@ export default {
 
     methods: {
         ...mapActions({
+            toggleDialog: 'helpers/toggleDialog',
             setSnackbar: 'snackbar/setSnackbar',
             fetchUserUniversities: 'user/fetchUserUniversities',
             fetchUniversityWorkers: 'university/fetchWorkers',
@@ -320,17 +321,23 @@ export default {
         async submit() {
             await this.$refs.observer.validate().then((value) => {
                 if (value) {
-                    this.createAgreement(this.agreement).then(() => {
+                    let formData = new FormData();
+
+                    for (const prop in this.agreement) {
+                        formData.append(prop, this.agreement[prop]);
+                    }
+
+                    this.createAgreement(formData).then(() => {
                         this.setSnackbar({message: 'Umowa została dodana.', color: 'success'});
-                        this.toggleCreateAgreementDialog(false);
                         this.agreement = null;
                     }).catch((e) => {
                         if (e.response.status === 422) {
-                            console.log(e.response.data.errors);
                             this.$refs.observer.setErrors(e.response.data.errors);
                         }
 
                         this.setSnackbar({message: 'Nie udało się dodać umowy.', color: 'error'});
+                    }).finally(() => {
+                        this.toggleDialog({key: 'DIALOG_FIELD_CREATE_AGREEMENT_FROM_OFFER', val: false});
                     });
                 }
             });

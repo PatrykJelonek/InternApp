@@ -31,7 +31,8 @@ class UniversityRejectUniversityRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'slug' => 'required|exists:App\Models\University,slug'
+            'slug' => 'required|exists:App\Models\University,slug',
+            'reason' => 'required'
         ];
     }
 }

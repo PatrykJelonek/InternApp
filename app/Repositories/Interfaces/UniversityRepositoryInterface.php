@@ -30,7 +30,7 @@ interface UniversityRepositoryInterface
 
     public function getUniversitiesToVerification();
 
-    public function getUserUniversities(int $userId, int $universityId);
+    public function getUserUniversity(int $userId, int $universityId);
 
     public function getUsersUniversitiesRoles(int $userId, int $universityId);
 }

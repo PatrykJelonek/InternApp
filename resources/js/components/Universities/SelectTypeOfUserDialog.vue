@@ -309,7 +309,6 @@ export default {
                             this.setSnackbar({message: 'Zostałeś dodany do uczelni!', color: 'success'});
                         }).catch((e) => {
                             if (e.response.status === 422) {
-                                console.log('asdasd');
                                 this.$refs.observerStudent.setErrors(e.response.data.errors);
                             } else {
                                 this.close();

@@ -5,13 +5,45 @@
             <template v-slot:subheader>Lista pracowników {{ company.name }}</template>
         </page-title>
         <custom-confirm-dialog
+            title="Aktywuj pracownika"
+            subheader="Czy na pewno chcesz aktywować tego pracownika?"
+            :dialog-state="dialogs['DIALOG_FIELD_ACTIVATE_COMPANY_WORKER']"
+            :toggle-function="toggleDialog"
+            :confirm-function="activate"
+            dialog-key="DIALOG_FIELD_DEACTIVATE_COMPANY_WORKER"
+        ></custom-confirm-dialog>
+        <custom-confirm-dialog
+            title="Dezaktywuj pracownika"
+            subheader="Czy na pewno chcesz dezaktywować tego pracownika?"
+            :dialog-state="dialogs['DIALOG_FIELD_DEACTIVATE_COMPANY_WORKER']"
+            :toggle-function="toggleDialog"
+            :confirm-function="deactivate"
+            dialog-key="DIALOG_FIELD_DEACTIVATE_COMPANY_WORKER"
+        ></custom-confirm-dialog>
+        <custom-confirm-dialog
             :dialog-state="deleteCompanyWorkerDialog"
             :toggle-function="toggleDeleteCompanyWorkerDialog"
             :confirm-function="deleteWorker"
             :confirm-function-args="[selectedWorkerId]"
             title="Usuń pracownika"
+            subheader="Czy chcesz usunąć tego pracownika z firmy?"
         >
-            Czy chcesz usunąć tego pracownika z firmy?
+            <validation-observer ref="observer" v-slot="{ validate }">
+                <validation-provider
+                    vid="reason"
+                    rules="required"
+                    v-slot="{ errors }"
+                >
+                    <v-textarea
+                        outlined
+                        v-model="reason"
+                        label="Powód odrzucenia"
+                        required
+                        hide-details="auto"
+                        :error-messages="errors"
+                    ></v-textarea>
+                </validation-provider>
+            </validation-observer>
         </custom-confirm-dialog>
         <custom-confirm-dialog
             :dialog-state="acceptCompanyWorkerDialog"
@@ -19,9 +51,13 @@
             :confirm-function="acceptWorker"
             :confirm-function-args="[selectedWorkerId]"
             title="Akceptuj pracownika"
-        >
-            Czy chcesz zaakceptować tego pracownika jako pracownika firmy?
-        </custom-confirm-dialog>
+            subheader="Czy chcesz zaakceptować tego pracownika jako pracownika firmy?"
+        ></custom-confirm-dialog>
+        <select-roles-dialog
+            :groups="['company']"
+            :submit-function="changeRoles"
+            :existent-roles-id="selectedWorkerRolesIds"
+        ></select-roles-dialog>
 
         <v-row no-gutters>
             <v-col cols="12">
@@ -110,7 +146,9 @@
                                     <template v-if="!item.companies_with_roles[0].verified">
                                         <v-list-item
                                             class="cursor-pointer"
+                                            @mouseup="selectedWorkerFullName = item.full_name; selectedWorkerId = item.id"
                                             @click="toggleAcceptCompanyWorkerDialog(true)"
+                                            v-has-company-role="['company_owner', 'company_manager']"
                                         >
                                             <v-list-item-content>
                                                 <v-list-item-title>Akceptuj pracownika</v-list-item-title>
@@ -118,10 +156,12 @@
                                         </v-list-item>
                                         <v-list-item
                                             class="cursor-pointer"
+                                            @mouseup="selectedWorkerFullName = item.full_name; selectedWorkerId = item.id"
                                             @click="toggleDeleteCompanyWorkerDialog(true)"
+                                            v-has-company-role="['company_owner', 'company_manager']"
                                         >
                                             <v-list-item-content>
-                                                <v-list-item-title>Usuń pracownika</v-list-item-title>
+                                                <v-list-item-title>Odrzuć pracownika</v-list-item-title>
                                             </v-list-item-content>
                                         </v-list-item>
                                     </template>
@@ -131,17 +171,23 @@
                                                 <v-list-item-title>Wyświetl profil</v-list-item-title>
                                             </v-list-item-content>
                                         </v-list-item>
-                                        <v-list-item>
-                                            <v-list-item-content>
+                                        <v-list-item v-has-company-role="['company_owner', 'company_manager']">
+                                            <v-list-item-content @click="openChangeRoleDialog(item)">
                                                 <v-list-item-title>Zmień rolę</v-list-item-title>
                                             </v-list-item-content>
                                         </v-list-item>
-                                        <v-list-item v-if="!item.companies_with_roles[0].active">
+                                        <v-list-item
+                                            v-if="!item.companies_with_roles[0].active && hasCompanyRole(['company_owner', 'company_manager']) && item.id !== user.id"
+                                            @click="openActivateDialog(item)"
+                                        >
                                             <v-list-item-content>
                                                 <v-list-item-title>Aktywuj</v-list-item-title>
                                             </v-list-item-content>
                                         </v-list-item>
-                                        <v-list-item v-else>
+                                        <v-list-item
+                                            v-else-if="item.companies_with_roles[0].active && hasCompanyRole(['company_owner', 'company_manager']) && item.id !== user.id"
+                                            @click="openDeactivateDialog(item)"
+                                        >
                                             <v-list-item-content>
                                                 <v-list-item-title>Dezaktywuj</v-list-item-title>
                                             </v-list-item-content>
@@ -163,15 +209,30 @@ import PageTitle from "../../_Helpers/PageTitle";
 import CustomCard from "../../_General/CustomCard";
 import CustomConfirmDialog from "../../_General/CustomConfirmDialog";
 import CustomCardTitle from "../../_General/CustomCardTitle";
+import {hasCompanyRole} from "../../../plugins/acl";
+import SelectRolesDialog from "../../Roles/SelectRolesDialog";
+import {extend, ValidationObserver, ValidationProvider} from "vee-validate";
 
 export default {
     name: "TheCompanyWorkers",
-    components: {CustomCardTitle, CustomConfirmDialog, CustomCard, PageTitle},
+    components: {
+        SelectRolesDialog,
+        CustomCardTitle,
+        CustomConfirmDialog,
+        CustomCard,
+        PageTitle,
+        ValidationObserver,
+        ValidationProvider
+    },
 
     data() {
         return {
             search: null,
             selectedWorker: null,
+            selectedWorkerId: null,
+            selectedWorkerFullName: null,
+            selectedWorkerRolesIds: [],
+            reason: null,
             headers: [
                 {text: "Imie i nazwisko", value: 'full_name', align: 'left'},
                 {text: "Role", value: 'roles', align: 'left'},
@@ -184,6 +245,9 @@ export default {
 
     computed: {
         ...mapGetters({
+            user: 'auth/user',
+            dialogs: 'helpers/dialogs',
+            dialogsArgs: 'helpers/dialogsArgs',
             company: 'company/company',
             companyWorkers: 'company/companyWorkers',
             companyWorkersLoading: 'company/companyWorkersLoading',
@@ -193,43 +257,132 @@ export default {
     },
 
     methods: {
+        hasCompanyRole,
+
         ...mapActions({
             setBreadcrumbs: 'helpers/setBreadcrumbs',
             fetchCompanyWorkers: 'company/fetchCompanyWorkers',
+            changeCompanyWorkerRoles: 'company/changeCompanyWorkerRoles',
             toggleDeleteCompanyWorkerDialog: 'helpers/toggleDeleteCompanyWorkerDialog',
             toggleAcceptCompanyWorkerDialog: 'helpers/toggleAcceptCompanyWorkerDialog',
             acceptCompanyWorker: 'company/acceptCompanyWorker',
             deleteCompanyWorker: 'company/deleteCompanyWorker',
-            setSnackbar: 'snackbar/setSnackbar'
+            setSnackbar: 'snackbar/setSnackbar',
+            toggleDialog: 'helpers/toggleDialog',
+            setDialogArgs: 'helpers/setDialogArgs',
+            activeCompanyWorker: 'company/activeCompanyWorker',
+            deactivateCompanyWorker: 'company/deactivateCompanyWorker'
         }),
 
-        deleteWorker(userId) {
-            this.deleteCompanyWorker({slug: this.$route.params.slug, userId: userId}).then((response) => {
-                this.toggleDeleteCompanyWorkerDialog(false);
-                this.setSnackbar({message: 'Użytkownik został usunięty z listy pracowników!', color: 'success'});
-            }).catch((e) => {
-                this.toggleDeleteCompanyWorkerDialog(false);
-                this.setSnackbar({
-                    message: 'Wystąpił problem z usunięciem użytkownika z listy pracowników!',
-                    color: 'error'
-                });
+        async deleteWorker(userId) {
+            await this.$refs.observer.validate().then((isValid) => {
+                if (isValid) {
+                    this.deleteCompanyWorker({
+                        slug: this.$route.params.slug,
+                        userId: userId,
+                        reason: this.reason
+                    }).then((response) => {
+                        this.toggleDeleteCompanyWorkerDialog(false);
+                        this.fetchCompanyWorkers(this.$route.params.slug);
+                        this.setSnackbar({
+                            message: 'Użytkownik został usunięty z listy pracowników!',
+                            color: 'success'
+                        });
+                    }).catch((e) => {
+                        this.toggleDeleteCompanyWorkerDialog(false);
+                        this.setSnackbar({
+                            message: 'Wystąpił problem z usunięciem użytkownika z listy pracowników!',
+                            color: 'error'
+                        });
+                    });
+                }
             });
-
         },
 
-        acceptWorker(userId) {
-            this.acceptCompanyWorker({slug: this.$route.params.slug, userId: userId}).then((response) => {
+        async acceptWorker(userId) {
+            await this.acceptCompanyWorker({slug: this.$route.params.slug, userId: userId}).then((response) => {
                 this.setSnackbar({
                     message: 'Użytkownik został zaakceptowany jako pracownik tej firmy!',
                     color: 'success'
                 });
                 this.toggleAcceptCompanyWorkerDialog(false);
+                this.fetchCompanyWorkers(this.$route.params.slug);
             }).catch((e) => {
                 this.setSnackbar({
                     message: 'Wystąpił problem podczas akceptacji użytkownika jako pracownika tej firmy',
                     color: 'error'
                 });
                 this.toggleAcceptCompanyWorkerDialog(false);
+            });
+        },
+
+        openChangeRoleDialog(item) {
+            this.selectedItem = item;
+            this.selectedWorkerRolesIds = item.companies_with_roles[0].roles.map((role) => {
+                return role.id;
+            });
+            this.toggleDialog({key: 'DIALOG_FIELD_SELECT_ROLES', val: true});
+        },
+
+        changeRoles(rolesIds) {
+            this.changeCompanyWorkerRoles({
+                slug: this.$route.params.slug,
+                userId: this.selectedItem.id,
+                userCompanyId: this.selectedItem.companies_with_roles[0].id,
+                rolesIds: rolesIds
+            }).then((response) => {
+                this.setSnackbar({message: 'Role zostały zmienione!', color: 'success'});
+                this.fetchCompanyWorkers(this.$route.params.slug);
+            }).catch((e) => {
+                this.setSnackbar({message: 'Nie udało się zmienić ról!', color: 'error'});
+            }).finally(() => {
+                this.toggleDialog({key: 'DIALOG_FIELD_SELECT_ROLES', val: false});
+            });
+        },
+
+        openActivateDialog(item) {
+            this.setDialogArgs({
+                key: 'DIALOG_FIELD_ACTIVATE_COMPANY_WORKER', val: {
+                    userId: item.id
+                }
+            });
+            this.toggleDialog({key: 'DIALOG_FIELD_ACTIVATE_COMPANY_WORKER', val: true});
+        },
+
+        openDeactivateDialog(item) {
+            this.setDialogArgs({
+                key: 'DIALOG_FIELD_DEACTIVATE_COMPANY_WORKER', val: {
+                    userId: item.id
+                }
+            });
+            this.toggleDialog({key: 'DIALOG_FIELD_DEACTIVATE_COMPANY_WORKER', val: true});
+        },
+
+        async activate() {
+            await this.activeCompanyWorker({
+                slug: this.$route.params.slug,
+                userId: this.dialogsArgs.DIALOG_FIELD_ACTIVATE_COMPANY_WORKER.userId,
+            }).then(() => {
+                this.setSnackbar({message: 'Pracownik został aktywowany!', color: 'success'});
+                this.fetchCompanyWorkers(this.$route.params.slug);
+            }).catch((e) => {
+                this.setSnackbar({message: 'Nie udało się aktywować pracownika!', color: 'error'});
+            }).finally(() => {
+                this.toggleDialog({key: 'DIALOG_FIELD_ACTIVATE_COMPANY_WORKER', val: false});
+            });
+        },
+
+        async deactivate() {
+            await this.deactivateCompanyWorker({
+                slug: this.$route.params.slug,
+                userId: this.dialogsArgs.DIALOG_FIELD_DEACTIVATE_COMPANY_WORKER.userId,
+            }).then(() => {
+                this.setSnackbar({message: 'Pracownik został dezaktywowany!', color: 'success'});
+                this.fetchCompanyWorkers(this.$route.params.slug);
+            }).catch((e) => {
+                this.setSnackbar({message: 'Nie udało się dezaktywować pracownika!', color: 'error'});
+            }).finally(() => {
+                this.toggleDialog({key: 'DIALOG_FIELD_DEACTIVATE_COMPANY_WORKER', val: false});
             });
         }
     },

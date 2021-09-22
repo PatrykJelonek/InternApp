@@ -29,23 +29,24 @@
                 <custom-card>
                     <custom-card-title>
                         <template v-slot:default>Lista umów</template>
+                        <template v-slot:actions>
+                            <v-tooltip top v-has-university-role="['deanery_worker','university_owner']">
+                                <template v-slot:activator="{ on, attrs }">
+                                    <v-btn
+                                        small
+                                        icon
+                                        v-bind="attrs"
+                                        v-on="on"
+                                        @click="toggleCreateOwnAgreementDialog(true)"
+                                    >
+                                        <v-icon>mdi-plus</v-icon>
+                                    </v-btn>
+                                </template>
+                                <span>Dodaj Umowę</span>
+                            </v-tooltip>
+                        </template>
                     </custom-card-title>
-                    <template v-slot:buttons>
-                        <v-tooltip top v-has="['deanery_worker']">
-                            <template v-slot:activator="{ on, attrs }">
-                                <v-btn
-                                    small
-                                    icon
-                                    v-bind="attrs"
-                                    v-on="on"
-                                    @click="toggleCreateOwnAgreementDialog(true)"
-                                >
-                                    <v-icon>mdi-plus</v-icon>
-                                </v-btn>
-                            </template>
-                            <span>Dodaj Umowę</span>
-                        </v-tooltip>
-                    </template>
+
                     <v-data-table
                         :headers="headers"
                         :items="agreements"
@@ -93,18 +94,27 @@
                             </v-chip>
                         </template>
                         <template v-slot:item.actions="{ item }">
-                            <v-menu offset-y class="component-background">
+                            <v-menu offset-y class="component-background" >
                                 <template v-slot:activator="{ on, attrs }">
                                     <v-btn
                                         icon
                                         v-bind="attrs"
                                         v-on="on"
+                                        :disabled="!hasUniversityRole(['deanery_worker','university_owner'])"
                                     >
                                         <v-icon>mdi-dots-vertical</v-icon>
                                     </v-btn>
                                 </template>
                                 <v-list dense color="component-background">
-                                    <v-list-item v-if="item.is_active">
+                                    <v-list-item>
+                                        <v-list-item-title @click="$router.push({name: 'agreement', params: {slug: item.slug}})">
+                                            Wyświetl umowę
+                                        </v-list-item-title>
+                                    </v-list-item>
+                                    <v-list-item
+                                        v-if="item.is_active"
+                                        v-has-university-role="['deanery_worker','university_owner']"
+                                    >
                                         <v-list-item-title
                                             class="link"
                                             @click="toggle('DIALOG_FIELD_DEACTIVATE_AGREEMENT', true, item)"
@@ -112,7 +122,10 @@
                                             Dezaktywuj umowę
                                         </v-list-item-title>
                                     </v-list-item>
-                                    <v-list-item v-if="!item.is_active">
+                                    <v-list-item
+                                        v-if="!item.is_active"
+                                        v-has-university-role="['deanery_worker','university_owner']"
+                                    >
                                         <v-list-item-title
                                             class="link"
                                             @click="toggle('DIALOG_FIELD_ACTIVATE_AGREEMENT', true, item)"
@@ -120,7 +133,10 @@
                                             Aktywuj umowę
                                         </v-list-item-title>
                                     </v-list-item>
-                                    <v-list-item v-if="!item.deleted_at">
+                                    <v-list-item
+                                        v-if="!item.deleted_at"
+                                        v-has-university-role="['deanery_worker','university_owner']"
+                                    >
                                         <v-list-item-title
                                             class="link"
                                             @click="toggle('DIALOG_FIELD_DELETE_AGREEMENT', true, item)"
@@ -147,6 +163,7 @@ import PageTitle from "../../_Helpers/PageTitle";
 import CustomCard from "../../_General/CustomCard";
 import CustomCardTitle from "../../_General/CustomCardTitle";
 import CustomConfirmDialog from "../../_General/CustomConfirmDialog";
+import {hasUniversityRole} from "../../../plugins/acl";
 
 export default {
     name: "TheUniversityAgreementsList",
@@ -181,6 +198,8 @@ export default {
     },
 
     methods: {
+        hasUniversityRole,
+
         ...mapActions({
             setSnackbar: 'snackbar/setSnackbar',
             fetchAgreements: 'university/fetchAgreements',
@@ -211,7 +230,6 @@ export default {
                 this.toggle('DIALOG_FIELD_ACTIVATE_AGREEMENT', false, null);
                 this.setSnackbar({message: 'Umowa została aktywowana!', color: 'success'});
             }).catch((e) => {
-                console.log(e);
                 this.toggle('DIALOG_FIELD_ACTIVATE_AGREEMENT', false, null);
                 this.setSnackbar({message: 'Nie udało się aktywować umowy!', color: 'error'});
             });

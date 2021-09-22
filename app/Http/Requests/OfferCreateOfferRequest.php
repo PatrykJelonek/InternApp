@@ -25,7 +25,7 @@ class OfferCreateOfferRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|string|unique:App\Models\Offer',
+            'name' => 'required|string|unique:App\Models\Offer,name',
             'placesNumber' => 'required|integer|min:1',
             'program' => 'required|string',
             'schedule' => 'nullable|string',
@@ -34,8 +34,8 @@ class OfferCreateOfferRequest extends FormRequest
             'dateFrom' => 'required|date|after:yesterday',
             'dateTo' => 'required|date|after:dateFrom',
             'interview' => 'sometimes|boolean',
-            'attachments' => [new Attachments()],
             'companyId' => 'required|exists:App\Models\Company,id',
+            'attachment' => 'nullable|file|mimes:pdf,docx'
         ];
     }
 

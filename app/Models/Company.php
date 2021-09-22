@@ -4,7 +4,15 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\City;
+use App\Models\Offer;
+use App\Models\User;
+use App\Models\Questionnaire;
+use App\Models\CompanyCategory;
 
 class Company extends Model
 {
@@ -34,38 +42,38 @@ class Company extends Model
 
     protected $table = "companies";
 
-    protected $hidden = ['city_id', 'company_category_id', 'access_code'];
+    protected $hidden = ['city_id', 'company_category_id'];
 
     protected $appends = ['full_address', 'draft_name', 'draft_email'];
 
-    public function category()
+    public function category(): BelongsTo
     {
-        return $this->belongsTo('App\Models\CompanyCategory', 'company_category_id', 'id');
+        return $this->belongsTo(CompanyCategory::class, 'company_category_id', 'id');
     }
 
-    public function city()
+    public function city(): BelongsTo
     {
-        return $this->belongsTo('App\Models\City');
+        return $this->belongsTo(City::class);
     }
 
-    public function offers()
+    public function offers(): HasMany
     {
-        return $this->hasMany('App\Models\Offer', 'company_id', 'id');
+        return $this->hasMany(Offer::class, 'company_id', 'id');
     }
 
-    public function users()
+    public function users(): BelongsToMany
     {
-        return $this->belongsToMany('App\Models\User', 'users_companies', 'company_id', 'user_id')->withPivot(['id','active','created_at']);
+        return $this->belongsToMany(User::class, 'users_companies', 'company_id', 'user_id')->withPivot(['id','active','created_at']);
     }
 
-    public function questionnaires()
+    public function questionnaires(): BelongsToMany
     {
-        return $this->belongsToMany('App\Models\Questionnaire','companies_questionnaires','company_id', 'questionnaire_id');
+        return $this->belongsToMany(Questionnaire::class, 'companies_questionnaires', 'company_id', 'questionnaire_id');
     }
 
-    public function author()
+    public function user(): BelongsTo
     {
-        return $this->hasOne(User::class, 'user_id','id');
+        return $this->belongsTo(User::class, 'user_id','id');
     }
 
     public function getFullAddressAttribute(): string

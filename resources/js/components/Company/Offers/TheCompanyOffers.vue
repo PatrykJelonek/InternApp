@@ -10,6 +10,7 @@
                     outlined
                     color="primary"
                     @click="toggleCreateOfferDialog(true)"
+                    v-has-company-role="['company_owner', 'company_manager']"
                 >
                     Dodaj ofertę
                 </v-btn>
@@ -85,7 +86,7 @@
                                                     Zobacz ofertę
                                                 </v-list-item-title>
                                             </v-list-item>
-                                            <v-list-item>
+                                            <v-list-item v-has-company-role="['company_owner', 'company_manager']">
                                                 <v-list-item-title @click="$router.push({name: 'offer', params: {slug: item.slug}})">
                                                     Usuń ofertę
                                                 </v-list-item-title>

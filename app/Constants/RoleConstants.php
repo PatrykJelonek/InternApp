@@ -15,6 +15,7 @@ class RoleConstants
     public const ROLE_STUDENT = 'student';
     public const ROLE_UNIVERSITY_SUPERVISOR = 'university_supervisor';
     public const ROLE_COMPANY_SUPERVISOR = 'company_supervisor';
+    public const ROLE_COMPANY_MANAGER = 'company_manager';
 
     public const ROLE_GROUP_UNIVERSITY = 'university';
     public const ROLE_GROUP_COMPANY = 'company';
@@ -40,6 +41,7 @@ class RoleConstants
         self::ROLE_USER,
         self::ROLE_UNIVERSITY_SUPERVISOR,
         self::ROLE_COMPANY_SUPERVISOR,
+        self::ROLE_COMPANY_MANAGER,
     ];
 
     public const BASIC_ROLE_USER_TYPES = [
@@ -54,6 +56,7 @@ class RoleConstants
         self::ROLE_STUDENT => 'User type: ' . self::ROLE_STUDENT,
         self::ROLE_UNIVERSITY_SUPERVISOR => 'User type: ' . self::ROLE_UNIVERSITY_SUPERVISOR,
         self::ROLE_COMPANY_SUPERVISOR => 'User type: ' . self::ROLE_COMPANY_SUPERVISOR,
+        self::ROLE_COMPANY_MANAGER => 'User type: ' . self::ROLE_COMPANY_MANAGER,
     ];
 
     public const BASIC_ROLE_DISPLAY_NAMES = [
@@ -68,6 +71,7 @@ class RoleConstants
         self::ROLE_STUDENT => 'Student',
         self::ROLE_UNIVERSITY_SUPERVISOR => 'Opiekun praktykanta z uczelni',
         self::ROLE_COMPANY_SUPERVISOR => 'Opiekun praktykanta z firmy',
+        self::ROLE_COMPANY_MANAGER => 'Manager firmy',
     ];
 
     public const BASIC_ROLE_DESCRIPTIONS = [
@@ -82,6 +86,7 @@ class RoleConstants
         self::ROLE_STUDENT => 'Student',
         self::ROLE_UNIVERSITY_SUPERVISOR => 'Opiekun praktykanta z uczelni',
         self::ROLE_COMPANY_SUPERVISOR => 'Opiekun praktykanta z firmy',
+        self::ROLE_COMPANY_MANAGER => 'Manager firmy',
     ];
 
     public const BASIC_ROLE_GROUP = [
@@ -96,5 +101,6 @@ class RoleConstants
         self::ROLE_STUDENT => self::ROLE_GROUP_OTHER,
         self::ROLE_UNIVERSITY_SUPERVISOR => self::ROLE_GROUP_UNIVERSITY,
         self::ROLE_COMPANY_SUPERVISOR => self::ROLE_GROUP_COMPANY,
+        self::ROLE_COMPANY_MANAGER => self::ROLE_GROUP_COMPANY,
     ];
 }

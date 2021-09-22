@@ -24,7 +24,7 @@
                                       style="top: 100px; border: 8px solid white;">
                                 <v-img
                                     :src="'/'+user.avatar_url"
-                                       :alt="user.first_name + ' ' + user.last_name + ' avatar'"
+                                    :alt="user.first_name + ' ' + user.last_name + ' avatar'"
                                 ></v-img>
                             </v-avatar>
                         </v-card-title>
@@ -102,7 +102,7 @@
                             <v-list class="component-background">
                                 <v-list-item v-for="company in user.companies" :key="company.id" class="cursor-pointer">
                                     <v-list-item-content
-                                        @click="$router.push({name: 'university', params: {slug: company.slug}})">
+                                        @click="$router.push({name: 'company', params: {slug: company.slug}})">
                                         <v-list-item-title class="text-overline">Nazwa</v-list-item-title>
                                         <v-list-item-subtitle>{{ company.name }}</v-list-item-subtitle>
                                     </v-list-item-content>

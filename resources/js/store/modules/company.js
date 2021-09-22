@@ -16,8 +16,13 @@ export default {
         companyWorkers: [],
         companyWorkersLoading: false,
         companies: [],
-        companiesLoading: [],
+        companiesLoading: false,
+        companiesToVerification: [],
+        companiesToVerificationLoading: false,
+        verifiedCompanies: [],
+        verifiedCompaniesLoading: false,
         interns: [],
+        codeLoading: false,
     },
 
     getters: {
@@ -39,6 +44,10 @@ export default {
 
         company(state) {
             return state.company;
+        },
+
+        codeLoading(state) {
+            return state.codeLoading;
         },
 
         companyLoading(state) {
@@ -83,7 +92,23 @@ export default {
 
         companiesLoading(state) {
             return state.companiesLoading;
-        }
+        },
+
+        companiesToVerification(state) {
+            return state.companiesToVerification;
+        },
+
+        companiesToVerificationLoading(state) {
+            return state.companiesToVerificationLoading;
+        },
+
+        verifiedCompanies(state) {
+            return state.verifiedCompanies;
+        },
+
+        verifiedCompaniesLoading(state) {
+            return state.verifiedCompaniesLoading;
+        },
     },
 
     mutations: {
@@ -112,7 +137,7 @@ export default {
         },
 
         SET_CODE(state, code) {
-            state.selectedCompany.access_code = code;
+            state.company.access_code = code;
         },
 
         SET_COMPANY_OFFERS(state, data) {
@@ -157,7 +182,27 @@ export default {
 
         SET_COMPANIES_LOADING(state, data) {
             state.companiesLoading = data;
-        }
+        },
+
+        SET_COMPANIES_TO_VERIFICATION(state, data) {
+            state.companiesToVerification = data;
+        },
+
+        SET_COMPANIES_TO_VERIFICATION_LOADING(state, data) {
+            state.companiesToVerificationLoading = data;
+        },
+
+        SET_VERIFIED_COMPANIES(state, data) {
+            state.verifiedCompanies = data;
+        },
+
+        SET_VERIFIED_COMPANIES_LOADING(state, data) {
+            state.verifiedCompaniesLoading = data;
+        },
+
+        SET_CODE_LOADING(state, data) {
+            state.codeLoading = data;
+        },
     },
 
     actions: {
@@ -263,14 +308,15 @@ export default {
             commit('SET_SELECTED_COMPANY_ID', id);
         },
 
-        async generateCode({commit}, id) {
+        async generateCode({commit}, {slug}) {
+            commit('SET_CODE_LOADING', true);
             try {
-                let response = await axios.post('/api/company/generate-code', {
-                    id: id
-                });
-                commit('SET_CODE', response.data.data);
+                let response = await axios.get(`/api/companies/${slug}/settings/generate-code`);
+                commit('SET_CODE', response.data.access_code);
+                commit('SET_CODE_LOADING', false);
             } catch (e) {
-                commit('SET_CODE', e.response.data.message);
+                commit('SET_CODE', null);
+                commit('SET_CODE_LOADING', false);
             }
         },
 
@@ -296,14 +342,65 @@ export default {
             return axios.put(`/api/companies/${slug}/workers/${userId}/accept`);
         },
 
-        deleteCompanyWorker({commit}, {slug, userId}) {
-            return axios.delete(`/api/companies/${slug}/workers/${userId}`);
+        deleteCompanyWorker({commit}, {slug, userId, reason}) {
+            return axios.put(`/api/companies/${slug}/workers/${userId}/reject`, {
+                reason: reason
+            });
         },
 
         addWorkerToCompany({commit}, {slug, userId, accessCode}) {
             return axios.post(`/api/companies/${slug}/workers/${userId}`, {
                 accessCode: accessCode,
             });
+        },
+
+        verifyCompany({commit}, {slug}) {
+            return axios.post(`/api/admin/companies/${slug}/verify`);
+        },
+
+        rejectCompany({commit}, {slug, reason}) {
+            return axios.post(`/api/admin/companies/${slug}/reject`, {
+                reason: reason
+            });
+        },
+
+        async fetchCompaniesToVerification({commit}) {
+            commit('SET_COMPANIES_TO_VERIFICATION_LOADING', true);
+            try {
+                let response = await axios.get(`/api/admin/companies/unverified`);
+                commit('SET_COMPANIES_TO_VERIFICATION', response.data);
+                commit('SET_COMPANIES_TO_VERIFICATION_LOADING', false);
+            } catch (e) {
+                commit('SET_COMPANIES_TO_VERIFICATION', []);
+                commit('SET_COMPANIES_TO_VERIFICATION_LOADING', false);
+            }
+        },
+
+        async fetchVerifiedCompanies({commit}) {
+            commit('SET_VERIFIED_COMPANIES_LOADING', true);
+            try {
+                let response = await axios.get(`/api/admin/companies/verified`);
+                commit('SET_VERIFIED_COMPANIES', response.data);
+                commit('SET_VERIFIED_COMPANIES_LOADING', false);
+            } catch (e) {
+                commit('SET_COMPANIES_TO_VERIFICATION', []);
+                commit('SET_VERIFIED_COMPANIES_LOADING', false);
+            }
+        },
+
+        changeCompanyWorkerRoles({commit}, {slug, userId, userCompanyId, rolesIds}) {
+            return axios.put(`/api/companies/${slug}/workers/${userId}/change-roles`, {
+                userCompanyId: userCompanyId,
+                rolesIds: rolesIds
+            });
+        },
+
+        activeCompanyWorker({commit}, {slug, userId}) {
+            return axios.put(`/api/companies/${slug}/workers/${userId}/activate`);
+        },
+
+        deactivateCompanyWorker({commit}, {slug, userId}) {
+            return axios.put(`/api/companies/${slug}/workers/${userId}/deactivate`);
         }
     },
 }

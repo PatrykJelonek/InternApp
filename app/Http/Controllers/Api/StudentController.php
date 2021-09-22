@@ -7,22 +7,27 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateStudentOwnInternshipRequest;
 use App\Http\Requests\StudentGetAvailableInternshipOffersRequest;
 use App\Http\Requests\StudentGetStudentUniversitiesRequest;
+use App\Http\Requests\StudentStoreStudentInternshipAttachmentRequest;
 use App\Models\Student;
 use App\Models\User;
+use App\Repositories\AgreementRepository;
 use App\Repositories\AgreementStatusRepository;
 use App\Repositories\InternshipRepository;
 use App\Repositories\StudentRepository;
 use App\Repositories\UniversityRepository;
 use App\Services\AgreementService;
+use App\Services\AttachmentService;
 use App\Services\CityService;
 use App\Services\CompanyService;
 use App\Services\InternshipService;
 use App\Services\StudentService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class StudentController extends Controller
@@ -51,6 +56,7 @@ class StudentController extends Controller
     public const OWN_INTERNSHIP_COMPANY_VERIFIED = false;
     public const OWN_INTERNSHIP_AGREEMENT_DEFAULT_PLACES_NUMBER = 1;
     public const OWN_INTERNSHIP_AGREEMENT_IS_NOT_ACTIVE = false;
+    public const REQUEST_FIELD_AGREEMENT_ATTACHMENT = 'attachment';
 
 
     /**
@@ -99,6 +105,16 @@ class StudentController extends Controller
     private $internshipRepository;
 
     /**
+     * @var AgreementRepository
+     */
+    private $agreementRepository;
+
+    /**
+     * @var AttachmentService
+     */
+    private $attachmentService;
+
+    /**
      * StudentController constructor.
      *
      * @param StudentRepository         $studentRepository
@@ -110,6 +126,8 @@ class StudentController extends Controller
      * @param UniversityRepository      $universityRepository
      * @param InternshipService         $internshipService
      * @param InternshipRepository      $internshipRepository
+     * @param AgreementRepository       $agreementRepository
+     * @param AttachmentService         $attachmentService
      */
     public function __construct(
         StudentRepository $studentRepository,
@@ -120,7 +138,9 @@ class StudentController extends Controller
         AgreementStatusRepository $agreementStatusRepository,
         UniversityRepository $universityRepository,
         InternshipService $internshipService,
-        InternshipRepository $internshipRepository
+        InternshipRepository $internshipRepository,
+        AgreementRepository $agreementRepository,
+        AttachmentService $attachmentService
     ) {
         $this->studentRepository = $studentRepository;
         $this->studentServices = $studentServices;
@@ -131,6 +151,8 @@ class StudentController extends Controller
         $this->universityRepository = $universityRepository;
         $this->internshipService = $internshipService;
         $this->internshipRepository = $internshipRepository;
+        $this->agreementRepository = $agreementRepository;
+        $this->attachmentService = $attachmentService;
     }
 
     /**
@@ -421,5 +443,39 @@ class StudentController extends Controller
             $this->studentRepository->getStudentUniversities(Auth::user()->id),
             Response::HTTP_OK
         );
+    }
+
+    public function storeStudentInternshipAttachment(StudentStoreStudentInternshipAttachmentRequest $request, int $internshipId)
+    {
+        $agreement = $this->agreementRepository->getAgreementByInternshipId($internshipId);
+
+        DB::beginTransaction();
+        if (!is_null($agreement) && !is_null($request->file(self::REQUEST_FIELD_AGREEMENT_ATTACHMENT))) {
+            $filename = "zalacznik_do_" . Str::slug(
+                    $request->input(
+                        $agreement->name,
+                    ) . Carbon::today()->format('h_i_d_m_Y')
+                ) . '.' . $request->file(self::REQUEST_FIELD_AGREEMENT_ATTACHMENT)->getClientOriginalExtension();
+
+            $path = $request->file(self::REQUEST_FIELD_AGREEMENT_ATTACHMENT)->storeAs('agreements', $filename);
+            $attachment = $this->attachmentService->storeAttachments(
+                $filename,
+                $request->file(self::REQUEST_FIELD_AGREEMENT_ATTACHMENT)->getMimeType(),
+                $path,
+                Auth::id()
+            );
+
+            if (!is_null($attachment)) {
+                $agreement->attachments()->attach($attachment);
+
+                DB::commit();
+                return response($agreement, Response::HTTP_CREATED);
+            }
+
+            Storage::delete($path);
+        }
+
+        DB::rollBack();
+        return response($agreement, Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 }

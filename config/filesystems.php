@@ -48,20 +48,24 @@ return [
             'root' => storage_path('app'),
         ],
 
-        'offers' => [
-            'driver'  => 'local',
-            'root' => storage_path('offers')
-        ],
-
-        'agreements' => [
-            'driver'  => 'local',
-            'root' => storage_path('agreements')
-        ],
-
         'avatars' => [
             'driver'  => 'local',
             'root' => storage_path('avatars'),
             'url' => env('APP_URL').'/avatars',
+            'visibility' => 'public',
+        ],
+
+        'offers' => [
+            'driver'  => 'local',
+            'root' => storage_path('offers'),
+            'url' => env('APP_URL').'/attachments/offers',
+            'visibility' => 'public',
+        ],
+
+        'agreements' => [
+            'driver'  => 'local',
+            'root' => storage_path('agreements'),
+            'url' => env('APP_URL').'/attachments/agreements',
             'visibility' => 'public',
         ],
 
@@ -98,6 +102,8 @@ return [
         public_path('storage') => storage_path('app/public'),
         public_path('avatars') => storage_path('app/avatars'),
         public_path('logos') => storage_path('app/logos'),
+        public_path('offers') => storage_path('app/attachments/offers'),
+        public_path('agreements') => storage_path('app/attachments/agreements'),
     ],
 
 ];

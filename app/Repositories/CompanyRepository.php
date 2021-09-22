@@ -15,7 +15,10 @@ use App\Models\Offer;
 use App\Models\Questionnaire;
 use App\Models\University;
 use App\Models\User;
+use App\Models\UserCompany;
 use App\Models\UserCompanyRole;
+use App\Models\UserUniversity;
+use App\Models\UserUniversityRole;
 use App\Repositories\Interfaces\CompanyRepositoryInterface;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
@@ -32,7 +35,7 @@ class CompanyRepository implements CompanyRepositoryInterface
 
     public function getCompanyBySlug(string $slug)
     {
-        return Company::with(['city', 'category'])
+        return Company::with(['city', 'category', 'user'])
             ->where(['slug' => $slug])
             ->first();
     }
@@ -182,15 +185,47 @@ class CompanyRepository implements CompanyRepositoryInterface
 
     public function getCompanyQuestionnaires(string $slug)
     {
-        return Questionnaire::with(['questions', 'company', 'user'])->whereHas('company', function (Builder $query) use ($slug) {
-            $query->where(['slug' => $slug]);
-        })->get();
+        return Questionnaire::with(['questions', 'company', 'user'])->whereHas(
+            'company',
+            function (Builder $query) use ($slug) {
+                $query->where(['slug' => $slug]);
+            }
+        )->get();
+    }
+
+    public function getUserCompany(int $userId, int $companyId)
+    {
+        return UserCompany::where(
+            [
+                'user_id' => $userId,
+                'company_id' => $companyId,
+            ]
+        )->first();
+    }
+
+    public function getUsersCompaniesRoles(int $userId, int $companyId): ?UserCompanyRole
+    {
+        $userCompany = $this->getUserCompany($userId, $companyId);
+
+        if (is_null($userCompany)) {
+            return null;
+        }
+
+        /** @var UserCompanyRole $userCompany */
+        return UserCompanyRole::where(['user_company_id' => $userCompany->id])->first();
     }
 
     public function getCompaniesToVerification()
     {
         return Company::with(['city', 'type'])
-            ->where(['verified' => 0])
+            ->where(['verified' => false])
+            ->get();
+    }
+
+    public function getAllVerifiedCompanies()
+    {
+        return Company::with(['city','type','user'])
+            ->where(['verified' => true])
             ->get();
     }
 }

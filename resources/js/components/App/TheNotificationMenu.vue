@@ -110,7 +110,7 @@ export default {
 
     created() {
         this.fetchUserUnreadNotifications().then(() => {
-            console.log(this.userUnreadNotifications);
+
         }).catch((e) => {
 
         });
@@ -119,7 +119,6 @@ export default {
             .notification((notification) => {
                 this.unshiftUserUnreadNotification(notification);
                 this.unshiftUserNotification(notification);
-                console.log(notification);
             });
     }
 }

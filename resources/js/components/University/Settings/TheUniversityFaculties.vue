@@ -16,7 +16,11 @@
         <custom-card-title>
             <template v-slot:default>Wydziały, kierunki i specjalności</template>
             <template v-slot:actions>
-                <v-tooltip left color="tooltip-background">
+                <v-tooltip
+                    left
+                    color="tooltip-background"
+                    v-has-university-role="['deanery_worker','university_owner']"
+                >
                     <template v-slot:activator="{ on, attrs }">
                         <v-btn
                             icon
@@ -48,6 +52,7 @@
                                         v-bind="attrs"
                                         v-on="on"
                                         @click="openEditDialog(item)"
+                                        v-has-university-role="['deanery_worker','university_owner']"
                                     >
                                         <v-icon small>mdi-pencil-outline</v-icon>
                                     </v-btn>
@@ -62,6 +67,7 @@
                                         v-bind="attrs"
                                         v-on="on"
                                         @click="openDeleteDialog(item)"
+                                        v-has-university-role="['deanery_worker','university_owner']"
                                     >
                                         <v-icon small>mdi-delete</v-icon>
                                     </v-btn>
@@ -80,6 +86,7 @@
                                     v-on="on"
                                     v-if="item.type !== 'specialization'"
                                     @click="openCreateDialog(item)"
+                                    v-has-university-role="['deanery_worker','university_owner']"
                                 >
                                     <v-icon>mdi-plus</v-icon>
                                 </v-btn>

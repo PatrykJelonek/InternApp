@@ -10,7 +10,9 @@ namespace App\Services;
 
 use App\Models\University;
 use App\Models\UserUniversity;
+use App\Repositories\StudentRepository;
 use App\Repositories\UniversityRepository;
+use App\Repositories\UserRepository;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
@@ -26,11 +28,28 @@ class UniversityService
     private $universityRepository;
 
     /**
-     * @param UniversityRepository $universityRepository
+     * @var StudentRepository
      */
-    public function __construct(UniversityRepository $universityRepository)
-    {
+    private $studentRepository;
+
+    /**
+     * @var UserRepository
+     */
+    private $userRepository;
+
+    /**
+     * @param UniversityRepository $universityRepository
+     * @param StudentRepository    $studentRepository
+     * @param UserRepository       $userRepository
+     */
+    public function __construct(
+        UniversityRepository $universityRepository,
+        StudentRepository $studentRepository,
+        UserRepository $userRepository
+    ) {
         $this->universityRepository = $universityRepository;
+        $this->studentRepository = $studentRepository;
+        $this->userRepository = $userRepository;
     }
 
     /**
@@ -49,20 +68,52 @@ class UniversityService
         }
     }
 
-    public function verifyUniversityWorker(int $userUniversityId): bool
+    public function verifyUniversityWorker(string $slug, int $userId)
     {
-        try {
-            $userUniversity = UserUniversity::find($userUniversityId);
-            $userUniversity->verified = true;
+        $university = $this->universityRepository->getUniversityBySlug($slug);
 
-            if ($userUniversity->save()) {
-                return true;
+        if (!is_null($university)) {
+            $userUniversity = $this->universityRepository->getUserUniversity($userId, $university->id);
+
+            if (!is_null($userUniversity)) {
+                $userUniversity->verified = true;
+
+                if ($userUniversity->save()) {
+                    return $userUniversity->user;
+                }
             }
-
-            throw new \Exception("Nie udało się zweryfikować pracownika!");
-        } catch (\Exception $e) {
-            throw new \Exception('Nie udało się zweryfikować pracownika!');
         }
+
+        return null;
+    }
+
+    public function rejectUniversityWorker(string $slug, int $userId)
+    {
+        $university = $this->universityRepository->getUniversityBySlug($slug);
+
+        DB::beginTransaction();
+        if (!is_null($university)) {
+            $universityWorker = $this->userRepository->getUserById($userId);
+            $userUniversityRoles = $this->universityRepository->getUsersUniversitiesRoles($userId, $university->id);
+
+            if (!is_null($universityWorker) && !is_null($userUniversityRoles)) {
+                $isAllUserUniversityRolesDeleted = true;
+
+                foreach ($userUniversityRoles as $userUniversityRole) {
+                    $isAllUserUniversityRolesDeleted = $userUniversityRole->delete();
+                }
+
+                if ($isAllUserUniversityRolesDeleted) {
+                    $university->users()->detach($userId);
+                }
+
+                DB::commit();
+                return $universityWorker;
+            }
+        }
+
+        DB::rollBack();
+        return null;
     }
 
     /**
@@ -191,7 +242,10 @@ class UniversityService
 
         DB::beginTransaction();
         if (!is_null($university) && !is_null($universityAuthor)) {
-            $userUniversityRole = $this->universityRepository->getUsersUniversitiesRoles($universityAuthor->id, $university->id);
+            $userUniversityRole = $this->universityRepository->getUsersUniversitiesRoles(
+                $universityAuthor->id,
+                $university->id
+            );
 
             if (!is_null($userUniversityRole)) {
                 $userUniversityRole->delete();
@@ -205,6 +259,110 @@ class UniversityService
         }
 
         DB::rollBack();
+        return null;
+    }
+
+    public function verifyStudentInUniversity(string $slug, int $userId)
+    {
+        $university = $this->universityRepository->getUniversityBySlug($slug);
+        $student = $this->studentRepository->getStudentByUserId($userId);
+
+        if (!is_null($university) && !is_null($student)) {
+            $userUniversity = $this->universityRepository->getUserUniversity($userId, $university->id);
+
+            if (!is_null($userUniversity)) {
+                $userUniversity->verified = true;
+
+                if ($userUniversity->update()) {
+                    return $student;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    public function rejectStudentInUniversity(string $slug, int $userId)
+    {
+        $university = $this->universityRepository->getUniversityBySlug($slug);
+        $student = $this->studentRepository->getStudentByUserId($userId);
+
+        DB::beginTransaction();
+        if (!is_null($university) && !is_null($student)) {
+            $userUniversity = $this->universityRepository->getUserUniversity($userId, $university->id);
+
+            if (!is_null($userUniversity)) {
+                $userUniversityRole = $this->universityRepository->getUsersUniversitiesRoles($userId, $university->id);
+
+                if (!is_null($userUniversityRole) &&
+                    $userUniversityRole->delete() &&
+                    $userUniversity->delete() &&
+                    $student->delete()
+                ) {
+                    DB::commit();
+                    return $student;
+                }
+            }
+        }
+
+        DB::rollBack();
+        return null;
+    }
+
+    public function updateUniversityData(string $slug, string $email, string $website, string $phone)
+    {
+        $university = $this->universityRepository->getUniversityBySlug($slug);
+
+        if (!is_null($university)) {
+            $university->email = $email;
+            $university->website = $website;
+            $university->phone = $phone;
+            $university->freshTimestamp();
+            if ($university->update()) {
+                return $university;
+            }
+        }
+
+        return null;
+    }
+
+    public function activateUniversityWorker(string $slug, int $userId)
+    {
+        $university = $this->universityRepository->getUniversityBySlug($slug);
+
+        if (!is_null($university)) {
+            $userUniversity = UserUniversity::where(['university_id' => $university->id, 'user_id' => $userId])->first();
+
+            if (!is_null($userUniversity)) {
+                $userUniversity->active = true;
+                $userUniversity->freshTimestamp();
+
+                if ($userUniversity->update()) {
+                    return $userUniversity;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    public function deactivateUniversityWorker(string $slug, int $userId)
+    {
+        $university = $this->universityRepository->getUniversityBySlug($slug);
+
+        if (!is_null($university)) {
+            $userUniversity = UserUniversity::where(['university_id' => $university->id, 'user_id' => $userId])->first();
+
+            if (!is_null($userUniversity)) {
+                $userUniversity->active = false;
+                $userUniversity->freshTimestamp();
+
+                if ($userUniversity->update()) {
+                    return $userUniversity;
+                }
+            }
+        }
+
         return null;
     }
 }

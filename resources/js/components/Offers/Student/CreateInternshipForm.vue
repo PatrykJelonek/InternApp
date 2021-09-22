@@ -424,7 +424,7 @@
                                         >
                                             <v-file-input
                                                 label="Załącznik"
-                                                v-model="fileInput"
+                                                v-model="attachment"
                                                 outlined
                                                 show-size
                                                 dense
@@ -533,13 +533,9 @@ export default {
                     offerCategoryId: null,
                     dateFrom: null,
                     dateTo: null,
-                    attachment: {
-                        content: null,
-                        name: null,
-                        mime: null,
-                    },
                 },
-            }
+            },
+            attachment: null,
         }
     },
 
@@ -555,6 +551,7 @@ export default {
             offerCategoriesLoading: 'offer/offerCategoriesLoading',
             studentUniversities: 'student/studentUniversities',
             studentUniversitiesLoading: 'student/studentUniversitiesLoading',
+            selectedUniversity: 'university/selectedUniversity',
         }),
     },
 
@@ -567,15 +564,25 @@ export default {
             fetchCity: 'city/fetchCity',
             fetchOfferCategories: 'offer/fetchOfferCategories',
             createStudentOwnInternship: 'student/createStudentOwnInternship',
-            fetchStudentUniversities: 'student/fetchStudentUniversities'
+            fetchStudentUniversities: 'student/fetchStudentUniversities',
+            storeStudentOwnInternshipAttachments: 'student/storeStudentOwnInternshipAttachment'
         }),
 
         async submit() {
             this.showForm = false;
 
-            await this.createStudentOwnInternship(this.data).then(() => {
+            await this.createStudentOwnInternship(this.data).then((response) => {
                 this.toggleDialog(false);
                 this.setSnackbar({message: 'Udało się!', color: 'success'});
+
+                let formData = new FormData();
+                formData.append('attachment', this.attachment);
+
+                this.storeStudentOwnInternshipAttachments({internshipId: response.data.id, data: formData}).then(() => {
+                    this.setSnackbar({message: 'Załącznik został dodany!', color: 'primary'});
+                }).catch((e) => {
+                    this.setSnackbar({message: 'Załącznik nie został dodany!', color: 'error'});
+                })
             }).catch((e) => {
                 if (e.response !== undefined && e.response.status === 422) {
                     this.stepper = 1;
@@ -641,7 +648,6 @@ export default {
         },
 
         createBase64(file) {
-            console.log(file);
             const reader = new FileReader();
 
             reader.onload = (e) => {

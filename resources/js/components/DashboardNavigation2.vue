@@ -98,7 +98,6 @@
                 let haveRole = false;
                 this.roles.forEach((role) => {
                     rolesToCheck.forEach((roleToCheck) => {
-                        console.log(`${roleToCheck} vs. ${role} == ${roleToCheck === role}`);
                         if(roleToCheck === role)
                             haveRole = true;
                     });

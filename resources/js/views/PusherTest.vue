@@ -35,7 +35,6 @@ export default {
 
     created() {
         Echo.channel('channel').listen(`.messageSent`, (e) => {
-            console.log(e);
             this.messages.push(e.message);
         });
     }

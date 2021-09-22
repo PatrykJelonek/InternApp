@@ -8,6 +8,7 @@
 
 namespace App\Services;
 
+use App\Models\Attachment;
 use App\Repositories\AttachmentRepository;
 use Illuminate\Support\Facades\Storage;
 
@@ -84,5 +85,22 @@ class AttachmentService
                 ]
             );
         }
+    }
+
+    public function storeAttachments(string $name, string $mime, string $path, int $userId, string $description = null)
+    {
+        $attachment = new Attachment();
+        $attachment->name = $name;
+        $attachment->mime = $mime;
+        $attachment->path = $path;
+        $attachment->user_id = $userId;
+        $attachment->description = $description;
+        $attachment->freshTimestamp();
+
+        if ($attachment->save()) {
+            return $attachment;
+        }
+
+        return null;
     }
 }

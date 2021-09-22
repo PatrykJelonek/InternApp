@@ -12,10 +12,11 @@ use App\Models\Agreement;
 use App\Repositories\Interfaces\AgreementRepositoryInterface;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\Builder;
 
 class AgreementRepository implements AgreementRepositoryInterface
 {
-    private $with = ['offer.category', 'university', 'company', 'status','company.city', 'supervisor'];
+    private $with = ['offer.category', 'university', 'company', 'status','company.city', 'supervisor', 'attachments'];
 
     public function getAgreementBySlug(string $slug)
     {
@@ -86,5 +87,12 @@ class AgreementRepository implements AgreementRepositoryInterface
         }
 
         return null;
+    }
+
+    public function getAgreementByInternshipId(int $internshipId)
+    {
+        return Agreement::whereHas('internships', function (Builder $query) use ($internshipId) {
+            $query->where(['id' => $internshipId]);
+        })->first();
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use phpDocumentor\Reflection\Types\Nullable;
 
 class CreateStudentOwnInternshipRequest extends FormRequest
 {
@@ -26,6 +27,7 @@ class CreateStudentOwnInternshipRequest extends FormRequest
     {
         return [
             'company.id' => [
+                'nullable',
                 Rule::requiredIf(
                     function () {
                         return empty($this->company['name']);
@@ -34,6 +36,7 @@ class CreateStudentOwnInternshipRequest extends FormRequest
                 'exists:App\Models\Company,id',
             ],
             'company.name' => [
+                'nullable',
                 Rule::requiredIf(
                     function () {
                         return empty($this->company['id']);
@@ -43,6 +46,7 @@ class CreateStudentOwnInternshipRequest extends FormRequest
                 'unique:App\Models\Company,name',
             ],
             'company.street' => [
+                'nullable',
                 Rule::requiredIf(
                     function () {
                         return empty($this->company['id']);
@@ -51,6 +55,7 @@ class CreateStudentOwnInternshipRequest extends FormRequest
                 'max:64',
             ],
             'company.streetNumber' => [
+                'nullable',
                 Rule::requiredIf(
                     function () {
                         return empty($this->company['id']);
@@ -59,6 +64,7 @@ class CreateStudentOwnInternshipRequest extends FormRequest
                 'max:8',
             ],
             'company.city.postcode' => [
+                'nullable',
                 Rule::requiredIf(
                     function () {
                         return empty($this->company['id']);
@@ -68,6 +74,7 @@ class CreateStudentOwnInternshipRequest extends FormRequest
                 'unique:App\Models\City,post_code',
             ],
             'company.city.name' => [
+                'nullable',
                 Rule::requiredIf(
                     function () {
                         return empty($this->company['id']);
@@ -98,7 +105,6 @@ class CreateStudentOwnInternshipRequest extends FormRequest
                 'required',
                 'exists:App\Models\University,slug',
             ],
-//            'agreement.attachments' => ['sometimes|mimes:pdf'],
             'agreement.dateFrom' => ['required', 'date'],
             'agreement.dateTo' => ['required', 'date'],
         ];
@@ -133,7 +139,6 @@ class CreateStudentOwnInternshipRequest extends FormRequest
             'company.companyCategoryId.exists' => 'Dana kategoria firmy nie istniej.',
             'agreement.name.max' => 'Pole nie może przekraczać :max znaków.',
             'agreement.universitySlug.exists' => 'Dana uczelnia nie istnieje.',
-            'agreement.attachments.mimes' => 'Plik musi być formatu PDF.',
             'agreement.dateFrom.date' => 'Pole musi zawierać prawidłową datę',
             'agreement.dateTo.date' => 'Pole musi zawierać prawidłową datę',
         ];

@@ -1,4 +1,5 @@
 import Vue from 'vue';
+import store from "../index";
 
 export default {
     namespaced: true,
@@ -29,6 +30,14 @@ export default {
 
         SET_USER (state, data) {
             state.user = data;
+
+            let universityFromStorage = JSON.parse(localStorage.getItem('SELECTED_UNIVERSITY'));
+
+            if (universityFromStorage) {
+                store.commit( 'university/SET_UNIVERSITY', universityFromStorage);
+            } else if (data.universities.length > 0) {
+                store.dispatch('university/fetchUniversity', [data.universities[0].slug]);
+            }
         },
 
         CHANGE_USER_DATA (state, data) {
@@ -70,7 +79,6 @@ export default {
                 let response = await axios.get('/api/me');
                 commit('SET_USER', response.data.data);
             } catch (e) {
-                console.log(e);
                 commit('SET_TOKEN', null);
                 commit('SET_USER', null);
             }
@@ -81,6 +89,15 @@ export default {
                 commit('SET_TOKEN', null);
                 commit('SET_USER', null);
             });
+        },
+
+        async me({commit}) {
+            try {
+                let response = await axios.get('/api/me');
+                commit('SET_USER', response.data.data);
+            } catch (e) {
+
+            }
         },
 
         updateUserData({commit}, data) {

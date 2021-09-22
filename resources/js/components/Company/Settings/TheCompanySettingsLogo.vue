@@ -32,6 +32,7 @@
                                 accept="image/jpeg,image/png"
                                 @change="setLogoPreview"
                                 prepend-icon=""
+                                :disabled="!hasCompanyRole(['company_owner', 'company_manager'])"
                             ></v-file-input>
                         </validation-provider>
                     </validation-observer>
@@ -41,8 +42,8 @@
                 <v-btn
                     color="primary"
                     outlined
-                    :disabled="logo === null"
                     @click="submit"
+                    :disabled="logo === null || !hasCompanyRole(['company_owner', 'company_manager'])"
                 >
                     Zapisz
                 </v-btn>
@@ -57,6 +58,7 @@ import {mimes} from "vee-validate/dist/rules";
 import {setInteractionMode, ValidationProvider, ValidationObserver, extend} from "vee-validate";
 import CustomCardTitle from "../../_General/CustomCardTitle";
 import {mapActions, mapGetters} from "vuex";
+import {hasCompanyRole} from "../../../plugins/acl";
 
 setInteractionMode('eager');
 
@@ -84,6 +86,8 @@ export default {
     },
 
     methods: {
+        hasCompanyRole,
+
         ...mapActions({
             setSnackbar: 'snackbar/setSnackbar',
             updateCompanyLogo: 'company/updateCompanyLogo'

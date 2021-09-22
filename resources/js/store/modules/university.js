@@ -13,21 +13,23 @@ export default {
         universityTypes: [],
         universityUsers: [],
         universityAgreements: [],
+        universityOffers: [],
+        universityOffersLoading: false,
         internships: [],
-        internshipsLoading: true,
+        internshipsLoading: false,
         students: [],
         studentsLoading: false,
         university: null,
-        universityLoading: true,
+        universityLoading: false,
         workers: [],
         workersLoading: false,
         agreements: [],
-        agreementsLoading: true,
+        agreementsLoading: false,
         faculties: [],
-        facultiesLoading: true,
+        facultiesLoading: false,
         codeLoading: false,
         availableStudentOffers: [],
-        availableStudentOffersLoading: true,
+        availableStudentOffersLoading: false,
         facultiesTreeView: [],
     },
 
@@ -130,7 +132,15 @@ export default {
 
         facultiesTreeView(state) {
             return state.facultiesTreeView;
-        }
+        },
+
+        universityOffers(state) {
+            return state.universityOffers;
+        },
+
+        universityOffersLoading(state) {
+            return state.universityOffersLoading;
+        },
     },
 
     mutations: {
@@ -294,7 +304,15 @@ export default {
 
                 return internship;
             });
-        }
+        },
+
+        SET_UNIVERSITY_OFFERS(state, data) {
+            state.universityOffers = data;
+        },
+
+        SET_UNIVERSITY_OFFERS_LOADING(state, data) {
+            state.universityOffersLoading = data;
+        },
     },
 
     actions: {
@@ -445,7 +463,7 @@ export default {
         async fetchUniversitiesToVerification({commit}) {
             commit('SET_UNIVERSITIES_TO_VERIFICATION_LOADING', true);
             try {
-                let response = await axios.get(`/api/admin/universities/verification`);
+                let response = await axios.get(`/api/admin/universities/unverified`);
                 commit('SET_UNIVERSITIES_TO_VERIFICATION', response.data);
                 commit('SET_UNIVERSITIES_TO_VERIFICATION_LOADING', false);
             } catch (e) {
@@ -531,6 +549,12 @@ export default {
             });
         },
 
+        rejectUniversityWorker({commit}, {slug, userId, reason}) {
+            return axios.put(`/api/universities/${slug}/workers/${userId}/reject`, {
+                reason: reason
+            });
+        },
+
         addWorkerToUniversity({commit}, {slug, userId, accessCode}) {
             return axios.post(`/api/universities/${slug}/workers/${userId}`, {
                 accessCode: accessCode,
@@ -551,8 +575,46 @@ export default {
 
         rejectUniversity({commit}, {slug, reason}) {
             return axios.post(`/api/admin/universities/${slug}/reject`, {
-                    reason: reason
+                reason: reason
             });
+        },
+
+        verifyStudentInUniversity({commit}, {slug, userId}) {
+            return axios.post(`/api/universities/${slug}/students/${userId}/verify`);
+        },
+
+        rejectStudentInUniversity({commit}, {slug, userId, reason}) {
+            return axios.post(`/api/universities/${slug}/students/${userId}/reject`, {
+                reason: reason,
+            });
+        },
+
+        async fetchUniversityOffers({commit}, {slug}) {
+            commit('SET_UNIVERSITY_OFFERS_LOADING', true);
+            try {
+                let response = await axios.get(`/api/universities/${slug}/offers`);
+                commit('SET_UNIVERSITY_OFFERS', response.data);
+                commit('SET_UNIVERSITY_OFFERS_LOADING', false);
+            } catch (e) {
+                commit('SET_UNIVERSITIES', []);
+                commit('SET_UNIVERSITY_OFFERS_LOADING', false);
+            }
+        },
+
+        updateUniversityData({commit}, {slug, email, website, phone}) {
+            return axios.put(`/api/universities/${slug}/`, {
+                email: email,
+                website: website,
+                phone: phone
+            })
+        },
+
+        activeUniversityWorker({commit}, {slug, userId}) {
+            return axios.put(`/api/universities/${slug}/workers/${userId}/activate`);
+        },
+
+        deactivateUniversityWorker({commit}, {slug, userId}) {
+            return axios.put(`/api/universities/${slug}/workers/${userId}/deactivate`);
         }
     },
 };

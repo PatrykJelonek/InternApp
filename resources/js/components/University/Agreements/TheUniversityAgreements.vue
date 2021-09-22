@@ -7,8 +7,13 @@
                 Lista umów przypisanych do {{ university.name }}.
             </template>
             <template v-slot:actions>
-                <v-btn color="primary" outlined
-                       @click="toggleDialog({key: 'DIALOG_FIELD_CREATE_OWN_AGREEMENT', val: true})">Dodaj umowę
+                <v-btn
+                    outlined
+                    color="primary"
+                    @click="toggleDialog({key: 'DIALOG_FIELD_CREATE_OWN_AGREEMENT', val: true})"
+                    v-has-university-role="['deanery_worker','university_owner']"
+                >
+                    Dodaj umowę
                 </v-btn>
             </template>
         </page-title>

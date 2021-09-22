@@ -10,17 +10,10 @@
                     <v-btn
                         outlined
                         color="primary"
+                        v-has="['deanery_worker','university_owner']"
                         @click="toggleCreateAgreementDialog(true)"
                     >
                         Dodaj umowę
-                    </v-btn>
-                    <v-btn
-                        outlined
-                        color="primary"
-                        v-has="['student']"
-                        @click="toggleCreateAgreementDialog(true)"
-                    >
-                        Aplikuj
                     </v-btn>
                 </template>
             </page-title>
@@ -142,6 +135,20 @@
                         </v-row>
                     </custom-card>
                 </v-col>
+                <v-col cols="12">
+                    <custom-card>
+                        <custom-card-title>
+                            <template v-slot:default>Załączniki</template>
+                            <template v-slot:subheader>Lista załączników oferty</template>
+                        </custom-card-title>
+
+                        <v-row no-gutters>
+                            <v-col cols="12" class="pa-5">
+                                <attachments :attachments="offer.attachments"></attachments>
+                            </v-col>
+                        </v-row>
+                    </custom-card>
+                </v-col>
             </v-row>
 
         </template>
@@ -165,10 +172,12 @@ import moment from "moment";
 import CreateAgreementDialog from "../components/Agreements/CreateAgreementDialog";
 import CustomCard from "../components/_General/CustomCard";
 import CustomCardTitle from "../components/_General/CustomCardTitle";
+import Attachments from "../components/_General/Attachments";
 
 export default {
     name: "Offer",
     components: {
+        Attachments,
         CustomCardTitle,
         CustomCard, CreateAgreementDialog, ExpandCard, PageLoader, PageTitle, PageDetailsHeader},
     data() {
@@ -181,6 +190,7 @@ export default {
         ...mapGetters({
             offer: 'offer/offer',
             offerLoading: 'offer/offerLoading',
+            userInternships: 'user/internships',
         }),
     },
 
@@ -189,6 +199,7 @@ export default {
             setBreadcrumbs: 'helpers/setBreadcrumbs',
             fetchOffer: 'offer/fetchOffer',
             toggleCreateAgreementDialog: 'helpers/toggleCreateAgreementDialog',
+            fetchUserInternships: 'user/fetchInternships',
         }),
 
         toCompany() {
@@ -205,6 +216,12 @@ export default {
     },
 
     created() {
+        this.fetchUserInternships().then(() => {
+
+        }).catch((e) => {
+
+        });
+
         this.fetchOffer(this.$route.params.slug).then(() => {
             this.setBreadcrumbs([
                 {text: 'Panel', to: {name: 'panel'}, exact: true},

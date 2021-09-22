@@ -4,6 +4,7 @@
         <custom-card-title>
             <template v-slot:default>Lista praktyk i staży</template>
         </custom-card-title>
+
         <v-row v-show="show" no-gutters>
             <v-col cols="12">
                 <v-data-table
@@ -15,7 +16,6 @@
                     loading-text="Pobieranie listy praktyk i staży..."
                     class="component-background"
                     :search="search"
-                    @click:row="(item) => {$router.push({name: 'internship', params: {internshipId: item.id}})}"
                 >
                     <template v-slot:item.university_supervisor.full_name="{ item }">
                         <router-link :to="{name: 'user', params: {id: item.university_supervisor.id}}">
@@ -52,16 +52,22 @@
                             </template>
                             <v-list dense color="component-background" class="cursor-pointer">
                                 <v-list-item>
-                                    <v-list-item-title @click="$router.push({name: 'internship', params: {internshipId: item.id}})">
+                                    <v-list-item-title
+                                        @click="$router.push({name: 'internship', params: {internshipId: item.id}})"
+                                    >
                                         Zobacz praktykę
                                     </v-list-item-title>
                                 </v-list-item>
                                 <v-list-item>
-                                    <v-list-item-title @click="$router.push({name: 'agreement', params: {slug: item.agreement.slug}})">
+                                    <v-list-item-title
+                                        @click="$router.push({name: 'agreement', params: {slug: item.agreement.slug}})"
+                                    >
                                         Zobacz umowę
                                     </v-list-item-title>
                                 </v-list-item>
-                                <v-list-item>
+                                <v-list-item
+                                    v-if="item.university_supervisor.id === user.id || hasUniversityRole(['deanery_worker','university_owner'])"
+                                >
                                     <v-list-item-title @click="openChangeStatusDialog(item)">
                                         Zmień status
                                     </v-list-item-title>
@@ -81,6 +87,7 @@ import moment from "moment";
 import CustomCard from "../../_General/CustomCard";
 import CustomCardTitle from "../../_General/CustomCardTitle";
 import TheUniversityInternshipChangeStatusDialog from "./TheUniversityInternshipChangeStatusDialog";
+import {hasUniversityRole} from "../../../plugins/acl";
 
 export default {
     name: "TheUniversityInternshipsList",
@@ -95,8 +102,8 @@ export default {
                 {text: 'Nazwa', value: 'agreement.name'},
                 {text: 'Opiekun z uczelni', value: 'university_supervisor.full_name'},
                 {text: 'Opiekun z firmy', value: 'company_supervisor.full_name'},
-                {text: 'Data rozpoczęcia', value:'agreement.date_from'},
-                {text: 'Data zakończenia', value:'agreement.date_to'},
+                {text: 'Data rozpoczęcia', value: 'agreement.date_from'},
+                {text: 'Data zakończenia', value: 'agreement.date_to'},
                 {text: 'Status', value: 'status.display_name'},
                 {text: 'Akcje', value: 'actions', sortable: false, align: 'center'},
             ],
@@ -105,6 +112,7 @@ export default {
 
     computed: {
         ...mapGetters({
+            user: "auth/user",
             university: 'university/university',
             internships: 'university/internships',
             internshipsLoading: 'university/internshipsLoading',
@@ -112,6 +120,8 @@ export default {
     },
 
     methods: {
+        hasUniversityRole,
+
         ...mapActions({
             fetchInternships: 'university/fetchInternships',
             toggleDialog: 'helpers/toggleDialog',
@@ -144,7 +154,7 @@ export default {
 </script>
 
 <style scoped>
-    .cursor-pointer {
-        cursor: pointer;
-    }
+.cursor-pointer {
+    cursor: pointer;
+}
 </style>

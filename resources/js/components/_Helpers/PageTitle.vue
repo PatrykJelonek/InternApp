@@ -9,7 +9,7 @@
                     <slot name="subheader"> </slot>&#32;
                 </p>
             </v-col>
-            <v-col class="d-flex justify-end">
+            <v-col xs="12" class="d-flex" v-bind:class="$vuetify.breakpoint.xsOnly ? 'justify-center mt-4' : ' justify-end'">
                 <slot name="actions"></slot>
             </v-col>
         </v-row>

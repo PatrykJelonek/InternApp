@@ -20,4 +20,6 @@ interface AgreementRepositoryInterface
     public function delete(string $slug);
 
     public function changeAgreementStatus(string $slug, int $statusId);
+
+    public function getAgreementByInternshipId(int $internshipId);
 }

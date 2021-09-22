@@ -4,6 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Company;
+use App\Models\User;
+use App\Models\OfferCategory;
+use App\Models\OfferStatus;
+use App\Models\Internship;
+use Ratchet\App;
 
 class Offer extends Model
 {
@@ -13,33 +19,38 @@ class Offer extends Model
 
     public function company()
     {
-        return $this->belongsTo('App\Models\Company');
+        return $this->belongsTo(Company::class);
     }
 
     public function user()
     {
-        return $this->belongsTo('App\Models\User');
+        return $this->belongsTo(User::class);
     }
 
     public function category()
     {
-        return $this->belongsTo('App\Models\OfferCategory','offer_category_id','id');
+        return $this->belongsTo(OfferCategory::class, 'offer_category_id', 'id');
     }
 
     public function status()
     {
-        return $this->hasOne('App\Models\OfferStatus', 'id', 'offer_status_id');
+        return $this->hasOne(OfferStatus::class, 'id', 'offer_status_id');
     }
 
     public function supervisor()
     {
-        return $this->hasOne('App\Models\User', 'id', 'company_supervisor_id');
+        return $this->hasOne(User::class, 'id', 'company_supervisor_id');
     }
 
     public function internships()
     {
-        return $this->hasMany('App\Models\Internship', 'offer_id', 'id');
+        return $this->hasMany(Internship::class, 'offer_id', 'id');
 
+    }
+
+    public function attachments()
+    {
+        return $this->belongsToMany(Attachment::class,'offers_attachments', 'offer_id', 'attachment_id');
     }
 
     public function scopeWithPlaces($query)

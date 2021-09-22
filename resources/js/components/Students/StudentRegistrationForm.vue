@@ -354,7 +354,6 @@
                         this.createStudent(this.studentAccount).then(() => {
                             this.$router.replace('/login');
                         }).catch((e) => {
-                            console.log(e.response.message);
                             if(e.response.status == 422) {
                                 this.$refs.observerFirst.setErrors(e.response.data.errors);
                                 this.$refs.observerSecond.setErrors(e.response.data.errors);

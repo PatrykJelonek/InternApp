@@ -13,15 +13,15 @@
             <v-row>
                 <v-col cols="12">
                     <the-company-details
-                    :name="company.draft ? company.draft_name : company.name"
-                    :category="company.category.name"
-                    :address="company.street + ' ' + company.street_number + ', ' + company.city.name"
-                    :email="company.draft ? company.draft_email : company.email"
-                    :phone="company.phone"
-                    :website="company.website"
-                    :description="company.description"
-                    :draft="company.draft"
-                    :verified="company.verified"
+                        :name="company.draft ? company.draft_name : company.name"
+                        :category="company.category.name"
+                        :address="company.street + ' ' + company.street_number + ', ' + company.city.name"
+                        :email="company.draft ? company.draft_email : company.email"
+                        :phone="company.phone"
+                        :website="company.website"
+                        :description="company.description"
+                        :draft="company.draft"
+                        :verified="company.verified"
                     ></the-company-details>
                 </v-col>
             </v-row>

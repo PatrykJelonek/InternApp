@@ -12,6 +12,7 @@ export default {
             DIALOG_FIELD_CHANGE_INTERNSHIP_STATUS: false,
             DIALOG_FIELD_SELECT_ROLES: false,
             DIALOG_FIELD_VERIFY_UNIVERSITY_WORKER: false,
+            DIALOG_FIELD_REJECT_UNIVERSITY_WORKER: false,
             DIALOG_FIELD_GENERATE_STUDENT_JOURNAL: false,
             DIALOG_FIELD_INTERNSHIP_SUMMARY: false,
             DIALOG_FIELD_RATE_STUDENT: false,
@@ -29,6 +30,12 @@ export default {
             DIALOG_FIELD_CONFIRM_UPDATE_JOURNAL_ENTRIES: false,
             DIALOG_FIELD_CONFIRM_DELETE_JOURNAL_ENTRIES_COMMENT: false,
             DIALOG_FIELD_CONFIRM_DELETE_JOURNAL_TASK: false,
+            DIALOG_FIELD_VERIFY_STUDENT: false,
+            DIALOG_FIELD_REJECT_STUDENT: false,
+            DIALOG_FIELD_ACTIVATE_COMPANY_WORKER: false,
+            DIALOG_FIELD_DEACTIVATE_COMPANY_WORKER: false,
+            DIALOG_FIELD_ACTIVATE_UNIVERSITY_WORKER: false,
+            DIALOG_FIELD_DEACTIVATE_UNIVERSITY_WORKER: false,
         },
         dialogsArgs: {
             DIALOG_FIELD_ACTIVATE_AGREEMENT: null,
@@ -37,6 +44,7 @@ export default {
             DIALOG_FIELD_CHANGE_INTERNSHIP_STATUS: null,
             DIALOG_FIELD_SELECT_ROLES: null,
             DIALOG_FIELD_VERIFY_UNIVERSITY_WORKER: null,
+            DIALOG_FIELD_REJECT_UNIVERSITY_WORKER: null,
             DIALOG_FIELD_GENERATE_STUDENT_JOURNAL: null,
             DIALOG_FIELD_INTERNSHIP_SUMMARY: null,
             DIALOG_FIELD_RATE_STUDENT: null,
@@ -54,6 +62,12 @@ export default {
             DIALOG_FIELD_CONFIRM_UPDATE_JOURNAL_ENTRIES: null,
             DIALOG_FIELD_CONFIRM_DELETE_JOURNAL_ENTRIES_COMMENT: null,
             DIALOG_FIELD_CONFIRM_DELETE_JOURNAL_TASK: null,
+            DIALOG_FIELD_VERIFY_STUDENT: null,
+            DIALOG_FIELD_REJECT_STUDENT: null,
+            DIALOG_FIELD_ACTIVATE_COMPANY_WORKER: null,
+            DIALOG_FIELD_DEACTIVATE_COMPANY_WORKER: null,
+            DIALOG_FIELD_ACTIVATE_UNIVERSITY_WORKER: null,
+            DIALOG_FIELD_DEACTIVATE_UNIVERSITY_WORKER: null,
         },
         createInternshipDialog: false,
         createOfferDialog: false,
@@ -82,6 +96,7 @@ export default {
         selectedUniversity: null,
         breadcrumbs: [],
         createOwnAgreementStepper: 1,
+        createOwnAgreementLoading: false,
     },
 
     getters: {
@@ -199,6 +214,10 @@ export default {
 
         createOwnAgreementStepper(state) {
             return state.createOwnAgreementStepper;
+        },
+
+        createOwnAgreementLoading(state) {
+            return state.createOwnAgreementLoading;
         },
     },
 
@@ -333,6 +352,10 @@ export default {
 
         SET_CREATE_OWN_AGREEMENT_STEPPER(state, val) {
             state.createOwnAgreementStepper = val;
+        },
+
+        SET_CREATE_OWN_AGREEMENT_LOADING(state, val) {
+            state.createOwnAgreementLoading = val;
         },
     },
 
@@ -475,6 +498,10 @@ export default {
 
         setCreateOwnAgreementStepper({commit}, value) {
             commit('SET_CREATE_OWN_AGREEMENT_STEPPER', value);
-        }
+        },
+
+        downloadAttachment({commit}, {name}) {
+            return axios.get(`/api/attachments/${name}`);
+        },
     },
 }

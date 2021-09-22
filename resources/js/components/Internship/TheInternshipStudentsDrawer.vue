@@ -67,7 +67,6 @@ export default {
     },
 
     created() {
-        console.log(this.getRandomHexColor());
         this.fetchInternshipStudents(this.$route.params.internshipId ? this.$route.params.internshipId : this.internshipId).then(() => {
 
         }).catch((e) => {

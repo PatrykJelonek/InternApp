@@ -9,14 +9,19 @@
 namespace App\Services;
 
 use App\Constants\RoleConstants;
+use App\Http\Requests\CompanyActivateCompanyWorkerRequest;
+use App\Http\Requests\CompanyDeactivateCompanyWorkerRequest;
 use App\Models\Company;
 use App\Models\User;
 use App\Models\UserCompany;
+use App\Models\UserUniversity;
 use App\Repositories\CompanyRepository;
+use App\Repositories\UserRepository;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 
@@ -25,16 +30,23 @@ class CompanyService
     /**
      * @var CompanyRepository
      */
-    private $repository;
+    private $companyRepository;
+
+    /**
+     * @var UserRepository
+     */
+    private $userRepository;
 
     /**
      * CompanyService constructor.
      *
      * @param CompanyRepository $repository
+     * @param UserRepository    $userRepository
      */
-    public function __construct(CompanyRepository $repository)
+    public function __construct(CompanyRepository $repository, UserRepository $userRepository)
     {
-        $this->repository = $repository;
+        $this->companyRepository = $repository;
+        $this->userRepository = $userRepository;
     }
 
     public function updateCompanyData(
@@ -44,7 +56,7 @@ class CompanyService
         string $website = null,
         string $description = null
     ) {
-        $company = $this->repository->getCompanyBySlug($slug);
+        $company = $this->companyRepository->getCompanyBySlug($slug);
 
         if ($company !== null) {
             $company->email = $email ?? $company->email;
@@ -87,19 +99,23 @@ class CompanyService
             }
         )->first();
 
-        $company = $this->repository->getCompanyBySlug($slug);
+        $company = $this->companyRepository->getCompanyBySlug($slug);
 
         if ($user !== null && $company !== null) {
-            $user->companies()->detach([$company->id]);
-            Log::channel('user')->info(
-                'Użytkownik został usunięty z firmy!',
-                [
-                    'user_id' => Auth::id(),
-                    'company_id' => $company->id,
-                    'deleted_user_id' => $user->id,
-                ]
-            );
-            return true;
+            $userCompaniesRoles = $this->companyRepository->getUsersCompaniesRoles($userId, $company->id);
+
+            if (!is_null($userCompaniesRoles) && $userCompaniesRoles->delete()) {
+                $user->companies()->detach([$company->id]);
+                Log::channel('user')->info(
+                    'Użytkownik został usunięty z firmy!',
+                    [
+                        'user_id' => Auth::id(),
+                        'company_id' => $company->id,
+                        'deleted_user_id' => $user->id,
+                    ]
+                );
+                return true;
+            }
         }
 
         Log::channel('user')->error(
@@ -125,13 +141,13 @@ class CompanyService
             }
         )->first();
 
-        $company = $this->repository->getCompanyBySlug($slug);
+        $company = $this->companyRepository->getCompanyBySlug($slug);
 
         if ($user !== null && $company !== null) {
             if ($user->companies()->updateExistingPivot(
                 $company->id,
                 [
-                    'active' => true,
+                    'verified' => true,
                 ]
             )) {
                 Log::channel('user')->info(
@@ -146,6 +162,8 @@ class CompanyService
                     ]
                 );
             }
+
+            return true;
         }
 
         Log::channel('user')->error(
@@ -172,9 +190,11 @@ class CompanyService
      * @param string|null $phone
      * @param string|null $website
      * @param string|null $description
-     * @param string|null $logoUrl
+     * @param bool|null   $verified
      * @param int|null    $userId
      * @param bool|null   $draft
+     *
+     * @param string|null $logoUrl
      *
      * @return Company|null
      */
@@ -329,6 +349,95 @@ class CompanyService
                 ],
             ]
         );
+
+        return null;
+    }
+
+    public function verifyCompany(string $slug)
+    {
+        $company = $this->companyRepository->getCompanyBySlug($slug);
+
+        if (!is_null($company)) {
+            $company->verified = true;
+
+            if ($company->save()) {
+                return $company;
+            }
+        }
+
+        return null;
+    }
+
+    public function rejectCompany(string $slug)
+    {
+        $company = $this->companyRepository->getCompanyBySlug($slug);
+        $companyAuthor = !is_null($company) ? $company->user : null;
+
+        DB::beginTransaction();
+        if (!is_null($company) && !is_null($companyAuthor)) {
+            $userCompanyRole = $this->companyRepository->getUsersCompaniesRoles($companyAuthor->id, $company->id);
+
+            if (!is_null($userCompanyRole)) {
+                $userCompanyRole->delete();
+                $company->users()->detach($companyAuthor->id);
+
+                if ($company->delete()) {
+                    DB::commit();
+                    return $company;
+                }
+            }
+        }
+
+        DB::rollBack();
+        return null;
+    }
+
+    public function changeCompanyWorkerRoles(int $userCompanyId, array $rolesIds)
+    {
+        try {
+            $userCompany = UserCompany::find($userCompanyId);
+            $userCompany->roles()->sync($rolesIds);
+        } catch (\Exception $e) {
+            throw new \Exception('Nie udało się dodać roli!');
+        }
+    }
+
+    public function activateCompanyWorker(string $slug, int $userId)
+    {
+        $company = $this->companyRepository->getCompanyBySlug($slug);
+
+        if (!is_null($company)) {
+            $userCompany = UserCompany::where(['company_id' => $company->id, 'user_id' => $userId])->first();
+
+            if (!is_null($userCompany)) {
+                $userCompany->active = true;
+                $userCompany->freshTimestamp();
+
+                if ($userCompany->update()) {
+                    return $userCompany;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    public function deactivateCompanyWorker(string $slug, int $userId)
+    {
+        $company = $this->companyRepository->getCompanyBySlug($slug);
+
+        if (!is_null($company)) {
+            $userCompany = UserCompany::where(['company_id' => $company->id, 'user_id' => $userId])->first();
+
+            if (!is_null($userCompany)) {
+                $userCompany->active = false;
+                $userCompany->freshTimestamp();
+
+                if ($userCompany->update()) {
+                    return $userCompany;
+                }
+            }
+        }
 
         return null;
     }

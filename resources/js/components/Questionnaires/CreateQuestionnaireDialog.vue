@@ -114,7 +114,6 @@ export default {
                             this.setSnackbar({message: 'Ankieta została dodana!', color: 'success'});
                         }).catch((e) => {
                             if (e.response.status === 422) {
-                                console.log(e.response.data.errors);
                                 this.$refs.observer.setErrors(e.response.data.errors);
                             } else {
                                 this.setSnackbar({message: 'Wystąpił problem z dodaniem ankiety!', color: 'error'});
@@ -130,7 +129,6 @@ export default {
                             this.setSnackbar({message: 'Ankieta została dodana!', color: 'success'});
                         }).catch((e) => {
                             if (e.response.status === 422) {
-                                console.log(e.response.data.errors);
                                 this.$refs.observer.setErrors(e.response.data.errors);
                             } else {
                                 this.setSnackbar({message: 'Wystąpił problem z dodaniem ankiety!', color: 'error'});

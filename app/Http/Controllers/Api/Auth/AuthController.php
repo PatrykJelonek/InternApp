@@ -26,6 +26,7 @@ class AuthController extends Controller
     private const USER_STATUS_ACTIVE = 1;
     private const TOKEN_TYPE_BEARER = 'bearer';
 
+    # Metoda do logowania użytkownika w serwisie 2
     public function login(AuthLoginRequest $request)
     {
         $token = auth()->attempt(
@@ -52,7 +53,7 @@ class AuthController extends Controller
 
     public function me()
     {
-        $user = User::with(['roles', 'permissions', 'universities','companies', 'student'])->find(auth()->id());
+        $user = User::with(['roles', 'permissions', 'universities','companies', 'student', 'universitiesWithRoles', 'companiesWithRoles'])->find(auth()->id());
         return response([
             'status' => 'success',
             'data' => $user,

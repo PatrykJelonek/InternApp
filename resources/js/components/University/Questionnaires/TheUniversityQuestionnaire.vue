@@ -11,7 +11,13 @@
                 <template v-slot:default> {{ questionnaire.name }}</template>
                 <template v-slot:subheader>{{ questionnaire.description }}</template>
                 <template v-slot:actions>
-                    <v-btn outlined color="primary" @click="toggleCreateQuestionnaireDialog(true)">Edytuj Ankietę
+                    <v-btn
+                        outlined
+                        color="primary"
+                        @click="toggleCreateQuestionnaireDialog(true)"
+                        v-if="hasUniversityRole(['deanery_worker','university_owner']) || questionnaire.user_id === user.id"
+                    >
+                        Edytuj Ankietę
                     </v-btn>
                 </template>
             </page-title>
@@ -56,6 +62,7 @@ import CustomCard from "../../_General/CustomCard";
 import QuestionnaireAnswersList from "../../Questionnaire/QuestionnaireAnswersList";
 import CreateQuestionnaireDialog from "../../Questionnaires/CreateQuestionnaireDialog";
 import CustomCardTitle from "../../_General/CustomCardTitle";
+import {hasUniversityRole} from "../../../plugins/acl";
 
 export default {
     name: "TheUniversityQuestionnaire",
@@ -70,6 +77,7 @@ export default {
     },
     computed: {
         ...mapGetters({
+            user: 'auth/user',
             university: 'university/university',
             questionnaire: 'questionnaire/questionnaire',
             isQuestionnaireLoading: 'questionnaire/isQuestionnaireLoading',
@@ -78,6 +86,8 @@ export default {
     },
 
     methods: {
+        hasUniversityRole,
+
         ...mapActions({
             setBreadcrumbs: 'helpers/setBreadcrumbs',
             fetchQuestionnaire: 'questionnaire/fetchQuestionnaire',

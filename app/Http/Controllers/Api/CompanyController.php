@@ -3,16 +3,28 @@
 namespace App\Http\Controllers\Api;
 
 use App\Constants\RoleConstants;
+use App\Events\CompanyRejected;
+use App\Events\CompanyVerified;
+use App\Events\CompanyWorkerRejected;
+use App\Events\CompanyWorkerVerified;
 use App\Http\Requests\CompanyAcceptCompanyWorkerRequest;
+use App\Http\Requests\CompanyActivateCompanyWorkerRequest;
 use App\Http\Requests\CompanyAddWorkerToCompanyRequest;
+use App\Http\Requests\CompanyChangeCompanyWorkerRolesRequest;
 use App\Http\Requests\CompanyCreateCompanyQuestionnaireRequest as CreateQuestionnaireRequest;
 use App\Http\Requests\CompanyCreateCompanyRequest;
+use App\Http\Requests\CompanyDeactivateCompanyWorkerDataRequest;
+use App\Http\Requests\CompanyDeactivateCompanyWorkerRequest;
 use App\Http\Requests\CompanyDeleteCompanyWorkerRequest;
+use App\Http\Requests\CompanyGetAllVerifiedCompaniesRequest;
+use App\Http\Requests\CompanyGetCompaniesToVerificationRequest;
 use App\Http\Requests\CompanyGetCompanyQuestionnairesRequest;
 use App\Http\Requests\CompanyOffersRequest;
+use App\Http\Requests\CompanyRejectCompanyRequest;
 use App\Http\Requests\CompanyShowRequest;
 use App\Http\Requests\CompanyUpdateCompanyDataRequest as UpdateDataRequest;
 use App\Http\Requests\CompanyUpdateCompanyLogoRequest as UpdateLogoRequest;
+use App\Http\Requests\CompanyVerifyCompanyRequest;
 use App\Http\Requests\GetCompanyWorkersRequest;
 use App\Http\Requests\UniversityCreateOwnAgreementRequest;
 use App\Models\Company;
@@ -22,6 +34,7 @@ use App\Models\Student;
 use App\Models\UserCompany;
 use App\Repositories\CompanyRepository;
 use App\Repositories\RoleRepository;
+use App\Repositories\UserRepository;
 use App\Services\CompanyService;
 use App\Services\QuestionnairesService;
 use Illuminate\Http\Request;
@@ -51,6 +64,8 @@ class CompanyController extends Controller
     public const USER_NOT_VERIFIED = false;
     public const USER_ACCEPTED = true;
     public const USER_NOT_ACCEPTED = false;
+    public const REQUEST_FIELD_REJECT_COMPANY_WORKER_REASON = 'reason';
+
     /**
      * @var CompanyRepository
      */
@@ -72,23 +87,31 @@ class CompanyController extends Controller
     private $roleRepository;
 
     /**
+     * @var UserRepository
+     */
+    private $userRepository;
+
+    /**
      * CompanyController constructor.
      *
      * @param CompanyRepository $companyRepository
      * @param QuestionnairesService $questionnairesService
      * @param CompanyService $companyService
      * @param RoleRepository $roleRepository
+     * @param UserRepository $userRepository
      */
     public function __construct(
         CompanyRepository $companyRepository,
         QuestionnairesService $questionnairesService,
         CompanyService $companyService,
-        RoleRepository $roleRepository
+        RoleRepository $roleRepository,
+        UserRepository $userRepository
     ) {
         $this->companyRepository = $companyRepository;
         $this->questionnairesService = $questionnairesService;
         $this->companyService = $companyService;
         $this->roleRepository = $roleRepository;
+        $this->userRepository = $userRepository;
     }
 
     /**
@@ -277,34 +300,20 @@ class CompanyController extends Controller
         }
     }
 
-    public function setNewAccessCode(Request $request)
+    public function setNewAccessCode(Request $request, string $slug)
     {
         //TODO: Będzie trzeba to zabezpieczyć
-        $company = Company::find($request->input("id"));
+        $company = $this->companyRepository->getCompanyBySlug($slug);
 
-        if (isset($company)) {
+        if (!is_null($company)) {
             $company->access_code = $this->generateUniqueRandomAccessCode();
 
             if ($company->save()) {
-                return response(
-                    [
-                        'status' => 'success',
-                        'data' => $company->access_code,
-                        'message' => null,
-                    ],
-                    Response::HTTP_OK
-                );
+                return response($company, Response::HTTP_OK);
             }
         }
 
-        return response(
-            [
-                'status' => 'error',
-                'data' => null,
-                'message' => 'New access code has been not generate!',
-            ],
-            Response::HTTP_NOT_MODIFIED
-        );
+        return response(null, Response::HTTP_NOT_MODIFIED);
     }
 
     /**
@@ -547,16 +556,36 @@ class CompanyController extends Controller
 
     public function deleteCompanyWorker(CompanyDeleteCompanyWorkerRequest $request, string $slug, string $userId)
     {
-        if ($this->companyService->deleteCompanyWokrer($slug, $userId)) {
+        $company = $this->companyRepository->getCompanyBySlug($slug);
+        $user = $this->userRepository->getUserById($userId);
+
+        DB::beginTransaction();
+        if (!is_null($company) && !is_null($user) && $this->companyService->deleteCompanyWokrer($slug, $userId)) {
+            CompanyWorkerRejected::dispatch(
+                $company,
+                $user,
+                $request->input(self::REQUEST_FIELD_REJECT_COMPANY_WORKER_REASON)
+            );
+
+            DB::commit();
             return \response(null, Response::HTTP_OK);
         }
 
+        DB::rollBack();
         return \response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 
     public function acceptCompanyWorker(CompanyAcceptCompanyWorkerRequest $request, string $slug, string $userId)
     {
-        if ($this->companyService->acceptCompanyWorker($slug, $userId)) {
+        $company = $this->companyRepository->getCompanyBySlug($slug);
+        $user = $this->userRepository->getUserById($userId);
+
+        if (!is_null($company) && !is_null($user) && $this->companyService->acceptCompanyWorker($slug, $userId)) {
+            CompanyWorkerVerified::dispatch(
+                $company,
+                $user,
+            );
+
             return \response(null, Response::HTTP_OK);
         }
 
@@ -613,6 +642,94 @@ class CompanyController extends Controller
         );
 
         DB::rollBack();
+        return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+
+    /**
+     * @param CompanyVerifyCompanyRequest $request
+     * @param string                      $slug
+     *
+     * @return Response
+     */
+    public function verifyCompany(CompanyVerifyCompanyRequest $request, string $slug): Response
+    {
+        $verifiedCompany = $this->companyService->verifyCompany($slug);
+
+        if (!is_null($verifiedCompany)) {
+            CompanyVerified::dispatch(
+                $verifiedCompany->user,
+                $verifiedCompany
+            );
+            return response($verifiedCompany, Response::HTTP_OK);
+        }
+
+        return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+
+    /**
+     * @param CompanyRejectCompanyRequest $request
+     * @param string                      $slug
+     *
+     * @return Response
+     */
+    public function rejectCompany(CompanyRejectCompanyRequest $request, string $slug): Response
+    {
+        $rejectedCompany = $this->companyService->rejectCompany($slug);
+
+        if (!is_null($rejectedCompany)) {
+            CompanyRejected::dispatch(
+                $rejectedCompany->user,
+                $rejectedCompany
+            );
+            return response($rejectedCompany, Response::HTTP_OK);
+        }
+
+        return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+
+    public function getCompaniesToVerification(CompanyGetCompaniesToVerificationRequest $request): Response
+    {
+        return response($this->companyRepository->getCompaniesToVerification(), Response::HTTP_OK);
+    }
+
+    public function getAllVerifiedCompanies(CompanyGetAllVerifiedCompaniesRequest $request): Response
+    {
+        return response($this->companyRepository->getAllVerifiedCompanies(), Response::HTTP_OK);
+    }
+
+    public function changeCompanyWorkerRoles(CompanyChangeCompanyWorkerRolesRequest $request, $slug, $userId)
+    {
+        try {
+            $this->companyService->changeCompanyWorkerRoles(
+                $request->input('userCompanyId'),
+                $request->input('rolesIds')
+            );
+
+            return response(null, Response::HTTP_OK);
+        } catch (\Exception $e) {
+            return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    public function activateCompanyWorker(CompanyActivateCompanyWorkerRequest $request, string $slug, int $userId)
+    {
+        $activatedUserCompany = $this->companyService->activateCompanyWorker($slug, $userId);
+
+        if (!is_null($activatedUserCompany)) {
+            return response($activatedUserCompany, Response::HTTP_OK);
+        }
+
+        return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+
+    public function deactivateCompanyWorker(CompanyDeactivateCompanyWorkerRequest $request, string $slug, int $userId)
+    {
+        $deactivatedUserCompany = $this->companyService->deactivateCompanyWorker($slug, $userId);
+
+        if (!is_null($deactivatedUserCompany)) {
+            return response($deactivatedUserCompany, Response::HTTP_OK);
+        }
+
         return response(null, Response::HTTP_INTERNAL_SERVER_ERROR);
     }
 }

@@ -35,8 +35,8 @@ class UniversityCreateOwnAgreementRequest extends FormRequest
             'company.street' => 'required_without:company.id|max:64',
             'company.streetNumber' => 'required_without:company.id|max:8',
             'company.city.id' => 'required_without:company.id|nullable|exists:App\Models\City,id',
-            'company.city.postcode' => 'required_without_all:company.city.id|nullable|max:6',
-            'company.city.name' => 'required_without_all:company.city.id|nullable|max:64',
+            'company.city.postcode' => 'required_without_all:company.city.id,company.id|nullable|max:6',
+            'company.city.name' => 'required_without_all:company.city.id,company.id|nullable|max:64',
             'company.email' => 'required_without:company.id|nullable|max:64|email',
             'company.phone' => 'required_without:company.id|max:16',
             'company.website' => 'required_without:company.id|max:64',
@@ -52,7 +52,6 @@ class UniversityCreateOwnAgreementRequest extends FormRequest
             'agreement.placesNumber' => 'required|min:1',
             'agreement.active' => 'boolean',
             'agreement.signingDate' => 'sometimes|date',
-            'agreement.attachments.*' => 'sometimes|nullable|mimes:pdf',
         ];
     }
 

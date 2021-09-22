@@ -178,5 +178,13 @@ export default {
         createStudentOwnInternship({commit}, data) {
             return axios.post(`/api/students/internships`, data);
         },
+
+        storeStudentOwnInternshipAttachment({commit}, {internshipId, data}) {
+            return axios.post(`/api/students/internships/${internshipId}/attachments`, data, {
+                headers: {
+                    'content-type': 'multipart/form-data'
+                }
+            })
+        }
     },
 }

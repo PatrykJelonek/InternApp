@@ -8,6 +8,7 @@
 
 namespace App\Repositories;
 
+use App\Constants\AgreementStatusConstants;
 use App\Constants\RoleConstants;
 use App\Models\Agreement;
 use App\Models\Faculty;
@@ -33,7 +34,7 @@ class UniversityRepository implements UniversityRepositoryInterface
      */
     public function getUniversityBySlug(string $slug)
     {
-        $university = University::where('slug', $slug)->with(['type', 'city', 'faculties'])->first();
+        $university = University::where('slug', $slug)->with(['type', 'city', 'faculties', 'user'])->first();
 
         if (!empty($university)) {
             return $university;
@@ -248,16 +249,15 @@ class UniversityRepository implements UniversityRepositoryInterface
      *
      * @return null|UserUniversityRole
      */
-    public function getUsersUniversitiesRoles(int $userId, int $universityId): ?UserUniversityRole
+    public function getUsersUniversitiesRoles(int $userId, int $universityId)
     {
-        $userUniversities = $this->getUserUniversities($userId, $universityId);
+        $userUniversities = $this->getUserUniversity($userId, $universityId);
 
         if (is_null($userUniversities)) {
             return null;
         }
 
-        /** @var UserUniversity $userUniversities */
-        return UserUniversityRole::where(['user_university_id' => $userUniversities->id])->first();
+        return UserUniversityRole::where(['user_university_id' => $userUniversities->id])->get();
     }
 
     /**
@@ -266,13 +266,32 @@ class UniversityRepository implements UniversityRepositoryInterface
      *
      * @return null|UserUniversity
      */
-    public function getUserUniversities(int $userId, int $universityId): ?UserUniversity
+    public function getUserUniversity(int $userId, int $universityId): ?UserUniversity
     {
         return UserUniversity::where(
             [
                 'user_id' => $userId,
                 'university_id' => $universityId,
             ]
-        )->first();
+        )->with(['user'])->first();
+    }
+
+    public function getUniversityOffers(string $slug)
+    {
+        return Agreement::with(
+            [
+                'university' => function ($query) use ($slug) {
+                    $query->where(['slug' => $slug]);
+                },
+                'company',
+                'offer',
+                'status' => function ($query) {
+                    $query->name = AgreementStatusConstants::STATUS_ACCEPTED;
+                },
+            ]
+        )->where(['is_active' => true])
+            ->where(['date_from', '>=', Carbon::today()])
+            ->where(['places_number', '>', '0'])
+            ->get();
     }
 }

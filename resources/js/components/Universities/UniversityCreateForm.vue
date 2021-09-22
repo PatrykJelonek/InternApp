@@ -169,7 +169,9 @@
                 fetchUserUniversities: 'user/fetchUserUniversities',
                 fetchUniversityTypes: 'university/fetchUniversityTypes',
                 fetchCities: 'city/fetchCities',
-                createUniversity: 'university/createUniversity'
+                createUniversity: 'university/createUniversity',
+                setSelectedUniversity: 'helpers/setSelectedUniversity',
+                fetchMe: 'auth/me'
             }),
 
             async submit(e) {
@@ -178,7 +180,9 @@
                 await this.createUniversity(this.university).then((response) => {
                     this.fetchUserUniversities();
                     this.$router.push({name: 'university', params: {slug: response.slug}});
+                    this.setSelectedUniversity(response);
                     this.setSnackbar({message: 'Uczelnia została dodana!', color: 'success'});
+                    this.fetchMe();
                 }).catch((e) => {
                     if(e.response.status == 422) {
                         this.$refs.observer.setErrors(e.response.data.errors);

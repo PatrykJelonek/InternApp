@@ -7,7 +7,9 @@
         <!--        <v-divider vertical></v-divider>-->
         <v-spacer></v-spacer>
         <user-company-selector v-if="$route.name.match(/company-*[a-z]*/g)"></user-company-selector>
-        <user-university-selector v-if="$route.name.match(/university-*[a-z]*/g)"></user-university-selector>
+        <user-university-selector
+            v-if="$route.name.match(/university-*[a-z]*/g) || $route.name.match(/offers-*[a-z]*/g)"
+        ></user-university-selector>
         <the-notification-menu></the-notification-menu>
         <v-divider vertical inset></v-divider>
         <v-menu left bottom offset-y nudge-bottom="3" tile>

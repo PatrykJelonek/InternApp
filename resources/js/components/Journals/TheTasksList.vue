@@ -47,7 +47,7 @@
 
         created() {
             this.fetchTasks(1).then(() => {
-                console.log('elo');
+
             });
         },
     }

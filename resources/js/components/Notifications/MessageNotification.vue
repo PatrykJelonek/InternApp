@@ -24,7 +24,6 @@ export default {
         }),
 
         async markAsRead() {
-            console.log(this.id);
            await this.markNotificationAsRead(this.id).then(() => {
                 this.$store.commit('user/MARK_AS_READ', this.id);
                 this.$store.commit('user/SET_NOTIFICATION_COUNT');

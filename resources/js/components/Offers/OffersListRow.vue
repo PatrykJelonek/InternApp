@@ -46,16 +46,24 @@
                     </v-col>
                 </v-row>
             </v-col>
-            <v-col cols="2" class="d-flex align-center">
+            <v-col
+                cols="2"
+                class="d-flex align-center"
+                v-if="canCreateAgreement || canApply"
+            >
                 <v-row no-gutters class="d-flex align-center justify-end">
                     <v-col cols="auto" class="d-flex justify-center align-center">
                         <menu-dots>
                             <template v-slot:items>
-                                <v-list-item class="cursor-pointer" v-if="forStudent" @click="openConfirmApplicationDialog(slug)" :disabled="!canApply">
+                                <v-list-item
+                                    class="cursor-pointer"
+                                    @click="openConfirmApplicationDialog(slug)"
+                                    v-if="canApply">
                                     <v-list-item-title>Aplikuj</v-list-item-title>
                                 </v-list-item>
-                                <v-list-item class="cursor-pointer" v-else>
-                                    <v-list-item-title @click="openCreateAgreementDialog">Utwórz umowę
+                                <v-list-item class="cursor-pointer" v-if="canCreateAgreement">
+                                    <v-list-item-title @click="openCreateAgreementDialog">
+                                        Utwórz umowę
                                     </v-list-item-title>
                                 </v-list-item>
                             </template>
@@ -76,11 +84,22 @@ import CustomConfirmDialog from "../_General/CustomConfirmDialog";
 export default {
     name: "OffersListRow",
     components: {CustomConfirmDialog, MenuDots, CustomCard},
-    props: ['name', 'slug', 'logoUrl', 'interview', 'companyName', 'address', 'dateRange', 'category', 'offer', 'forStudent', 'canApply'],
+    props: [
+        'name',
+        'slug',
+        'logoUrl',
+        'interview',
+        'companyName',
+        'address',
+        'dateRange',
+        'category',
+        'offer',
+        'forStudent',
+        'canApply',
+        'canCreateAgreement',
+    ],
 
-    computed: {
-
-    },
+    computed: {},
 
     methods: {
         ...mapActions({

@@ -19,11 +19,10 @@ export default {
                     commit('setUserStatuses', res.data);
                 })
                 .catch(err => {
-                    console.log(err);
+
                 });
         },
         addUserStatus({commit}, {name, description}){
-            console.log(name, description);
             window.axios({
                 method: 'post',
                 url: 'api/user_statuses',
@@ -34,9 +33,8 @@ export default {
                 }
             }).then(res => {
                 commit('addUserStatus', res.data);
-            })
-                .catch(err => {
-                    console.log(err);
+            }).catch(err => {
+
                 });
         },
         deleteUserStatus({commit}, id)
